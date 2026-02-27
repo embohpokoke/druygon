@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Route — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <style>
+    .pokemon-sprite { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
+    .pokemon-sprite.small { width: 32px; height: 32px; }
+    .pokemon-sprite.medium { width: 48px; height: 48px; }
+    .pokemon-sprite.large { width: 96px; height: 96px; }
+    .pokemon-sprite.grayscale { filter: grayscale(1) opacity(0.4); }
+    .pokeball-sprite { width: 32px; height: 32px; object-fit: contain; }
+    .pokemon-emoji { font-size: 48px; }
+    .preview-mon { display: inline-block; }
+  </style>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="route-container">
+    <div class="header">
+      <h1 class="pixel-font">🗺️ PETA ROUTE</h1>
+      <p style="color:#aaa;margin-top:10px;">Jelajahi 4 route dan tangkap Pokemon liar!</p>
+    </div>
+
+    <!-- Player Status Bar -->
+    <div class="status-bar poke-card">
+      <div class="status-item">
+        <span class="label">Level</span>
+        <span class="value" id="playerLevel">1</span>
+      </div>
+      <div class="status-item">
+        <span class="label">XP</span>
+        <div class="xp-bar-container">
+          <div class="xp-bar" id="xpBar"></div>
+        </div>
+        <span class="xp-text" id="xpText">0/100</span>
+      </div>
+      <div class="status-item">
+        <span class="label">🪙 Koin</span>
+        <span class="value" id="playerCoins">0</span>
+      </div>
+    </div>
+
+    <!-- Routes Map -->
+    <div class="routes-map" id="routesMap">
+      <!-- Will be populated by JS -->
+    </div>
+
+    <div class="tips poke-card" style="margin-top:30px;">
+      <h3 style="color:var(--poke-yellow);margin-bottom:10px;">💡 Tips:</h3>
+      <p>• Kalahkan Pokemon untuk naik level dan buka route baru</p>
+      <p>• Pokemon yang lebih langka memiliki catch rate lebih rendah</p>
+      <p>• Gunakan Great Ball atau Ultra Ball untuk Pokemon langka</p>
+      <p>• Setiap route punya topik matematika berbeda!</p>
+    </div>
+  </div>
+
+  <script src="../js/profile.js?v=20260223"></script>
+  <script src="../js/pokemon.js?v=20260222b"></script>
+  <script>
+    function renderRoutes() {
+      var routesMap = document.getElementById('routesMap');
+      routesMap.innerHTML = '';
+      
+      var routeData = [
+        { num: 1, emoji: '🌾', name: 'Padang Hijau', level: 1, desc: 'Padang rumput tempat Pokemon pemula tinggal', topic: 'Penjumlahan & Pengurangan', preview: ['rattata', 'pidgey', 'caterpie', 'pikachu'] },
+        { num: 2, emoji: '🪨', name: 'Gua Batu', level: 6, desc: 'Gua gelap dengan Pokemon batu dan hantu', topic: 'Perkalian & Pembagian', preview: ['geodude', 'zubat', 'machop', 'alakazam'] },
+        { num: 3, emoji: '🌿', name: 'Hutan Mistis', level: 11, desc: 'Hutan lebat penuh Pokemon rumput dan api', topic: 'FPB & KPK', preview: ['bulbasaur', 'charmander', 'squirtle', 'lapras'] },
+        { num: 4, emoji: '🏔️', name: 'Puncak Naga', level: 16, desc: 'Puncak gunung tertinggi, rumah Pokemon legendaris', topic: 'Pecahan & Desimal', preview: ['dratini', 'dragonair', 'dragonite', 'mewtwo'] }
+      ];
+      
+      routeData.forEach(function(route) {
+        var unlocked = window.druygonProfile.isRouteUnlocked(route.num);
+        var card = document.createElement('div');
+        card.className = 'route-card poke-card' + (unlocked ? ' unlocked' : '');
+        card.setAttribute('data-route', route.num);
+        card.onclick = function() { selectRoute(route.num); };
+        
+        var lockIcon = unlocked ? '' : '<span class="lock-icon">🔒</span>';
+        
+        var previewHTML = '<div class="pokemon-preview">';
+        route.preview.forEach(function(pokemonId) {
+          var pokemon = window.getPokemonById(pokemonId);
+          if (pokemon) {
+            var imgHTML = unlocked ? window.getPokemonImg(pokemon) : '<span class="pokemon-emoji">' + pokemon.emoji + '</span>';
+            var rarityClass = pokemon.rarity === 'rare' ? ' rare' : (pokemon.rarity === 'legendary' ? ' legendary' : '');
+            previewHTML += '<span class="preview-mon' + rarityClass + (unlocked ? '' : ' silhouette') + '" style="display:inline-block;width:32px;height:32px;overflow:hidden;">' + imgHTML + '</span>';
+          }
+        });
+        previewHTML += '</div>';
+        
+        var btnDisabled = unlocked ? '' : ' disabled';
+        var btnText = unlocked ? '🎮 MULAI PETUALANGAN' : '🔒 Butuh Level ' + route.level;
+        var btnClass = unlocked ? ' green' : '';
+        
+        card.innerHTML = '<div class="route-header">' +
+          '<span class="route-emoji">' + route.emoji + '</span>' +
+          '<div class="route-info">' +
+            '<h3>Route ' + route.num + ': ' + route.name + '</h3>' +
+            '<p class="route-level">Level ' + route.level + '+</p>' +
+          '</div>' +
+          lockIcon +
+        '</div>' +
+        '<p class="route-desc">' + route.desc + '</p>' +
+        '<div class="route-topic">📚 ' + route.topic + '</div>' +
+        previewHTML +
+        '<button class="route-btn poke-btn' + btnClass + '"' + btnDisabled + '>' + btnText + '</button>';
+        
+        routesMap.appendChild(card);
+      });
+    }
+    
+    function updateUI() {
+      var profile = window.druygonProfile.get();
+      
+      document.getElementById('playerLevel').textContent = profile.level;
+      document.getElementById('playerCoins').textContent = profile.coins;
+      
+      var xpPct = (profile.xp / profile.xpToNext) * 100;
+      document.getElementById('xpBar').style.width = xpPct + '%';
+      document.getElementById('xpText').textContent = profile.xp + '/' + profile.xpToNext;
+      
+      renderRoutes();
+    }
+
+    function selectRoute(routeNum) {
+      if (!window.druygonProfile.isRouteUnlocked(routeNum)) {
+        alert('Route ini masih terkunci! Naik level dulu ya!');
+        return;
+      }
+      
+      // Save selected route to localStorage and go to Math Arena
+      localStorage.setItem('druygon_selectedRoute', routeNum);
+      window.location.href = '../math/index.html';
+    }
+
+    // Expose to window
+    window.selectRoute = selectRoute;
+
+    // Init
+    updateUI();
+  </script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html" class="active">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+<script src="../js/analytics.js?v=20260222b"></script>
+</body>
+</html>

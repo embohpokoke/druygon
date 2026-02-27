@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toko Pokemon — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <style>
+    .pokemon-sprite { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
+    .pokemon-sprite.small { width: 32px; height: 32px; }
+    .pokemon-sprite.medium { width: 48px; height: 48px; }
+    .pokemon-sprite.large { width: 96px; height: 96px; }
+    .pokemon-sprite.grayscale { filter: grayscale(1) opacity(0.4); }
+    .pokeball-sprite { width: 32px; height: 32px; object-fit: contain; }
+    .pokemon-emoji { font-size: 48px; }
+  </style>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="store-container">
+    <div class="header">
+      <h1 class="pixel-font">🏪 TOKO POKEMON</h1>
+      <p style="color:#aaa;margin-top:10px;">Beli Pokeball dan item dengan koin!</p>
+    </div>
+
+    <!-- Coin Balance -->
+    <div class="balance-card poke-card">
+      <div class="balance-icon">🪙</div>
+      <div class="balance-info">
+        <div class="balance-label">Koin Kamu:</div>
+        <div class="balance-value" id="coinBalance">0</div>
+      </div>
+    </div>
+
+    <!-- Pokeballs Section -->
+    <div class="section-header">
+      <h2>⚪ POKEBALLS</h2>
+      <p>Gunakan Pokeball untuk menangkap Pokemon liar di Math Arena!</p>
+    </div>
+
+    <div class="items-grid" id="itemsGrid">
+      <!-- Will be populated by JS -->
+    </div>
+
+    <!-- Tips -->
+    <div class="tips poke-card" style="margin-top:30px;">
+      <h3 style="color:var(--poke-yellow);margin-bottom:10px;">💡 Tips:</h3>
+      <p>• Dapatkan koin dengan menjawab soal dengan benar di semua game!</p>
+      <p>• Streak berturut-turut memberikan bonus koin 2x!</p>
+      <p>• Gunakan Great Ball atau Ultra Ball untuk Pokemon langka (⭐⭐⭐)</p>
+      <p>• Master Ball sangat mahal tapi PASTI berhasil menangkap!</p>
+      <p>• Simpan Master Ball untuk Pokemon Legendary seperti Mewtwo 🧠✨</p>
+    </div>
+  </div>
+
+  <!-- Purchase Animation -->
+  <div class="purchase-overlay" id="purchaseOverlay">
+    <div class="purchase-popup">
+      <div class="purchase-emoji" id="purchaseEmoji">⚪</div>
+      <div class="purchase-text" id="purchaseText">Membeli...</div>
+    </div>
+  </div>
+
+  <script src="../js/profile.js?v=20260223"></script>
+  <script src="../js/pokemon.js?v=20260222b"></script>
+  <script>
+    function renderItems() {
+      var grid = document.getElementById('itemsGrid');
+      grid.innerHTML = '';
+      
+      var profile = window.druygonProfile.get();
+      var pokeballs = profile.pokeballs || {};
+      
+      var items = [
+        { type: 'pokeball', name: 'Pokeball', desc: 'Pokeball standar', rate: '1x', price: 50, btnClass: 'green' },
+        { type: 'greatball', name: 'Great Ball', desc: 'Lebih kuat dari Pokeball', rate: '1.5x', price: 150, btnClass: 'blue' },
+        { type: 'ultraball', name: 'Ultra Ball', desc: 'Sangat kuat!', rate: '2x', price: 400, btnClass: '', btnStyle: 'background:linear-gradient(135deg,#FFC107,#FF9800)' },
+        { type: 'masterball', name: 'Master Ball', desc: 'Tangkap PASTI berhasil!', rate: '100%', price: 2000, btnClass: '', btnStyle: 'background:linear-gradient(135deg,#9C27B0,#E040FB)', legendary: true }
+      ];
+      
+      items.forEach(function(item) {
+        var card = document.createElement('div');
+        card.className = 'item-card poke-card' + (item.legendary ? ' legendary' : '');
+        
+        var badge = item.legendary ? '<div class="item-badge">✨ LEGENDARY ✨</div>' : '';
+        var count = pokeballs[item.type] || 0;
+        
+        card.innerHTML = badge +
+          '<div class="item-emoji">' + window.getPokeballImg(item.type) + '</div>' +
+          '<h3>' + item.name + '</h3>' +
+          '<div class="item-desc">' + item.desc + '<br>Catch rate: <span class="highlight">' + item.rate + '</span></div>' +
+          '<div class="item-price">💰 ' + item.price + ' Koin</div>' +
+          '<div class="item-owned" id="owned-' + item.type + '">Punya: ' + count + '</div>' +
+          '<button class="poke-btn ' + item.btnClass + '" ' +
+          (item.btnStyle ? 'style="' + item.btnStyle + '" ' : '') +
+          'onclick="buyItem(\'' + item.type + '\', ' + item.price + ')">Beli</button>';
+        
+        grid.appendChild(card);
+      });
+    }
+    
+    function updateUI() {
+      var profile = window.druygonProfile.get();
+      
+      // Update coin balance
+      document.getElementById('coinBalance').textContent = profile.coins.toLocaleString();
+      
+      // Update owned counts
+      var pokeballs = profile.pokeballs || {};
+      document.getElementById('owned-pokeball').textContent = 'Punya: ' + (pokeballs.pokeball || 0);
+      document.getElementById('owned-greatball').textContent = 'Punya: ' + (pokeballs.greatball || 0);
+      document.getElementById('owned-ultraball').textContent = 'Punya: ' + (pokeballs.ultraball || 0);
+      document.getElementById('owned-masterball').textContent = 'Punya: ' + (pokeballs.masterball || 0);
+    }
+
+    function buyItem(type, price) {
+      var profile = window.druygonProfile;
+      
+      if (profile.getCoins() < price) {
+        showMessage('❌ Koin tidak cukup!', false);
+        return;
+      }
+      
+      // Deduct coins and add pokeball
+      if (profile.spendCoins(price)) {
+        profile.addPokeball(type, 1);
+        
+        var names = {
+          pokeball: 'Pokeball',
+          greatball: 'Great Ball',
+          ultraball: 'Ultra Ball',
+          masterball: 'Master Ball'
+        };
+        
+        showPurchaseAnimation(type, names[type] + ' dibeli!');
+        playPurchaseSound();
+        renderItems();
+        updateUI();
+      }
+    }
+
+    function showPurchaseAnimation(ballType, text) {
+      var overlay = document.getElementById('purchaseOverlay');
+      var emojiEl = document.getElementById('purchaseEmoji');
+      var textEl = document.getElementById('purchaseText');
+      
+      emojiEl.innerHTML = window.getPokeballImg(ballType);
+      textEl.textContent = text;
+      
+      overlay.classList.add('show');
+      
+      setTimeout(function() {
+        overlay.classList.remove('show');
+      }, 2000);
+    }
+
+    function showMessage(msg, positive) {
+      var overlay = document.getElementById('purchaseOverlay');
+      var textEl = document.getElementById('purchaseText');
+      var emojiEl = document.getElementById('purchaseEmoji');
+      
+      emojiEl.textContent = positive ? '✅' : '❌';
+      textEl.textContent = msg;
+      textEl.style.color = positive ? '#8BC34A' : '#FF5722';
+      
+      overlay.classList.add('show');
+      
+      setTimeout(function() {
+        overlay.classList.remove('show');
+        textEl.style.color = '#fff';
+      }, 1500);
+    }
+
+    function playPurchaseSound() {
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [523, 659, 784, 1047].forEach(function(freq, i) {
+          setTimeout(function() {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.frequency.value = freq;
+            osc.type = 'square';
+            gain.gain.value = 0.1;
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2);
+          }, i * 100);
+        });
+      } catch (e) {}
+    }
+
+    // Expose to window
+    window.buyItem = buyItem;
+
+    // Init
+    renderItems();
+    updateUI();
+  </script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html" class="active">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+<script src="../js/analytics.js?v=20260222b"></script>
+</body>
+</html>

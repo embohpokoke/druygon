@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌙 Ramadhan — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <script src="../js/profile.js?v=20260223"></script>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="ramadhan-container">
+    <div class="ramadhan-header slide-in">
+      <div style="font-size:3.5rem;margin-bottom:10px;">🌙✨</div>
+      <h1 class="pixel-font">RAMADHAN</h1>
+      <p class="subtitle">Belajar di Bulan Suci</p>
+      <p style="color:#aaa;font-size:0.9rem;margin-top:8px;">Kumpulkan ilmu Ramadhan seperti mengumpulkan Pokemon! 🌙</p>
+    </div>
+
+    <div class="progress-card poke-card">
+      <h3 style="color:var(--poke-yellow);margin-bottom:12px;">📊 Progress Belajar</h3>
+      <div style="display:flex;justify-content:space-around;margin-top:15px;">
+        <div style="text-align:center;">
+          <div style="font-size:2rem;color:var(--poke-green);">0</div>
+          <div style="font-size:0.8rem;color:#888;">Materi Selesai</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:2rem;color:var(--poke-blue);">1</div>
+          <div style="font-size:0.8rem;color:#888;">Total Materi</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:2rem;color:var(--poke-yellow);" id="totalScoreDisplay">0</div>
+          <div style="font-size:0.8rem;color:#888;">Total Nilai</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="materials-grid">
+      <!-- Material 1: Al-'Ashr -->
+      <div class="material-card poke-card" id="material-al-ashr">
+        <div class="material-status" id="status-al-ashr">
+          <span class="status-badge locked">🔒 Belum Selesai</span>
+        </div>
+        <div class="material-icon">📖</div>
+        <h3 class="material-title">Belajar dari Al-'Ashr</h3>
+        <p class="material-desc">Kisah Tareq dan pelajaran dari Surat Al-'Ashr tentang pentingnya waktu</p>
+        <div class="material-progress">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-al-ashr" style="width:0%"></div>
+          </div>
+          <div class="progress-text" id="score-al-ashr">Nilai terbaik: -</div>
+        </div>
+        <a href="al-ashr.html" class="poke-btn" style="margin-top:12px;width:100%;">📚 Mulai Belajar</a>
+      </div>
+
+      <!-- Placeholder untuk materi berikutnya -->
+      <div class="material-card poke-card locked-material">
+        <div class="material-status">
+          <span class="status-badge coming-soon">🔜 Segera Hadir</span>
+        </div>
+        <div class="material-icon" style="opacity:0.3;">📿</div>
+        <h3 class="material-title" style="color:#666;">Materi Ramadhan 2</h3>
+        <p class="material-desc" style="color:#555;">Materi baru akan ditambahkan sesuai PDF berikutnya</p>
+        <button class="poke-btn" disabled style="margin-top:12px;width:100%;opacity:0.5;cursor:not-allowed;">🔒 Terkunci</button>
+      </div>
+
+      <div class="material-card poke-card locked-material">
+        <div class="material-status">
+          <span class="status-badge coming-soon">🔜 Segera Hadir</span>
+        </div>
+        <div class="material-icon" style="opacity:0.3;">🕌</div>
+        <h3 class="material-title" style="color:#666;">Materi Ramadhan 3</h3>
+        <p class="material-desc" style="color:#555;">Materi baru akan ditambahkan sesuai PDF berikutnya</p>
+        <button class="poke-btn" disabled style="margin-top:12px;width:100%;opacity:0.5;cursor:not-allowed;">🔒 Terkunci</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;color:#666;font-size:0.85rem;">
+      <p>🌙 Ramadhan Section — Druygon ⚡</p>
+      <p style="margin-top:5px;font-size:0.75rem;">Belajar dengan penuh berkah 💚</p>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+  <script>
+    // Load progress from localStorage
+    function loadProgress() {
+      var progress = localStorage.getItem('druygon_ramadhan_progress');
+      if (progress) {
+        try {
+          var data = JSON.parse(progress);
+          
+          // Update Al-'Ashr card
+          if (data.materials && data.materials['al-ashr']) {
+            var alAshr = data.materials['al-ashr'];
+            if (alAshr.completed) {
+              document.getElementById('status-al-ashr').innerHTML = '<span class="status-badge completed">✅ Selesai</span>';
+              document.getElementById('progress-al-ashr').style.width = '100%';
+            }
+            if (alAshr.bestScore !== undefined) {
+              document.getElementById('score-al-ashr').textContent = 'Nilai terbaik: ' + alAshr.bestScore + '/10';
+              var percent = (alAshr.bestScore / 10) * 100;
+              document.getElementById('progress-al-ashr').style.width = percent + '%';
+            }
+          }
+
+          // Calculate total score
+          var totalScore = 0;
+          var completedCount = 0;
+          if (data.materials) {
+            for (var key in data.materials) {
+              if (data.materials[key].bestScore) {
+                totalScore += data.materials[key].bestScore;
+              }
+              if (data.materials[key].completed) {
+                completedCount++;
+              }
+            }
+          }
+          document.getElementById('totalScoreDisplay').textContent = totalScore;
+          
+          // Update completed count
+          var progressCard = document.querySelector('.progress-card');
+          progressCard.querySelector('.highlight, div[style*="poke-green"]').textContent = completedCount;
+          
+        } catch(e) {}
+      }
+    }
+
+    loadProgress();
+  </script>
+
+  <script src="../js/analytics.js"></script>
+</body>
+</html>

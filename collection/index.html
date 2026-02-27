@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koleksi Pokemon — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <style>
+    .pokemon-sprite { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
+    .pokemon-sprite.small { width: 32px; height: 32px; }
+    .pokemon-sprite.medium { width: 48px; height: 48px; }
+    .pokemon-sprite.large { width: 96px; height: 96px; }
+    .pokemon-sprite.grayscale { filter: grayscale(1) opacity(0.4); }
+    .pokeball-sprite { width: 32px; height: 32px; object-fit: contain; }
+    .pokemon-emoji { font-size: 48px; }
+  </style>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="collection-container">
+    <div class="header">
+      <h1 class="pixel-font">📦 KOLEKSI POKEMON</h1>
+      <p class="catch-count" id="catchCount">0/31 Pokemon Tertangkap</p>
+    </div>
+
+    <!-- Team Selection -->
+    <div class="team-section poke-card">
+      <h3 style="color:var(--poke-yellow);margin-bottom:12px;">⭐ TIM AKTIF (Max 3)</h3>
+      <p style="color:#aaa;font-size:0.85rem;margin-bottom:15px;">
+        Pokemon di tim aktif akan membantumu di Math Arena!
+      </p>
+      <div class="team-slots" id="teamSlots">
+        <div class="team-slot empty">
+          <div class="slot-icon">➕</div>
+          <div class="slot-label">Slot 1</div>
+        </div>
+        <div class="team-slot empty">
+          <div class="slot-icon">➕</div>
+          <div class="slot-label">Slot 2</div>
+        </div>
+        <div class="team-slot empty">
+          <div class="slot-icon">➕</div>
+          <div class="slot-label">Slot 3</div>
+        </div>
+      </div>
+      <button class="poke-btn blue" id="saveTeamBtn" onclick="saveTeam()" style="margin-top:15px;width:100%;">
+        💾 Simpan Tim
+      </button>
+    </div>
+
+    <!-- Collection Grid -->
+    <div class="collection-header">
+      <h3 style="color:var(--poke-yellow);">📚 SEMUA POKEMON</h3>
+      <div class="filter-btns">
+        <button class="filter-btn active" onclick="filterCollection('all')">Semua</button>
+        <button class="filter-btn" onclick="filterCollection('caught')">Tertangkap</button>
+        <button class="filter-btn" onclick="filterCollection('missing')">Belum Punya</button>
+      </div>
+    </div>
+
+    <div class="collection-grid" id="collectionGrid">
+      <!-- Will be populated by JS -->
+    </div>
+
+    <div class="tips poke-card" style="margin-top:30px;">
+      <h3 style="color:var(--poke-yellow);margin-bottom:10px;">💡 Tips:</h3>
+      <p>• Tangkap Pokemon dengan bermain Math Arena di berbagai route</p>
+      <p>• Pokemon langka (⭐⭐⭐) lebih sulit ditangkap tapi lebih kuat!</p>
+      <p>• CP (Combat Power) = kekuatan Pokemon dalam battle</p>
+      <p>• Pilih 3 Pokemon terkuat untuk tim aktifmu</p>
+    </div>
+  </div>
+
+  <script src="../js/profile.js?v=20260223"></script>
+  <script src="../js/pokemon.js?v=20260222b"></script>
+  <script>
+    let selectedForTeam = [];
+    let currentFilter = 'all';
+
+    function renderCollection() {
+      const profile = window.druygonProfile.get();
+      const collection = profile.collection;
+      const grid = document.getElementById('collectionGrid');
+      
+      // Update catch count
+      document.getElementById('catchCount').textContent = 
+        `${collection.length}/${window.POKEMON_DB.length} Pokemon Tertangkap`;
+      
+      grid.innerHTML = '';
+      
+      // Show empty state message if no Pokemon caught
+      if (collection.length === 0 && currentFilter === 'caught') {
+        grid.innerHTML = '<div class="poke-card" style="text-align:center;padding:30px;grid-column:1/-1;"><div style="font-size:3rem;margin-bottom:15px;">🎯</div><p style="font-size:1.1rem;font-weight:900;color:var(--poke-yellow);margin-bottom:10px;">Tangkap Pokemon pertamamu di Math Arena untuk membuat tim!</p><p style="color:#aaa;">Main Math Arena → Kalahkan Pokemon → Tangkap dengan Pokeball!</p></div>';
+        return;
+      }
+      
+      window.POKEMON_DB.forEach(pokemon => {
+        const caught = collection.find(c => c.id === pokemon.id);
+        const isCaught = !!caught;
+        
+        // Apply filter
+        if (currentFilter === 'caught' && !isCaught) return;
+        if (currentFilter === 'missing' && isCaught) return;
+        
+        const card = document.createElement('div');
+        card.className = 'pokemon-card poke-card' + (isCaught ? ' caught' : ' uncaught');
+        
+        if (isCaught) {
+          const rarityStars = {
+            common: '⭐',
+            uncommon: '⭐⭐',
+            rare: '⭐⭐⭐',
+            legendary: '✨✨✨'
+          };
+          
+          var isInTeam = selectedForTeam.includes(pokemon.id);
+          
+          card.innerHTML = '<div class="card-header">' +
+              '<span class="rarity">' + (rarityStars[caught.rarity] || '') + '</span>' +
+              '<span class="cp">CP ' + caught.cp + '</span>' +
+            '</div>' +
+            '<div class="pokemon-sprite-container">' + window.getPokemonImg(caught) + '</div>' +
+            '<h4>' + caught.name + '</h4>' +
+            '<div class="pokemon-type">' + caught.type + '</div>' +
+            '<div class="pokemon-meta">' +
+              '<span>Lv ' + caught.level + '</span>' +
+              '<span>Route ' + caught.route + '</span>' +
+            '</div>' +
+            '<div class="caught-info">' +
+              'Ditangkap: ' + formatDate(caught.caughtAt) +
+            '</div>' +
+            '<button class="add-to-team-btn poke-btn ' + (isInTeam ? 'blue' : 'green') + '" ' + 
+                    'onclick="toggleTeamSelection(\'' + pokemon.id + '\')">' +
+              (isInTeam ? '✅ Di Tim' : '➕ Tambah ke Tim') +
+            '</button>';
+        } else {
+          card.innerHTML = '<div class="pokemon-sprite-container"><div class="pokemon-sprite grayscale">❓</div></div>' +
+            '<h4>???</h4>' +
+            '<div class="pokemon-type">???</div>' +
+            '<div class="caught-info">Belum ditangkap</div>' +
+            '<div class="hint-text">Route ' + pokemon.route + ' • Lv ' + pokemon.minLevel + '+</div>';
+        }
+        
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleTeamSelection(pokemonId) {
+      var index = selectedForTeam.indexOf(pokemonId);
+      
+      if (index > -1) {
+        // Remove from team
+        selectedForTeam.splice(index, 1);
+      } else {
+        // Add to team (max 3)
+        if (selectedForTeam.length >= 3) {
+          alert('Tim sudah penuh! Maksimal 3 Pokemon.');
+          return;
+        }
+        selectedForTeam.push(pokemonId);
+      }
+      
+      updateTeamSlots();
+      renderCollection();
+    }
+
+    function updateTeamSlots() {
+      var profile = window.druygonProfile.get();
+      var teamSection = document.querySelector('.team-section');
+      
+      // Hide team builder if no Pokemon caught
+      if (profile.collection.length === 0) {
+        teamSection.style.display = 'none';
+        return;
+      } else {
+        teamSection.style.display = 'block';
+      }
+      
+      var slots = document.getElementById('teamSlots');
+      slots.innerHTML = '';
+      
+      for (var i = 0; i < 3; i++) {
+        var slot = document.createElement('div');
+        var pokemonId = selectedForTeam[i];
+        
+        if (pokemonId) {
+          var pokemon = profile.collection.find(function(p) { return p.id === pokemonId; });
+          if (pokemon) {
+            slot.className = 'team-slot filled';
+            slot.innerHTML = '<div class="slot-emoji">' + pokemon.emoji + '</div>' +
+              '<div class="slot-name">' + pokemon.name + '</div>' +
+              '<div class="slot-cp">CP ' + pokemon.cp + '</div>' +
+              '<button class="remove-btn" onclick="removeFromTeam(' + i + ')">✖️</button>';
+          } else {
+            slot.className = 'team-slot empty';
+            slot.innerHTML = '<div class="slot-icon">➕</div>' +
+              '<div class="slot-label">Slot ' + (i + 1) + '</div>';
+          }
+        } else {
+          slot.className = 'team-slot empty';
+          slot.innerHTML = '<div class="slot-icon">➕</div>' +
+            '<div class="slot-label">Slot ' + (i + 1) + '</div>';
+        }
+        
+        slots.appendChild(slot);
+      }
+    }
+
+    function removeFromTeam(index) {
+      selectedForTeam.splice(index, 1);
+      updateTeamSlots();
+      renderCollection();
+    }
+
+    function saveTeam() {
+      window.druygonProfile.setTeam(selectedForTeam);
+      alert('✅ Tim berhasil disimpan!');
+      
+      // Show animation
+      var btn = document.getElementById('saveTeamBtn');
+      btn.textContent = '✅ Tersimpan!';
+      btn.classList.add('green');
+      setTimeout(function() {
+        btn.textContent = '💾 Simpan Tim';
+        btn.classList.remove('green');
+        btn.classList.add('blue');
+      }, 2000);
+    }
+
+    function filterCollection(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      renderCollection();
+    }
+
+    function formatDate(isoString) {
+      var date = new Date(isoString);
+      var day = date.getDate();
+      var month = date.getMonth() + 1;
+      var year = date.getFullYear();
+      return day + '/' + month + '/' + year;
+    }
+
+    // Expose to window
+    window.toggleTeamSelection = toggleTeamSelection;
+    window.removeFromTeam = removeFromTeam;
+    window.saveTeam = saveTeam;
+    window.filterCollection = filterCollection;
+
+    // Init
+    var teamCopy = window.druygonProfile.get().team;
+    selectedForTeam = teamCopy.slice();
+    updateTeamSlots();
+    renderCollection();
+  </script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html" class="active">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+<script src="../js/analytics.js?v=20260222b"></script>
+</body>
+</html>

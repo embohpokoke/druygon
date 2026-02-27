@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belajar Hijaiyah — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260217">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <script src="../js/profile.js"></script>
+  <style>
+    .arabic-font { font-family: 'Amiri', serif; }
+    .arabic-letter { font-size: 6rem; font-family: 'Amiri', serif; line-height: 1; color: var(--poke-yellow); text-shadow: 0 0 20px rgba(255,203,5,0.3); }
+    .letter-forms { display: flex; gap: 15px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+    .letter-form { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,203,5,0.2); border-radius: 10px; padding: 15px 20px; text-align: center; }
+    .letter-form-label { font-size: 0.7rem; color: #aaa; margin-bottom: 5px; text-transform: uppercase; }
+    .letter-form-char { font-size: 2.5rem; font-family: 'Amiri', serif; color: var(--poke-yellow); }
+    .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 30px 0; }
+    .level-card { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 3px solid #555; border-radius: 20px; padding: 25px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+    .level-card.unlocked { border-color: var(--poke-yellow); }
+    .level-card.completed { border-color: var(--poke-green); }
+    .level-card.locked { opacity: 0.5; cursor: not-allowed; }
+    .level-card:not(.locked):hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,203,5,0.3); }
+    .level-num { font-size: 3rem; opacity: 0.2; position: absolute; top: 10px; right: 15px; font-weight: 900; }
+    .level-title { font-family: 'Press Start 2P', monospace; font-size: 0.9rem; color: var(--poke-yellow); margin-bottom: 10px; }
+    .level-subtitle { color: #aaa; font-size: 0.85rem; margin-bottom: 15px; }
+    .level-status { display: flex; align-items: center; gap: 8px; margin-top: 15px; font-size: 0.8rem; }
+    .mode-btns { display: flex; gap: 10px; margin-top: 15px; }
+    .mode-btn { flex: 1; padding: 10px; font-size: 0.75rem; font-weight: 700; border: 2px solid var(--poke-blue); background: rgba(59,76,202,0.2); color: white; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+    .mode-btn:hover:not(:disabled) { background: var(--poke-blue); transform: scale(1.05); }
+    .mode-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .flashcard { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 3px solid var(--poke-yellow); border-radius: 30px; padding: 50px 30px; text-align: center; max-width: 600px; margin: 30px auto; min-height: 400px; display: flex; flex-direction: column; justify-content: center; }
+    .flashcard-nav { display: flex; justify-content: space-between; margin-top: 30px; }
+    .quiz-container { max-width: 700px; margin: 0 auto; }
+    .quiz-question { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 3px solid var(--poke-yellow); border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 25px; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+    .quiz-option { padding: 20px; font-size: 1.1rem; background: rgba(255,255,255,0.05); border: 2px solid #555; border-radius: 15px; cursor: pointer; transition: all 0.2s; }
+    .quiz-option:hover { border-color: var(--poke-yellow); background: rgba(255,203,5,0.1); transform: scale(1.03); }
+    .quiz-option.correct { border-color: var(--poke-green); background: rgba(76,175,80,0.2); }
+    .quiz-option.wrong { border-color: var(--poke-red); background: rgba(227,53,13,0.2); }
+    .quiz-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+    .progress-dot { width: 12px; height: 12px; border-radius: 50%; background: #444; }
+    .progress-dot.answered { background: var(--poke-yellow); }
+    .progress-dot.correct { background: var(--poke-green); }
+    .progress-dot.wrong { background: var(--poke-red); }
+    .timer { font-size: 1.5rem; color: var(--poke-yellow); margin-bottom: 15px; font-family: 'Press Start 2P', monospace; }
+    .screen { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+    .screen.active { display: block; }
+    @media (max-width: 768px) {
+      .arabic-letter { font-size: 4rem; }
+      .level-grid { grid-template-columns: 1fr; }
+      .quiz-options { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <!-- MENU SCREEN -->
+  <div id="menuScreen" class="screen active">
+    <div style="text-align:center;margin:30px 0;">
+      <div style="font-size:3.5rem;margin-bottom:10px;">📖✨</div>
+      <h1 style="font-family:'Press Start 2P',monospace;font-size:1.5rem;color:var(--poke-yellow);margin-bottom:10px;">BELAJAR HIJAIYAH</h1>
+      <p style="color:#aaa;font-size:1rem;">Setiap huruf adalah Pokemon baru yang harus kamu tangkap! 🎯</p>
+      <p style="color:#888;font-size:0.85rem;margin-top:5px;">Pelajari 29 huruf Hijaiyah + Harakat</p>
+    </div>
+
+    <div class="level-grid" id="levelGrid">
+      <!-- Will be filled by JavaScript -->
+    </div>
+  </div>
+
+  <!-- LEARN SCREEN (Flashcard) -->
+  <div id="learnScreen" class="screen">
+    <div style="text-align:center;margin-bottom:20px;">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:1.2rem;color:var(--poke-yellow);" id="learnTitle">Level 1: Belajar</h2>
+      <p style="color:#aaa;font-size:0.9rem;">Geser kartu untuk belajar setiap huruf</p>
+    </div>
+
+    <div class="flashcard">
+      <div class="arabic-letter" id="flashcardLetter">أ</div>
+      <h3 style="font-size:1.8rem;margin:20px 0;color:white;" id="flashcardName">Alif</h3>
+      <p style="color:#aaa;font-size:1rem;margin-bottom:15px;" id="flashcardSound">Bunyi: a (seperti 'anak')</p>
+      
+      <div class="letter-forms" id="flashcardForms">
+        <!-- Will show different letter positions -->
+      </div>
+
+      <div class="flashcard-nav">
+        <button class="poke-btn" onclick="prevFlashcard()">⬅ Sebelumnya</button>
+        <div style="color:#aaa;font-size:0.9rem;align-self:center;" id="flashcardProgress">1 / 5</div>
+        <button class="poke-btn" onclick="nextFlashcard()">Selanjutnya ➡</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:30px;">
+      <button class="poke-btn green" onclick="backToMenu()">✅ Selesai Belajar</button>
+    </div>
+  </div>
+
+  <!-- PRACTICE SCREEN (Quiz tanpa skor) -->
+  <div id="practiceScreen" class="screen">
+    <div style="text-align:center;margin-bottom:20px;">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:1.2rem;color:var(--poke-yellow);" id="practiceTitle">Level 1: Latihan</h2>
+      <p style="color:#aaa;font-size:0.9rem;">Latihan tanpa skor, jawab sesukamu!</p>
+    </div>
+
+    <div class="quiz-container">
+      <div class="quiz-question">
+        <div class="arabic-letter" id="practiceLetter" style="font-size:5rem;">أ</div>
+        <p style="color:#aaa;margin-top:20px;font-size:1.1rem;">Huruf ini dibaca:</p>
+      </div>
+
+      <div class="quiz-options" id="practiceOptions">
+        <!-- Will be filled by JS -->
+      </div>
+
+      <div id="practiceFeedback" style="text-align:center;margin-top:20px;font-size:1.1rem;min-height:30px;"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:30px;">
+      <button class="poke-btn" onclick="nextPractice()">Soal Selanjutnya ➡</button>
+      <button class="poke-btn green" onclick="backToMenu()" style="margin-left:10px;">✅ Selesai</button>
+    </div>
+  </div>
+
+  <!-- TEST SCREEN (Quiz dengan skor & timer) -->
+  <div id="testScreen" class="screen">
+    <div style="text-align:center;margin-bottom:20px;">
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:1.2rem;color:var(--poke-yellow);" id="testTitle">Level 1: Tes</h2>
+      <div class="timer" id="testTimer">⏱️ 03:00</div>
+      <div class="quiz-progress" id="testProgress">
+        <!-- 10 dots will be here -->
+      </div>
+    </div>
+
+    <div class="quiz-container">
+      <div class="quiz-question">
+        <div style="font-size:0.9rem;color:#aaa;margin-bottom:10px;">Pertanyaan <span id="testQuestionNum">1</span>/10</div>
+        <div class="arabic-letter" id="testLetter" style="font-size:5rem;">أ</div>
+        <p style="color:#aaa;margin-top:20px;font-size:1.1rem;">Huruf ini dibaca:</p>
+      </div>
+
+      <div class="quiz-options" id="testOptions">
+        <!-- Will be filled by JS -->
+      </div>
+
+      <div id="testFeedback" style="text-align:center;margin-top:20px;font-size:1.1rem;min-height:30px;"></div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="resultScreen" class="screen">
+    <div style="text-align:center;margin:50px 0;">
+      <div style="font-size:4rem;margin-bottom:20px;" id="resultEmoji">🎉</div>
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:1.5rem;color:var(--poke-yellow);margin-bottom:15px;" id="resultTitle">SELAMAT!</h2>
+      <div style="font-size:3rem;font-weight:900;color:white;margin:20px 0;" id="resultScore">8/10</div>
+      <p style="color:#aaa;font-size:1.1rem;" id="resultMessage">Kamu berhasil menangkap Pokemon baru!</p>
+
+      <div class="poke-card" style="max-width:500px;margin:30px auto;text-align:left;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span>✅ Jawaban Benar:</span>
+          <span style="color:var(--poke-green);font-weight:900;" id="resultCorrect">8</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span>❌ Jawaban Salah:</span>
+          <span style="color:var(--poke-red);font-weight:900;" id="resultWrong">2</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span>⏱️ Waktu:</span>
+          <span style="color:var(--poke-yellow);font-weight:900;" id="resultTime">02:15</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:20px;padding-top:15px;border-top:2px solid rgba(255,203,5,0.2);">
+          <span>🌟 Reward XP:</span>
+          <span style="color:var(--poke-yellow);font-weight:900;" id="resultXP">+150 XP</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span>💰 Reward Koin:</span>
+          <span style="color:var(--poke-yellow);font-weight:900;" id="resultCoins">+64 Koin</span>
+        </div>
+      </div>
+
+      <button class="poke-btn green" onclick="backToMenu()">🏠 Kembali ke Menu</button>
+    </div>
+  </div>
+
+  <script>
+    // ========== DATA STRUCTURE ==========
+    var LEVELS = [
+      {
+        id: 1,
+        title: 'Level 1: Alif - Jim',
+        subtitle: 'أ ب ت ث ج',
+        letters: [
+          { ar: 'أ', name: 'Alif', sound: 'a (seperti anak)', forms: {alone:'ا',start:'ا',mid:'ـا',end:'ـا'} },
+          { ar: 'ب', name: 'Ba', sound: 'ba (seperti bapak)', forms: {alone:'ب',start:'بـ',mid:'ـبـ',end:'ـب'} },
+          { ar: 'ت', name: 'Ta', sound: 'ta (seperti tangan)', forms: {alone:'ت',start:'تـ',mid:'ـتـ',end:'ـت'} },
+          { ar: 'ث', name: 'Tsa', sound: 'tsa (seperti thanks)', forms: {alone:'ث',start:'ثـ',mid:'ـثـ',end:'ـث'} },
+          { ar: 'ج', name: 'Jim', sound: 'ja (seperti jalan)', forms: {alone:'ج',start:'جـ',mid:'ـجـ',end:'ـج'} }
+        ]
+      },
+      {
+        id: 2,
+        title: 'Level 2: Ha - Zay',
+        subtitle: 'ح خ د ذ ر ز',
+        letters: [
+          { ar: 'ح', name: 'Ha', sound: 'ha (seperti haus)', forms: {alone:'ح',start:'حـ',mid:'ـحـ',end:'ـح'} },
+          { ar: 'خ', name: 'Kha', sound: 'kha (seperti khas)', forms: {alone:'خ',start:'خـ',mid:'ـخـ',end:'ـخ'} },
+          { ar: 'د', name: 'Dal', sound: 'da (seperti dagu)', forms: {alone:'د',start:'د',mid:'ـد',end:'ـد'} },
+          { ar: 'ذ', name: 'Dzal', sound: 'dza (seperti that)', forms: {alone:'ذ',start:'ذ',mid:'ـذ',end:'ـذ'} },
+          { ar: 'ر', name: 'Ra', sound: 'ra (seperti rasa)', forms: {alone:'ر',start:'ر',mid:'ـر',end:'ـر'} },
+          { ar: 'ز', name: 'Zay', sound: 'za (seperti zakat)', forms: {alone:'ز',start:'ز',mid:'ـز',end:'ـز'} }
+        ]
+      },
+      {
+        id: 3,
+        title: 'Level 3: Sin - Dhad',
+        subtitle: 'س ش ص ض',
+        letters: [
+          { ar: 'س', name: 'Sin', sound: 'sa (seperti salam)', forms: {alone:'س',start:'سـ',mid:'ـسـ',end:'ـس'} },
+          { ar: 'ش', name: 'Syin', sound: 'sya (seperti syukur)', forms: {alone:'ش',start:'شـ',mid:'ـشـ',end:'ـش'} },
+          { ar: 'ص', name: 'Shad', sound: 'sha (seperti shaf)', forms: {alone:'ص',start:'صـ',mid:'ـصـ',end:'ـص'} },
+          { ar: 'ض', name: 'Dhad', sound: 'dha (seperti dhuhur)', forms: {alone:'ض',start:'ضـ',mid:'ـضـ',end:'ـض'} }
+        ]
+      },
+      {
+        id: 4,
+        title: 'Level 4: Tha - Qaf',
+        subtitle: 'ط ظ ع غ ف ق',
+        letters: [
+          { ar: 'ط', name: 'Tha', sound: 'tha (seperti thawaf)', forms: {alone:'ط',start:'طـ',mid:'ـطـ',end:'ـط'} },
+          { ar: 'ظ', name: 'Zha', sound: 'zha (seperti zhuhur)', forms: {alone:'ظ',start:'ظـ',mid:'ـظـ',end:'ـظ'} },
+          { ar: 'ع', name: 'Ain', sound: "'a (seperti 'asar)", forms: {alone:'ع',start:'عـ',mid:'ـعـ',end:'ـع'} },
+          { ar: 'غ', name: 'Ghain', sound: 'gha (seperti ghaib)', forms: {alone:'غ',start:'غـ',mid:'ـغـ',end:'ـغ'} },
+          { ar: 'ف', name: 'Fa', sound: 'fa (seperti fajr)', forms: {alone:'ف',start:'فـ',mid:'ـفـ',end:'ـف'} },
+          { ar: 'ق', name: 'Qaf', sound: 'qa (seperti qalbu)', forms: {alone:'ق',start:'قـ',mid:'ـقـ',end:'ـق'} }
+        ]
+      },
+      {
+        id: 5,
+        title: 'Level 5: Kaf - Ya',
+        subtitle: 'ك ل م ن و ه ي',
+        letters: [
+          { ar: 'ك', name: 'Kaf', sound: 'ka (seperti kabar)', forms: {alone:'ك',start:'كـ',mid:'ـكـ',end:'ـك'} },
+          { ar: 'ل', name: 'Lam', sound: 'la (seperti lalu)', forms: {alone:'ل',start:'لـ',mid:'ـلـ',end:'ـل'} },
+          { ar: 'م', name: 'Mim', sound: 'ma (seperti makan)', forms: {alone:'م',start:'مـ',mid:'ـمـ',end:'ـم'} },
+          { ar: 'ن', name: 'Nun', sound: 'na (seperti nama)', forms: {alone:'ن',start:'نـ',mid:'ـنـ',end:'ـن'} },
+          { ar: 'و', name: 'Wau', sound: 'wa (seperti waktu)', forms: {alone:'و',start:'و',mid:'ـو',end:'ـو'} },
+          { ar: 'ه', name: 'Ha', sound: 'ha (seperti hari)', forms: {alone:'ه',start:'هـ',mid:'ـهـ',end:'ـه'} },
+          { ar: 'ي', name: 'Ya', sound: 'ya (seperti yakin)', forms: {alone:'ي',start:'يـ',mid:'ـيـ',end:'ـي'} }
+        ]
+      },
+      {
+        id: 6,
+        title: 'Level 6: Harakat',
+        subtitle: 'Tanda Baca',
+        letters: [
+          { ar: 'بَ', name: 'Fathah', sound: 'ba (baris atas)', forms: {alone:'َ',start:'بَ',mid:'ـبَـ',end:'ـبَ'} },
+          { ar: 'بِ', name: 'Kasrah', sound: 'bi (baris bawah)', forms: {alone:'ِ',start:'بِ',mid:'ـبِـ',end:'ـبِ'} },
+          { ar: 'بُ', name: 'Dhammah', sound: 'bu (baris depan)', forms: {alone:'ُ',start:'بُ',mid:'ـبُـ',end:'ـبُ'} },
+          { ar: 'بً', name: 'Fathatain', sound: 'ban (dobel fathah)', forms: {alone:'ً',start:'بً',mid:'ـبًـ',end:'ـبً'} },
+          { ar: 'بٍ', name: 'Kasratain', sound: 'bin (dobel kasrah)', forms: {alone:'ٍ',start:'بٍ',mid:'ـبٍـ',end:'ـبٍ'} },
+          { ar: 'بٌ', name: 'Dhammatain', sound: 'bun (dobel dhammah)', forms: {alone:'ٌ',start:'بٌ',mid:'ـبٌـ',end:'ـبٌ'} },
+          { ar: 'بْ', name: 'Sukun', sound: 'b (mati)', forms: {alone:'ْ',start:'بْ',mid:'ـبْـ',end:'ـبْ'} },
+          { ar: 'بّ', name: 'Tasydid', sound: 'bb (dobel)', forms: {alone:'ّ',start:'بّ',mid:'ـبّـ',end:'ـبّ'} }
+        ]
+      }
+    ];
+
+    // ========== GLOBAL STATE ==========
+    var currentLevel = null;
+    var currentMode = null; // 'learn', 'practice', 'test'
+    var flashcardIndex = 0;
+    var practiceIndex = 0;
+    var testQuestions = [];
+    var testAnswers = [];
+    var testStartTime = 0;
+    var testTimer = null;
+
+    // ========== PROGRESS MANAGEMENT ==========
+    function loadProgress() {
+      var saved = localStorage.getItem('druygon_hijaiyah_progress');
+      if (!saved) {
+        return { currentLevel: 1, levels: {} };
+      }
+      try {
+        return JSON.parse(saved);
+      } catch(e) {
+        return { currentLevel: 1, levels: {} };
+      }
+    }
+
+    function saveProgress(progress) {
+      localStorage.setItem('druygon_hijaiyah_progress', JSON.stringify(progress));
+    }
+
+    function isLevelUnlocked(levelId) {
+      var progress = loadProgress();
+      return levelId <= progress.currentLevel;
+    }
+
+    function isLevelCompleted(levelId) {
+      var progress = loadProgress();
+      return progress.levels[levelId] && progress.levels[levelId].passed;
+    }
+
+    function unlockNextLevel(levelId) {
+      var progress = loadProgress();
+      if (levelId >= progress.currentLevel) {
+        progress.currentLevel = levelId + 1;
+        saveProgress(progress);
+      }
+    }
+
+    function recordTestResult(levelId, score, total) {
+      var progress = loadProgress();
+      if (!progress.levels[levelId]) {
+        progress.levels[levelId] = { passed: false, bestScore: 0 };
+      }
+      var percentage = Math.floor((score / total) * 100);
+      if (score > progress.levels[levelId].bestScore) {
+        progress.levels[levelId].bestScore = score;
+      }
+      if (percentage >= 80) {
+        progress.levels[levelId].passed = true;
+        unlockNextLevel(levelId);
+      }
+      saveProgress(progress);
+    }
+
+    // ========== MENU ==========
+    function renderMenu() {
+      var grid = document.getElementById('levelGrid');
+      grid.innerHTML = '';
+      
+      for (var i = 0; i < LEVELS.length; i++) {
+        var level = LEVELS[i];
+        var unlocked = isLevelUnlocked(level.id);
+        var completed = isLevelCompleted(level.id);
+        
+        var card = document.createElement('div');
+        card.className = 'level-card';
+        if (unlocked && !completed) card.className += ' unlocked';
+        if (completed) card.className += ' completed';
+        if (!unlocked) card.className += ' locked';
+        
+        var statusIcon = '🔒';
+        var statusText = 'Terkunci';
+        var statusColor = '#888';
+        if (completed) {
+          statusIcon = '✅';
+          statusText = 'Selesai';
+          statusColor = 'var(--poke-green)';
+        } else if (unlocked) {
+          statusIcon = '⚡';
+          statusText = 'Tersedia';
+          statusColor = 'var(--poke-yellow)';
+        }
+        
+        card.innerHTML = '<div class="level-num">' + level.id + '</div>' +
+          '<div class="level-title">' + level.title + '</div>' +
+          '<div class="level-subtitle arabic-font" style="font-size:2rem;">' + level.subtitle + '</div>' +
+          '<div class="level-status"><span>' + statusIcon + '</span><span style="color:' + statusColor + ';">' + statusText + '</span></div>';
+        
+        if (unlocked) {
+          var btnContainer = document.createElement('div');
+          btnContainer.className = 'mode-btns';
+          btnContainer.innerHTML = '<button class="mode-btn" onclick="startMode(' + level.id + ', \'learn\')">📖 Belajar</button>' +
+            '<button class="mode-btn" onclick="startMode(' + level.id + ', \'practice\')">✏️ Latihan</button>' +
+            '<button class="mode-btn" onclick="startMode(' + level.id + ', \'test\')">🎯 Tes</button>';
+          card.appendChild(btnContainer);
+        }
+        
+        grid.appendChild(card);
+      }
+    }
+
+    // ========== MODE LAUNCHER ==========
+    function startMode(levelId, mode) {
+      currentLevel = LEVELS[levelId - 1];
+      currentMode = mode;
+      
+      hideAllScreens();
+      
+      if (mode === 'learn') {
+        flashcardIndex = 0;
+        showLearnScreen();
+      } else if (mode === 'practice') {
+        practiceIndex = 0;
+        showPracticeScreen();
+      } else if (mode === 'test') {
+        showTestScreen();
+      }
+    }
+
+    function hideAllScreens() {
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) {
+        screens[i].classList.remove('active');
+      }
+    }
+
+    function backToMenu() {
+      hideAllScreens();
+      document.getElementById('menuScreen').classList.add('active');
+      if (testTimer) {
+        clearInterval(testTimer);
+        testTimer = null;
+      }
+    }
+
+    // ========== LEARN MODE (FLASHCARDS) ==========
+    function showLearnScreen() {
+      document.getElementById('learnScreen').classList.add('active');
+      document.getElementById('learnTitle').textContent = currentLevel.title + ': Belajar';
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      var letter = currentLevel.letters[flashcardIndex];
+      document.getElementById('flashcardLetter').textContent = letter.ar;
+      document.getElementById('flashcardName').textContent = letter.name;
+      document.getElementById('flashcardSound').textContent = 'Bunyi: ' + letter.sound;
+      document.getElementById('flashcardProgress').textContent = (flashcardIndex + 1) + ' / ' + currentLevel.letters.length;
+      
+      var formsDiv = document.getElementById('flashcardForms');
+      formsDiv.innerHTML = '';
+      if (letter.forms) {
+        var positions = [
+          {key: 'alone', label: 'Sendiri'},
+          {key: 'start', label: 'Awal'},
+          {key: 'mid', label: 'Tengah'},
+          {key: 'end', label: 'Akhir'}
+        ];
+        for (var i = 0; i < positions.length; i++) {
+          var pos = positions[i];
+          var formDiv = document.createElement('div');
+          formDiv.className = 'letter-form';
+          formDiv.innerHTML = '<div class="letter-form-label">' + pos.label + '</div>' +
+            '<div class="letter-form-char">' + letter.forms[pos.key] + '</div>';
+          formsDiv.appendChild(formDiv);
+        }
+      }
+    }
+
+    function nextFlashcard() {
+      if (flashcardIndex < currentLevel.letters.length - 1) {
+        flashcardIndex++;
+        renderFlashcard();
+      }
+    }
+
+    function prevFlashcard() {
+      if (flashcardIndex > 0) {
+        flashcardIndex--;
+        renderFlashcard();
+      }
+    }
+
+    // ========== PRACTICE MODE ==========
+    function showPracticeScreen() {
+      document.getElementById('practiceScreen').classList.add('active');
+      document.getElementById('practiceTitle').textContent = currentLevel.title + ': Latihan';
+      renderPractice();
+    }
+
+    function renderPractice() {
+      var correctLetter = currentLevel.letters[practiceIndex % currentLevel.letters.length];
+      document.getElementById('practiceLetter').textContent = correctLetter.ar;
+      
+      var options = generateOptions(correctLetter, currentLevel.letters);
+      var optionsDiv = document.getElementById('practiceOptions');
+      optionsDiv.innerHTML = '';
+      
+      for (var i = 0; i < options.length; i++) {
+        var opt = options[i];
+        var btn = document.createElement('div');
+        btn.className = 'quiz-option';
+        btn.textContent = opt.name;
+        btn.setAttribute('data-correct', opt.correct ? '1' : '0');
+        btn.onclick = function() { checkPracticeAnswer(this); };
+        optionsDiv.appendChild(btn);
+      }
+      
+      document.getElementById('practiceFeedback').innerHTML = '';
+    }
+
+    function checkPracticeAnswer(btn) {
+      var correct = btn.getAttribute('data-correct') === '1';
+      var allBtns = document.querySelectorAll('#practiceOptions .quiz-option');
+      for (var i = 0; i < allBtns.length; i++) {
+        allBtns[i].onclick = null;
+        if (allBtns[i].getAttribute('data-correct') === '1') {
+          allBtns[i].classList.add('correct');
+        }
+      }
+      if (correct) {
+        btn.classList.add('correct');
+        document.getElementById('practiceFeedback').innerHTML = '<span style="color:var(--poke-green);">✅ Benar!</span>';
+      } else {
+        btn.classList.add('wrong');
+        document.getElementById('practiceFeedback').innerHTML = '<span style="color:var(--poke-red);">❌ Salah! Coba lagi di soal berikutnya.</span>';
+      }
+    }
+
+    function nextPractice() {
+      practiceIndex++;
+      renderPractice();
+    }
+
+    // ========== TEST MODE ==========
+    function showTestScreen() {
+      document.getElementById('testScreen').classList.add('active');
+      document.getElementById('testTitle').textContent = currentLevel.title + ': Tes';
+      
+      testQuestions = generateTestQuestions(currentLevel.letters, 10);
+      testAnswers = [];
+      testStartTime = Date.now();
+      
+      var progressDiv = document.getElementById('testProgress');
+      progressDiv.innerHTML = '';
+      for (var i = 0; i < 10; i++) {
+        var dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        progressDiv.appendChild(dot);
+      }
+      
+      startTestTimer();
+      renderTestQuestion(0);
+    }
+
+    function generateTestQuestions(letters, count) {
+      var questions = [];
+      for (var i = 0; i < count; i++) {
+        var correctLetter = letters[Math.floor(Math.random() * letters.length)];
+        questions.push({
+          letter: correctLetter,
+          options: generateOptions(correctLetter, letters)
+        });
+      }
+      return questions;
+    }
+
+    function generateOptions(correctLetter, allLetters) {
+      var options = [{ name: correctLetter.name, correct: true }];
+      var used = [correctLetter.name];
+      
+      while (options.length < 4 && used.length < allLetters.length) {
+        var randomLetter = allLetters[Math.floor(Math.random() * allLetters.length)];
+        if (used.indexOf(randomLetter.name) === -1) {
+          options.push({ name: randomLetter.name, correct: false });
+          used.push(randomLetter.name);
+        }
+      }
+      
+      // Shuffle
+      for (var i = options.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = options[i];
+        options[i] = options[j];
+        options[j] = temp;
+      }
+      
+      return options;
+    }
+
+    function renderTestQuestion(index) {
+      if (index >= testQuestions.length) {
+        finishTest();
+        return;
+      }
+      
+      var q = testQuestions[index];
+      document.getElementById('testQuestionNum').textContent = (index + 1);
+      document.getElementById('testLetter').textContent = q.letter.ar;
+      
+      var optionsDiv = document.getElementById('testOptions');
+      optionsDiv.innerHTML = '';
+      
+      for (var i = 0; i < q.options.length; i++) {
+        var opt = q.options[i];
+        var btn = document.createElement('div');
+        btn.className = 'quiz-option';
+        btn.textContent = opt.name;
+        btn.setAttribute('data-correct', opt.correct ? '1' : '0');
+        btn.setAttribute('data-index', index);
+        btn.onclick = function() { checkTestAnswer(this); };
+        optionsDiv.appendChild(btn);
+      }
+      
+      document.getElementById('testFeedback').innerHTML = '';
+    }
+
+    function checkTestAnswer(btn) {
+      var index = parseInt(btn.getAttribute('data-index'));
+      var correct = btn.getAttribute('data-correct') === '1';
+      
+      testAnswers.push({ correct: correct });
+      
+      var allBtns = document.querySelectorAll('#testOptions .quiz-option');
+      for (var i = 0; i < allBtns.length; i++) {
+        allBtns[i].onclick = null;
+        if (allBtns[i].getAttribute('data-correct') === '1') {
+          allBtns[i].classList.add('correct');
+        }
+      }
+      
+      if (correct) {
+        btn.classList.add('correct');
+        document.getElementById('testFeedback').innerHTML = '<span style="color:var(--poke-green);">✅ Benar!</span>';
+        window.druygonProfile.addXP(15);
+        window.druygonProfile.addCoins(8);
+      } else {
+        btn.classList.add('wrong');
+        document.getElementById('testFeedback').innerHTML = '<span style="color:var(--poke-red);">❌ Salah!</span>';
+      }
+      
+      var dots = document.querySelectorAll('#testProgress .progress-dot');
+      if (dots[index]) {
+        dots[index].classList.add(correct ? 'correct' : 'wrong');
+        dots[index].classList.add('answered');
+      }
+      
+      setTimeout(function() {
+        renderTestQuestion(index + 1);
+      }, 1500);
+    }
+
+    function startTestTimer() {
+      var timeLeft = 180; // 3 minutes
+      testTimer = setInterval(function() {
+        timeLeft--;
+        var mins = Math.floor(timeLeft / 60);
+        var secs = timeLeft % 60;
+        document.getElementById('testTimer').textContent = '⏱️ ' + 
+          (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+        
+        if (timeLeft <= 0) {
+          clearInterval(testTimer);
+          finishTest();
+        }
+      }, 1000);
+    }
+
+    function finishTest() {
+      if (testTimer) {
+        clearInterval(testTimer);
+        testTimer = null;
+      }
+      
+      var correct = 0;
+      for (var i = 0; i < testAnswers.length; i++) {
+        if (testAnswers[i].correct) correct++;
+      }
+      var total = testQuestions.length;
+      var wrong = total - correct;
+      var timeElapsed = Math.floor((Date.now() - testStartTime) / 1000);
+      var percentage = Math.floor((correct / total) * 100);
+      
+      var totalXP = correct * 15;
+      var totalCoins = correct * 8;
+      var bonusXP = 0;
+      var bonusCoins = 0;
+      
+      if (percentage >= 80) {
+        bonusXP = 50;
+        bonusCoins = 25;
+        totalXP += bonusXP;
+        totalCoins += bonusCoins;
+      }
+      
+      recordTestResult(currentLevel.id, correct, total);
+      
+      hideAllScreens();
+      document.getElementById('resultScreen').classList.add('active');
+      
+      if (percentage >= 80) {
+        document.getElementById('resultEmoji').textContent = '🎉🎊✨';
+        document.getElementById('resultTitle').textContent = 'SELAMAT!';
+        document.getElementById('resultMessage').textContent = 'Kamu berhasil menangkap Pokemon baru!';
+        window.showRewardPopup(totalXP, totalCoins, false);
+      } else {
+        document.getElementById('resultEmoji').textContent = '😢';
+        document.getElementById('resultTitle').textContent = 'BELUM LULUS';
+        document.getElementById('resultMessage').textContent = 'Skor minimum 80% untuk lulus. Coba lagi!';
+      }
+      
+      document.getElementById('resultScore').textContent = correct + '/' + total;
+      document.getElementById('resultCorrect').textContent = correct;
+      document.getElementById('resultWrong').textContent = wrong;
+      
+      var mins = Math.floor(timeElapsed / 60);
+      var secs = timeElapsed % 60;
+      document.getElementById('resultTime').textContent = 
+        (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+      
+      document.getElementById('resultXP').textContent = '+' + totalXP + ' XP' + (bonusXP > 0 ? ' (bonus!)' : '');
+      document.getElementById('resultCoins').textContent = '+' + totalCoins + ' Koin' + (bonusCoins > 0 ? ' (bonus!)' : '');
+    }
+
+    // ========== INIT ==========
+    window.onload = function() {
+      renderMenu();
+    };
+  </script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+<script src="../js/analytics.js"></script>
+</body>
+</html>

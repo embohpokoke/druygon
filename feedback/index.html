@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback & Planning - Druygon Portal</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <script src="../js/profile.js?v=20260223"></script>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <div class="stars" id="stars"></div>
+
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="portal">
+    <div class="page-header slide-in">
+      <h1>📋 Feedback & Planning</h1>
+      <p>Ceritain pengalaman kamu atau ide game baru yang seru!</p>
+    </div>
+
+    <!-- Mode Selection Tabs -->
+    <div class="mode-tabs slide-in" style="animation-delay: 0.1s">
+      <button class="mode-tab active" onclick="switchMode('feedback')" id="tabFeedback">
+        <span class="tab-emoji">🎮</span>
+        Portal Feedback
+      </button>
+      <button class="mode-tab" onclick="switchMode('planning')" id="tabPlanning">
+        <span class="tab-emoji">🚀</span>
+        What's Next
+      </button>
+    </div>
+
+    <!-- Wizard Screen -->
+    <div id="wizardScreen" class="wizard-container poke-card slide-in" style="animation-delay: 0.2s">
+      <div class="step-progress" id="stepProgress">Langkah 1</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+      </div>
+
+      <div class="question-card">
+        <h2 id="questionTitle"></h2>
+        <div class="input-container" id="inputContainer"></div>
+      </div>
+
+      <div class="wizard-nav">
+        <button class="btn-prev" id="prevBtn" onclick="previousStep()">⬅️ Kembali</button>
+        <button class="btn-next" id="nextBtn" onclick="nextStep()" disabled>Lanjut ➡️</button>
+      </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="poke-card hide">
+      <div class="loading-screen">
+        <div class="pokeball-spinner">⚪</div>
+        <div class="loading-text">AI sedang menganalisis...</div>
+        <p style="color: #888; margin-top: 20px;">Tunggu sebentar ya! 🔮</p>
+      </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="resultScreen" class="hide">
+      <div class="result-container">
+        <div class="result-content poke-card" id="resultContent"></div>
+        <div class="result-actions">
+          <button class="btn-save" onclick="saveResult()">💾 Simpan</button>
+          <button class="btn-another" onclick="resetForm()">📝 Submit Lagi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="wizard.js?v=20260222b"></script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="index.html" class="active">
+      <div class="nav-icon">📋</div>
+      <div>Feedback</div>
+    </a>
+  </nav>
+
+  <script>
+    // Stars background animation (ES5)
+    var starsContainer = document.getElementById('stars');
+    for (var i = 0; i < 30; i++) {
+      var star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (2 + Math.random() * 3) + 's';
+      starsContainer.appendChild(star);
+    }
+  </script>
+
+  <script src="../js/analytics.js?v=20260222b"></script>
+</body>
+</html>

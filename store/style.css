@@ -1,0 +1,261 @@
+/* Store Page Styles */
+.store-container {
+  max-width: 800px; margin: 0 auto;
+  padding: 60px 16px 40px;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center; margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+  background: linear-gradient(180deg, var(--poke-yellow), var(--poke-red));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+/* Balance Card */
+.balance-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #2a2a4a, #1e1e3a);
+  border: 3px solid var(--poke-yellow);
+}
+
+.balance-icon {
+  font-size: 3rem;
+  animation: bounce 2s infinite;
+}
+
+.balance-label {
+  font-size: 0.85rem;
+  color: #aaa;
+  font-family: 'Press Start 2P', monospace;
+  margin-bottom: 5px;
+}
+
+.balance-value {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--poke-yellow);
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* Section Header */
+.section-header {
+  margin: 30px 0 20px;
+}
+
+.section-header h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.2rem;
+  color: var(--poke-yellow);
+  margin-bottom: 8px;
+}
+
+.section-header p {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Items Grid */
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.item-card {
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+  border-color: #fff;
+}
+
+.item-card.legendary {
+  border-color: var(--poke-purple);
+  background: linear-gradient(145deg, #3a2a4a, #2e1e3a);
+  position: relative;
+  overflow: hidden;
+}
+
+.item-card.legendary::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(156,39,176,0.1) 0%, transparent 70%);
+  animation: glow 3s ease-in-out infinite;
+}
+
+.item-badge {
+  position: absolute;
+  top: -5px; right: -5px;
+  background: linear-gradient(135deg, var(--poke-purple), #E040FB);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.6rem;
+  font-weight: 900;
+  font-family: 'Press Start 2P', monospace;
+  transform: rotate(5deg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  overflow: hidden;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-emoji {
+  font-size: 4rem;
+  margin: 15px 0;
+  filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.5));
+  animation: bounce 3s infinite;
+}
+
+.item-card h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9rem;
+  color: var(--poke-yellow);
+  margin: 10px 0;
+}
+
+.item-desc {
+  color: #ccc;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.item-desc .highlight {
+  color: var(--poke-yellow);
+  font-weight: 900;
+}
+
+.item-price {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--poke-yellow);
+  margin: 12px 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8rem;
+}
+
+.item-owned {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.item-card .poke-btn {
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+/* Purchase Overlay */
+.purchase-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.purchase-overlay.show {
+  display: flex;
+  animation: fadeIn 0.3s;
+}
+
+.purchase-popup {
+  background: linear-gradient(145deg, #2a2a4a, #1e1e3a);
+  border: 3px solid var(--poke-yellow);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  min-width: 280px;
+  animation: popIn 0.3s ease;
+}
+
+.purchase-emoji {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  animation: bounce 0.5s ease infinite;
+}
+
+.purchase-text {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.tips {
+  background: rgba(255,203,5,0.05);
+  border-color: rgba(255,203,5,0.3);
+}
+
+.tips p {
+  margin: 6px 0;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .item-card.legendary {
+    grid-column: 1 / -1;
+  }
+  
+  .balance-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .balance-value {
+    font-size: 2rem;
+  }
+  
+  .item-emoji {
+    font-size: 3rem;
+  }
+  
+  .item-card h3 {
+    font-size: 0.75rem;
+  }
+  
+  .item-desc {
+    font-size: 0.75rem;
+  }
+}

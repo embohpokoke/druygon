@@ -1,0 +1,310 @@
+/* Collection Page Styles */
+.collection-container {
+  max-width: 900px; margin: 0 auto;
+  padding: 60px 16px 40px;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center; margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+  background: linear-gradient(180deg, var(--poke-yellow), var(--poke-red));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+.catch-count {
+  font-size: 1.1rem; font-weight: 900;
+  color: var(--poke-yellow);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9rem;
+}
+
+/* Team Section */
+.team-section {
+  margin-bottom: 30px;
+}
+
+.team-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.team-slot {
+  background: rgba(0,0,0,0.3);
+  border: 2px dashed #555;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.team-slot.empty {
+  opacity: 0.5;
+}
+
+.team-slot.filled {
+  background: linear-gradient(145deg, #2a2a4a, #1e1e3a);
+  border: 2px solid var(--poke-yellow);
+  opacity: 1;
+}
+
+.slot-icon {
+  font-size: 2rem;
+  color: #555;
+}
+
+.slot-label {
+  font-size: 0.75rem;
+  color: #777;
+  margin-top: 5px;
+}
+
+.slot-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.slot-name {
+  font-weight: 900;
+  color: var(--poke-yellow);
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.slot-cp {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 5px; right: 5px;
+  background: var(--poke-red);
+  border: none;
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  transition: all 0.2s;
+}
+
+.remove-btn:hover {
+  transform: scale(1.1);
+  background: #ff5722;
+}
+
+/* Collection Header */
+.collection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.filter-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: 2px solid #555;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.3);
+  color: #aaa;
+  cursor: pointer;
+  font-family: 'Nunito';
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover {
+  border-color: var(--poke-yellow);
+  color: var(--poke-yellow);
+}
+
+.filter-btn.active {
+  background: var(--poke-yellow);
+  color: var(--poke-dark);
+  border-color: var(--poke-yellow);
+}
+
+/* Collection Grid */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.pokemon-card {
+  padding: 16px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.pokemon-card.caught {
+  cursor: default;
+}
+
+.pokemon-card.caught:hover {
+  transform: translateY(-5px);
+  border-color: #fff;
+}
+
+.pokemon-card.uncaught {
+  opacity: 0.5;
+  filter: grayscale(80%);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+}
+
+.rarity {
+  color: var(--poke-yellow);
+}
+
+.cp {
+  font-weight: 900;
+  color: var(--poke-blue);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+}
+
+.pokemon-sprite {
+  font-size: 3.5rem;
+  margin: 10px 0;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+}
+
+.pokemon-sprite.silhouette {
+  filter: brightness(0) opacity(0.3);
+}
+
+.pokemon-card h4 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8rem;
+  color: var(--poke-yellow);
+  margin: 8px 0;
+}
+
+.pokemon-type {
+  background: rgba(255,203,5,0.2);
+  border: 1px solid rgba(255,203,5,0.3);
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  color: #fff;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.pokemon-meta {
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.7rem;
+  color: #aaa;
+  margin: 8px 0;
+}
+
+.caught-info {
+  font-size: 0.7rem;
+  color: #777;
+  margin-top: 8px;
+}
+
+.hint-text {
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.add-to-team-btn {
+  width: 100%;
+  margin-top: 10px;
+  font-size: 0.75rem;
+  padding: 8px 12px;
+}
+
+.tips {
+  background: rgba(255,203,5,0.05);
+  border-color: rgba(255,203,5,0.3);
+}
+
+.tips p {
+  margin: 6px 0;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .collection-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  
+  .pokemon-sprite {
+    font-size: 2.5rem;
+  }
+  
+  .filter-btns {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .collection-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .pokemon-sprite {
+    font-size: 3.5rem;
+  }
+  
+  .pokemon-card h4 {
+    font-size: 1rem;
+    font-weight: 900;
+  }
+  
+  .pokemon-type,
+  .pokemon-meta,
+  .caught-info,
+  .hint-text {
+    font-size: 14px;
+  }
+  
+  .caught-info {
+    font-size: 13px;
+  }
+  
+  .filter-btn {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+    min-height: 44px;
+  }
+}

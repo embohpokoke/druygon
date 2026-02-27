@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Belajar Sholat — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260217">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    .sholat-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    .sholat-header { text-align: center; margin-bottom: 30px; }
+    .sholat-header h1 { font-family: 'Press Start 2P', monospace; font-size: clamp(1.2rem, 5vw, 1.8rem); color: var(--poke-yellow); margin: 15px 0; }
+    .sholat-header .subtitle { color: #aaa; font-size: 0.95rem; }
+    
+    /* Level Cards */
+    .level-card { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 3px solid #555; border-radius: 20px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; transition: all 0.3s; }
+    .level-card.unlocked { border-color: var(--poke-yellow); }
+    .level-card.unlocked:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,203,5,0.3); }
+    .level-card.locked { opacity: 0.5; cursor: not-allowed; }
+    .level-card.locked::after { content: '🔒'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; opacity: 0.3; pointer-events: none; }
+    
+    .level-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .level-title { font-family: 'Press Start 2P', monospace; font-size: 1rem; color: var(--poke-yellow); }
+    .level-num { background: var(--poke-yellow); color: var(--poke-dark); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; }
+    .level-desc { color: #ccc; font-size: 0.9rem; margin-bottom: 15px; }
+    .level-progress { font-size: 0.8rem; color: #888; margin-bottom: 12px; }
+    .level-status { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; margin-bottom: 10px; }
+    .level-status.passed { background: var(--poke-green); color: white; }
+    .level-status.locked { background: #555; color: #aaa; }
+    .level-status.available { background: var(--poke-blue); color: white; }
+    
+    .mode-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .mode-btn { flex: 1; min-width: 100px; padding: 10px 16px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; border: 2px solid var(--poke-yellow); border-radius: 12px; background: linear-gradient(135deg, var(--poke-blue), #5b6bea); color: white; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .mode-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,203,5,0.4); }
+    .mode-btn:active { transform: scale(0.97); }
+    .mode-btn.test { background: linear-gradient(135deg, var(--poke-red), #ff6b35); }
+    
+    /* Learning Mode */
+    .learning-screen { display: none; }
+    .learning-screen.active { display: block; }
+    .step-card { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 2px solid var(--poke-yellow); border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+    .step-num { background: var(--poke-yellow); color: var(--poke-dark); padding: 6px 14px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; display: inline-block; margin-bottom: 12px; }
+    .step-title { font-size: 1.3rem; font-weight: 900; color: var(--poke-yellow); margin-bottom: 10px; }
+    .step-emoji { font-size: 3rem; margin: 10px 0; text-align: center; }
+    .step-desc { color: #ddd; line-height: 1.6; margin-bottom: 12px; }
+    
+    .arabic-text { font-family: 'Amiri', serif; font-size: 2.2rem; text-align: center; direction: rtl; color: var(--poke-yellow); line-height: 1.8; margin: 15px 0; font-weight: 700; }
+    .transliteration { font-style: italic; color: #8BC34A; font-size: 1.1rem; text-align: center; margin: 10px 0; }
+    .meaning { color: #aaa; font-size: 0.95rem; text-align: center; margin: 8px 0; }
+    
+    .nav-buttons { display: flex; gap: 12px; margin-top: 20px; }
+    .nav-btn { flex: 1; padding: 12px; font-weight: 700; border: 2px solid var(--poke-yellow); border-radius: 12px; background: linear-gradient(135deg, #555, #444); color: white; cursor: pointer; transition: all 0.3s; }
+    .nav-btn:hover { background: var(--poke-yellow); color: var(--poke-dark); }
+    .nav-btn.primary { background: linear-gradient(135deg, var(--poke-green), #66BB6A); }
+    .nav-btn.primary:hover { transform: scale(1.05); }
+    
+    /* Quiz Mode */
+    .quiz-screen { display: none; }
+    .quiz-screen.active { display: block; }
+    .quiz-header { text-align: center; margin-bottom: 25px; }
+    .quiz-progress { color: #aaa; font-size: 0.9rem; margin-bottom: 8px; }
+    .quiz-score { font-size: 1.5rem; font-weight: 900; color: var(--poke-yellow); }
+    
+    .question-card { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 3px solid var(--poke-yellow); border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+    .question-text { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 20px; text-align: center; }
+    .options-grid { display: grid; gap: 12px; }
+    .option-btn { padding: 15px; font-size: 1rem; font-weight: 700; border: 2px solid #555; border-radius: 12px; background: linear-gradient(145deg, #3a3a5a, #2a2a4a); color: white; cursor: pointer; transition: all 0.3s; text-align: left; }
+    .option-btn:hover { border-color: var(--poke-yellow); transform: translateX(5px); }
+    .option-btn.correct { background: linear-gradient(135deg, var(--poke-green), #66BB6A); border-color: var(--poke-green); }
+    .option-btn.wrong { background: linear-gradient(135deg, var(--poke-red), #ff6b35); border-color: var(--poke-red); }
+    .option-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    .feedback-box { padding: 15px; border-radius: 12px; margin-top: 15px; text-align: center; font-weight: 700; display: none; }
+    .feedback-box.show { display: block; }
+    .feedback-box.correct { background: rgba(76,175,80,0.2); border: 2px solid var(--poke-green); color: var(--poke-green); }
+    .feedback-box.wrong { background: rgba(227,53,13,0.2); border: 2px solid var(--poke-red); color: #ff6b35; }
+    
+    /* Result Screen */
+    .result-screen { display: none; text-align: center; }
+    .result-screen.active { display: block; }
+    .result-emoji { font-size: 5rem; margin: 20px 0; }
+    .result-title { font-family: 'Press Start 2P', monospace; font-size: 1.5rem; color: var(--poke-yellow); margin-bottom: 15px; }
+    .result-message { color: #ccc; font-size: 1.1rem; margin-bottom: 20px; line-height: 1.6; }
+    .result-stats { background: linear-gradient(145deg, #2a2a4a, #1e1e3a); border: 2px solid var(--poke-yellow); border-radius: 15px; padding: 20px; margin: 20px 0; text-align: left; }
+    .result-stats p { margin: 8px 0; font-size: 1.05rem; }
+    .result-stats .highlight { color: var(--poke-yellow); font-weight: 900; font-size: 1.2rem; }
+    
+    @media (max-width: 600px) {
+      .sholat-container { padding: 15px; }
+      .arabic-text { font-size: 1.8rem; }
+      .mode-btns { flex-direction: column; }
+      .mode-btn { min-width: auto; }
+    }
+  </style>
+  <script src="../js/profile.js"></script>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="sholat-container">
+    <!-- MAIN MENU -->
+    <div id="mainMenu">
+      <div class="sholat-header slide-in">
+        <div style="font-size: 3.5rem;">🕌🤲</div>
+        <h1>Belajar Sholat</h1>
+        <p class="subtitle">Kuasai gerakan sholat seperti jurus Pokemon! ⚡</p>
+      </div>
+
+      <div id="levelList">
+        <!-- Levels will be generated by JS -->
+      </div>
+    </div>
+
+    <!-- LEARNING SCREEN -->
+    <div id="learningScreen" class="learning-screen">
+      <div id="learningContent"></div>
+      <div class="nav-buttons">
+        <button class="nav-btn" onclick="backToMenu()">⬅ Kembali</button>
+        <button class="nav-btn primary" id="nextStepBtn" onclick="nextStep()">Lanjut ➡</button>
+      </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="quiz-screen">
+      <div class="quiz-header">
+        <div class="quiz-progress" id="quizProgress">Pertanyaan 1/10</div>
+        <div class="quiz-score" id="quizScore">Skor: 0 | Benar: 0/10</div>
+      </div>
+      <div id="quizContent"></div>
+      <div class="nav-buttons" style="margin-top: 20px;">
+        <button class="nav-btn" onclick="backToMenu()">⬅ Kembali</button>
+      </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="resultScreen" class="result-screen">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-title" id="resultTitle">SELAMAT!</div>
+      <div class="result-message" id="resultMessage"></div>
+      <div class="result-stats">
+        <p>📊 Skor Akhir: <span class="highlight" id="finalScore">0</span></p>
+        <p>✅ Jawaban Benar: <span class="highlight" id="finalCorrect">0/10</span></p>
+        <p>💰 Koin Didapat: <span class="highlight" id="finalCoins">0</span></p>
+        <p>⭐ XP Didapat: <span class="highlight" id="finalXP">0</span></p>
+      </div>
+      <button class="poke-btn" onclick="backToMenu()">🔄 Kembali ke Menu</button>
+    </div>
+  </div>
+
+  <script>
+    // === DATA STRUCTURE ===
+    var sholatData = {
+      1: {
+        title: '🚰 Wudhu',
+        desc: 'Belajar urutan dan doa wudhu yang benar',
+        emoji: '🚰',
+        steps: [
+          { title: 'Niat Wudhu', emoji: '🤲', desc: 'Niat di dalam hati sebelum memulai wudhu' },
+          { title: 'Cuci Tangan', emoji: '🖐️', desc: 'Cuci kedua telapak tangan sebanyak 3 kali', detail: 'Mulai dari pergelangan hingga ujung jari' },
+          { title: 'Kumur-kumur', emoji: '👄', desc: 'Berkumur 3 kali dengan air', detail: 'Bersihkan seluruh mulut' },
+          { title: 'Cuci Hidung', emoji: '👃', desc: 'Hirup air ke hidung lalu keluarkan, 3 kali', detail: 'Gunakan tangan kiri untuk mengeluarkan' },
+          { title: 'Cuci Muka', emoji: '😊', desc: 'Basuh seluruh wajah 3 kali', detail: 'Dari dahi sampai dagu, dari telinga ke telinga' },
+          { title: 'Cuci Tangan Sampai Siku', emoji: '💪', desc: 'Cuci tangan kanan lalu kiri hingga siku, masing-masing 3 kali' },
+          { title: 'Usap Kepala', emoji: '👨', desc: 'Basahi tangan lalu usap kepala 1 kali', detail: 'Dari depan ke belakang' },
+          { title: 'Usap Telinga', emoji: '👂', desc: 'Usap bagian dalam dan luar telinga dengan jari 1 kali' },
+          { title: 'Cuci Kaki', emoji: '🦶', desc: 'Cuci kaki kanan lalu kiri sampai mata kaki, masing-masing 3 kali' }
+        ],
+        doa: {
+          sebelum: {
+            arab: 'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ',
+            latin: 'Bismillahir rahmaanir rahiim',
+            arti: 'Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang'
+          },
+          sesudah: {
+            arab: 'أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُوْلُ اللهِ',
+            latin: 'Asyhadu alla ilaha illallah wa asyhadu anna Muhammadar rasuulullah',
+            arti: 'Aku bersaksi bahwa tiada Tuhan selain Allah dan aku bersaksi bahwa Muhammad adalah utusan Allah'
+          }
+        }
+      },
+      2: {
+        title: '🧍 Gerakan Sholat',
+        desc: 'Pelajari nama dan urutan gerakan dalam sholat',
+        emoji: '🧍',
+        steps: [
+          { title: 'Berdiri (Qiyam)', emoji: '🧍', desc: 'Berdiri tegak menghadap kiblat', detail: 'Posisi awal sholat, tangan di samping badan' },
+          { title: 'Takbiratul Ihram', emoji: '🙌', desc: 'Angkat kedua tangan sejajar telinga sambil ucapkan "Allahu Akbar"', detail: 'Lalu letakkan tangan kanan di atas tangan kiri di dada' },
+          { title: 'Ruku', emoji: '🙇', desc: 'Membungkuk hingga punggung lurus, tangan di lutut', detail: 'Kepala sejajar dengan punggung' },
+          { title: 'Itidal', emoji: '🧍', desc: 'Bangkit dari ruku kembali berdiri tegak', detail: 'Tangan kembali di samping badan' },
+          { title: 'Sujud', emoji: '🤲', desc: 'Menungging dengan dahi, hidung, kedua telapak tangan, lutut, dan ujung kaki menyentuh lantai', detail: 'Sujud dilakukan 2 kali' },
+          { title: 'Duduk Antara 2 Sujud', emoji: '🧘', desc: 'Duduk sejenak di antara dua sujud', detail: 'Kaki kiri dilipat untuk duduk, kaki kanan ditegakkan' },
+          { title: 'Tasyahud Awal', emoji: '☝️', desc: 'Duduk untuk membaca tasyahud awal (setelah rakaat ke-2)', detail: 'Jari telunjuk tangan kanan diangkat saat menyebut nama Allah' },
+          { title: 'Tasyahud Akhir', emoji: '☝️', desc: 'Duduk untuk membaca tasyahud akhir dan sholawat', detail: 'Di rakaat terakhir sebelum salam' },
+          { title: 'Salam', emoji: '👋', desc: 'Mengucapkan salam ke kanan dan ke kiri', detail: 'Assalamu alaikum warahmatullah (kanan), lalu (kiri)' }
+        ]
+      },
+      3: {
+        title: '📖 Bacaan Sholat',
+        desc: 'Hafalkan bacaan-bacaan penting dalam sholat',
+        emoji: '📖',
+        bacaan: [
+          {
+            nama: 'Takbiratul Ihram',
+            arab: 'اَللهُ أَكْبَرُ',
+            latin: 'Allahu Akbar',
+            arti: 'Allah Maha Besar',
+            kapan: 'Saat memulai sholat dengan mengangkat kedua tangan'
+          },
+          {
+            nama: 'Doa Iftitah',
+            arab: 'اللهُ أَكْبَرُ كَبِيْرًا وَالْحَمْدُ لِلَّهِ كَثِيْرًا وَسُبْحَانَ اللهِ بُكْرَةً وَأَصِيْلاً',
+            latin: 'Allahu akbar kabira, walhamdulillahi katsira, wa subhanallahi bukratan wa ashila',
+            arti: 'Allah Maha Besar dengan sebesar-besarnya, segala puji bagi Allah dengan pujian yang banyak, Maha Suci Allah pada waktu pagi dan petang',
+            kapan: 'Setelah takbir, sebelum membaca Al-Fatihah'
+          },
+          {
+            nama: 'Al-Fatihah',
+            arab: 'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ ۝ الْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِيْنَۙ ۝ الرَّحْمٰنِ الرَّحِيْمِۙ ۝ مٰلِكِ يَوْمِ الدِّيْنِۗ ۝ اِيَّاكَ نَعْبُدُ وَاِيَّاكَ نَسْتَعِيْنُۗ ۝ اِهْدِنَا الصِّرَاطَ الْمُسْتَقِيْمَۙ ۝ صِرَاطَ الَّذِيْنَ اَنْعَمْتَ عَلَيْهِمْ ەۙ غَيْرِ الْمَغْضُوْبِ عَلَيْهِمْ وَلَا الضَّاۤلِّيْنَ',
+            latin: 'Bismillahir rahmaanir rahiim. Alhamdulillahi rabbil alamiin. Ar-rahmaanir rahiim. Maaliki yaumiddiin. Iyyaka nabudu wa iyyaka nastaiin. Ihdinash shiratal mustaqiim. Shirathal ladziina anamta alaihim ghairil maghdhuubi alaihim waladh dhaallin.',
+            arti: 'Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Segala puji bagi Allah, Tuhan semesta alam. Yang Maha Pengasih lagi Maha Penyayang. Yang menguasai hari pembalasan. Hanya kepada-Mu kami menyembah dan hanya kepada-Mu kami meminta pertolongan. Tunjukilah kami jalan yang lurus. Yaitu jalan orang-orang yang telah Engkau beri nikmat, bukan jalan mereka yang dimurkai dan bukan pula jalan mereka yang sesat.',
+            kapan: 'Dibaca setiap rakaat saat berdiri'
+          },
+          {
+            nama: 'Bacaan Ruku',
+            arab: 'سُبْحَانَ رَبِّيَ الْعَظِيْمِ وَبِحَمْدِهٖ',
+            latin: 'Subhaana rabbiyal azhiimi wa bihamdih',
+            arti: 'Maha Suci Tuhanku Yang Maha Agung dan dengan memuji-Nya',
+            kapan: 'Saat ruku, diucapkan 3 kali'
+          },
+          {
+            nama: 'Bacaan Itidal',
+            arab: 'سَمِعَ اللهُ لِمَنْ حَمِدَهُ',
+            latin: 'Samiallahu liman hamidah',
+            arti: 'Allah mendengar orang yang memuji-Nya',
+            kapan: 'Saat bangkit dari ruku'
+          },
+          {
+            nama: 'Bacaan Itidal (lanjutan)',
+            arab: 'رَبَّنَا وَلَكَ الْحَمْدُ',
+            latin: 'Rabbana walakal hamdu',
+            arti: 'Ya Tuhan kami, bagi-Mu segala puji',
+            kapan: 'Setelah "Samiallahu liman hamidah" saat berdiri tegak'
+          },
+          {
+            nama: 'Bacaan Sujud',
+            arab: 'سُبْحَانَ رَبِّيَ الْأَعْلَى وَبِحَمْدِهٖ',
+            latin: 'Subhaana rabbiyal ala wa bihamdih',
+            arti: 'Maha Suci Tuhanku Yang Maha Tinggi dan dengan memuji-Nya',
+            kapan: 'Saat sujud, diucapkan 3 kali'
+          },
+          {
+            nama: 'Duduk Antara 2 Sujud',
+            arab: 'رَبِّ اغْفِرْ لِيْ وَارْحَمْنِيْ',
+            latin: 'Rabbighfir lii warhamnii',
+            arti: 'Ya Tuhanku, ampunilah aku dan rahmatilah aku',
+            kapan: 'Saat duduk di antara dua sujud'
+          }
+        ]
+      },
+      4: {
+        title: '🌅 Praktik Sholat Subuh',
+        desc: 'Simulasi lengkap sholat Subuh 2 rakaat',
+        emoji: '🌅',
+        simulation: [
+          { step: 1, gerakan: 'Berdiri menghadap kiblat', bacaan: 'Niat sholat Subuh', tanya: 'Apa bacaan saat memulai sholat?' },
+          { step: 2, gerakan: 'Takbiratul Ihram - angkat tangan', bacaan: 'Allahu Akbar', tanya: 'Apa arti Allahu Akbar?' },
+          { step: 3, gerakan: 'Berdiri - baca Iftitah', bacaan: 'Doa Iftitah', tanya: 'Bacaan apa yang dibaca setelah takbir?' },
+          { step: 4, gerakan: 'Berdiri - baca Fatihah', bacaan: 'Al-Fatihah', tanya: 'Apakah Al-Fatihah dibaca setiap rakaat?' },
+          { step: 5, gerakan: 'Ruku', bacaan: 'Subhaana rabbiyal azhiim', tanya: 'Apa bacaan saat ruku?' },
+          { step: 6, gerakan: 'Itidal', bacaan: 'Samiallahu liman hamidah', tanya: 'Apa bacaan saat bangkit dari ruku?' },
+          { step: 7, gerakan: 'Sujud pertama', bacaan: 'Subhaana rabbiyal ala', tanya: 'Berapa kali bacaan sujud diucapkan?' },
+          { step: 8, gerakan: 'Duduk antara 2 sujud', bacaan: 'Rabbighfir lii', tanya: 'Apa doa saat duduk antara 2 sujud?' },
+          { step: 9, gerakan: 'Sujud kedua', bacaan: 'Subhaana rabbiyal ala', tanya: 'Apakah bacaan sujud kedua sama dengan pertama?' },
+          { step: 10, gerakan: 'Bangkit untuk rakaat ke-2', bacaan: 'Allahu Akbar', tanya: 'Berapa rakaat sholat Subuh?' }
+        ]
+      },
+      5: {
+        title: '🕌 Sholat 5 Waktu',
+        desc: 'Kenali 5 waktu sholat dan jumlah rakaatnya',
+        emoji: '🕌',
+        waktu: [
+          { nama: 'Subuh', emoji: '🌅', rakaat: 2, waktu: 'Fajar hingga matahari terbit', keterangan: 'Sholat paling awal di pagi hari' },
+          { nama: 'Dzuhur', emoji: '☀️', rakaat: 4, waktu: 'Matahari tergelincir hingga bayangan sama panjang', keterangan: 'Sholat di siang hari setelah matahari bergeser' },
+          { nama: 'Ashar', emoji: '🌤️', rakaat: 4, waktu: 'Bayangan lebih panjang hingga matahari terbenam', keterangan: 'Sholat di sore hari' },
+          { nama: 'Maghrib', emoji: '🌆', rakaat: 3, waktu: 'Matahari terbenam hingga mega merah hilang', keterangan: 'Sholat setelah matahari terbenam' },
+          { nama: 'Isya', emoji: '🌙', rakaat: 4, waktu: 'Mega merah hilang hingga fajar', keterangan: 'Sholat malam hari' }
+        ]
+      }
+    };
+
+    // === QUIZ QUESTIONS ===
+    var quizQuestions = {
+      1: [ // Wudhu
+        { q: 'Apa yang harus dilakukan PERTAMA KALI saat wudhu?', options: ['Niat di dalam hati', 'Cuci tangan', 'Kumur-kumur', 'Cuci muka'], answer: 0 },
+        { q: 'Berapa kali kita mencuci tangan saat wudhu?', options: ['1 kali', '2 kali', '3 kali', '4 kali'], answer: 2 },
+        { q: 'Urutan yang BENAR setelah cuci tangan adalah...', options: ['Cuci muka', 'Kumur-kumur', 'Cuci hidung', 'Usap kepala'], answer: 1 },
+        { q: 'Bagian tubuh apa yang diusap BUKAN dicuci saat wudhu?', options: ['Tangan', 'Muka', 'Kepala', 'Kaki'], answer: 2 },
+        { q: 'Saat cuci tangan, sampai mana kita harus membasuhnya?', options: ['Sampai pergelangan', 'Sampai siku', 'Sampai bahu', 'Sampai ujung jari saja'], answer: 1 },
+        { q: 'Apa arti dari "Bismillahir rahmaanir rahiim"?', options: ['Dengan menyebut nama Allah', 'Segala puji bagi Allah', 'Allah Maha Besar', 'Tiada Tuhan selain Allah'], answer: 0 },
+        { q: 'Berapa kali kita harus sujud dalam 1 rakaat?', options: ['1 kali', '2 kali', '3 kali', '4 kali'], answer: 1 },
+        { q: 'Urutan yang benar adalah: cuci muka → ...', options: ['Cuci tangan sampai siku', 'Usap kepala', 'Cuci kaki', 'Kumur-kumur'], answer: 0 },
+        { q: 'Doa sesudah wudhu dimulai dengan kata...', options: ['Bismillah', 'Asyhadu', 'Alhamdulillah', 'Subhanallah'], answer: 1 },
+        { q: 'Apa yang terakhir dicuci saat wudhu?', options: ['Tangan', 'Muka', 'Telinga', 'Kaki'], answer: 3 }
+      ],
+      2: [ // Gerakan
+        { q: 'Apa nama gerakan berdiri tegak dalam sholat?', options: ['Qiyam', 'Ruku', 'Sujud', 'Tasyahud'], answer: 0 },
+        { q: 'Saat ruku, posisi punggung harus...', options: ['Membungkuk sedikit', 'Lurus sejajar', 'Melengkung', 'Tegak'], answer: 1 },
+        { q: 'Berapa kali kita sujud dalam 1 rakaat?', options: ['1 kali', '2 kali', '3 kali', '4 kali'], answer: 1 },
+        { q: 'Apa nama gerakan bangkit dari ruku?', options: ['Qiyam', 'Itidal', 'Sujud', 'Tasyahud'], answer: 1 },
+        { q: 'Saat takbiratul ihram, tangan diangkat setinggi...', options: ['Dada', 'Telinga', 'Kepala', 'Bahu'], answer: 1 },
+        { q: 'Urutan gerakan yang benar adalah: Ruku → ... → Sujud', options: ['Qiyam', 'Itidal', 'Tasyahud', 'Salam'], answer: 1 },
+        { q: 'Saat sujud, bagian tubuh yang TIDAK menyentuh lantai adalah...', options: ['Dahi', 'Hidung', 'Tangan', 'Punggung'], answer: 3 },
+        { q: 'Apa gerakan terakhir dalam sholat?', options: ['Tasyahud', 'Sujud', 'Salam', 'Ruku'], answer: 2 },
+        { q: 'Duduk untuk membaca tasyahud dilakukan di rakaat ke berapa?', options: ['Rakaat 1', 'Rakaat 2 dan terakhir', 'Rakaat terakhir saja', 'Setiap rakaat'], answer: 1 },
+        { q: 'Saat itidal, posisi tangan...', options: ['Di dada', 'Di samping badan', 'Diangkat', 'Di lutut'], answer: 1 }
+      ],
+      3: [ // Bacaan
+        { q: 'Apa bacaan saat takbiratul ihram?', options: ['Bismillah', 'Allahu Akbar', 'Subhanallah', 'Alhamdulillah'], answer: 1 },
+        { q: 'Apa arti "Allahu Akbar"?', options: ['Allah Maha Suci', 'Allah Maha Besar', 'Allah Maha Tinggi', 'Allah Maha Pengasih'], answer: 1 },
+        { q: 'Bacaan apa yang WAJIB dibaca di setiap rakaat?', options: ['Doa Iftitah', 'Al-Fatihah', 'Tasyahud', 'Sholawat'], answer: 1 },
+        { q: 'Apa bacaan saat ruku?', options: ['Subhaana rabbiyal ala', 'Subhaana rabbiyal azhiim', 'Samiallahu liman hamidah', 'Rabbighfir lii'], answer: 1 },
+        { q: 'Apa bacaan saat sujud?', options: ['Subhaana rabbiyal ala', 'Subhaana rabbiyal azhiim', 'Samiallahu liman hamidah', 'Rabbana walakal hamdu'], answer: 0 },
+        { q: 'Bacaan "Samiallahu liman hamidah" dibaca saat...', options: ['Ruku', 'Sujud', 'Bangkit dari ruku (itidal)', 'Duduk'], answer: 2 },
+        { q: 'Berapa kali bacaan ruku diucapkan (minimal)?', options: ['1 kali', '2 kali', '3 kali', '4 kali'], answer: 2 },
+        { q: 'Doa "Rabbighfir lii warhamnii" artinya...', options: ['Allah mendengar pujian', 'Ya Tuhan ampunilah dan rahmatilah aku', 'Maha Suci Tuhanku', 'Segala puji bagi Allah'], answer: 1 },
+        { q: 'Al-Fatihah dibaca saat posisi...', options: ['Berdiri', 'Ruku', 'Sujud', 'Duduk'], answer: 0 },
+        { q: 'Doa Iftitah dibaca...', options: ['Setiap rakaat', 'Hanya di rakaat pertama', 'Hanya di rakaat terakhir', 'Saat sujud'], answer: 1 }
+      ],
+      4: [ // Praktik Subuh
+        { q: 'Berapa rakaat sholat Subuh?', options: ['2 rakaat', '3 rakaat', '4 rakaat', '5 rakaat'], answer: 0 },
+        { q: 'Setelah takbir, bacaan apa yang dibaca?', options: ['Al-Fatihah', 'Doa Iftitah', 'Tasyahud', 'Sholawat'], answer: 1 },
+        { q: 'Apakah Al-Fatihah dibaca di rakaat ke-2?', options: ['Ya, setiap rakaat', 'Tidak, hanya rakaat 1', 'Hanya di rakaat terakhir', 'Tidak wajib'], answer: 0 },
+        { q: 'Urutan yang benar setelah ruku adalah...', options: ['Sujud', 'Itidal', 'Tasyahud', 'Salam'], answer: 1 },
+        { q: 'Tasyahud di sholat Subuh dibaca setelah rakaat ke...', options: ['1', '2', '3', '4'], answer: 1 },
+        { q: 'Setelah tasyahud, apa yang dibaca sebelum salam?', options: ['Al-Fatihah', 'Doa Iftitah', 'Sholawat', 'Doa qunut'], answer: 2 },
+        { q: 'Berapa kali kita ruku dalam sholat Subuh 2 rakaat?', options: ['1 kali', '2 kali', '3 kali', '4 kali'], answer: 1 },
+        { q: 'Berapa total sujud dalam sholat Subuh?', options: ['2 kali', '3 kali', '4 kali', '6 kali'], answer: 2 },
+        { q: 'Salam diucapkan ke arah...', options: ['Depan', 'Kanan lalu kiri', 'Kiri lalu kanan', 'Belakang'], answer: 1 },
+        { q: 'Apa gerakan terakhir sholat Subuh?', options: ['Tasyahud', 'Sujud', 'Salam', 'Itidal'], answer: 2 }
+      ],
+      5: [ // 5 Waktu
+        { q: 'Sholat apa yang dilakukan di pagi hari saat fajar?', options: ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib'], answer: 0 },
+        { q: 'Berapa rakaat sholat Dzuhur?', options: ['2', '3', '4', '5'], answer: 2 },
+        { q: 'Sholat yang rakaatnya PALING SEDIKIT adalah...', options: ['Subuh', 'Maghrib', 'Dzuhur', 'Isya'], answer: 0 },
+        { q: 'Sholat Maghrib dilakukan saat...', options: ['Pagi hari', 'Siang hari', 'Matahari terbenam', 'Malam hari'], answer: 2 },
+        { q: 'Berapa rakaat sholat Maghrib?', options: ['2', '3', '4', '5'], answer: 1 },
+        { q: 'Sholat malam setelah mega merah hilang adalah sholat...', options: ['Maghrib', 'Isya', 'Subuh', 'Ashar'], answer: 1 },
+        { q: 'Berapa rakaat sholat Ashar?', options: ['2', '3', '4', '5'], answer: 2 },
+        { q: 'Sholat apa yang dilakukan di siang hari setelah matahari tergelincir?', options: ['Subuh', 'Dzuhur', 'Ashar', 'Maghrib'], answer: 1 },
+        { q: 'Berapa TOTAL rakaat sholat 5 waktu dalam 1 hari?', options: ['15', '17', '19', '20'], answer: 1 },
+        { q: 'Sholat yang rakaatnya 3 adalah...', options: ['Subuh', 'Maghrib', 'Dzuhur', 'Isya'], answer: 1 }
+      ]
+    };
+
+    // === GLOBAL STATE ===
+    var currentLevel = 0;
+    var currentMode = ''; // 'belajar', 'latihan', 'tes'
+    var currentStep = 0;
+    var quizIndex = 0;
+    var quizCorrect = 0;
+    var quizScore = 0;
+    var totalXP = 0;
+    var totalCoins = 0;
+
+    // === PROGRESS TRACKING ===
+    function getProgress() {
+      var saved = localStorage.getItem('druygon_sholat_progress');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch(e) {}
+      }
+      return {
+        currentLevel: 1,
+        levels: {
+          1: { passed: false, bestScore: 0 },
+          2: { passed: false, bestScore: 0 },
+          3: { passed: false, bestScore: 0 },
+          4: { passed: false, bestScore: 0 },
+          5: { passed: false, bestScore: 0 }
+        }
+      };
+    }
+
+    function saveProgress(progress) {
+      localStorage.setItem('druygon_sholat_progress', JSON.stringify(progress));
+    }
+
+    function isLevelUnlocked(level) {
+      var progress = getProgress();
+      return level <= progress.currentLevel;
+    }
+
+    function unlockNextLevel() {
+      var progress = getProgress();
+      if (progress.currentLevel < 5) {
+        progress.currentLevel++;
+        saveProgress(progress);
+      }
+    }
+
+    function markLevelPassed(level, score) {
+      var progress = getProgress();
+      progress.levels[level].passed = true;
+      if (score > progress.levels[level].bestScore) {
+        progress.levels[level].bestScore = score;
+      }
+      saveProgress(progress);
+    }
+
+    // === RENDER MAIN MENU ===
+    function renderLevelList() {
+      var progress = getProgress();
+      var html = '';
+      
+      for (var lvl = 1; lvl <= 5; lvl++) {
+        var data = sholatData[lvl];
+        var unlocked = isLevelUnlocked(lvl);
+        var levelProg = progress.levels[lvl];
+        var statusClass = levelProg.passed ? 'passed' : (unlocked ? 'available' : 'locked');
+        var statusText = levelProg.passed ? '✅ Lulus' : (unlocked ? '📘 Tersedia' : '🔒 Terkunci');
+        
+        html += '<div class="level-card ' + (unlocked ? 'unlocked' : 'locked') + '">';
+        html += '<div class="level-header">';
+        html += '<div style="display:flex;align-items:center;gap:12px;">';
+        html += '<div class="level-num">' + lvl + '</div>';
+        html += '<div class="level-title">' + data.title + '</div>';
+        html += '</div>';
+        html += '<div style="font-size:2rem;">' + data.emoji + '</div>';
+        html += '</div>';
+        html += '<div class="level-desc">' + data.desc + '</div>';
+        html += '<div class="level-status ' + statusClass + '">' + statusText + '</div>';
+        
+        if (levelProg.bestScore > 0) {
+          html += '<div class="level-progress">Skor Terbaik: ' + levelProg.bestScore + '/10</div>';
+        }
+        
+        if (unlocked) {
+          html += '<div class="mode-btns">';
+          html += '<button class="mode-btn" onclick="startMode(' + lvl + ', \'belajar\')">📖 Belajar</button>';
+          html += '<button class="mode-btn" onclick="startMode(' + lvl + ', \'latihan\')">✏️ Latihan</button>';
+          html += '<button class="mode-btn test" onclick="startMode(' + lvl + ', \'tes\')">🎯 Tes</button>';
+          html += '</div>';
+        } else {
+          html += '<div style="color:#888;font-size:0.85rem;margin-top:8px;">Selesaikan level sebelumnya untuk membuka</div>';
+        }
+        
+        html += '</div>';
+      }
+      
+      document.getElementById('levelList').innerHTML = html;
+    }
+
+    // === START MODE ===
+    function startMode(level, mode) {
+      currentLevel = level;
+      currentMode = mode;
+      currentStep = 0;
+      quizIndex = 0;
+      quizCorrect = 0;
+      quizScore = 0;
+      totalXP = 0;
+      totalCoins = 0;
+      
+      document.getElementById('mainMenu').style.display = 'none';
+      
+      if (mode === 'belajar') {
+        renderLearningMode();
+        document.getElementById('learningScreen').classList.add('active');
+      } else {
+        renderQuiz(mode === 'tes');
+        document.getElementById('quizScreen').classList.add('active');
+      }
+    }
+
+    // === LEARNING MODE ===
+    function renderLearningMode() {
+      var data = sholatData[currentLevel];
+      var html = '';
+      
+      html += '<div class="sholat-header">';
+      html += '<div style="font-size:3rem;">' + data.emoji + '</div>';
+      html += '<h1>' + data.title + '</h1>';
+      html += '<p class="subtitle">' + data.desc + '</p>';
+      html += '</div>';
+      
+      if (currentLevel === 1) {
+        // Wudhu - steps + doa
+        html += '<h3 style="color:var(--poke-yellow);margin:20px 0 15px;">📋 Urutan Wudhu:</h3>';
+        for (var i = 0; i < data.steps.length; i++) {
+          var step = data.steps[i];
+          html += '<div class="step-card">';
+          html += '<span class="step-num">Langkah ' + (i + 1) + '</span>';
+          html += '<div class="step-emoji">' + step.emoji + '</div>';
+          html += '<div class="step-title">' + step.title + '</div>';
+          html += '<div class="step-desc">' + step.desc + '</div>';
+          if (step.detail) {
+            html += '<div class="step-desc" style="color:#888;font-size:0.9rem;margin-top:5px;">💡 ' + step.detail + '</div>';
+          }
+          html += '</div>';
+        }
+        
+        html += '<h3 style="color:var(--poke-yellow);margin:30px 0 15px;">🤲 Doa Wudhu:</h3>';
+        
+        html += '<div class="step-card">';
+        html += '<div class="step-title">Doa SEBELUM Wudhu:</div>';
+        html += '<div class="arabic-text">' + data.doa.sebelum.arab + '</div>';
+        html += '<div class="transliteration">' + data.doa.sebelum.latin + '</div>';
+        html += '<div class="meaning">Artinya: ' + data.doa.sebelum.arti + '</div>';
+        html += '</div>';
+        
+        html += '<div class="step-card">';
+        html += '<div class="step-title">Doa SESUDAH Wudhu:</div>';
+        html += '<div class="arabic-text">' + data.doa.sesudah.arab + '</div>';
+        html += '<div class="transliteration">' + data.doa.sesudah.latin + '</div>';
+        html += '<div class="meaning">Artinya: ' + data.doa.sesudah.arti + '</div>';
+        html += '</div>';
+        
+      } else if (currentLevel === 2) {
+        // Gerakan
+        for (var i = 0; i < data.steps.length; i++) {
+          var step = data.steps[i];
+          html += '<div class="step-card">';
+          html += '<span class="step-num">Gerakan ' + (i + 1) + '</span>';
+          html += '<div class="step-emoji">' + step.emoji + '</div>';
+          html += '<div class="step-title">' + step.title + '</div>';
+          html += '<div class="step-desc">' + step.desc + '</div>';
+          if (step.detail) {
+            html += '<div class="step-desc" style="color:#888;font-size:0.9rem;margin-top:5px;">💡 ' + step.detail + '</div>';
+          }
+          html += '</div>';
+        }
+        
+      } else if (currentLevel === 3) {
+        // Bacaan
+        for (var i = 0; i < data.bacaan.length; i++) {
+          var b = data.bacaan[i];
+          html += '<div class="step-card">';
+          html += '<div class="step-title">' + b.nama + '</div>';
+          html += '<div class="arabic-text">' + b.arab + '</div>';
+          html += '<div class="transliteration">' + b.latin + '</div>';
+          html += '<div class="meaning">Artinya: ' + b.arti + '</div>';
+          html += '<div class="step-desc" style="margin-top:10px;color:#8BC34A;">📍 ' + b.kapan + '</div>';
+          html += '</div>';
+        }
+        
+      } else if (currentLevel === 4) {
+        // Simulasi Subuh
+        html += '<h3 style="color:var(--poke-yellow);margin:20px 0 15px;">🌅 Urutan Lengkap Sholat Subuh (2 Rakaat):</h3>';
+        for (var i = 0; i < data.simulation.length; i++) {
+          var sim = data.simulation[i];
+          html += '<div class="step-card">';
+          html += '<span class="step-num">Langkah ' + sim.step + '</span>';
+          html += '<div class="step-title">' + sim.gerakan + '</div>';
+          html += '<div class="step-desc">🗣️ Bacaan: <strong>' + sim.bacaan + '</strong></div>';
+          html += '</div>';
+        }
+        html += '<div class="step-card" style="background:rgba(76,175,80,0.1);border-color:var(--poke-green);">';
+        html += '<div class="step-title">✅ Setelah itu...</div>';
+        html += '<div class="step-desc">Ulangi rakaat ke-2 (tanpa Doa Iftitah), lalu duduk tasyahud akhir, baca sholawat, dan salam. Selesai! 🎉</div>';
+        html += '</div>';
+        
+      } else if (currentLevel === 5) {
+        // 5 Waktu
+        html += '<h3 style="color:var(--poke-yellow);margin:20px 0 15px;">🕌 5 Waktu Sholat Wajib:</h3>';
+        for (var i = 0; i < data.waktu.length; i++) {
+          var w = data.waktu[i];
+          html += '<div class="step-card">';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">';
+          html += '<div class="step-title">' + w.emoji + ' Sholat ' + w.nama + '</div>';
+          html += '<div style="background:var(--poke-yellow);color:var(--poke-dark);padding:6px 14px;border-radius:20px;font-weight:900;font-size:1.1rem;">' + w.rakaat + ' Rakaat</div>';
+          html += '</div>';
+          html += '<div class="step-desc">🕐 Waktu: ' + w.waktu + '</div>';
+          html += '<div class="step-desc" style="color:#888;margin-top:5px;">💡 ' + w.keterangan + '</div>';
+          html += '</div>';
+        }
+        html += '<div class="step-card" style="background:rgba(255,203,5,0.1);border-color:var(--poke-yellow);">';
+        html += '<div class="step-title">📊 Total Rakaat per Hari:</div>';
+        html += '<div class="step-desc" style="font-size:1.1rem;">2 (Subuh) + 4 (Dzuhur) + 4 (Ashar) + 3 (Maghrib) + 4 (Isya) = <strong style="color:var(--poke-yellow);font-size:1.3rem;">17 Rakaat</strong></div>';
+        html += '</div>';
+      }
+      
+      document.getElementById('learningContent').innerHTML = html;
+      document.getElementById('nextStepBtn').style.display = 'none';
+    }
+
+    function nextStep() {
+      // Not used in this simplified version
+    }
+
+    // === QUIZ MODE ===
+    function renderQuiz(isTest) {
+      var questions = quizQuestions[currentLevel];
+      
+      if (quizIndex >= questions.length) {
+        showResult(isTest);
+        return;
+      }
+      
+      var q = questions[quizIndex];
+      var html = '';
+      
+      var progress = (quizIndex + 1) + '/' + questions.length;
+      var scoreText = 'Skor: ' + quizScore + ' | Benar: ' + quizCorrect + '/' + questions.length;
+      
+      document.getElementById('quizProgress').textContent = 'Pertanyaan ' + progress;
+      document.getElementById('quizScore').textContent = scoreText;
+      
+      html += '<div class="question-card">';
+      html += '<div class="question-text">' + q.q + '</div>';
+      html += '<div class="options-grid">';
+      
+      for (var i = 0; i < q.options.length; i++) {
+        html += '<button class="option-btn" onclick="answerQuestion(' + i + ', ' + q.answer + ', ' + isTest + ')">';
+        html += q.options[i];
+        html += '</button>';
+      }
+      
+      html += '</div>';
+      html += '<div class="feedback-box" id="feedbackBox"></div>';
+      html += '</div>';
+      
+      document.getElementById('quizContent').innerHTML = html;
+    }
+
+    function answerQuestion(selected, correct, isTest) {
+      var isCorrect = (selected === correct);
+      var feedbackBox = document.getElementById('feedbackBox');
+      var buttons = document.querySelectorAll('.option-btn');
+      
+      // Disable all buttons
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+      }
+      
+      // Highlight answer
+      buttons[selected].classList.add(isCorrect ? 'correct' : 'wrong');
+      if (!isCorrect) {
+        buttons[correct].classList.add('correct');
+      }
+      
+      // Feedback
+      if (isCorrect) {
+        quizCorrect++;
+        if (isTest) {
+          quizScore += 10;
+          var xp = 20;
+          var coins = 10;
+          totalXP += xp;
+          totalCoins += coins;
+          window.druygonProfile.addXP(xp);
+          window.druygonProfile.addCoins(coins);
+          feedbackBox.innerHTML = '✅ BENAR! +' + xp + ' XP, +' + coins + ' Koin';
+        } else {
+          feedbackBox.innerHTML = '✅ BENAR!';
+        }
+        feedbackBox.className = 'feedback-box show correct';
+      } else {
+        if (isTest) {
+          feedbackBox.innerHTML = '❌ Salah. Jawaban yang benar: <strong>' + buttons[correct].textContent + '</strong>';
+        } else {
+          feedbackBox.innerHTML = '❌ Coba lagi! Jawaban yang benar: <strong>' + buttons[correct].textContent + '</strong>';
+        }
+        feedbackBox.className = 'feedback-box show wrong';
+      }
+      
+      // Next question after delay
+      setTimeout(function() {
+        quizIndex++;
+        renderQuiz(isTest);
+      }, isTest ? 2000 : 2500);
+    }
+
+    function showResult(isTest) {
+      document.getElementById('quizScreen').classList.remove('active');
+      document.getElementById('resultScreen').classList.add('active');
+      
+      var percentage = Math.round((quizCorrect / quizQuestions[currentLevel].length) * 100);
+      var passed = percentage >= 80;
+      
+      var emoji, title, message;
+      
+      if (passed) {
+        emoji = '🎉🏆✨';
+        title = 'LULUS!';
+        message = 'Kamu berhasil menguasai level ini dengan skor ' + percentage + '%! Pokemon Trainer sejati! ⚡';
+        
+        if (isTest) {
+          markLevelPassed(currentLevel, quizCorrect);
+          unlockNextLevel();
+          
+          // Bonus XP & Coins for passing
+          var bonusXP = 60;
+          var bonusCoins = 30;
+          totalXP += bonusXP;
+          totalCoins += bonusCoins;
+          window.druygonProfile.addXP(bonusXP);
+          window.druygonProfile.addCoins(bonusCoins);
+          
+          message += '<br><br>🎁 Bonus Level: +' + bonusXP + ' XP, +' + bonusCoins + ' Koin!';
+          
+          if (currentLevel < 5) {
+            message += '<br><br>🔓 Level berikutnya telah terbuka!';
+          } else {
+            message += '<br><br>🌟 Kamu telah menyelesaikan SEMUA level Belajar Sholat! Hebat! 🌟';
+          }
+        }
+      } else {
+        emoji = '😢';
+        title = 'Belum Lulus';
+        message = 'Kamu mendapat ' + quizCorrect + '/10 benar (' + percentage + '%). Butuh minimal 80% untuk lulus.<br><br>Jangan menyerah! Coba lagi dengan mode Belajar dulu, lalu ulangi Tes! 💪';
+      }
+      
+      document.getElementById('resultEmoji').textContent = emoji;
+      document.getElementById('resultTitle').textContent = title;
+      document.getElementById('resultMessage').innerHTML = message;
+      document.getElementById('finalScore').textContent = quizScore;
+      document.getElementById('finalCorrect').textContent = quizCorrect + '/10';
+      document.getElementById('finalCoins').textContent = totalCoins;
+      document.getElementById('finalXP').textContent = totalXP;
+      
+      // Show reward popup if passed test
+      if (isTest && passed && typeof showRewardPopup === 'function') {
+        var leveledUp = window.druygonProfile.data.level > 1; // Simplified check
+        setTimeout(function() {
+          showRewardPopup(totalXP, totalCoins, leveledUp);
+        }, 500);
+      }
+    }
+
+    function backToMenu() {
+      document.getElementById('mainMenu').style.display = 'block';
+      document.getElementById('learningScreen').classList.remove('active');
+      document.getElementById('quizScreen').classList.remove('active');
+      document.getElementById('resultScreen').classList.remove('active');
+      renderLevelList();
+    }
+
+    // === INIT ===
+    window.onload = function() {
+      renderLevelList();
+    };
+  </script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+  <script src="../js/analytics.js"></script>
+</body>
+</html>

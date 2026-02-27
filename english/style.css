@@ -1,0 +1,150 @@
+/* English Writing Guide Styles */
+body {
+  background: url('../assets/bg3.jpg') center/cover fixed;
+}
+body::after {
+  content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,26,46,0.88); z-index: -1;
+}
+
+.guide-container {
+  max-width: 750px; margin: 0 auto; padding: 60px 16px 40px;
+  position: relative; z-index: 1;
+}
+
+.guide-header {
+  text-align: center; margin-bottom: 30px;
+}
+.guide-header h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1rem, 4vw, 1.8rem);
+  background: linear-gradient(180deg, var(--poke-yellow), var(--poke-blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.guide-header .subtitle { color: #aaa; margin-top: 8px; }
+
+/* Topic card */
+.topic-card {
+  background: linear-gradient(145deg, #2a2a4a, #1e1e3a);
+  border: 2px solid #3a3a5a; border-radius: 16px;
+  margin-bottom: 16px; overflow: hidden; transition: all 0.3s;
+}
+.topic-card:hover { border-color: var(--poke-yellow); }
+
+.topic-header {
+  padding: 16px 20px; cursor: pointer; display: flex;
+  align-items: center; justify-content: space-between;
+  user-select: none;
+}
+.topic-header h3 {
+  font-size: 1.05rem; font-weight: 900; color: white; margin: 0;
+}
+.topic-header .topic-num {
+  font-family: 'Press Start 2P', monospace; font-size: 0.6rem;
+  color: var(--poke-yellow); margin-right: 10px; min-width: 24px;
+}
+.topic-header .arrow {
+  font-size: 1.2rem; color: var(--poke-yellow);
+  transition: transform 0.3s;
+}
+.topic-card.open .arrow { transform: rotate(180deg); }
+
+.topic-body {
+  max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+  padding: 0 20px;
+}
+.topic-card.open .topic-body {
+  max-height: 8000px; padding: 0 20px 20px;
+}
+
+/* Content styles */
+.topic-body h4 {
+  font-family: 'Press Start 2P', monospace; font-size: 0.7rem;
+  color: var(--poke-yellow); margin: 16px 0 8px;
+}
+.topic-body p, .topic-body li {
+  color: #ccc; line-height: 1.7; font-size: 1rem;
+}
+.topic-body ul, .topic-body ol { padding-left: 20px; margin: 8px 0; }
+.topic-body li { margin: 4px 0; }
+
+/* Formula/rule box */
+.formula-box {
+  background: linear-gradient(135deg, rgba(255,203,5,0.15), rgba(255,152,0,0.1));
+  border: 2px solid var(--poke-yellow); border-radius: 12px;
+  padding: 14px 18px; margin: 12px 0;
+  font-size: 1.05rem; font-weight: 900;
+  color: var(--poke-yellow);
+}
+
+/* Example box */
+.example-box {
+  background: rgba(59,76,202,0.15);
+  border-left: 4px solid var(--poke-blue); border-radius: 0 12px 12px 0;
+  padding: 14px 18px; margin: 12px 0;
+}
+.example-box .example-title {
+  font-weight: 900; color: var(--poke-blue); font-size: 0.9rem; margin-bottom: 6px;
+}
+.example-box .step {
+  color: #bbb; margin: 4px 0; font-size: 0.95rem;
+}
+.example-box .step strong { color: white; }
+.example-box .answer {
+  color: var(--poke-green); font-weight: 900; margin-top: 6px; font-size: 1.05rem;
+}
+
+/* Tips box */
+.tips-box {
+  background: rgba(76,175,80,0.1);
+  border: 2px dashed var(--poke-green); border-radius: 12px;
+  padding: 14px 18px; margin: 12px 0;
+}
+.tips-box .tips-title {
+  font-weight: 900; color: var(--poke-green); margin-bottom: 6px;
+}
+.tips-box p, .tips-box li { color: #bbb; }
+
+/* Word table */
+.word-table {
+  width: 100%; border-collapse: collapse; margin: 12px 0;
+}
+.word-table th {
+  background: rgba(255,203,5,0.15); color: var(--poke-yellow);
+  padding: 10px 12px; text-align: left; font-weight: 900; font-size: 0.85rem;
+  border-bottom: 2px solid var(--poke-yellow);
+}
+.word-table td {
+  padding: 8px 12px; color: #ccc; border-bottom: 1px solid #3a3a5a; font-size: 0.95rem;
+}
+.word-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* Checklist */
+.checklist-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px; margin: 6px 0;
+  background: rgba(59,76,202,0.1); border-radius: 10px;
+  font-size: 1rem; color: #ccc;
+}
+.checklist-item .check-icon {
+  font-size: 1.3rem; flex-shrink: 0;
+}
+
+/* Recount text example */
+.recount-example {
+  background: rgba(156,39,176,0.1);
+  border: 2px solid var(--poke-purple); border-radius: 12px;
+  padding: 16px 18px; margin: 12px 0;
+}
+.recount-example .label {
+  font-weight: 900; font-size: 0.8rem; color: var(--poke-purple);
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.recount-example p { color: #ccc; line-height: 1.7; margin: 4px 0; }
+
+@media (max-width: 500px) {
+  .topic-header h3 { font-size: 0.95rem; }
+  .guide-container { padding: 60px 10px 30px; }
+  .word-table { font-size: 0.85rem; }
+  .word-table th, .word-table td { padding: 6px 8px; }
+}

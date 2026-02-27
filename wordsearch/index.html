@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Search — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <script src="../js/profile.js?v=20260223"></script>
+</head>
+<body>
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="game-container">
+    <!-- MENU -->
+    <div id="menuScreen" class="menu-screen">
+      <h1>🔍 WORD SEARCH</h1>
+      <div class="menu-icon bounce">📝🔎</div>
+      <p style="color:#aaa;margin:8px 0">Temukan kata-kata tersembunyi<br>di dalam puzzle!</p>
+      
+      <p style="color:var(--poke-yellow);font-weight:700;margin-top:16px">📚 Pilih Kategori:</p>
+      <div class="category-grid">
+        <button class="cat-btn selected" data-cat="hewan" onclick="selectCategory('hewan')">🐾 Hewan</button>
+        <button class="cat-btn" data-cat="buah" onclick="selectCategory('buah')">🍎 Buah</button>
+        <button class="cat-btn" data-cat="warna" onclick="selectCategory('warna')">🎨 Warna</button>
+        <button class="cat-btn" data-cat="katakerja" onclick="selectCategory('katakerja')">🏃 Kata Kerja</button>
+        <button class="cat-btn" data-cat="alam" onclick="selectCategory('alam')">🌿 Alam</button>
+        <button class="cat-btn" data-cat="tubuh" onclick="selectCategory('tubuh')">🦶 Tubuh</button>
+      </div>
+
+      <p style="color:var(--poke-yellow);font-weight:700;margin-top:12px">⚡ Tingkat Kesulitan:</p>
+      <div class="diff-btns">
+        <button class="poke-btn green" onclick="startGame('mudah')">🟢 Mudah</button>
+        <button class="poke-btn" onclick="startGame('sedang')">🟡 Sedang</button>
+        <button class="poke-btn" style="background:linear-gradient(135deg,#9C27B0,#E040FB)" onclick="startGame('susah')">🔴 Susah</button>
+      </div>
+    </div>
+
+    <!-- GAME -->
+    <div id="gameScreen" class="game-screen">
+      <div class="game-header">
+        <div class="stat"><div>DITEMUKAN</div><div class="stat-val" id="foundCount">0/6</div></div>
+        <div class="stat"><div>WAKTU</div><div class="stat-val" id="timerValue">00:00</div></div>
+        <div class="stat"><div>SKOR</div><div class="stat-val" id="scoreValue">0</div></div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <div class="feedback-msg" id="feedback"></div>
+
+      <div class="word-list" id="wordList"></div>
+
+      <div class="game-actions">
+        <button class="hint-btn" onclick="useHint()">💡 Hint (<span id="hintCount">3</span>)</button>
+        <button class="poke-btn" style="font-size:0.8rem;padding:8px 16px" onclick="backToMenu()">🏠 Menu</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="resultScreen" class="result-screen">
+      <h2>🎉 SELESAI! 🎉</h2>
+      <div class="result-icon">🏆⭐🌟</div>
+      <p style="color:#aaa">Semua kata ditemukan!</p>
+      <div class="poke-card" style="margin:20px 0;text-align:left">
+        <p>🏅 Skor: <span style="color:var(--poke-yellow);font-weight:900;font-size:1.3rem" id="resultScore">0</span></p>
+        <p>⏱️ Waktu: <span style="color:var(--poke-yellow);font-weight:900" id="resultTime">0:00</span></p>
+        <p>📝 Kata: <span style="color:var(--poke-yellow);font-weight:900" id="resultWords">0/0</span></p>
+        <p>💡 Hint: <span style="color:var(--poke-yellow);font-weight:900" id="resultHints">0</span></p>
+      </div>
+      <button class="poke-btn" onclick="backToMenu()">🔄 Main Lagi</button>
+    </div>
+  </div>
+
+  <script src="game.js?v=20260222b"></script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html" class="active">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+<script src="../js/analytics.js?v=20260222b"></script>
+</body>
+</html>

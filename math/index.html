@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Arena — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260222b">
+  <style>
+    .pokemon-sprite { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
+    .pokemon-sprite.small { width: 32px; height: 32px; }
+    .pokemon-sprite.medium { width: 48px; height: 48px; }
+    .pokemon-sprite.large { width: 96px; height: 96px; }
+    .pokemon-sprite.grayscale { filter: grayscale(1) opacity(0.4); }
+    .pokeball-sprite { width: 32px; height: 32px; object-fit: contain; }
+    .pokemon-emoji { font-size: 48px; }
+  </style>
+  <script src="../js/profile.js?v=20260223"></script>
+  <script src="../js/pokemon.js?v=20260222b"></script>
+</head>
+<body>
+  <!-- Screen flash overlay for hit/damage feedback -->
+  <div id="screenFlash" class="screen-flash"></div>
+
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <div class="game-container">
+    <!-- MENU -->
+    <div id="menuScreen" class="menu-screen">
+      <h1>⚔️ MATH ARENA</h1>
+      <div class="menu-pokemon bounce">⚡🐭</div>
+      <p style="color:#aaa;margin:10px 0">Bertarung melawan Pokemon liar<br>dengan kekuatan matematika!</p>
+
+      <div class="topic-select">
+        <label>📚 Pilih Topik:</label>
+        <select id="topicSelect">
+          <option value="campuran">🎲 Campuran (Semua)</option>
+          <option value="penjumlahan">➕ Penjumlahan</option>
+          <option value="pengurangan">➖ Pengurangan</option>
+          <option value="perkalian">✖️ Perkalian</option>
+          <option value="pembagian">➗ Pembagian</option>
+          <option value="fpb">🔢 FPB (Faktor Persekutuan Terbesar)</option>
+          <option value="kpk">🔢 KPK (Kelipatan Persekutuan Terkecil)</option>
+        </select>
+      </div>
+
+      <div class="difficulty-btns">
+        <button class="poke-btn green" onclick="startGame('mudah')">🟢 Mudah</button>
+        <button class="poke-btn" onclick="startGame('sedang')">🟡 Sedang</button>
+        <button class="poke-btn" style="background:linear-gradient(135deg,#9C27B0,#E040FB)" onclick="startGame('susah')">🔴 Susah</button>
+      </div>
+    </div>
+
+    <!-- BATTLE -->
+    <div id="battleScreen" class="battle-screen">
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div>SKOR</div>
+          <div class="stat-value" id="scoreValue">0</div>
+        </div>
+        <div class="stat-item">
+          <div>STREAK</div>
+          <div class="stat-value" id="streakValue">0</div>
+        </div>
+        <div class="stat-item">
+          <div>KALAH</div>
+          <div class="stat-value" id="defeatedValue">0</div>
+        </div>
+      </div>
+
+      <div class="battle-field">
+        <!-- Player panel — id needed for floating damage -->
+        <div class="pokemon-panel" id="playerPanel">
+          <div class="pokemon-name" id="playerName">Pikadru</div>
+          <div class="hp-bar-container">
+            <div class="hp-bar" id="playerHPBar" style="width:100%"></div>
+          </div>
+          <div class="hp-text" id="playerHPText">HP: 100/100</div>
+          <div class="pokemon-sprite" id="playerSprite">⚡🐭</div>
+        </div>
+
+        <div class="vs-text">VS</div>
+
+        <!-- Enemy panel — id needed for floating damage -->
+        <div class="pokemon-panel" id="enemyPanel">
+          <div class="pokemon-name" id="enemyName">Rattata</div>
+          <div class="hp-bar-container">
+            <div class="hp-bar" id="enemyHPBar" style="width:100%"></div>
+          </div>
+          <div class="hp-text" id="enemyHPText">HP: 40/40</div>
+          <div class="pokemon-sprite" id="enemySprite">🐀</div>
+        </div>
+      </div>
+
+      <div class="question-area">
+        <div class="question-label" id="questionLabel">✖️ Perkalian</div>
+        <div class="question-text" id="questionText">6 × 7 = ?</div>
+        <div class="answer-options" id="answerOptions"></div>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <!-- CATCH SCREEN -->
+    <div id="catchScreen" class="catch-screen">
+      <h2 style="color:var(--poke-yellow);margin-bottom:15px;">🎉 POKEMON KALAH! 🎉</h2>
+      <div class="catch-pokemon" id="catchPokemon">🐀</div>
+      <h3 id="catchPokemonName">Rattata</h3>
+      <p style="color:#aaa;margin:10px 0;">Pilih Pokeball untuk menangkap!</p>
+
+      <div class="pokeball-select" id="pokeballSelect">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="catch-feedback" id="catchFeedback"></div>
+      <button class="poke-btn" id="continueBattleBtn" onclick="continueBattle()" style="display:none;margin-top:15px;">
+        ⚡ Lanjut Bertarung
+      </button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="resultScreen" class="result-screen">
+      <h2 id="resultTitle">🏆 KAMU MENANG! 🏆</h2>
+      <div class="result-pokemon" id="resultPokemon">🎉🌟🎊</div>
+      <p style="color:#aaa;font-size:1.1rem" id="resultMessage"></p>
+      <div class="result-stats poke-card" style="margin:20px 0;text-align:left">
+        <p>🏅 Skor Akhir: <span class="highlight" id="resultScore">0</span></p>
+        <p>✅ Jawaban Benar: <span class="highlight" id="resultCorrect">0/0</span></p>
+        <p>🔥 Streak Terbaik: <span class="highlight" id="resultStreak">0</span></p>
+        <p>⚔️ Pokemon Dikalahkan: <span class="highlight" id="resultDefeated">0</span></p>
+      </div>
+      <button class="poke-btn" onclick="backToMenu()">🔄 Main Lagi</button>
+    </div>
+  </div>
+
+  <script src="game.js?v=20260222b"></script>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html" class="active">
+      <div class="nav-icon">⚔️</div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon">🗺️</div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon">📦</div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon">🏪</div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+<script src="../js/analytics.js?v=20260222b"></script>
+</body>
+</html>
