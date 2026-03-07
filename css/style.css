@@ -218,10 +218,22 @@ body {
   margin-bottom: 4px;
 }
 
+.bottom-nav a .nav-icon img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: brightness(0.85);
+}
+
 .bottom-nav a:hover,
 .bottom-nav a.active {
   color: var(--poke-yellow);
   transform: translateY(-2px);
+}
+
+.bottom-nav a:hover .nav-icon img,
+.bottom-nav a.active .nav-icon img {
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,203,5,0.6));
 }
 
 .bottom-nav a.active .nav-icon {

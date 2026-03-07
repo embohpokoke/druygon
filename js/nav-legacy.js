@@ -22,23 +22,23 @@
 
   nav.innerHTML = `
     <a href="${prefix}index.html" class="${isHome ? 'active' : ''}">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><img src="${prefix}assets/icons/home.svg" alt=""></div>
       <div>Home</div>
     </a>
     <a href="${prefix}math/index.html" class="${isGames ? 'active' : ''}">
-      <div class="nav-icon">⚔️</div>
+      <div class="nav-icon"><img src="${prefix}assets/icons/games.svg" alt=""></div>
       <div>Games</div>
     </a>
     <a href="${prefix}routes/index.html" class="${isMap ? 'active' : ''}">
-      <div class="nav-icon">🗺️</div>
+      <div class="nav-icon"><img src="${prefix}assets/icons/map.svg" alt=""></div>
       <div>Peta</div>
     </a>
     <a href="${prefix}collection/index.html" class="${isCollection ? 'active' : ''}">
-      <div class="nav-icon">📦</div>
+      <div class="nav-icon"><img src="${prefix}assets/icons/stats.svg" alt=""></div>
       <div>Koleksi</div>
     </a>
     <a href="${prefix}store/index.html" class="${isStore ? 'active' : ''}">
-      <div class="nav-icon">🏪</div>
+      <div class="nav-icon"><img src="${prefix}assets/icons/settings.svg" alt=""></div>
       <div>Toko</div>
     </a>
   `;
