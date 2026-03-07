@@ -219,22 +219,30 @@ function updateGameLocks() {
  * Load and display leaderboard
  */
 async function loadLeaderboard() {
-  const players = await DruygonAPI.getAllPlayers();
+  const apiPlayers = await DruygonAPI.getAllPlayers();
+  if (apiPlayers.length === 0) return;
 
-  if (players.length === 0) return;
+  const players = apiPlayers.map(normalizeLeaderboardPlayer);
 
-  // Sort by stars (descending)
-  players.sort((a, b) => (b.profile.stars || 0) - (a.profile.stars || 0));
+  // Sort by points from DB profile
+  players.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    return (a.slot || 999) - (b.slot || 999);
+  });
 
   // Assign ranks
   players.forEach((p, index) => {
-    p.profile.rank = index + 1;
+    p.rank = index + 1;
   });
 
-  // Update current player's rank
-  const currentPlayer = players.find(p => p.name === playerProfile.name);
+  // Update current player's rank (prefer active slot match)
+  const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
+  const currentPlayer = players.find((p) =>
+    (activeSlot && p.slot === activeSlot) ||
+    (!activeSlot && p.name === playerProfile.name)
+  );
   if (currentPlayer) {
-    playerProfile.rank = currentPlayer.profile.rank;
+    playerProfile.rank = currentPlayer.rank;
     updateStats();
   }
 
@@ -253,8 +261,7 @@ function updateLeaderboardUI(players) {
   leaderboard.innerHTML = '';
 
   players.forEach((player, index) => {
-    const profile = player.profile;
-    const isCurrentPlayer = profile.name === playerProfile.name;
+    const isCurrentPlayer = player.isCurrentPlayer;
 
     const rank = index + 1;
     const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
@@ -273,19 +280,43 @@ function updateLeaderboardUI(players) {
       <div class="leaderboard-avatar">${isCurrentPlayer ? '👤' : '🎮'}</div>
       <div class="leaderboard-name">
         <div class="leaderboard-username">
-          ${profile.name}
+          ${player.name}
           ${isCurrentPlayer ? '<span style="font-size:10px; color: var(--yellow); background: var(--yellow-dim); padding: 1px 6px; border-radius: 99px;">YOU</span>' : ''}
         </div>
-        <div class="leaderboard-sub">Level ${profile.level} • ${profile.xp} XP</div>
+        <div class="leaderboard-sub">Level ${player.level} • ${player.xp} XP • ${player.points} Poin</div>
       </div>
       <div class="leaderboard-score">
-        <div class="score-val" style="color: ${rankColor || 'var(--yellow)'};">${profile.stars || 0} ⭐</div>
-        <div class="score-label">Stars</div>
+        <div class="score-val" style="color: ${rankColor || 'var(--yellow)'};">${player.points}</div>
+        <div class="score-label">Poin</div>
       </div>
     `;
 
     leaderboard.appendChild(row);
   });
+}
+
+function normalizeLeaderboardPlayer(player) {
+  const profile = player?.profile || {};
+  const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
+  const level = profile.level || 1;
+  const xp = profile.xp || 0;
+  const totalCorrect = profile.stats?.totalCorrect || 0;
+  const collectionCount = Array.isArray(profile.collection)
+    ? profile.collection.length
+    : (profile.caughtCount || profile.stats?.pokemon_rpg?.pokemon_caught || 0);
+  const fallbackStars = Math.floor(profile.stars || 0);
+
+  // Keep score formula aligned with legacy profile leaderboard logic.
+  const points = (level * 1000) + xp + (collectionCount * 50) + (totalCorrect || fallbackStars);
+
+  return {
+    slot: player.slot,
+    name: profile.name || player.name || `Player ${player.slot || ''}`.trim(),
+    level: level,
+    xp: xp,
+    points: points,
+    isCurrentPlayer: (activeSlot && player.slot === activeSlot) || (!activeSlot && (profile.name === playerProfile?.name))
+  };
 }
 
 // ============================================
