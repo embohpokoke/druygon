@@ -67,6 +67,12 @@ function convertOldProfile(oldProfile, name) {
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🎮 Druygon Portal v2.0 - Initializing...');
 
+  // Leaderboard should load even before slot selection is completed.
+  loadLeaderboard().catch((error) => {
+    console.warn('[Leaderboard] initial load failed', error);
+    renderLeaderboardState('empty');
+  });
+
   // Wait for user selection
   const checkUserSelection = setInterval(async () => {
     const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
@@ -260,9 +266,9 @@ async function loadLeaderboard() {
   const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
   const currentPlayer = players.find((p) =>
     (activeSlot && p.slot === activeSlot) ||
-    (!activeSlot && p.name === playerProfile.name)
+    (!activeSlot && p.name === (playerProfile?.name || ''))
   );
-  if (currentPlayer) {
+  if (currentPlayer && playerProfile) {
     playerProfile.rank = currentPlayer.rank;
     updateStats();
   }
@@ -384,7 +390,7 @@ async function getLeaderboardPlayersFromDb() {
 
     if (!existing) {
       const seeded = createLegacySeedProfile(slotDef.name);
-      await DruygonAPI.saveProfile(seeded, slotDef.slot, 'seed-slot');
+      DruygonAPI.saveProfile(seeded, slotDef.slot, 'seed-slot').catch(() => {});
       merged.push({ slot: slotDef.slot, name: slotDef.name, profile: seeded });
       continue;
     }
@@ -394,7 +400,7 @@ async function getLeaderboardPlayersFromDb() {
 
     if (currentName !== slotDef.name) {
       const normalized = { ...profile, name: slotDef.name };
-      await DruygonAPI.saveProfile(normalized, slotDef.slot, 'normalize-slot-name');
+      DruygonAPI.saveProfile(normalized, slotDef.slot, 'normalize-slot-name').catch(() => {});
       merged.push({ slot: slotDef.slot, name: slotDef.name, profile: normalized });
       continue;
     }
