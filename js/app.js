@@ -17,6 +17,10 @@ const LEADERBOARD_SLOTS = [
  * Convert old profile structure (profile.js) to new structure
  */
 function convertOldProfile(oldProfile, name) {
+  if (window.DruygonAPI?.normalizeProfile) {
+    return window.DruygonAPI.normalizeProfile(oldProfile, name);
+  }
+
   return {
     name: name || oldProfile.name || 'Player',
     level: oldProfile.level || 1,
@@ -52,6 +56,20 @@ function convertOldProfile(oldProfile, name) {
       ultra_balls: oldProfile.pokeballs?.ultraball || 0,
       coins: oldProfile.coins || 0
     },
+    xpToNext: oldProfile.xpToNext || 100,
+    coins: oldProfile.coins || 0,
+    pokeballs: {
+      pokeball: oldProfile.pokeballs?.pokeball || 5,
+      greatball: oldProfile.pokeballs?.greatball || 0,
+      ultraball: oldProfile.pokeballs?.ultraball || 0,
+      masterball: oldProfile.pokeballs?.masterball || 0
+    },
+    team: Array.isArray(oldProfile.team) ? oldProfile.team : [],
+    collection: Array.isArray(oldProfile.collection) ? oldProfile.collection : [],
+    defeatedCount: oldProfile.defeatedCount || 0,
+    caughtCount: oldProfile.caughtCount || 0,
+    currentRoute: oldProfile.currentRoute || 1,
+    badges: oldProfile.badges || [],
     streak: 0,
     stars: (oldProfile.stats?.totalCorrect || 0) / 10, // 10 correct = 1 star
     rank: 0,

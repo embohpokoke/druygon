@@ -9,6 +9,123 @@ const DRUYGON_API = API_BASE + '/druygon';
 // Default player slot (can be changed via profile selector)
 let currentSlot = 1;
 
+function normalizeProfile(profile = {}, fallbackName = 'Player') {
+  const p = profile || {};
+
+  const level = Number.isFinite(p.level) ? p.level : 1;
+  const xp = Number.isFinite(p.xp) ? p.xp : 0;
+  const xpToNext = Number.isFinite(p.xpToNext)
+    ? p.xpToNext
+    : (Number.isFinite(p.xpRequired) ? p.xpRequired : 100);
+
+  const achievements = Array.isArray(p.achievements)
+    ? [...p.achievements]
+    : (Array.isArray(p.badges) ? [...p.badges] : []);
+  const badges = Array.isArray(p.badges)
+    ? [...p.badges]
+    : [...achievements];
+
+  const statsInput = (p.stats && typeof p.stats === 'object') ? p.stats : {};
+  const legacyStatsDefaults = {
+    totalCorrect: 0,
+    totalWrong: 0,
+    gamesPlayed: 0,
+    bestStreak: 0,
+    mathArenaPlays: 0,
+    wordSearchPlays: 0,
+    fiveMinutePlays: 0
+  };
+
+  const collection = Array.isArray(p.collection) ? p.collection : [];
+  const caughtCount = Number.isFinite(p.caughtCount)
+    ? p.caughtCount
+    : (Number.isFinite(statsInput?.pokemon_rpg?.pokemon_caught)
+      ? statsInput.pokemon_rpg.pokemon_caught
+      : collection.length);
+
+  const stats = {
+    ...legacyStatsDefaults,
+    ...statsInput,
+    math_arena: {
+      played: statsInput.math_arena?.played ?? statsInput.mathArenaPlays ?? 0,
+      wins: statsInput.math_arena?.wins ?? 0,
+      best_score: statsInput.math_arena?.best_score ?? statsInput.bestStreak ?? 0
+    },
+    word_search: {
+      played: statsInput.word_search?.played ?? statsInput.wordSearchPlays ?? 0,
+      wins: statsInput.word_search?.wins ?? 0,
+      best_time: statsInput.word_search?.best_time ?? 0
+    },
+    speed_math: {
+      played: statsInput.speed_math?.played ?? statsInput.fiveMinutePlays ?? 0,
+      wins: statsInput.speed_math?.wins ?? 0,
+      perfect_scores: statsInput.speed_math?.perfect_scores ?? 0
+    },
+    pokemon_rpg: {
+      played: statsInput.pokemon_rpg?.played ?? 0,
+      pokemon_caught: statsInput.pokemon_rpg?.pokemon_caught ?? caughtCount,
+      badges: statsInput.pokemon_rpg?.badges ?? badges.length
+    }
+  };
+
+  const gamesPlayed = Number.isFinite(p.gamesPlayed) ? p.gamesPlayed : (stats.gamesPlayed || 0);
+  stats.gamesPlayed = gamesPlayed;
+  stats.mathArenaPlays = stats.math_arena.played;
+  stats.wordSearchPlays = stats.word_search.played;
+  stats.fiveMinutePlays = stats.speed_math.played;
+
+  const inventoryInput = (p.inventory && typeof p.inventory === 'object') ? p.inventory : {};
+  const pokeballsInput = (p.pokeballs && typeof p.pokeballs === 'object') ? p.pokeballs : {};
+
+  const pokeball = Number.isFinite(pokeballsInput.pokeball)
+    ? pokeballsInput.pokeball
+    : (Number.isFinite(inventoryInput.pokeballs) ? inventoryInput.pokeballs : 5);
+  const greatball = Number.isFinite(pokeballsInput.greatball)
+    ? pokeballsInput.greatball
+    : (Number.isFinite(inventoryInput.great_balls) ? inventoryInput.great_balls : 0);
+  const ultraball = Number.isFinite(pokeballsInput.ultraball)
+    ? pokeballsInput.ultraball
+    : (Number.isFinite(inventoryInput.ultra_balls) ? inventoryInput.ultra_balls : 0);
+  const masterball = Number.isFinite(pokeballsInput.masterball) ? pokeballsInput.masterball : 0;
+
+  const coins = Number.isFinite(p.coins)
+    ? p.coins
+    : (Number.isFinite(inventoryInput.coins) ? inventoryInput.coins : 0);
+
+  const stars = Number.isFinite(p.stars) ? p.stars : Math.floor((stats.totalCorrect || 0) / 10);
+
+  return {
+    ...p,
+    name: p.name || fallbackName || 'Player',
+    level,
+    xp,
+    xpRequired: xpToNext,
+    xpToNext,
+    gamesPlayed,
+    achievements,
+    badges,
+    stats,
+    coins,
+    pokeballs: { pokeball, greatball, ultraball, masterball },
+    inventory: {
+      pokeballs: pokeball,
+      great_balls: greatball,
+      ultra_balls: ultraball,
+      coins
+    },
+    team: Array.isArray(p.team) ? p.team : [],
+    collection,
+    defeatedCount: Number.isFinite(p.defeatedCount) ? p.defeatedCount : 0,
+    caughtCount,
+    currentRoute: Number.isFinite(p.currentRoute) ? p.currentRoute : 1,
+    streak: Number.isFinite(p.streak) ? p.streak : 0,
+    stars,
+    rank: Number.isFinite(p.rank) ? p.rank : 0,
+    lastPlayed: p.lastPlayed || new Date().toISOString(),
+    createdAt: p.createdAt || new Date().toISOString()
+  };
+}
+
 // ============================================
 // PLAYER PROFILE API
 // ============================================
@@ -25,7 +142,7 @@ async function loadProfile(slot = currentSlot) {
 
     if (data.success && data.profile) {
       currentSlot = slot;
-      return data.profile;
+      return normalizeProfile(data.profile, data.name || 'Player');
     }
     return null;
   } catch (error) {
@@ -43,10 +160,11 @@ async function loadProfile(slot = currentSlot) {
  */
 async function saveProfile(profile, slot = currentSlot, event = 'auto-save') {
   try {
+    const normalized = normalizeProfile(profile);
     const response = await fetch(`${DRUYGON_API}/profile/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slot, profile, event })
+      body: JSON.stringify({ slot, profile: normalized, event })
     });
 
     const data = await response.json();
@@ -67,7 +185,10 @@ async function getAllPlayers() {
     const data = await response.json();
 
     if (data.success) {
-      return data.players || [];
+      return (data.players || []).map((p) => ({
+        ...p,
+        profile: normalizeProfile(p.profile, p.name)
+      }));
     }
     return [];
   } catch (error) {
@@ -88,7 +209,10 @@ async function getProfileHistory(slot = currentSlot, limit = 20) {
     const data = await response.json();
 
     if (data.success) {
-      return data.history || [];
+      return (data.history || []).map((h) => ({
+        ...h,
+        profile: normalizeProfile(h.profile)
+      }));
     }
     return [];
   } catch (error) {
@@ -114,7 +238,7 @@ async function restoreFromHistory(historyId, slot = currentSlot) {
     const data = await response.json();
 
     if (data.success) {
-      return data.profile;
+      return normalizeProfile(data.profile);
     }
     return null;
   } catch (error) {
@@ -139,7 +263,7 @@ async function submitFeedback(mode, answers, profile) {
     const response = await fetch(`${API_BASE}/feedback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode, answers, profile })
+      body: JSON.stringify({ mode, answers, profile: normalizeProfile(profile) })
     });
 
     const data = await response.json();
@@ -166,7 +290,7 @@ const STORAGE_KEY = 'druygon_profile_slot_';
 function loadProfileLocal(slot = currentSlot) {
   try {
     const data = localStorage.getItem(STORAGE_KEY + slot);
-    return data ? JSON.parse(data) : null;
+    return data ? normalizeProfile(JSON.parse(data)) : null;
   } catch (error) {
     console.error('[Storage] Load error:', error);
     return null;
@@ -178,7 +302,7 @@ function loadProfileLocal(slot = currentSlot) {
  */
 function saveProfileLocal(profile, slot = currentSlot) {
   try {
-    localStorage.setItem(STORAGE_KEY + slot, JSON.stringify(profile));
+    localStorage.setItem(STORAGE_KEY + slot, JSON.stringify(normalizeProfile(profile)));
     return true;
   } catch (error) {
     console.error('[Storage] Save error:', error);
@@ -194,8 +318,8 @@ function saveProfileLocal(profile, slot = currentSlot) {
  * Create default player profile
  */
 function createDefaultProfile(name = 'Player') {
-  return {
-    name: name,
+  return normalizeProfile({
+    name,
     level: 1,
     xp: 0,
     xpRequired: 100,
@@ -218,7 +342,7 @@ function createDefaultProfile(name = 'Player') {
     rank: 0,
     lastPlayed: new Date().toISOString(),
     createdAt: new Date().toISOString()
-  };
+  }, name);
 }
 
 /**
@@ -232,6 +356,7 @@ function xpForLevel(level) {
  * Add XP to player and handle level up
  */
 function addXP(profile, amount) {
+  profile = normalizeProfile(profile);
   profile.xp += amount;
 
   // Check for level up
@@ -239,14 +364,18 @@ function addXP(profile, amount) {
     profile.xp -= profile.xpRequired;
     profile.level++;
     profile.xpRequired = xpForLevel(profile.level);
+    profile.xpToNext = profile.xpRequired;
 
     // Level up rewards
     profile.inventory.pokeballs += 5;
+    profile.pokeballs.pokeball += 5;
     if (profile.level % 5 === 0) {
       profile.inventory.great_balls += 3;
+      profile.pokeballs.greatball += 3;
     }
     if (profile.level % 10 === 0) {
       profile.inventory.ultra_balls += 2;
+      profile.pokeballs.ultraball += 2;
     }
 
     console.log(`🎉 LEVEL UP! Now level ${profile.level}`);
@@ -259,8 +388,13 @@ function addXP(profile, amount) {
  * Add achievement to player
  */
 function unlockAchievement(profile, achievementId) {
+  profile = normalizeProfile(profile);
   if (!profile.achievements.includes(achievementId)) {
     profile.achievements.push(achievementId);
+    if (!profile.badges.includes(achievementId)) {
+      profile.badges.push(achievementId);
+    }
+    profile.stats.pokemon_rpg.badges = profile.badges.length;
     profile.stars += 1; // Each achievement = 1 star
     console.log(`⭐ Achievement unlocked: ${achievementId}`);
     return true;
@@ -272,6 +406,8 @@ function unlockAchievement(profile, achievementId) {
  * Update game stats after game completion
  */
 function updateGameStats(profile, gameType, stats) {
+  profile = normalizeProfile(profile);
+
   if (!profile.stats[gameType]) {
     profile.stats[gameType] = { played: 0, wins: 0 };
   }
@@ -284,6 +420,13 @@ function updateGameStats(profile, gameType, stats) {
     profile.stars += 1;
   }
 
+  if (typeof stats.correct === 'number') {
+    profile.stats.totalCorrect += stats.correct;
+  }
+  if (typeof stats.wrong === 'number') {
+    profile.stats.totalWrong += stats.wrong;
+  }
+
   // Update best scores
   if (stats.score && stats.score > (profile.stats[gameType].best_score || 0)) {
     profile.stats[gameType].best_score = stats.score;
@@ -294,6 +437,11 @@ function updateGameStats(profile, gameType, stats) {
   if (stats.perfect) {
     profile.stats[gameType].perfect_scores = (profile.stats[gameType].perfect_scores || 0) + 1;
   }
+
+  profile.stats.gamesPlayed = profile.gamesPlayed;
+  profile.stats.mathArenaPlays = profile.stats.math_arena?.played ?? profile.stats.mathArenaPlays;
+  profile.stats.wordSearchPlays = profile.stats.word_search?.played ?? profile.stats.wordSearchPlays;
+  profile.stats.fiveMinutePlays = profile.stats.speed_math?.played ?? profile.stats.fiveMinutePlays;
 
   profile.lastPlayed = new Date().toISOString();
   return profile;
@@ -316,8 +464,9 @@ function startAutoSave(getProfileFn) {
   autoSaveTimer = setInterval(async () => {
     const profile = getProfileFn();
     if (profile) {
-      const success = await saveProfile(profile, currentSlot, 'auto-save');
-      saveProfileLocal(profile, currentSlot); // Also save to localStorage
+      const normalized = normalizeProfile(profile);
+      const success = await saveProfile(normalized, currentSlot, 'auto-save');
+      saveProfileLocal(normalized, currentSlot); // Also save to localStorage
 
       if (success) {
         console.log('[Auto-save] Profile saved to server');
@@ -362,6 +511,7 @@ window.DruygonAPI = {
 
   // Player utilities
   createDefaultProfile,
+  normalizeProfile,
   xpForLevel,
   addXP,
   unlockAchievement,
