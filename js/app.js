@@ -420,49 +420,16 @@ function showNotification(title, message) {
 // GAME BUTTONS
 // ============================================
 
-// Attach event listeners to game buttons
+// Keep locked game card from opening before required level.
 document.addEventListener('DOMContentLoaded', () => {
-  // Play buttons
-  const playButtons = document.querySelectorAll('.card-cta, .compact-play-btn');
-
-  playButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const card = btn.closest('.game-card-featured, .game-card-compact');
-
-      if (card && card.classList.contains('is-locked')) {
+  const lockedCards = document.querySelectorAll('.game-card-compact.is-locked');
+  lockedCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (!playerProfile || playerProfile.level < 15) {
+        e.preventDefault();
+        e.stopPropagation();
         showNotification('🔒 Locked', 'Reach level 15 to unlock this game');
-        return;
       }
-
-      // Get game type from card title
-      const titleEl = card.querySelector('.card-title, .compact-title');
-      const title = titleEl ? titleEl.textContent.trim() : '';
-
-      let gameType = 'math_arena';
-      if (title.includes('Word Search')) gameType = 'word_search';
-      else if (title.includes('Matematika')) gameType = 'speed_math';
-      else if (title.includes('RPG')) gameType = 'pokemon_rpg';
-
-      // Show loading state
-      const originalText = btn.textContent;
-      btn.textContent = '⏳';
-      btn.disabled = true;
-
-      // Simulate game launch (in real app, navigate to game page)
-      setTimeout(() => {
-        btn.textContent = originalText;
-        btn.disabled = false;
-
-        // For demo: complete game immediately
-        completeGame(gameType, {
-          won: Math.random() > 0.3,
-          score: Math.floor(Math.random() * 1000),
-          xpReward: gameType === 'pokemon_rpg' ? 100 : gameType === 'speed_math' ? 75 : 50
-        });
-      }, 1500);
     });
   });
 });
