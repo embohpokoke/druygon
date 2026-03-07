@@ -8,6 +8,11 @@ const DRUYGON_API = API_BASE + '/druygon';
 
 // Default player slot (can be changed via profile selector)
 let currentSlot = 1;
+const profileSnapshots = {};
+
+function hasOwn(obj, key) {
+  return !!obj && Object.prototype.hasOwnProperty.call(obj, key);
+}
 
 function normalizeProfile(profile = {}, fallbackName = 'Player') {
   const p = profile || {};
@@ -126,6 +131,59 @@ function normalizeProfile(profile = {}, fallbackName = 'Player') {
   };
 }
 
+function snapshotProfile(slot, profile) {
+  profileSnapshots[slot] = normalizeProfile(profile);
+}
+
+function getProfileSnapshot(slot) {
+  return profileSnapshots[slot] || null;
+}
+
+function applyRegressionGuard(rawProfile, normalizedProfile, slot) {
+  const prev = getProfileSnapshot(slot);
+  if (!prev) return normalizedProfile;
+
+  const raw = rawProfile || {};
+  const next = { ...normalizedProfile };
+
+  const rawHasCollection = hasOwn(raw, 'collection');
+  const prevCollectionLen = Array.isArray(prev.collection) ? prev.collection.length : 0;
+  if (!rawHasCollection && prevCollectionLen > 0 && next.collection.length === 0) {
+    next.collection = [...prev.collection];
+    next.caughtCount = Math.max(prev.caughtCount || prevCollectionLen, prevCollectionLen);
+    next.stats = { ...next.stats, pokemon_rpg: { ...next.stats.pokemon_rpg, pokemon_caught: next.caughtCount } };
+  }
+
+  const rawHasPokeballs = hasOwn(raw, 'pokeballs');
+  const rawHasInventory = hasOwn(raw, 'inventory');
+  if (!rawHasPokeballs && !rawHasInventory) {
+    const prevBallTotal = (prev.pokeballs?.pokeball || 0) + (prev.pokeballs?.greatball || 0) + (prev.pokeballs?.ultraball || 0) + (prev.pokeballs?.masterball || 0);
+    const nextBallTotal = (next.pokeballs?.pokeball || 0) + (next.pokeballs?.greatball || 0) + (next.pokeballs?.ultraball || 0) + (next.pokeballs?.masterball || 0);
+    if (prevBallTotal > 0 && nextBallTotal <= 0) {
+      next.pokeballs = { ...prev.pokeballs };
+      next.inventory = {
+        ...next.inventory,
+        pokeballs: prev.pokeballs?.pokeball || 0,
+        great_balls: prev.pokeballs?.greatball || 0,
+        ultra_balls: prev.pokeballs?.ultraball || 0
+      };
+    }
+  }
+
+  const rawHasXpTargets = hasOwn(raw, 'xpToNext') || hasOwn(raw, 'xpRequired');
+  if (!rawHasXpTargets && (prev.xpToNext || 0) > 100 && next.xpToNext === 100 && next.level >= prev.level) {
+    next.xpToNext = prev.xpToNext;
+    next.xpRequired = prev.xpToNext;
+  }
+
+  if (next.caughtCount < next.collection.length) {
+    next.caughtCount = next.collection.length;
+    next.stats = { ...next.stats, pokemon_rpg: { ...next.stats.pokemon_rpg, pokemon_caught: next.caughtCount } };
+  }
+
+  return next;
+}
+
 // ============================================
 // PLAYER PROFILE API
 // ============================================
@@ -142,7 +200,9 @@ async function loadProfile(slot = currentSlot) {
 
     if (data.success && data.profile) {
       currentSlot = slot;
-      return normalizeProfile(data.profile, data.name || 'Player');
+      const normalized = normalizeProfile(data.profile, data.name || 'Player');
+      snapshotProfile(slot, normalized);
+      return normalized;
     }
     return null;
   } catch (error) {
@@ -160,7 +220,7 @@ async function loadProfile(slot = currentSlot) {
  */
 async function saveProfile(profile, slot = currentSlot, event = 'auto-save') {
   try {
-    const normalized = normalizeProfile(profile);
+    const normalized = applyRegressionGuard(profile, normalizeProfile(profile), slot);
     const response = await fetch(`${DRUYGON_API}/profile/save`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -168,6 +228,9 @@ async function saveProfile(profile, slot = currentSlot, event = 'auto-save') {
     });
 
     const data = await response.json();
+    if (data.success) {
+      snapshotProfile(slot, normalized);
+    }
     return data.success;
   } catch (error) {
     console.error('[API] Save profile error:', error);
@@ -290,7 +353,10 @@ const STORAGE_KEY = 'druygon_profile_slot_';
 function loadProfileLocal(slot = currentSlot) {
   try {
     const data = localStorage.getItem(STORAGE_KEY + slot);
-    return data ? normalizeProfile(JSON.parse(data)) : null;
+    if (!data) return null;
+    const normalized = normalizeProfile(JSON.parse(data));
+    snapshotProfile(slot, normalized);
+    return normalized;
   } catch (error) {
     console.error('[Storage] Load error:', error);
     return null;
@@ -302,7 +368,9 @@ function loadProfileLocal(slot = currentSlot) {
  */
 function saveProfileLocal(profile, slot = currentSlot) {
   try {
-    localStorage.setItem(STORAGE_KEY + slot, JSON.stringify(normalizeProfile(profile)));
+    const normalized = applyRegressionGuard(profile, normalizeProfile(profile), slot);
+    localStorage.setItem(STORAGE_KEY + slot, JSON.stringify(normalized));
+    snapshotProfile(slot, normalized);
     return true;
   } catch (error) {
     console.error('[Storage] Save error:', error);
