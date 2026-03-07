@@ -5,6 +5,13 @@
 
 // Global player profile
 let playerProfile = null;
+const LEADERBOARD_SLOTS = [
+  { slot: 1, name: 'Dru' },
+  { slot: 2, name: 'Oming' },
+  { slot: 3, name: 'Illy' },
+  { slot: 4, name: 'Reymar' },
+  { slot: 5, name: 'Extra' }
+];
 
 /**
  * Convert old profile structure (profile.js) to new structure
@@ -219,7 +226,7 @@ function updateGameLocks() {
  * Load and display leaderboard
  */
 async function loadLeaderboard() {
-  const apiPlayers = await DruygonAPI.getAllPlayers();
+  const apiPlayers = await getLeaderboardPlayersFromDb();
   if (apiPlayers.length === 0) return;
 
   const players = apiPlayers.map(normalizeLeaderboardPlayer);
@@ -316,6 +323,63 @@ function normalizeLeaderboardPlayer(player) {
     xp: xp,
     points: points,
     isCurrentPlayer: (activeSlot && player.slot === activeSlot) || (!activeSlot && (profile.name === playerProfile?.name))
+  };
+}
+
+async function getLeaderboardPlayersFromDb() {
+  const playersFromDb = await DruygonAPI.getAllPlayers();
+  const bySlot = new Map(playersFromDb.map((p) => [p.slot, p]));
+  const merged = [];
+
+  for (const slotDef of LEADERBOARD_SLOTS) {
+    const existing = bySlot.get(slotDef.slot);
+
+    if (!existing) {
+      const seeded = createLegacySeedProfile(slotDef.name);
+      await DruygonAPI.saveProfile(seeded, slotDef.slot, 'seed-slot');
+      merged.push({ slot: slotDef.slot, name: slotDef.name, profile: seeded });
+      continue;
+    }
+
+    const profile = existing.profile || {};
+    const currentName = profile.name || existing.name || '';
+
+    if (currentName !== slotDef.name) {
+      const normalized = { ...profile, name: slotDef.name };
+      await DruygonAPI.saveProfile(normalized, slotDef.slot, 'normalize-slot-name');
+      merged.push({ slot: slotDef.slot, name: slotDef.name, profile: normalized });
+      continue;
+    }
+
+    merged.push({ slot: slotDef.slot, name: slotDef.name, profile: profile });
+  }
+
+  return merged;
+}
+
+function createLegacySeedProfile(name) {
+  return {
+    name: name,
+    level: 1,
+    xp: 0,
+    xpToNext: 100,
+    coins: 0,
+    pokeballs: { pokeball: 5, greatball: 0, ultraball: 0, masterball: 0 },
+    team: [],
+    collection: [],
+    defeatedCount: 0,
+    caughtCount: 0,
+    currentRoute: 1,
+    badges: [],
+    stats: {
+      totalCorrect: 0,
+      totalWrong: 0,
+      gamesPlayed: 0,
+      bestStreak: 0,
+      mathArenaPlays: 0,
+      wordSearchPlays: 0,
+      fiveMinutePlays: 0
+    }
   };
 }
 
