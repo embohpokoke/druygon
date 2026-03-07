@@ -12,6 +12,13 @@ const LEADERBOARD_SLOTS = [
   { slot: 4, name: 'Illy' },
   { slot: 5, name: 'Extra' }
 ];
+const LEADERBOARD_SPRITES = {
+  dru: 'assets/sprites/pikachu.png',
+  oming: 'assets/sprites/charizard.png',
+  reymar: 'assets/sprites/alakazam.png',
+  illy: 'assets/sprites/jolteon.png',
+  extra: 'images/pokemon/mewtwo.webp'
+};
 
 /**
  * Convert old profile structure (profile.js) to new structure
@@ -322,7 +329,9 @@ function updateLeaderboardUI(players) {
 
     row.innerHTML = `
       <div class="leaderboard-rank" style="color: ${rankColor || 'inherit'};">${rankEmoji}</div>
-      <div class="leaderboard-avatar">${isCurrentPlayer ? '👤' : '🎮'}</div>
+      <div class="leaderboard-avatar">
+        <img src="${getLeaderboardSprite(player)}" alt="${player.name} Pokemon" class="leaderboard-avatar-img">
+      </div>
       <div class="leaderboard-name">
         <div class="leaderboard-username">
           ${player.name}
@@ -396,6 +405,11 @@ function normalizeLeaderboardPlayer(player) {
     points: points,
     isCurrentPlayer: (activeSlot && player.slot === activeSlot) || (!activeSlot && (profile.name === playerProfile?.name))
   };
+}
+
+function getLeaderboardSprite(player) {
+  const key = String(player?.name || '').toLowerCase();
+  return LEADERBOARD_SPRITES[key] || 'images/pokemon/pikachu.webp';
 }
 
 async function getLeaderboardPlayersFromDb() {
