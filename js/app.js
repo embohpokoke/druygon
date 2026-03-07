@@ -226,10 +226,24 @@ function updateGameLocks() {
  * Load and display leaderboard
  */
 async function loadLeaderboard() {
-  const apiPlayers = await getLeaderboardPlayersFromDb();
-  if (apiPlayers.length === 0) return;
+  renderLeaderboardState('loading');
 
-  const players = apiPlayers.map(normalizeLeaderboardPlayer);
+  let players = [];
+  try {
+    const apiPlayers = await getLeaderboardPlayersFromDb();
+    players = apiPlayers.map(normalizeLeaderboardPlayer);
+  } catch (error) {
+    console.warn('[Leaderboard] API unavailable, using local fallback', error);
+  }
+
+  if (players.length === 0) {
+    players = getLocalFallbackLeaderboard();
+  }
+
+  if (players.length === 0) {
+    renderLeaderboardState('empty');
+    return;
+  }
 
   // Sort by points from DB profile
   players.sort((a, b) => {
@@ -300,6 +314,40 @@ function updateLeaderboardUI(players) {
 
     leaderboard.appendChild(row);
   });
+}
+
+function renderLeaderboardState(state) {
+  const leaderboard = document.querySelector('.leaderboard');
+  if (!leaderboard) return;
+
+  if (state === 'loading') {
+    leaderboard.innerHTML = '<div class="leaderboard-row"><div class="leaderboard-name"><div class="leaderboard-username">Memuat leaderboard...</div><div class="leaderboard-sub">Mengambil data pemain dari server</div></div></div>';
+    return;
+  }
+
+  if (state === 'empty') {
+    leaderboard.innerHTML = '<div class="leaderboard-row"><div class="leaderboard-name"><div class="leaderboard-username">Belum ada data leaderboard</div><div class="leaderboard-sub">Mainkan game dulu untuk mengisi ranking</div></div></div>';
+  }
+}
+
+function getLocalFallbackLeaderboard() {
+  if (!window.getAllPlayersRanked) return [];
+
+  try {
+    const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
+    const ranked = window.getAllPlayersRanked();
+    return ranked.map((p) => ({
+      slot: p.slot,
+      name: p.name,
+      level: p.level || 1,
+      xp: p.xp || 0,
+      points: p.score || 0,
+      isCurrentPlayer: (activeSlot && p.slot === activeSlot) || p.name === playerProfile?.name
+    }));
+  } catch (error) {
+    console.warn('[Leaderboard] local fallback failed', error);
+    return [];
+  }
 }
 
 function normalizeLeaderboardPlayer(player) {
