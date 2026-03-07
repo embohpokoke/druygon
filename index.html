@@ -2,502 +2,395 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Druygon — Portal Game Edukasi</title>
-  <link rel="stylesheet" href="css/style.css?v=20260223">
-  <script src="js/profile.js?v=20260223"></script>
-  <style>
-    .portal { 
-      max-width: 800px; margin: 0 auto; padding: 20px; 
-      min-height: 100vh; display: flex; flex-direction: column; 
-      align-items: center; gap: 30px;
-    }
-    .logo { text-align: center; margin: 30px 0 10px; }
-    .logo h1 {
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(2rem, 8vw, 4rem);
-      background: linear-gradient(180deg, var(--poke-yellow) 0%, #FF9800 50%, var(--poke-red) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
-      animation: glow 2s ease-in-out infinite, bounce 3s ease-in-out infinite;
-    }
-    .logo .subtitle {
-      font-size: 1rem; color: var(--poke-yellow); margin-top: 8px;
-      letter-spacing: 3px; text-transform: uppercase;
-    }
-
-    /* Section headers */
-    .section { width: 100%; }
-    .section-header {
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(0.7rem, 2.5vw, 1rem);
-      color: var(--poke-yellow);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid rgba(255,203,5,0.3);
-      display: flex; align-items: center; gap: 10px;
-    }
-
-    .games-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 20px; width: 100%;
-    }
-    .game-card {
-      text-align: center; cursor: pointer;
-      text-decoration: none; color: white;
-    }
-    .game-card .emoji-art { font-size: 3rem; margin: 8px 0; }
-    .game-card h2 { 
-      font-family: 'Press Start 2P', monospace; font-size: 0.85rem; 
-      color: var(--poke-yellow); margin: 8px 0;
-    }
-    .game-card p { color: #aaa; font-size: 0.9rem; line-height: 1.5; }
-    .game-card .badge {
-      display: inline-block; margin-top: 10px;
-      padding: 5px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 900;
-    }
-    .badge.math-badge { background: linear-gradient(135deg, var(--poke-red), #ff6b35); }
-    .badge.word-badge { background: linear-gradient(135deg, var(--poke-blue), #5b6bea); }
-    .badge.timer-badge { background: linear-gradient(135deg, #FF9800, #FF5722); }
-    .badge.guide-badge { background: linear-gradient(135deg, var(--poke-green), #66BB6A); }
-    .badge.english-badge { background: linear-gradient(135deg, var(--poke-purple), #BA68C8); }
-    .footer {
-      text-align: center; color: #555; font-size: 0.8rem; margin-top: 20px;
-    }
-    .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-    .star {
-      position: absolute; width: 3px; height: 3px; background: white;
-      border-radius: 50%; animation: sparkle 3s ease-in-out infinite;
-    }
-    /* Player Status Bar */
-    .player-status {
-      background: linear-gradient(145deg, #2a2a4a, #1e1e3a);
-      border: 3px solid var(--poke-yellow);
-      border-radius: 16px;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-    .status-item {
-      text-align: center;
-      flex: 1;
-      min-width: 100px;
-    }
-    .status-label {
-      font-size: 0.7rem;
-      color: #aaa;
-      font-family: 'Press Start 2P', monospace;
-      margin-bottom: 5px;
-    }
-    .status-value {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--poke-yellow);
-    }
-    @media (max-width: 400px) {
-      .player-status {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px 10px;
-      }
-      .status-item {
-        min-width: auto;
-      }
-      .status-item:nth-child(2) {
-        grid-column: 1 / -1;
-      }
-      .status-label {
-        font-size: 0.75rem;
-      }
-      .status-value {
-        font-size: 1.5rem;
-      }
-    }
-    .xp-bar-mini {
-      width: 100%;
-      height: 8px;
-      background: #333;
-      border-radius: 10px;
-      border: 2px solid #555;
-      overflow: hidden;
-      margin-top: 5px;
-    }
-    .xp-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--poke-yellow), #FF9800);
-      border-radius: 6px;
-      transition: width 0.5s ease;
-    }
-    .pokeball-count {
-      display: flex;
-      gap: 8px;
-      font-size: 0.75rem;
-      color: #ccc;
-      margin-top: 5px;
-    }
-
-    /* Rank Board */
-    .rank-row {
-      display: flex;
-      align-items: center;
-      padding: 12px 16px;
-      border-radius: 12px;
-      gap: 12px;
-      transition: transform 0.2s;
-    }
-    .rank-row:hover { transform: scale(1.02); }
-    .rank-row.rank-1 {
-      background: linear-gradient(145deg, rgba(255,203,5,0.15), rgba(255,152,0,0.08));
-      border: 2px solid #FFCB05;
-    }
-    .rank-row.rank-2 {
-      background: linear-gradient(145deg, rgba(192,192,192,0.12), rgba(150,150,150,0.06));
-      border: 2px solid #C0C0C0;
-    }
-    .rank-row.rank-3 {
-      background: linear-gradient(145deg, rgba(205,127,50,0.12), rgba(180,100,30,0.06));
-      border: 2px solid #CD7F32;
-    }
-    .rank-row.rank-other {
-      background: linear-gradient(145deg, rgba(42,42,74,0.6), rgba(30,30,58,0.6));
-      border: 2px solid #444;
-    }
-    .rank-row.rank-me {
-      box-shadow: 0 0 12px rgba(255,203,5,0.3);
-    }
-    .rank-pos {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 1.2rem;
-      min-width: 36px;
-      text-align: center;
-    }
-    .rank-avatar {
-      font-size: 1.5rem;
-      min-width: 32px;
-      text-align: center;
-    }
-    .rank-info {
-      flex: 1;
-      min-width: 0;
-    }
-    .rank-name {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.7rem;
-      margin-bottom: 4px;
-    }
-    .rank-details {
-      font-size: 0.7rem;
-      color: #aaa;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .rank-title-badge {
-      font-size: 0.65rem;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    @media (max-width: 400px) {
-      .rank-row { padding: 10px 12px; gap: 8px; }
-      .rank-pos { font-size: 1rem; min-width: 28px; }
-      .rank-name { font-size: 0.6rem; }
-      .rank-details { font-size: 0.6rem; gap: 6px; }
-    }
-
-    /* Bottom Navigation Bar — inline to avoid CSS parse issues */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 64px;
-      background: linear-gradient(180deg, rgba(26,26,46,0.97), rgba(16,16,32,0.99));
-      border-top: 2px solid var(--poke-yellow);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 999;
-      padding: 0 8px;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-      box-shadow: 0 -4px 24px rgba(0,0,0,0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .bottom-nav a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      color: #888;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 6px 4px;
-      min-width: 56px;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-      text-align: center;
-      gap: 2px;
-    }
-    .bottom-nav a .nav-icon {
-      font-size: 1.4rem;
-      line-height: 1;
-    }
-    .bottom-nav a:hover,
-    .bottom-nav a.active {
-      color: var(--poke-yellow);
-      background: rgba(255,203,5,0.1);
-    }
-    .bottom-nav a.active .nav-icon {
-      filter: drop-shadow(0 0 6px rgba(255,203,5,0.5));
-      transform: scale(1.1);
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#080714">
+  <title>Druygon — Pokemon Game Portal</title>
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="icon" type="image/x-icon" href="assets/icons/app/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/app/icon-32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="assets/icons/app/icon-96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/app/icon-180.png">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <div class="pokeball-bg"></div>
-  <div class="stars" id="stars"></div>
 
-  <div class="portal">
-    <div class="logo slide-in">
-      <img src="assets/header-banner.jpg" alt="Druygon Portal" style="width: 100%; max-width: 700px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); border: 3px solid var(--poke-yellow); object-fit: contain; object-position: center;">
-      <div class="subtitle">⚡ Portal Game Edukasi untuk Dru ⚡</div>
-    </div>
-
-    <!-- Player Status Bar -->
-    <div class="player-status slide-in" style="animation-delay:0.1s; width: 100%; max-width: 700px;">
-      <div class="status-item">
-        <div class="status-label">LEVEL</div>
-        <div class="status-value" id="playerLevel">1</div>
+  <!-- ════════════════════════════════════════
+       HEADER
+  ════════════════════════════════════════ -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="header-logo">
+        <div class="header-logo-dot"></div>
+        DRUYGON
+      </a>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Notifikasi">
+          <img src="assets/icons/trophy.svg" alt="">
+        </button>
+        <button class="avatar-btn" aria-label="Profil" style="padding:0;overflow:hidden;">
+          <img src="assets/trainer-avatar.jpg" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
+        </button>
       </div>
-      <div class="status-item" style="flex: 2;">
-        <div class="status-label">XP</div>
-        <div class="xp-bar-mini">
-          <div class="xp-fill" id="xpFill" style="width: 0%"></div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════
+       MAIN
+  ════════════════════════════════════════ -->
+  <main class="page">
+    <div class="container">
+
+      <!-- ── PLAYER HERO ────────────────── -->
+      <div class="player-hero anim-1">
+        <div class="player-hero-overlay"></div>
+
+        <div class="player-hero-top">
+          <div>
+            <div class="player-greeting">Halo, <span>Erik</span>! ⚡</div>
+            <div class="player-subtitle">Lanjut petualangan hari ini?</div>
+          </div>
+          <div class="player-level-badge">LVL 12</div>
         </div>
-        <div style="font-size: 0.7rem; color: #ccc; margin-top: 3px;" id="xpText">0/100</div>
-      </div>
-      <div class="status-item">
-        <div class="status-label">KOIN</div>
-        <div class="status-value" id="playerCoins">0</div>
-      </div>
-      <div class="status-item">
-        <div class="status-label">POKEBALLS</div>
-        <div class="pokeball-count" id="pokeballCount">
-          ⚪0 🔵0 🟡0
+
+        <div class="player-xp-row">
+          <div class="player-xp-label">1,250 / 1,560 XP</div>
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" style="width: 80%;"></div>
+          </div>
+        </div>
+
+        <div class="player-stats-row">
+          <div class="player-stat">
+            <div class="player-stat-val">7🔥</div>
+            <div class="player-stat-label">Streak</div>
+          </div>
+          <div class="player-stat">
+            <div class="player-stat-val">128⭐</div>
+            <div class="player-stat-label">Stars</div>
+          </div>
+          <div class="player-stat">
+            <div class="player-stat-val">4🏆</div>
+            <div class="player-stat-label">Badges</div>
+          </div>
+          <div class="player-stat">
+            <div class="player-stat-val">#3</div>
+            <div class="player-stat-label">Rank</div>
+          </div>
         </div>
       </div>
+
+      <!-- ── FEATURED GAME ──────────────── -->
+      <section class="anim-2">
+        <div class="section-head">
+          <h2 class="section-title">🎯 Featured</h2>
+          <a href="#" class="section-link">See all →</a>
+        </div>
+
+        <div class="game-card-featured mb-4">
+          <!-- Background image layer — trainer hero -->
+          <div class="card-bg" style="background-image: url(assets/heroes/math-arena-ai.jpg);"></div>
+          <!-- Gradient overlay -->
+          <div class="card-overlay"></div>
+          <!-- Content -->
+          <div class="card-body">
+            <div class="card-top">
+              <span class="featured-badge">⚡ POPULAR</span>
+              <!-- Druygon mascot — bottom right corner, floating -->
+              <div class="card-sprite" style="position:absolute;right:12px;bottom:60px;animation:float 3s ease-in-out infinite;z-index:3;">
+                <img src="assets/sprites/pikachu.png" alt="Pikachu"
+                     style="width:90px;height:90px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.7));">
+              </div>
+            </div>
+            <div class="card-bottom">
+              <span class="card-type-badge type-electric">⚡ Electric</span>
+              <div class="card-title">Math Arena</div>
+              <div class="card-subtitle">Lawan Pokemon dengan matematika kilat!</div>
+              <div class="card-meta-row">
+                <div class="meta-chip">
+                  <img src="assets/icons/clock.svg" alt="">
+                  10 min
+                </div>
+                <div class="meta-chip">
+                  <img src="assets/icons/users.svg" alt="">
+                  1.2k players
+                </div>
+                <div class="meta-chip">
+                  <img src="assets/icons/star.svg" alt="">
+                  +50 XP
+                </div>
+              </div>
+              <a href="math/" class="card-cta">
+                ▶ Play Now
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MORE GAMES ─────────────────── -->
+      <section class="anim-3">
+        <div class="section-head">
+          <h2 class="section-title">🎮 All Games</h2>
+        </div>
+
+        <div class="cards-stack">
+
+          <!-- Word Search -->
+          <a href="wordsearch/" class="game-card-compact" style="display: flex; text-decoration: none; color: inherit;">
+            <div class="compact-thumb">
+              <div class="card-bg" style="background-image: url(assets/heroes/word-search-ai.jpg);"></div>
+              <div class="card-overlay"></div>
+              <div class="card-sprite">
+                <img src="assets/sprites/alakazam.png" alt="Alakazam">
+              </div>
+            </div>
+            <div class="compact-body">
+              <div>
+                <div class="compact-title">💡 Word Search</div>
+                <div class="compact-desc">Temukan kata tersembunyi di dunia Pokemon</div>
+              </div>
+              <div class="compact-footer">
+                <div class="compact-meta">
+                  <div class="meta-chip">
+                    <img src="assets/icons/clock.svg" alt="">
+                    5 min
+                  </div>
+                  <div class="meta-chip">⭐ +30 XP</div>
+                </div>
+                <div class="compact-play-btn">▶</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- 5 Menit Matematika -->
+          <a href="fiveminutes/" class="game-card-compact" style="display: flex; text-decoration: none; color: inherit;">
+            <div class="compact-thumb">
+              <div class="card-bg" style="background-image: url(assets/heroes/speed-math-ai.jpg);"></div>
+              <div class="card-overlay"></div>
+              <div class="card-sprite">
+                <img src="assets/sprites/jolteon.png" alt="Jolteon">
+              </div>
+            </div>
+            <div class="compact-body">
+              <div>
+                <div class="compact-title">🚀 5 Menit Matematika</div>
+                <div class="compact-desc">Speed challenge! Seberapa cepat kamu?</div>
+              </div>
+              <div class="compact-footer">
+                <div class="compact-meta">
+                  <div class="meta-chip">
+                    <img src="assets/icons/clock.svg" alt="">
+                    5 min
+                  </div>
+                  <div class="meta-chip">⭐ +75 XP</div>
+                </div>
+                <div class="compact-play-btn">▶</div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Pokemon RPG — LOCKED -->
+          <a href="routes/" class="game-card-compact is-locked" style="display: flex; text-decoration: none; color: inherit;">
+            <div class="compact-thumb">
+              <div class="card-bg" style="background-image: url(assets/heroes/pokemon-rpg-ai.jpg);"></div>
+              <div class="card-overlay"></div>
+              <div class="lock-overlay">
+                <img src="assets/icons/lock.svg" alt="">
+                <span>LVL 15</span>
+              </div>
+            </div>
+            <div class="compact-body">
+              <div>
+                <div class="compact-title">🌟 Pokemon RPG</div>
+                <div class="compact-desc">Petualangan epik menantimu di level 15!</div>
+              </div>
+              <div class="compact-footer">
+                <div class="compact-meta">
+                  <div class="meta-chip">
+                    <img src="assets/icons/clock.svg" alt="">
+                    ~30 min
+                  </div>
+                  <div class="meta-chip">⭐ +100 XP</div>
+                </div>
+                <div class="compact-play-btn" style="background: var(--bg-elevated); color: var(--text-tertiary); box-shadow: none;">🔒</div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- ── ACHIEVEMENTS ────────────────── -->
+      <section class="mt-8 anim-4" style="position:relative;">
+        <!-- Druygon peeking from corner -->
+        <img src="assets/druygon-logo-sm.png" alt=""
+             style="position:absolute;right:0;top:-8px;height:44px;width:auto;
+                    opacity:0.7;transform:scaleX(-1);" aria-hidden="true">
+        <div class="section-head">
+          <h2 class="section-title">🏅 Achievements</h2>
+          <a href="#" class="section-link">All →</a>
+        </div>
+
+        <div class="achievements-scroll">
+          <div class="achievement-chip is-new">
+            <div class="achievement-icon">🥇</div>
+            <div class="achievement-info">
+              <div class="achievement-name">Math Master</div>
+              <div class="achievement-desc">100 battle wins</div>
+            </div>
+            <div class="new-tag">NEW</div>
+          </div>
+          <div class="achievement-chip">
+            <div class="achievement-icon">⚡</div>
+            <div class="achievement-info">
+              <div class="achievement-name">Speed Demon</div>
+              <div class="achievement-desc">10 perfect scores</div>
+            </div>
+          </div>
+          <div class="achievement-chip">
+            <div class="achievement-icon">🔥</div>
+            <div class="achievement-info">
+              <div class="achievement-name">7-Day Streak</div>
+              <div class="achievement-desc">Daily login bonus</div>
+            </div>
+          </div>
+          <div class="achievement-chip">
+            <div class="achievement-icon">🌟</div>
+            <div class="achievement-info">
+              <div class="achievement-name">Explorer</div>
+              <div class="achievement-desc">All games tried</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── LEADERBOARD ─────────────────── -->
+      <section class="mt-8 mb-6 anim-5">
+        <div class="section-head">
+          <h2 class="section-title">🏆 Leaderboard</h2>
+          <a href="#" class="section-link">Full →</a>
+        </div>
+
+        <div class="leaderboard">
+
+          <div class="leaderboard-row">
+            <div class="leaderboard-rank" style="color: #FFD700;">🥇</div>
+            <div class="leaderboard-avatar">🎮</div>
+            <div class="leaderboard-name">
+              <div class="leaderboard-username">Ash_Trainer</div>
+              <div class="leaderboard-sub">Level 25 • 5,890 XP</div>
+            </div>
+            <div class="leaderboard-score">
+              <div class="score-val" style="color: #FFD700;">128 ⭐</div>
+              <div class="score-label">Stars</div>
+            </div>
+          </div>
+
+          <div class="leaderboard-row">
+            <div class="leaderboard-rank" style="color: #C0C0C0;">🥈</div>
+            <div class="leaderboard-avatar">🌊</div>
+            <div class="leaderboard-name">
+              <div class="leaderboard-username">Misty_Master</div>
+              <div class="leaderboard-sub">Level 23 • 4,720 XP</div>
+            </div>
+            <div class="leaderboard-score">
+              <div class="score-val" style="color: #C0C0C0;">115 ⭐</div>
+              <div class="score-label">Stars</div>
+            </div>
+          </div>
+
+          <!-- ME -->
+          <div class="leaderboard-row" style="background: rgba(255,203,5,0.05); border-color: rgba(255,203,5,0.15);">
+            <div class="leaderboard-rank" style="color: #CD7F32;">🥉</div>
+            <div class="leaderboard-avatar" style="padding:0;overflow:hidden;">
+              <img src="assets/trainer-avatar.jpg" alt="You" style="width:100%;height:100%;object-fit:cover;">
+            </div>
+            <div class="leaderboard-name">
+              <div class="leaderboard-username">Erik <span style="font-size:10px; color: var(--yellow); background: var(--yellow-dim); padding: 1px 6px; border-radius: 99px;">YOU</span></div>
+              <div class="leaderboard-sub">Level 12 • 1,250 XP</div>
+            </div>
+            <div class="leaderboard-score">
+              <div class="score-val" style="color: var(--yellow);">98 ⭐</div>
+              <div class="score-label">Stars</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
     </div>
+  </main>
 
-    <!-- RANK / LEADERBOARD Section -->
-    <div class="section slide-in" style="animation-delay:0.15s; width:100%; max-width:700px;">
-      <div class="section-header">🏆 RANK PEMAIN</div>
-      <div id="rankBoard" style="display:flex;flex-direction:column;gap:8px;"></div>
+  <!-- ════════════════════════════════════════
+       BOTTOM NAV
+  ════════════════════════════════════════ -->
+  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama">
+    <div class="bottom-nav-inner">
+
+      <a href="#" class="nav-item active" aria-label="Home">
+        <div class="nav-dot"></div>
+        <div class="nav-icon-wrap">
+          <img src="assets/icons/home.svg" alt="">
+        </div>
+        <span class="nav-label">Home</span>
+      </a>
+
+      <a href="#" class="nav-item" aria-label="Games">
+        <div class="nav-dot"></div>
+        <div class="nav-icon-wrap">
+          <img src="assets/icons/games.svg" alt="">
+        </div>
+        <span class="nav-label">Games</span>
+      </a>
+
+      <a href="#" class="nav-item" aria-label="Map">
+        <div class="nav-dot"></div>
+        <div class="nav-icon-wrap">
+          <img src="assets/icons/map.svg" alt="">
+        </div>
+        <span class="nav-label">Map</span>
+      </a>
+
+      <a href="#" class="nav-item" aria-label="Stats">
+        <div class="nav-dot"></div>
+        <div class="nav-icon-wrap">
+          <img src="assets/icons/stats.svg" alt="">
+        </div>
+        <span class="nav-label">Stats</span>
+      </a>
+
+      <a href="#" class="nav-item" aria-label="Settings">
+        <div class="nav-dot"></div>
+        <div class="nav-icon-wrap">
+          <img src="assets/icons/settings.svg" alt="">
+        </div>
+        <span class="nav-label">Settings</span>
+      </a>
+
     </div>
-
-    <!-- GAMES Section -->
-    <div class="section slide-in" style="animation-delay:0.25s">
-      <div class="section-header">🎮 GAMES</div>
-      <div class="games-grid">
-        <a href="math/index.html" class="game-card poke-card">
-          <div class="emoji-art">⚔️🔥</div>
-          <h2>Math Arena</h2>
-          <p>Bertarung melawan Pokemon liar dengan kekuatan matematika!</p>
-          <span class="badge math-badge">🎮 MAIN</span>
-        </a>
-
-        <a href="wordsearch/index.html" class="game-card poke-card">
-          <div class="emoji-art">🔍📝</div>
-          <h2>Word Search</h2>
-          <p>Temukan kata-kata tersembunyi di dalam puzzle!</p>
-          <span class="badge word-badge">🎮 MAIN</span>
-        </a>
-
-        <a href="fiveminutes/index.html" class="game-card poke-card">
-          <div class="emoji-art">⏱️🔥</div>
-          <h2>5 Menit Matematika</h2>
-          <p>Jawab soal sebanyak-banyaknya dalam 5 menit! ⚡</p>
-          <span class="badge timer-badge">🎮 MAIN</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- PETUALANGAN Section -->
-    <div class="section slide-in" style="animation-delay:0.4s">
-      <div class="section-header">🗺️ PETUALANGAN</div>
-      <div class="games-grid">
-        <a href="routes/index.html" class="game-card poke-card">
-          <div class="emoji-art">🗺️🌍</div>
-          <h2>Peta Route</h2>
-          <p>Jelajahi 4 route dan tangkap Pokemon liar!</p>
-          <span class="badge" style="background:linear-gradient(135deg,#4CAF50,#66BB6A)">🗺️ JELAJAH</span>
-        </a>
-
-        <a href="collection/index.html" class="game-card poke-card">
-          <div class="emoji-art">📦✨</div>
-          <h2>Koleksi Pokemon</h2>
-          <p>Lihat semua Pokemon yang sudah ditangkap!</p>
-          <span class="badge" style="background:linear-gradient(135deg,#2196F3,#5b6bea)">📦 BUKA</span>
-        </a>
-
-        <a href="store/index.html" class="game-card poke-card">
-          <div class="emoji-art">🏪💰</div>
-          <h2>Toko</h2>
-          <p>Beli Pokeball dan item dengan koin!</p>
-          <span class="badge" style="background:linear-gradient(135deg,#FF9800,#FF5722)">🛒 BELANJA</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- PANDUAN BELAJAR Section -->
-    <div class="section slide-in" style="animation-delay:0.6s">
-      <div class="section-header">📚 PANDUAN BELAJAR</div>
-      <div class="games-grid">
-        <a href="guide/index.html" class="game-card poke-card">
-          <div class="emoji-art">📐🧮</div>
-          <h2>Matematika</h2>
-          <p>Panduan lengkap matematika Kelas 4-5: rumus, contoh, dan tips!</p>
-          <span class="badge guide-badge">📚 BUKA</span>
-        </a>
-
-        <a href="english/index.html" class="game-card poke-card">
-          <div class="emoji-art">📝✨</div>
-          <h2>English Writing</h2>
-          <p>Past tense, recount text, adjectives, spelling & punctuation!</p>
-          <span class="badge english-badge">📚 BUKA</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- FEEDBACK & PLANNING Section -->
-    <div class="section slide-in" style="animation-delay:0.8s">
-      <div class="section-header">💬 FEEDBACK & IDEAS</div>
-      <div class="games-grid">
-        <a href="feedback/index.html" class="game-card poke-card">
-          <div class="emoji-art">📋✨</div>
-          <h2>Feedback & Plans</h2>
-          <p>Kasih review portal atau usul game baru yang kamu mau!</p>
-          <span class="badge" style="background:linear-gradient(135deg,#9C27B0,#BA68C8)">💬 BUKA</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p>🌟 Selamat bermain, <strong id="activeUserName"></strong>! 🌟</p>
-      <button onclick="window.showSwitchPlayer();" 
-        style="margin-top:10px;padding:8px 20px;background:transparent;color:#888;
-        border:1px solid #444;border-radius:20px;font-size:0.75rem;cursor:pointer;">
-        🔄 Ganti Pemain
-      </button>
-    </div>
-  </div>
-
-  <script>
-    const starsContainer = document.getElementById('stars');
-    for (let i = 0; i < 30; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.animationDelay = Math.random() * 3 + 's';
-      star.style.animationDuration = (2 + Math.random() * 3) + 's';
-      starsContainer.appendChild(star);
-    }
-
-    // Show profile picker if no slot chosen yet
-    if (!localStorage.getItem('druygon_active_slot')) {
-      showProfilePicker(function() { location.reload(); });
-    }
-
-    // Update player status
-    function updateStatus() {
-      const profile = window.druygonProfile.get();
-      
-      document.getElementById('playerLevel').textContent = profile.level;
-      document.getElementById('playerCoins').textContent = profile.coins;
-      
-      const xpPct = (profile.xp / profile.xpToNext) * 100;
-      document.getElementById('xpFill').style.width = xpPct + '%';
-      document.getElementById('xpText').textContent = `${profile.xp}/${profile.xpToNext}`;
-      
-      const pb = profile.pokeballs;
-      document.getElementById('pokeballCount').innerHTML = 
-        `⚪${pb.pokeball || 0} 🔵${pb.greatball || 0} 🟡${pb.ultraball || 0}`;
-    }
-
-    updateStatus();
-
-    // Render Rank Board
-    function renderRankBoard() {
-      var players = window.getAllPlayersRanked();
-      var board = document.getElementById('rankBoard');
-      var posIcons = ['🥇', '🥈', '🥉'];
-      var html = '';
-
-      for (var i = 0; i < players.length; i++) {
-        var p = players[i];
-        var posNum = i + 1;
-        var posIcon = posIcons[i] || '#' + posNum;
-        var rowClass = 'rank-row ' + (i < 3 ? 'rank-' + posNum : 'rank-other') + (p.isActive ? ' rank-me' : '');
-
-        html += '<div class="' + rowClass + '">' +
-          '<div class="rank-pos">' + posIcon + '</div>' +
-          '<div class="rank-avatar">' + p.emoji + '</div>' +
-          '<div class="rank-info">' +
-            '<div class="rank-name" style="color:' + p.color + ';">' + p.name + (p.isActive ? ' <span style="font-size:0.55rem;color:#8BC34A;">(kamu)</span>' : '') + '</div>' +
-            '<div class="rank-details">' +
-              '<span>Lv.' + p.level + '</span>' +
-              '<span>' + p.pokemon + ' Pokemon</span>' +
-              '<span>' + p.coins + ' Koin</span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="rank-title-badge" style="background:' + p.color + '22;color:' + p.color + ';border:1px solid ' + p.color + '44;">' +
-            p.rankBadge + ' ' + p.rankTitle +
-          '</div>' +
-        '</div>';
-      }
-      board.innerHTML = html;
-    }
-    renderRankBoard();
-
-    // Show active user name
-    var userName = window.druygonProfile.data.name || 'Dru';
-    document.getElementById('activeUserName').textContent = userName;
-    document.querySelector('.subtitle').textContent = '⚡ Portal Game Edukasi untuk ' + userName + ' ⚡';
-  </script>
-
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="active">
-      <div class="nav-icon">🏠</div>
-      <div>Home</div>
-    </a>
-    <a href="math/index.html">
-      <div class="nav-icon">⚔️</div>
-      <div>Games</div>
-    </a>
-    <a href="routes/index.html">
-      <div class="nav-icon">🗺️</div>
-      <div>Peta</div>
-    </a>
-    <a href="collection/index.html">
-      <div class="nav-icon">📦</div>
-      <div>Koleksi</div>
-    </a>
-    <a href="store/index.html">
-      <div class="nav-icon">🏪</div>
-      <div>Toko</div>
-    </a>
   </nav>
 
-<script src="js/analytics.js?v=20260223"></script>
+  <!-- Core Scripts -->
+  <script src="js/profile.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/user-selection.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Bottom nav tap interaction
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Haptic-like scale on game cards (touch)
+    document.querySelectorAll('.game-card-featured, .game-card-compact:not(.is-locked)').forEach(card => {
+      card.addEventListener('touchstart', () => {}, { passive: true });
+    });
+  </script>
+
 </body>
 </html>
-<!-- Test edit on local - 05:39:03 -->

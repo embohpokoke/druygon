@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <pattern id="pokeball" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <!-- Pokeball circle -->
+      <circle cx="40" cy="40" r="28" fill="none" stroke="currentColor" stroke-width="2" opacity="0.12"/>
+      <!-- Center line -->
+      <line x1="12" y1="40" x2="68" y2="40" stroke="currentColor" stroke-width="2" opacity="0.12"/>
+      <!-- Center button -->
+      <circle cx="40" cy="40" r="6" fill="none" stroke="currentColor" stroke-width="2" opacity="0.18"/>
+      <circle cx="40" cy="40" r="2" fill="currentColor" opacity="0.15"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="400" fill="url(#pokeball)" color="#6B46C1"/>
+</svg>
