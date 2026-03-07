@@ -1,9 +1,9 @@
 // Druygon Profile System — 5 Named Player Slots
 // Each player has their own localStorage key: druygon_slot_1 through druygon_slot_5
 
-var SLOT_NAMES = ['Dru', 'Oming', 'Illy', 'Reymar', 'Extra'];
-var SLOT_EMOJIS = ['🐉', '🦖', '🦈', '🐺', '🦅'];
-var SLOT_COLORS = ['#FFCB05', '#FF6B35', '#4FC3F7', '#00BCD4', '#9C27B0'];
+var SLOT_NAMES = ['Dru', 'Oming', 'Reymar', 'Illy', 'Extra'];
+var SLOT_EMOJIS = ['🐉', '🦖', '🐺', '🦈', '🦅'];
+var SLOT_COLORS = ['#FFCB05', '#FF6B35', '#00BCD4', '#4FC3F7', '#9C27B0'];
 var ACTIVE_SLOT_KEY = 'druygon_active_slot';
 var MAX_SLOTS = 5;
 

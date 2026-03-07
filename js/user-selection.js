@@ -7,8 +7,8 @@
 const SLOT_CONFIG = [
   { id: 1, name: 'Dru', emoji: '🐉', color: '#FFCB05' },
   { id: 2, name: 'Oming', emoji: '🦖', color: '#FF6B35' },
-  { id: 3, name: 'Illy', emoji: '🦈', color: '#4FC3F7' },
-  { id: 4, name: 'Reymar', emoji: '🐺', color: '#00BCD4' },
+  { id: 3, name: 'Reymar', emoji: '🐺', color: '#00BCD4' },
+  { id: 4, name: 'Illy', emoji: '🦈', color: '#4FC3F7' },
   { id: 5, name: 'Extra', emoji: '🦅', color: '#9C27B0' }
 ];
 

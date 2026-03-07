@@ -8,8 +8,8 @@ let playerProfile = null;
 const LEADERBOARD_SLOTS = [
   { slot: 1, name: 'Dru' },
   { slot: 2, name: 'Oming' },
-  { slot: 3, name: 'Illy' },
-  { slot: 4, name: 'Reymar' },
+  { slot: 3, name: 'Reymar' },
+  { slot: 4, name: 'Illy' },
   { slot: 5, name: 'Extra' }
 ];
 
