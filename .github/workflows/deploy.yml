@@ -20,4 +20,5 @@ jobs:
             cd /var/www/druygon
             git fetch origin
             git reset --hard origin/master
+            pm2 restart druygon
             echo "Deploy done: $(date)"
