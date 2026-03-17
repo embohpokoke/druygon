@@ -2,28 +2,28 @@
 // Word Search Indonesia - Pokemon Theme
 var CATEGORIES = {
   hewan: {
-    label: '🐾 Hewan', words: [
+    label: 'Hewan', words: [
       'KUCING','ANJING','KELINCI','KUDA','SAPI','KAMBING','AYAM','BEBEK',
       'IKAN','BURUNG','ULAR','GAJAH','HARIMAU','SINGA','MONYET',
       'RUSA','DOMBA','KERBAU','TIKUS','RUBAH','ELANG','PAUS','LUMBA'
     ]
   },
   buah: {
-    label: '🍎 Buah', words: [
+    label: 'Buah', words: [
       'APEL','JERUK','MANGGA','PISANG','ANGGUR','SEMANGKA','PEPAYA',
       'NANAS','DURIAN','SALAK','MELON','JAMBU','KELAPA','RAMBUTAN',
       'LEMON','ALPUKAT','SIRSAK','KURMA','CERI','NANGKA','DELIMA','MARKISA'
     ]
   },
   warna: {
-    label: '🎨 Warna', words: [
+    label: 'Warna', words: [
       'MERAH','BIRU','HIJAU','KUNING','PUTIH','HITAM','COKLAT',
       'UNGU','PINK','EMAS','PERAK','JINGGA','KREM','VIOLET',
       'NILA','CYAN','TEAL','MAGENTA','MAROON','CORAL'
     ]
   },
   katakerja: {
-    label: '🏃 Kata Kerja', words: [
+    label: 'Kata Kerja', words: [
       'BERLARI','MAKAN','MINUM','TIDUR','DUDUK','BERDIRI','MENULIS',
       'MEMBACA','BERMAIN','BERENANG','TERBANG','MELOMPAT','MENARI',
       'BERNYANYI','MEMASAK','MENCUCI','BELAJAR','MEMBANTU','TERTAWA',
@@ -31,14 +31,14 @@ var CATEGORIES = {
     ]
   },
   alam: {
-    label: '🌿 Alam', words: [
+    label: 'Alam', words: [
       'GUNUNG','SUNGAI','LAUT','DANAU','HUTAN','PANTAI','BUKIT',
       'PADANG','PULAU','LANGIT','AWAN','HUJAN','ANGIN','PETIR',
       'BINTANG','MATAHARI','BULAN','TANAH','BATU','PASIR','POHON','RUMPUT'
     ]
   },
   tubuh: {
-    label: '🦶 Tubuh', words: [
+    label: 'Tubuh', words: [
       'KEPALA','MATA','HIDUNG','MULUT','TELINGA','TANGAN','KAKI',
       'JARI','LUTUT','BAHU','PERUT','DADA','LEHER','SIKU',
       'TUMIT','BIBIR','GIGI','LIDAH','PIPI','DAHI','ALIS','RAMBUT'
@@ -308,7 +308,7 @@ function endSelect(e) {
 
     renderWordList();
     updateStats();
-    showFeedback('✅ "' + match.word + '" ditemukan! +' + (match.word.length * 10) + ' poin!', true);
+    showFeedback('"' + match.word + '" ditemukan! +' + (match.word.length * 10) + ' poin!', true);
     playCorrectSound();
 
     if (state.foundWords.length === state.words.length) {
@@ -376,7 +376,7 @@ function startTimer() {
 
 function useHint() {
   if (state.hintsUsed >= state.maxHints) {
-    showFeedback('❌ Hint sudah habis!', false);
+    showFeedback('Hint sudah habis!', false);
     return;
   }
 
@@ -403,7 +403,7 @@ function useHint() {
     var el = document.getElementById('cell-' + cellId);
     el.classList.add('hint');
     setTimeout(function() { el.classList.remove('hint'); }, 3000);
-    showFeedback('💡 Cari kata "' + word + '" — huruf pertama ditandai!', true);
+    showFeedback('Cari kata "' + word + '" — huruf pertama ditandai!', true);
     updateStats();
   }
 }

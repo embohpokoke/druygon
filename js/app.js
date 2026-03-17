@@ -1,630 +1,340 @@
-/**
- * Druygon App Main
- * Initializes app and connects UI with backend API
- */
+(function(window, document) {
+  var LEADERBOARD_API_URL = '/api/druygon/profile/all';
+  var LEADERBOARD_SPRITES = {
+    dru: 'assets/sprites/pikachu.png',
+    oming: 'assets/sprites/charizard.png',
+    reymar: 'assets/sprites/alakazam.png',
+    illy: 'assets/sprites/jolteon.png',
+    extra: 'images/pokemon/mewtwo.webp'
+  };
+  var currentRank = null;
+  var appStarted = false;
 
-// Global player profile
-let playerProfile = null;
-const LEADERBOARD_SLOTS = [
-  { slot: 1, name: 'Dru' },
-  { slot: 2, name: 'Oming' },
-  { slot: 3, name: 'Reymar' },
-  { slot: 4, name: 'Illy' },
-  { slot: 5, name: 'Extra' }
-];
-const LEADERBOARD_SPRITES = {
-  dru: 'assets/sprites/pikachu.png',
-  oming: 'assets/sprites/charizard.png',
-  reymar: 'assets/sprites/alakazam.png',
-  illy: 'assets/sprites/jolteon.png',
-  extra: 'images/pokemon/mewtwo.webp'
-};
-
-/**
- * Convert old profile structure (profile.js) to new structure
- */
-function convertOldProfile(oldProfile, name) {
-  if (window.DruygonAPI?.normalizeProfile) {
-    return window.DruygonAPI.normalizeProfile(oldProfile, name);
+  function bySelector(selector) {
+    return document.querySelector(selector);
   }
 
-  return {
-    name: name || oldProfile.name || 'Player',
-    level: oldProfile.level || 1,
-    xp: oldProfile.xp || 0,
-    xpRequired: oldProfile.xpToNext || 100,
-    gamesPlayed: oldProfile.stats?.gamesPlayed || 0,
-    achievements: oldProfile.badges || [],
-    stats: {
-      math_arena: {
-        played: oldProfile.stats?.mathArenaPlays || 0,
-        wins: Math.floor((oldProfile.stats?.mathArenaPlays || 0) * 0.7), // estimate
-        best_score: oldProfile.stats?.bestStreak || 0
-      },
-      word_search: {
-        played: oldProfile.stats?.wordSearchPlays || 0,
-        wins: Math.floor((oldProfile.stats?.wordSearchPlays || 0) * 0.8),
-        best_time: 0
-      },
-      speed_math: {
-        played: oldProfile.stats?.fiveMinutePlays || 0,
-        wins: Math.floor((oldProfile.stats?.fiveMinutePlays || 0) * 0.6),
-        perfect_scores: 0
-      },
-      pokemon_rpg: {
-        played: 0,
-        pokemon_caught: oldProfile.caughtCount || 0,
-        badges: oldProfile.badges?.length || 0
+  function getProfileData() {
+    if (!window.druygonProfile || !window.druygonProfile.data) return null;
+    return window.druygonProfile.data;
+  }
+
+  function hasProgress(profile) {
+    if (!profile) return false;
+    return profile.level > 1 ||
+      profile.xp > 0 ||
+      profile.coins > 0 ||
+      (profile.collection && profile.collection.length > 0) ||
+      (profile.badges && profile.badges.length > 0) ||
+      (profile.stats && (profile.stats.gamesPlayed > 0 || profile.stats.totalCorrect > 0));
+  }
+
+  function getStars(profile) {
+    var stats = profile && profile.stats ? profile.stats : {};
+    return Math.floor((stats.totalCorrect || 0) / 10);
+  }
+
+  function ensureChangeUserButton() {
+    var actions = bySelector('.header-actions');
+    var button;
+    if (!actions || document.getElementById('changeUserBtn')) return;
+    button = document.createElement('button');
+    button.id = 'changeUserBtn';
+    button.className = 'icon-btn';
+    button.type = 'button';
+    button.textContent = 'Ganti User';
+    button.style.width = 'auto';
+    button.style.padding = '0 14px';
+    button.style.fontSize = '12px';
+    button.style.fontWeight = '700';
+    button.style.borderRadius = '999px';
+    button.onclick = function() {
+      if (window.showSwitchPlayer) window.showSwitchPlayer();
+    };
+    actions.insertBefore(button, actions.firstChild);
+  }
+
+  function updateHero() {
+    var profile = getProfileData();
+    var greeting = bySelector('.player-greeting span');
+    var levelBadge = bySelector('.player-level-badge');
+    if (!profile) return;
+    if (greeting) greeting.textContent = profile.name;
+    if (levelBadge) levelBadge.textContent = 'LVL ' + profile.level;
+  }
+
+  function updateXP() {
+    var profile = getProfileData();
+    var label = bySelector('.player-xp-label');
+    var bar = bySelector('.xp-bar-fill');
+    var pct;
+    if (!profile) return;
+    if (label) label.textContent = profile.xp + ' / ' + profile.xpToNext + ' XP';
+    if (bar) {
+      pct = profile.xpToNext > 0 ? Math.round((profile.xp / profile.xpToNext) * 100) : 0;
+      if (pct < 0) pct = 0;
+      if (pct > 100) pct = 100;
+      bar.style.width = pct + '%';
+    }
+  }
+
+  function updateStats() {
+    var profile = getProfileData();
+    var statEls = document.querySelectorAll('.player-stat-val');
+    var stats;
+    if (!profile || !statEls || statEls.length < 4) return;
+    stats = profile.stats || {};
+    statEls[0].textContent = (stats.bestStreak || 0) + '🔥';
+    statEls[1].textContent = getStars(profile) + '⭐';
+    statEls[2].textContent = (profile.badges ? profile.badges.length : 0) + '🏆';
+    statEls[3].textContent = currentRank ? '#' + currentRank : '-';
+  }
+
+  function updateGameLocks() {
+    var profile = getProfileData();
+    var card = bySelector('.game-card-compact[href="routes/"]') || bySelector('.game-card-compact.is-locked');
+    var lockOverlay;
+    var playBtn;
+    if (!profile || !card) return;
+
+    lockOverlay = card.querySelector('.lock-overlay');
+    playBtn = card.querySelector('.compact-play-btn');
+
+    if (profile.level >= 15) {
+      card.classList.remove('is-locked');
+      if (lockOverlay) lockOverlay.style.display = 'none';
+      if (playBtn) {
+        playBtn.textContent = '▶';
+        playBtn.style.background = 'var(--yellow)';
+        playBtn.style.color = 'var(--text-inverse)';
+        playBtn.style.boxShadow = '0 2px 8px rgba(255,203,5,0.4)';
       }
-    },
-    inventory: {
-      pokeballs: oldProfile.pokeballs?.pokeball || 5,
-      great_balls: oldProfile.pokeballs?.greatball || 0,
-      ultra_balls: oldProfile.pokeballs?.ultraball || 0,
-      coins: oldProfile.coins || 0
-    },
-    xpToNext: oldProfile.xpToNext || 100,
-    coins: oldProfile.coins || 0,
-    pokeballs: {
-      pokeball: oldProfile.pokeballs?.pokeball || 5,
-      greatball: oldProfile.pokeballs?.greatball || 0,
-      ultraball: oldProfile.pokeballs?.ultraball || 0,
-      masterball: oldProfile.pokeballs?.masterball || 0
-    },
-    team: Array.isArray(oldProfile.team) ? oldProfile.team : [],
-    collection: Array.isArray(oldProfile.collection) ? oldProfile.collection : [],
-    defeatedCount: oldProfile.defeatedCount || 0,
-    caughtCount: oldProfile.caughtCount || 0,
-    currentRoute: oldProfile.currentRoute || 1,
-    badges: oldProfile.badges || [],
-    streak: 0,
-    stars: (oldProfile.stats?.totalCorrect || 0) / 10, // 10 correct = 1 star
-    rank: 0,
-    lastPlayed: new Date().toISOString(),
-    createdAt: new Date().toISOString()
-  };
-}
+    } else {
+      card.classList.add('is-locked');
+      if (lockOverlay) lockOverlay.style.display = '';
+      if (playBtn) {
+        playBtn.textContent = '🔒';
+        playBtn.style.background = 'var(--bg-elevated)';
+        playBtn.style.color = 'var(--text-tertiary)';
+        playBtn.style.boxShadow = 'none';
+      }
+    }
+  }
 
-// ============================================
-// INITIALIZATION
-// ============================================
+  function refreshHome() {
+    if (!window.druygonProfile) return;
+    window.druygonProfile.load();
+    updateHero();
+    updateXP();
+    updateStats();
+    updateGameLocks();
+  }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🎮 Druygon Portal v2.0 - Initializing...');
-
-  // Leaderboard should load even before slot selection is completed.
-  loadLeaderboard().catch((error) => {
-    console.warn('[Leaderboard] initial load failed', error);
-    renderLeaderboardState('empty');
-  });
-
-  // Wait for user selection
-  const checkUserSelection = setInterval(async () => {
-    const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
-
-    if (!activeSlot) {
-      console.log('Waiting for user selection...');
+  function renderLeaderboardState(state) {
+    var leaderboard = bySelector('.leaderboard');
+    if (!leaderboard) return;
+    if (state === 'loading') {
+      leaderboard.innerHTML = '<div class="leaderboard-row"><div class="leaderboard-name"><div class="leaderboard-username">Memuat leaderboard...</div><div class="leaderboard-sub">Mengambil data pemain dari server</div></div></div>';
       return;
     }
+    leaderboard.innerHTML = '<div class="leaderboard-row"><div class="leaderboard-name"><div class="leaderboard-username">Belum ada data leaderboard</div><div class="leaderboard-sub">Mainkan game dulu untuk mengisi ranking</div></div></div>';
+  }
 
-    clearInterval(checkUserSelection);
+  function normalizeLeaderboardProfile(player) {
+    var profile = player && player.profile ? player.profile : player;
+    var stats = profile && profile.stats ? profile.stats : {};
+    var collectionCount = profile && profile.collection && profile.collection.length ? profile.collection.length : (profile && profile.caughtCount ? profile.caughtCount : 0);
+    var slot = player && player.slot ? player.slot : null;
+    return {
+      slot: slot,
+      name: (profile && profile.name) || (player && player.name) || 'Player',
+      level: profile && profile.level ? profile.level : 1,
+      xp: profile && profile.xp ? profile.xp : 0,
+      points: ((profile && profile.level ? profile.level : 1) * 1000) + (profile && profile.xp ? profile.xp : 0) + (collectionCount * 50) + (stats.totalCorrect || 0),
+      isCurrentPlayer: !!slot && window.druygonUsers && window.druygonUsers.getActiveSlot && window.druygonUsers.getActiveSlot() === slot
+    };
+  }
 
-    // Get slot info
-    const slotConfig = window.UserSelection.SLOT_CONFIG[activeSlot - 1];
-    console.log(`Loading profile for: ${slotConfig.name} (Slot ${activeSlot})`);
+  function getLeaderboardSprite(name) {
+    var key = String(name || '').toLowerCase();
+    return LEADERBOARD_SPRITES[key] || 'images/pokemon/pikachu.webp';
+  }
 
-    // Load from original profile.js first (localStorage)
-    if (typeof DruygonProfile !== 'undefined') {
-      const localProfile = new DruygonProfile(activeSlot);
-      if (localProfile.data) {
-        // Convert old profile structure to new
-        playerProfile = convertOldProfile(localProfile.data, slotConfig.name);
-        console.log('✅ Loaded from profile.js (localStorage)');
+  function updateLeaderboard(players) {
+    var leaderboard = bySelector('.leaderboard');
+    var i;
+    var row;
+    var player;
+    var rank;
+    var currentSlot = window.druygonUsers && window.druygonUsers.getActiveSlot ? window.druygonUsers.getActiveSlot() : null;
+    if (!leaderboard) return;
+    leaderboard.innerHTML = '';
+
+    currentRank = null;
+    for (i = 0; i < players.length; i++) {
+      player = players[i];
+      rank = i + 1;
+      if (currentSlot && player.slot === currentSlot) {
+        currentRank = rank;
       }
-    }
-
-    // Try API if localStorage failed
-    if (!playerProfile) {
-      playerProfile = await DruygonAPI.loadProfile(activeSlot);
-      if (playerProfile) {
-        console.log('✅ Loaded from API');
+      row = document.createElement('div');
+      row.className = 'leaderboard-row';
+      if (player.slot === currentSlot) {
+        row.style.background = 'rgba(255,203,5,0.05)';
+        row.style.borderColor = 'rgba(255,203,5,0.15)';
       }
+      row.innerHTML =
+        '<div class="leaderboard-rank">' + (rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank) + '</div>' +
+        '<div class="leaderboard-avatar"><img src="' + getLeaderboardSprite(player.name) + '" alt="' + player.name + '" class="leaderboard-avatar-img"></div>' +
+        '<div class="leaderboard-name">' +
+          '<div class="leaderboard-username">' + player.name + (player.slot === currentSlot ? ' <span style="font-size:10px;color:var(--yellow);background:var(--yellow-dim);padding:1px 6px;border-radius:99px;">YOU</span>' : '') + '</div>' +
+          '<div class="leaderboard-sub">Level ' + player.level + ' • ' + player.xp + ' XP • ' + player.points + ' Poin</div>' +
+        '</div>' +
+        '<div class="leaderboard-score"><div class="score-val">' + player.points + '</div><div class="score-label">Poin</div></div>';
+      leaderboard.appendChild(row);
     }
 
-    // Create new if nothing found
-    if (!playerProfile) {
-      playerProfile = DruygonAPI.createDefaultProfile(slotConfig.name);
-      await DruygonAPI.saveProfile(playerProfile, activeSlot, 'new-profile');
-      console.log(`✨ New profile created for ${slotConfig.name}`);
-    }
-
-    // Update API current slot
-    DruygonAPI.setCurrentSlot(activeSlot);
-
-    // Update UI with loaded profile
-    updateUI();
-
-    // Start auto-save
-    DruygonAPI.startAutoSave(() => playerProfile);
-
-    // Load leaderboard
-    loadLeaderboard();
-
-    console.log('✅ App initialized successfully');
-  }, 100);
-});
-
-// ============================================
-// UI UPDATES
-// ============================================
-
-/**
- * Update all UI elements with current player data
- */
-function updateUI() {
-  if (!playerProfile) return;
-
-  // Player Hero Section
-  updatePlayerHero();
-
-  // XP Progress
-  updateXPProgress();
-
-  // Stats Row
-  updateStats();
-
-  // Featured Game (unlock logic)
-  updateGameLocks();
-}
-
-/**
- * Update player hero section
- */
-function updatePlayerHero() {
-  const nameEl = document.querySelector('.player-greeting span');
-  const levelBadge = document.querySelector('.player-level-badge');
-
-  if (nameEl) nameEl.textContent = playerProfile.name;
-  if (levelBadge) levelBadge.textContent = `LVL ${playerProfile.level}`;
-}
-
-/**
- * Update XP bar
- */
-function updateXPProgress() {
-  const xpLabel = document.querySelector('.player-xp-label');
-  const xpBar = document.querySelector('.xp-bar-fill');
-
-  if (xpLabel) {
-    xpLabel.textContent = `${playerProfile.xp} / ${playerProfile.xpRequired} XP`;
-  }
-
-  if (xpBar) {
-    const percentage = (playerProfile.xp / playerProfile.xpRequired) * 100;
-    xpBar.style.width = `${Math.min(percentage, 100)}%`;
-  }
-}
-
-/**
- * Update stats row
- */
-function updateStats() {
-  const statsRow = document.querySelector('.player-stats-row');
-  if (!statsRow) return;
-
-  const stats = [
-    { selector: '.player-stat:nth-child(1) .player-stat-val', value: `${playerProfile.streak}🔥` },
-    { selector: '.player-stat:nth-child(2) .player-stat-val', value: `${playerProfile.stars}⭐` },
-    { selector: '.player-stat:nth-child(3) .player-stat-val', value: `${playerProfile.achievements.length}🏆` },
-    { selector: '.player-stat:nth-child(4) .player-stat-val', value: `#${playerProfile.rank || '?'}` }
-  ];
-
-  stats.forEach(stat => {
-    const el = document.querySelector(stat.selector);
-    if (el) el.textContent = stat.value;
-  });
-}
-
-/**
- * Update game lock status based on level
- */
-function updateGameLocks() {
-  // Pokemon RPG requires level 15
-  const rpgCard = document.querySelector('.game-card-compact.is-locked');
-
-  if (rpgCard && playerProfile.level >= 15) {
-    rpgCard.classList.remove('is-locked');
-    rpgCard.style.opacity = '1';
-
-    const playBtn = rpgCard.querySelector('.compact-play-btn');
-    if (playBtn) {
-      playBtn.textContent = '▶';
-      playBtn.style.background = 'var(--yellow)';
-      playBtn.style.color = 'var(--text-inverse)';
-      playBtn.style.boxShadow = '0 2px 8px rgba(255,203,5,0.4)';
-    }
-
-    // Show unlock notification
-    showNotification('🌟 Pokemon RPG Unlocked!', 'You can now play Pokemon RPG!');
-  }
-}
-
-// ============================================
-// LEADERBOARD
-// ============================================
-
-/**
- * Load and display leaderboard
- */
-async function loadLeaderboard() {
-  renderLeaderboardState('loading');
-
-  let players = [];
-  try {
-    const apiPlayers = await getLeaderboardPlayersFromDb();
-    players = apiPlayers.map(normalizeLeaderboardPlayer);
-  } catch (error) {
-    console.warn('[Leaderboard] API unavailable, using local fallback', error);
-  }
-
-  if (players.length === 0) {
-    players = getLocalFallbackLeaderboard();
-  }
-
-  if (players.length === 0) {
-    renderLeaderboardState('empty');
-    return;
-  }
-
-  // Sort by points from DB profile
-  players.sort((a, b) => {
-    if (b.points !== a.points) return b.points - a.points;
-    return (a.slot || 999) - (b.slot || 999);
-  });
-
-  // Assign ranks
-  players.forEach((p, index) => {
-    p.rank = index + 1;
-  });
-
-  // Update current player's rank (prefer active slot match)
-  const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
-  const currentPlayer = players.find((p) =>
-    (activeSlot && p.slot === activeSlot) ||
-    (!activeSlot && p.name === (playerProfile?.name || ''))
-  );
-  if (currentPlayer && playerProfile) {
-    playerProfile.rank = currentPlayer.rank;
     updateStats();
   }
 
-  // Update leaderboard UI
-  updateLeaderboardUI(players.slice(0, 10)); // Top 10
-}
-
-/**
- * Update leaderboard UI
- */
-function updateLeaderboardUI(players) {
-  const leaderboard = document.querySelector('.leaderboard');
-  if (!leaderboard) return;
-
-  // Clear existing rows
-  leaderboard.innerHTML = '';
-
-  players.forEach((player, index) => {
-    const isCurrentPlayer = player.isCurrentPlayer;
-
-    const rank = index + 1;
-    const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
-    const rankColor = rank === 1 ? '#FFD700' : rank === 2 ? '#C0C0C0' : rank === 3 ? '#CD7F32' : '';
-
-    const row = document.createElement('div');
-    row.className = 'leaderboard-row';
-
-    if (isCurrentPlayer) {
-      row.style.background = 'rgba(255,203,5,0.05)';
-      row.style.borderColor = 'rgba(255,203,5,0.15)';
+  function getLocalLeaderboard() {
+    var ranked;
+    var players = [];
+    var i;
+    if (!window.getAllPlayersRanked) return players;
+    ranked = window.getAllPlayersRanked();
+    for (i = 0; i < ranked.length; i++) {
+      players.push({
+        slot: ranked[i].slot,
+        name: ranked[i].name,
+        level: ranked[i].level,
+        xp: ranked[i].xp,
+        points: ranked[i].score,
+        isCurrentPlayer: ranked[i].isActive
+      });
     }
-
-    row.innerHTML = `
-      <div class="leaderboard-rank" style="color: ${rankColor || 'inherit'};">${rankEmoji}</div>
-      <div class="leaderboard-avatar">
-        <img src="${getLeaderboardSprite(player)}" alt="${player.name} Pokemon" class="leaderboard-avatar-img">
-      </div>
-      <div class="leaderboard-name">
-        <div class="leaderboard-username">
-          ${player.name}
-          ${isCurrentPlayer ? '<span style="font-size:10px; color: var(--yellow); background: var(--yellow-dim); padding: 1px 6px; border-radius: 99px;">YOU</span>' : ''}
-        </div>
-        <div class="leaderboard-sub">Level ${player.level} • ${player.xp} XP • ${player.points} Poin</div>
-      </div>
-      <div class="leaderboard-score">
-        <div class="score-val" style="color: ${rankColor || 'var(--yellow)'};">${player.points}</div>
-        <div class="score-label">Poin</div>
-      </div>
-    `;
-
-    leaderboard.appendChild(row);
-  });
-}
-
-function renderLeaderboardState(state) {
-  const leaderboard = document.querySelector('.leaderboard');
-  if (!leaderboard) return;
-
-  if (state === 'loading') {
-    leaderboard.innerHTML = '<div class="leaderboard-row"><div class="leaderboard-name"><div class="leaderboard-username">Memuat leaderboard...</div><div class="leaderboard-sub">Mengambil data pemain dari server</div></div></div>';
-    return;
+    return players;
   }
 
-  if (state === 'empty') {
-    leaderboard.innerHTML = '<div class="leaderboard-row"><div class="leaderboard-name"><div class="leaderboard-username">Belum ada data leaderboard</div><div class="leaderboard-sub">Mainkan game dulu untuk mengisi ranking</div></div></div>';
-  }
-}
-
-function getLocalFallbackLeaderboard() {
-  if (!window.getAllPlayersRanked) return [];
-
-  try {
-    const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
-    const ranked = window.getAllPlayersRanked();
-    return ranked.map((p) => ({
-      slot: p.slot,
-      name: p.name,
-      level: p.level || 1,
-      xp: p.xp || 0,
-      points: p.score || 0,
-      isCurrentPlayer: (activeSlot && p.slot === activeSlot) || p.name === playerProfile?.name
-    }));
-  } catch (error) {
-    console.warn('[Leaderboard] local fallback failed', error);
-    return [];
-  }
-}
-
-function normalizeLeaderboardPlayer(player) {
-  const profile = player?.profile || {};
-  const activeSlot = window.UserSelection ? window.UserSelection.getActiveSlot() : null;
-  const level = profile.level || 1;
-  const xp = profile.xp || 0;
-  const totalCorrect = profile.stats?.totalCorrect || 0;
-  const collectionCount = Array.isArray(profile.collection)
-    ? profile.collection.length
-    : (profile.caughtCount || profile.stats?.pokemon_rpg?.pokemon_caught || 0);
-  const fallbackStars = Math.floor(profile.stars || 0);
-
-  // Keep score formula aligned with legacy profile leaderboard logic.
-  const points = (level * 1000) + xp + (collectionCount * 50) + (totalCorrect || fallbackStars);
-
-  return {
-    slot: player.slot,
-    name: profile.name || player.name || `Player ${player.slot || ''}`.trim(),
-    level: level,
-    xp: xp,
-    points: points,
-    isCurrentPlayer: (activeSlot && player.slot === activeSlot) || (!activeSlot && (profile.name === playerProfile?.name))
-  };
-}
-
-function getLeaderboardSprite(player) {
-  const key = String(player?.name || '').toLowerCase();
-  return LEADERBOARD_SPRITES[key] || 'images/pokemon/pikachu.webp';
-}
-
-async function getLeaderboardPlayersFromDb() {
-  const playersFromDb = await DruygonAPI.getAllPlayers();
-  const bySlot = new Map(playersFromDb.map((p) => [p.slot, p]));
-  const merged = [];
-
-  for (const slotDef of LEADERBOARD_SLOTS) {
-    const existing = bySlot.get(slotDef.slot);
-
-    if (!existing) {
-      const seeded = createLegacySeedProfile(slotDef.name);
-      DruygonAPI.saveProfile(seeded, slotDef.slot, 'seed-slot').catch(() => {});
-      merged.push({ slot: slotDef.slot, name: slotDef.name, profile: seeded });
-      continue;
-    }
-
-    const profile = existing.profile || {};
-    const currentName = profile.name || existing.name || '';
-
-    if (currentName !== slotDef.name) {
-      const normalized = { ...profile, name: slotDef.name };
-      DruygonAPI.saveProfile(normalized, slotDef.slot, 'normalize-slot-name').catch(() => {});
-      merged.push({ slot: slotDef.slot, name: slotDef.name, profile: normalized });
-      continue;
-    }
-
-    merged.push({ slot: slotDef.slot, name: slotDef.name, profile: profile });
-  }
-
-  return merged;
-}
-
-function createLegacySeedProfile(name) {
-  return {
-    name: name,
-    level: 1,
-    xp: 0,
-    xpToNext: 100,
-    coins: 0,
-    pokeballs: { pokeball: 5, greatball: 0, ultraball: 0, masterball: 0 },
-    team: [],
-    collection: [],
-    defeatedCount: 0,
-    caughtCount: 0,
-    currentRoute: 1,
-    badges: [],
-    stats: {
-      totalCorrect: 0,
-      totalWrong: 0,
-      gamesPlayed: 0,
-      bestStreak: 0,
-      mathArenaPlays: 0,
-      wordSearchPlays: 0,
-      fiveMinutePlays: 0
-    }
-  };
-}
-
-// ============================================
-// GAME COMPLETION
-// ============================================
-
-/**
- * Handle game completion
- * Call this when a game finishes
- */
-function completeGame(gameType, stats) {
-  if (!playerProfile) return;
-
-  // Add XP
-  const xpReward = stats.xpReward || 50;
-  DruygonAPI.addXP(playerProfile, xpReward);
-
-  // Update game stats
-  DruygonAPI.updateGameStats(playerProfile, gameType, stats);
-
-  // Check for achievements
-  checkAchievements(gameType, stats);
-
-  // Update UI
-  updateUI();
-
-  // Save profile
-  DruygonAPI.saveProfile(playerProfile, DruygonAPI.getCurrentSlot(), 'game-complete');
-  DruygonAPI.saveProfileLocal(playerProfile);
-
-  // Show completion notification
-  showNotification(
-    `🎮 Game Complete!`,
-    `+${xpReward} XP | Level ${playerProfile.level}`
-  );
-
-  // Reload leaderboard
-  setTimeout(loadLeaderboard, 1000);
-}
-
-/**
- * Check and unlock achievements
- */
-function checkAchievements(gameType, stats) {
-  const achievements = {
-    math_master: () =>
-      gameType === 'math_arena' &&
-      playerProfile.stats.math_arena.wins >= 100,
-
-    speed_demon: () =>
-      gameType === 'speed_math' &&
-      playerProfile.stats.speed_math.perfect_scores >= 10,
-
-    streak_7: () => playerProfile.streak >= 7,
-
-    explorer: () =>
-      playerProfile.stats.math_arena.played > 0 &&
-      playerProfile.stats.word_search.played > 0 &&
-      playerProfile.stats.speed_math.played > 0,
-
-    perfectionist: () =>
-      playerProfile.stats.math_arena.wins / Math.max(playerProfile.stats.math_arena.played, 1) === 1 &&
-      playerProfile.stats.math_arena.played >= 10
-  };
-
-  Object.entries(achievements).forEach(([id, checkFn]) => {
-    if (checkFn()) {
-      const unlocked = DruygonAPI.unlockAchievement(playerProfile, id);
-      if (unlocked) {
-        showNotification('🏆 Achievement Unlocked!', id.replace('_', ' ').toUpperCase());
-      }
-    }
-  });
-}
-
-// ============================================
-// NOTIFICATIONS
-// ============================================
-
-/**
- * Show notification toast
- */
-function showNotification(title, message) {
-  const toast = document.createElement('div');
-  toast.className = 'notification-toast';
-  toast.innerHTML = `
-    <div style="font-weight: 700; margin-bottom: 4px;">${title}</div>
-    <div style="font-size: 13px; opacity: 0.8;">${message}</div>
-  `;
-
-  document.body.appendChild(toast);
-
-  // Add CSS if not exists
-  if (!document.getElementById('notification-styles')) {
-    const style = document.createElement('style');
-    style.id = 'notification-styles';
-    style.textContent = `
-      .notification-toast {
-        position: fixed;
-        top: calc(var(--header-h) + var(--safe-top) + 16px);
-        left: 50%;
-        transform: translateX(-50%) translateY(-100px);
-        background: rgba(37, 37, 66, 0.95);
-        backdrop-filter: blur(12px);
-        color: white;
-        padding: 16px 20px;
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        z-index: 1000;
-        min-width: 280px;
-        max-width: 90%;
-        text-align: center;
-        animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-                   slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 2.5s forwards;
-      }
-
-      @keyframes slideDown {
-        to { transform: translateX(-50%) translateY(0); }
-      }
-
-      @keyframes slideUp {
-        to { transform: translateX(-50%) translateY(-100px); opacity: 0; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  setTimeout(() => toast.remove(), 3000);
-}
-
-// ============================================
-// GAME BUTTONS
-// ============================================
-
-// Keep locked game card from opening before required level.
-document.addEventListener('DOMContentLoaded', () => {
-  const lockedCards = document.querySelectorAll('.game-card-compact.is-locked');
-  lockedCards.forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (!playerProfile || playerProfile.level < 15) {
-        e.preventDefault();
-        e.stopPropagation();
-        showNotification('🔒 Locked', 'Reach level 15 to unlock this game');
-      }
+  function sortPlayers(players) {
+    players.sort(function(a, b) {
+      if (b.points !== a.points) return b.points - a.points;
+      return (a.slot || 999) - (b.slot || 999);
     });
-  });
-});
+  }
 
-// ============================================
-// EXPORTS
-// ============================================
+  function loadLeaderboard() {
+    var xhr = new XMLHttpRequest();
+    renderLeaderboardState('loading');
+    try {
+      xhr.onreadystatechange = function() {
+        var response;
+        var source;
+        var players = [];
+        var i;
+        if (xhr.readyState !== 4) return;
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            response = JSON.parse(xhr.responseText);
+          } catch (error) {
+            response = null;
+          }
+          if (response && response.success && response.players && response.players.length) {
+            source = response.players;
+            for (i = 0; i < source.length; i++) {
+              if (!source[i] || !source[i].profile) continue;
+              if (!hasProgress(source[i].profile)) continue;
+              players.push(normalizeLeaderboardProfile(source[i]));
+            }
+          }
+        }
 
-window.DruygonApp = {
-  getProfile: () => playerProfile,
-  updateUI,
-  completeGame,
-  loadLeaderboard,
-  showNotification
-};
+        if (!players.length) {
+          players = getLocalLeaderboard();
+        }
 
-console.log('✅ Druygon App loaded');
+        if (!players.length) {
+          currentRank = null;
+          updateStats();
+          renderLeaderboardState('empty');
+          return;
+        }
+
+        sortPlayers(players);
+        updateLeaderboard(players.slice(0, 10));
+      };
+      xhr.open('GET', LEADERBOARD_API_URL, true);
+      xhr.send();
+    } catch (error) {
+      var fallback = getLocalLeaderboard();
+      if (!fallback.length) {
+        currentRank = null;
+        updateStats();
+        renderLeaderboardState('empty');
+        return;
+      }
+      sortPlayers(fallback);
+      updateLeaderboard(fallback.slice(0, 10));
+    }
+  }
+
+  function startAutoSave() {
+    window.setInterval(function() {
+      if (!window.druygonProfile) return;
+      window.druygonProfile.load();
+      window.druygonProfile.syncToServer('auto-save');
+      refreshHome();
+    }, 60000);
+  }
+
+  function bindRefreshEvents() {
+    window.addEventListener('focus', function() {
+      refreshHome();
+      loadLeaderboard();
+    });
+    window.addEventListener('pageshow', function() {
+      refreshHome();
+      loadLeaderboard();
+    });
+    window.addEventListener('storage', function() {
+      refreshHome();
+      loadLeaderboard();
+    });
+    window.addEventListener('druygon:slot-changed', function() {
+      refreshHome();
+      loadLeaderboard();
+    });
+    window.addEventListener('druygon:profile-updated', function() {
+      refreshHome();
+    });
+  }
+
+  function startApp() {
+    if (appStarted) return;
+    appStarted = true;
+    ensureChangeUserButton();
+    refreshHome();
+    loadLeaderboard();
+    startAutoSave();
+    bindRefreshEvents();
+  }
+
+  function waitForActiveSlot() {
+    var timer = window.setInterval(function() {
+      var slot = window.druygonUsers && window.druygonUsers.getActiveSlot ? window.druygonUsers.getActiveSlot() : null;
+      if (!slot || !window.druygonProfile) return;
+      window.clearInterval(timer);
+      startApp();
+    }, 100);
+  }
+
+  function boot() {
+    waitForActiveSlot();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})(window, document);

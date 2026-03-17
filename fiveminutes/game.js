@@ -64,28 +64,28 @@ function generateQuestion() {
       b = k4 ? rand(5,50) : rand(50,500);
       answer = a + b;
       text = a + ' + ' + b + ' = ?';
-      label = '➕ Penjumlahan';
+      label = 'Penjumlahan';
       break;
     case 'sub':
       a = k4 ? rand(20,99) : rand(100,999);
       b = k4 ? rand(1, a-1) : rand(1, a-1);
       answer = a - b;
       text = a + ' − ' + b + ' = ?';
-      label = '➖ Pengurangan';
+      label = 'Pengurangan';
       break;
     case 'mul':
       if (k4) { a = rand(2,12); b = rand(2,12); }
       else { a = rand(5,25); b = rand(3,15); }
       answer = a * b;
       text = a + ' × ' + b + ' = ?';
-      label = '✖️ Perkalian';
+      label = 'Perkalian';
       break;
     case 'div':
       if (k4) { b = rand(2,10); answer = rand(2,10); }
       else { b = rand(3,15); answer = rand(5,30); }
       a = b * answer;
       text = a + ' ÷ ' + b + ' = ?';
-      label = '➗ Pembagian';
+      label = 'Pembagian';
       break;
   }
   return { text: text, answer: answer, label: label };
@@ -115,15 +115,15 @@ function submitAnswer() {
     if (streak > bestStreak) bestStreak = streak;
     var bonus = Math.min(streak - 1, 10) * 2;
     score += 10 + bonus;
-    fb.textContent = streak > 2 ? '⚡ Super Effective! +' + (10+bonus) : '✅ Benar! +' + (10+bonus);
+    fb.textContent = streak > 2 ? 'Super Effective! +' + (10+bonus) : 'Benar! +' + (10+bonus);
     fb.className = 'feedback correct';
-    if (streak >= 3) sd.textContent = '🔥 Streak x' + streak + '!';
+    if (streak >= 3) sd.textContent = 'Streak x' + streak + '!';
     else sd.textContent = '';
     sfxCorrect();
   } else {
     wrong++;
     streak = 0;
-    fb.textContent = '❌ Not very effective... Jawaban: ' + currentAnswer;
+    fb.textContent = 'Not very effective... Jawaban: ' + currentAnswer;
     fb.className = 'feedback wrong';
     sd.textContent = '';
     sfxWrong();
@@ -137,7 +137,7 @@ function updateStats() {
   document.getElementById('scoreVal').textContent = score;
   document.getElementById('correctVal').textContent = correct;
   document.getElementById('wrongVal').textContent = wrong;
-  document.getElementById('streakVal').textContent = streak > 0 ? '🔥'+streak : '0';
+  document.getElementById('streakVal').textContent = streak > 0 ? 'x' + streak : '0';
 }
 
 function updateTimer() {
@@ -213,15 +213,20 @@ function endGame() {
 
   // Stars: ⭐ = played, ⭐⭐ = 60%+, ⭐⭐⭐ = 80%+
   var stars = '⭐';
-  var msg = 'Terus berlatih ya! 💪';
-  if (accuracy >= 80) { stars = '⭐⭐⭐'; msg = 'LUAR BIASA! Kamu Pokémon Master! 🏆'; }
-  else if (accuracy >= 60) { stars = '⭐⭐'; msg = 'Bagus sekali! Hampir sempurna! 🌟'; }
+  var msg = 'Terus berlatih ya!';
+  if (accuracy >= 80) { stars = 'RANK A'; msg = 'LUAR BIASA! Kamu Pokemon Master!'; }
+  else if (accuracy >= 60) { stars = 'RANK B'; msg = 'Bagus sekali! Hampir sempurna!'; }
+  else { stars = 'RANK C'; }
 
   document.getElementById('resultScreen').style.display = 'block';
   document.getElementById('battleScreen').style.display = 'none';
   document.getElementById('starsDisplay').textContent = stars;
-  document.getElementById('resultEmoji').textContent = accuracy >= 80 ? '🏆🎉' : accuracy >= 60 ? '🌟💪' : '💪🔥';
-  document.getElementById('resultTitle').textContent = '⏰ WAKTU HABIS!';
+  document.getElementById('resultEmoji').innerHTML = accuracy >= 80
+    ? '<img src="../images/pokemon/dragonite.png" alt="Dragonite" class="result-sprite">'
+    : accuracy >= 60
+      ? '<img src="../images/pokemon/pikachu.webp" alt="Pikachu" class="result-sprite">'
+      : '<img src="../images/pokemon/squirtle.webp" alt="Squirtle" class="result-sprite">';
+  document.getElementById('resultTitle').textContent = 'WAKTU HABIS!';
   document.getElementById('resultMessage').textContent = msg;
   document.getElementById('rScore').textContent = score;
   document.getElementById('rCorrect').textContent = correct;

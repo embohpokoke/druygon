@@ -173,9 +173,9 @@ function generateQuestion() {
 
 function topicLabel(t) {
   var labels = {
-    penjumlahan: '➕ Penjumlahan', pengurangan: '➖ Pengurangan',
-    perkalian: '✖️ Perkalian', pembagian: '➗ Pembagian',
-    fpb: '🔢 FPB', kpk: '🔢 KPK'
+    penjumlahan: 'Penjumlahan', pengurangan: 'Pengurangan',
+    perkalian: 'Perkalian', pembagian: 'Pembagian',
+    fpb: 'FPB', kpk: 'KPK'
   };
   return labels[t] || t;
 }
@@ -223,9 +223,9 @@ function startGame(difficulty) {
 
   var team = window.druygonProfile.getTeam();
   if (team.length > 0) {
-    state.player = { name: team[0].name, emoji: team[0].emoji, type: team[0].type, cp: team[0].cp };
+    state.player = { name: team[0].name, emoji: team[0].emoji, type: team[0].type, cp: team[0].cp, img: team[0].img };
   } else {
-    state.player = { name: 'Pikadru', emoji: '⚡🐭', type: 'Listrik', img: '../assets/pikadru.jpg' };
+    state.player = { name: 'Pikadru', emoji: '⚡🐭', type: 'Listrik', img: 'pikachu.webp' };
   }
 
   state.enemyIndex = 0;
@@ -254,7 +254,7 @@ function spawnEnemy() {
 
   if (!pokemon) {
     state.currentEnemy = {
-      id: 'rattata', name: 'Rattata', emoji: '🐀', type: 'Normal',
+      id: 'rattata', name: 'Rattata', emoji: '🐀', img: 'rattata.webp', type: 'Normal',
       rarity: 'common', baseHP: 40, attack: 25, catchRate: 0.7, route: 1, level: 1
     };
   } else {
@@ -271,12 +271,7 @@ function spawnEnemy() {
 function updateUI() {
   // Player
   document.getElementById('playerName').textContent = state.player.name;
-  var playerSprite = document.getElementById('playerSprite');
-  if (state.player.img) {
-    playerSprite.innerHTML = '<img src="' + state.player.img + '" alt="' + state.player.name + '" style="width:80px;height:80px;object-fit:contain;border-radius:12px;">';
-  } else {
-    playerSprite.textContent = state.player.emoji;
-  }
+  document.getElementById('playerSprite').innerHTML = window.getPokemonImg(state.player);
   document.getElementById('playerHPBar').style.width = (state.playerHP / state.playerMaxHP * 100) + '%';
   updateHPBarColor('playerHPBar', state.playerHP, state.playerMaxHP);
   document.getElementById('playerHPText').textContent = 'HP: ' + state.playerHP + '/' + state.playerMaxHP;
@@ -290,7 +285,7 @@ function updateUI() {
 
   // Stats
   document.getElementById('scoreValue').textContent = state.score;
-  document.getElementById('streakValue').textContent = state.streak > 0 ? '🔥' + state.streak : '0';
+  document.getElementById('streakValue').textContent = state.streak > 0 ? 'x' + state.streak : '0';
   document.getElementById('defeatedValue').textContent = state.enemiesDefeated;
 }
 
@@ -355,9 +350,9 @@ function checkAnswer(selected, btn) {
     btn.classList.add('correct');
 
     // Build feedback with streak badge
-    var feedbackHTML = '✅ Benar! +' + points + ' poin!';
+    var feedbackHTML = 'Benar! +' + points + ' poin!';
     if (state.streak >= 2) {
-      feedbackHTML += ' <span class="streak-badge">🔥 x' + state.streak + ' STREAK!</span>';
+      feedbackHTML += ' <span class="streak-badge">x' + state.streak + ' STREAK!</span>';
     }
     feedback.innerHTML = feedbackHTML;
     feedback.className = 'feedback correct';
@@ -396,7 +391,7 @@ function checkAnswer(selected, btn) {
       if (parseInt(b.textContent) === state.currentAnswer) b.classList.add('correct');
     });
 
-    feedback.textContent = '❌ Salah! Jawaban: ' + state.currentAnswer + '. HP -' + damage2;
+    feedback.textContent = 'Salah! Jawaban: ' + state.currentAnswer + '. HP -' + damage2;
     feedback.className = 'feedback wrong';
 
     playWrongSound();
@@ -513,7 +508,7 @@ function attemptCatch(ballType) {
   var catchPokemonEl = document.getElementById('catchPokemon');
 
   // --- CATCH DRAMA PHASE 1: throw animation ---
-  feedback.innerHTML = '<div class="pokeball-throw-anim">⚪</div>';
+  feedback.innerHTML = '<div class="pokeball-throw-anim"><img src="../images/pokemon/pokeball-sm.png" alt="Pokeball" class="pokeball-sprite"></div>';
   playCatchSound();
 
   setTimeout(function() {
@@ -521,7 +516,7 @@ function attemptCatch(ballType) {
     catchPokemonEl.style.display = 'none'; // Pokemon "absorbed"
     feedback.innerHTML =
       '<div style="font-size:1rem;color:var(--poke-yellow);margin-bottom:8px;">...</div>' +
-      '<div class="pokeball-shake-anim">⚾</div>';
+      '<div class="pokeball-shake-anim"><img src="../images/pokemon/pokeball-sm.png" alt="Pokeball" class="pokeball-sprite"></div>';
 
     playSound(400, 0.15, 'square');
 
@@ -543,7 +538,7 @@ function attemptCatch(ballType) {
         screenFlash('yellow');
 
         feedback.innerHTML =
-          '<div style="font-size:2.5rem;animation:bounce 0.4s ease 3;">🎉</div>' +
+          '<div style="animation:bounce 0.4s ease 3;">' + window.getPokemonImg(state.currentEnemy) + '</div>' +
           '<div style="font-family:\'Press Start 2P\',monospace;font-size:0.9rem;color:#FFD700;margin:8px 0;">' + state.currentEnemy.name + ' TERTANGKAP!</div>' +
           '<div style="font-size:0.85rem;color:#aaa;">CP ' + caught.cp + ' • Ditambahkan ke koleksi!</div>';
 
@@ -554,7 +549,7 @@ function attemptCatch(ballType) {
 
         playWrongSound();
         feedback.innerHTML =
-          '<div style="font-size:2rem;">💨</div>' +
+          '<div>' + window.getPokemonImg(state.currentEnemy) + '</div>' +
           '<div style="font-family:\'Press Start 2P\',monospace;font-size:0.8rem;color:#FF5722;margin:8px 0;">' + state.currentEnemy.name + ' KABUR!</div>' +
           '<div style="font-size:0.85rem;color:#aaa;">Coba lagi dengan Pokeball lebih kuat!</div>';
       }
@@ -573,7 +568,7 @@ function continueBattle() {
 
   // Show +heal float briefly before transitioning
   var catchFeedback = document.getElementById('catchFeedback');
-  catchFeedback.innerHTML = '<div style="color:#8BC34A;font-weight:900;">+20 HP pulih! 💚</div>';
+  catchFeedback.innerHTML = '<div style="color:#8BC34A;font-weight:900;">+20 HP pulih!</div>';
 
   setTimeout(function() {
     catchScreen.style.display = 'none';
@@ -605,14 +600,14 @@ function gameOver(won) {
   if (won) {
     playVictorySound();
     screenFlash('yellow');
-    document.getElementById('resultTitle').textContent = '🏆 KAMU MENANG! 🏆';
-    document.getElementById('resultPokemon').textContent = '🎉🌟🎊';
+    document.getElementById('resultTitle').textContent = 'KAMU MENANG!';
+    document.getElementById('resultPokemon').innerHTML = '<img src="../images/pokemon/pikachu.webp" alt="Pikachu">';
     document.getElementById('resultMessage').textContent = 'Hebat! Kamu mengalahkan semua Pokemon liar!';
   } else {
     playDefeatSound();
     screenFlash('red');
-    document.getElementById('resultTitle').textContent = '💫 KALAH... 💫';
-    document.getElementById('resultPokemon').textContent = '😵💫';
+    document.getElementById('resultTitle').textContent = 'KALAH...';
+    document.getElementById('resultPokemon').innerHTML = '<img src="../images/pokemon/snorlax.png" alt="Snorlax">';
     document.getElementById('resultMessage').textContent = 'Jangan menyerah! Coba lagi ya!';
   }
 

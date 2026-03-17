@@ -19,7 +19,13 @@ body::after {
   background: linear-gradient(180deg, var(--poke-yellow), var(--poke-blue));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.menu-screen .menu-icon { font-size: 4rem; margin: 16px 0; }
+.menu-screen .menu-icon { margin: 16px 0; }
+.menu-sprite {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
 
 .category-grid {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 16px 0;
@@ -121,4 +127,10 @@ body::after {
   font-family: 'Press Start 2P', monospace; font-size: 1.3rem;
   color: var(--poke-yellow);
 }
-.result-icon { font-size: 4rem; margin: 16px 0; }
+.result-icon { margin: 16px 0; }
+.result-sprite {
+  width: 94px;
+  height: 94px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}

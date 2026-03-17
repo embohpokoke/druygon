@@ -20,7 +20,18 @@ body::after {
   background: linear-gradient(180deg, var(--poke-yellow), #FF9800);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.menu-pokemon { font-size: 4rem; margin: 10px 0; }
+.menu-pokemon {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+.sprite-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
 
 .setting-section { margin: 20px 0; }
 .setting-label {
@@ -51,7 +62,13 @@ body::after {
   border: 3px solid var(--poke-yellow); border-radius: 16px;
   padding: 12px 16px;
 }
-.timer-icon { font-size: 1.5rem; }
+.timer-icon { margin-bottom: 4px; }
+.timer-sprite {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
 .timer-display {
   font-family: 'Press Start 2P', monospace;
   font-size: clamp(2rem, 8vw, 3rem);
@@ -129,7 +146,13 @@ body::after {
   font-family: 'Press Start 2P', monospace; font-size: clamp(1.2rem, 5vw, 1.8rem);
   color: var(--poke-yellow); margin: 10px 0;
 }
-.result-pokemon { font-size: 5rem; }
+.result-pokemon { margin: 8px 0; }
+.result-sprite {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
 .stars-display { font-size: 3rem; margin: 16px 0; }
 .result-card { margin: 20px 0; }
 .result-grid {

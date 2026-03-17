@@ -6,7 +6,7 @@
   <title>5 Menit Matematika — Druygon</title>
   <link rel="stylesheet" href="../css/style.css?v=20260222b">
   <link rel="stylesheet" href="style.css?v=20260222b">
-  <script src="../js/profile.js?v=20260223"></script>
+  <script src="../js/profile.js?v=20260318"></script>
 </head>
 <body>
   <div class="pokeball-bg"></div>
@@ -15,12 +15,12 @@
   <!-- MENU SCREEN -->
   <div class="game-container" id="menuScreen">
     <div class="menu-screen slide-in">
-      <div class="menu-pokemon">⏱️🔥</div>
+      <div class="menu-pokemon"><img src="../images/pokemon/pikachu.webp" alt="Pikachu" class="sprite-icon"><img src="../images/pokemon/charizard.webp" alt="Charizard" class="sprite-icon"></div>
       <h1>5 Menit Matematika</h1>
-      <p style="color:#aaa; margin:12px 0;">Jawab sebanyak mungkin dalam 5 menit! ⚡</p>
+      <p style="color:#aaa; margin:12px 0;">Jawab sebanyak mungkin dalam 5 menit!</p>
 
       <div class="setting-section">
-        <label class="setting-label">📊 Tingkat Kesulitan</label>
+        <label class="setting-label">Tingkat Kesulitan</label>
         <div class="diff-btns">
           <button class="poke-btn diff-btn active" data-diff="kelas4" onclick="setDifficulty('kelas4',this)">Kelas 4<br><small>1 — 100</small></button>
           <button class="poke-btn blue diff-btn" data-diff="kelas5" onclick="setDifficulty('kelas5',this)">Kelas 5<br><small>1 — 1000</small></button>
@@ -28,17 +28,17 @@
       </div>
 
       <div class="setting-section">
-        <label class="setting-label">🔢 Operasi Hitung</label>
+        <label class="setting-label">Operasi Hitung</label>
         <div class="ops-grid">
-          <label class="op-check"><input type="checkbox" id="opAdd" checked><span>➕ Penjumlahan</span></label>
-          <label class="op-check"><input type="checkbox" id="opSub" checked><span>➖ Pengurangan</span></label>
-          <label class="op-check"><input type="checkbox" id="opMul" checked><span>✖️ Perkalian</span></label>
-          <label class="op-check"><input type="checkbox" id="opDiv" checked><span>➗ Pembagian</span></label>
+          <label class="op-check"><input type="checkbox" id="opAdd" checked><span>Penjumlahan</span></label>
+          <label class="op-check"><input type="checkbox" id="opSub" checked><span>Pengurangan</span></label>
+          <label class="op-check"><input type="checkbox" id="opMul" checked><span>Perkalian</span></label>
+          <label class="op-check"><input type="checkbox" id="opDiv" checked><span>Pembagian</span></label>
         </div>
       </div>
 
       <button class="poke-btn start-btn" onclick="startGame()" style="margin-top:20px;font-size:1.3rem;">
-        ⚔️ MULAI BATTLE! ⚔️
+        Mulai Battle
       </button>
     </div>
   </div>
@@ -46,7 +46,7 @@
   <!-- BATTLE SCREEN -->
   <div class="game-container" id="battleScreen" style="display:none;">
     <div class="timer-bar slide-in">
-      <div class="timer-icon">⏱️</div>
+      <div class="timer-icon"><img src="../images/pokemon/pokeball-sm.png" alt="Timer" class="timer-sprite"></div>
       <div class="timer-display" id="timerDisplay">5:00</div>
       <div class="timer-progress-bg"><div class="timer-progress" id="timerProgress"></div></div>
     </div>
@@ -59,10 +59,10 @@
     </div>
 
     <div class="question-area slide-in">
-      <div class="question-label" id="questionLabel">➕ Penjumlahan</div>
+      <div class="question-label" id="questionLabel">Penjumlahan</div>
       <div class="question-text" id="questionText">12 + 34 = ?</div>
       <input type="number" inputmode="numeric" pattern="[0-9]*" class="answer-input" id="answerInput" autocomplete="off" placeholder="Ketik jawaban...">
-      <button class="poke-btn submit-btn" id="submitBtn" onclick="submitAnswer()">SERANG! ⚡</button>
+      <button class="poke-btn submit-btn" id="submitBtn" onclick="submitAnswer()">Serang</button>
     </div>
 
     <div class="feedback" id="feedback"></div>
@@ -73,7 +73,7 @@
   <!-- RESULT SCREEN -->
   <div class="game-container" id="resultScreen" style="display:none;">
     <div class="result-screen slide-in" style="display:block;">
-      <div class="result-pokemon" id="resultEmoji">🏆</div>
+      <div class="result-pokemon" id="resultEmoji"><img src="../images/pokemon/pikachu.webp" alt="Pikachu" class="result-sprite"></div>
       <h2 id="resultTitle">WAKTU HABIS!</h2>
       <p id="resultMessage" style="color:#aaa;margin:8px 0;"></p>
 
@@ -90,40 +90,40 @@
       </div>
 
       <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap;">
-        <button class="poke-btn" onclick="startGame()">🔄 MAIN LAGI</button>
-        <button class="poke-btn blue" onclick="backToMenu()">📋 MENU</button>
-        <a href="../index.html" class="poke-btn green">🏠 PORTAL</a>
+        <button class="poke-btn" onclick="startGame()">Main Lagi</button>
+        <button class="poke-btn blue" onclick="backToMenu()">Menu</button>
+        <a href="../index.html" class="poke-btn green">Portal</a>
       </div>
     </div>
   </div>
 
-  <script src="game.js?v=20260222b"></script>
+  <script src="game.js?v=20260318"></script>
 
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <a href="../index.html">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><img src="../assets/icons/home.svg" alt=""></div>
       <div>Home</div>
     </a>
     <a href="../math/index.html" class="active">
-      <div class="nav-icon">⚔️</div>
+      <div class="nav-icon"><img src="../assets/icons/games.svg" alt=""></div>
       <div>Games</div>
     </a>
     <a href="../routes/index.html">
-      <div class="nav-icon">🗺️</div>
+      <div class="nav-icon"><img src="../assets/icons/map.svg" alt=""></div>
       <div>Peta</div>
     </a>
     <a href="../collection/index.html">
-      <div class="nav-icon">📦</div>
+      <div class="nav-icon"><img src="../assets/icons/stats.svg" alt=""></div>
       <div>Koleksi</div>
     </a>
     <a href="../store/index.html">
-      <div class="nav-icon">🏪</div>
+      <div class="nav-icon"><img src="../assets/icons/settings.svg" alt=""></div>
       <div>Toko</div>
     </a>
   </nav>
 
-<script src="../js/analytics.js?v=20260222b"></script>
+<script src="../js/analytics.js?v=20260318"></script>
   <script src="../js/nav-legacy.js"></script>
 </body>
 </html>

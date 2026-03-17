@@ -14,9 +14,12 @@
     .pokemon-sprite.grayscale { filter: grayscale(1) opacity(0.4); }
     .pokeball-sprite { width: 32px; height: 32px; object-fit: contain; }
     .pokemon-emoji { font-size: 48px; }
+    .menu-pokemon img { width: 92px; height: 92px; object-fit: contain; image-rendering: pixelated; }
+    .result-pokemon img { width: 88px; height: 88px; object-fit: contain; image-rendering: pixelated; }
+    .icon-sprite { width: 24px; height: 24px; object-fit: contain; image-rendering: pixelated; vertical-align: middle; }
   </style>
-  <script src="../js/profile.js?v=20260223"></script>
-  <script src="../js/pokemon.js?v=20260222b"></script>
+  <script src="../js/profile.js?v=20260318"></script>
+  <script src="../js/pokemon.js?v=20260318"></script>
 </head>
 <body>
   <!-- Screen flash overlay for hit/damage feedback -->
@@ -28,27 +31,27 @@
   <div class="game-container">
     <!-- MENU -->
     <div id="menuScreen" class="menu-screen">
-      <h1>⚔️ MATH ARENA</h1>
-      <div class="menu-pokemon bounce">⚡🐭</div>
+      <h1>MATH ARENA</h1>
+      <div class="menu-pokemon bounce"><img src="../images/pokemon/pikachu.webp" alt="Pikachu"></div>
       <p style="color:#aaa;margin:10px 0">Bertarung melawan Pokemon liar<br>dengan kekuatan matematika!</p>
 
       <div class="topic-select">
-        <label>📚 Pilih Topik:</label>
+        <label>Pilih Topik:</label>
         <select id="topicSelect">
-          <option value="campuran">🎲 Campuran (Semua)</option>
-          <option value="penjumlahan">➕ Penjumlahan</option>
-          <option value="pengurangan">➖ Pengurangan</option>
-          <option value="perkalian">✖️ Perkalian</option>
-          <option value="pembagian">➗ Pembagian</option>
-          <option value="fpb">🔢 FPB (Faktor Persekutuan Terbesar)</option>
-          <option value="kpk">🔢 KPK (Kelipatan Persekutuan Terkecil)</option>
+          <option value="campuran">Campuran (Semua)</option>
+          <option value="penjumlahan">Penjumlahan</option>
+          <option value="pengurangan">Pengurangan</option>
+          <option value="perkalian">Perkalian</option>
+          <option value="pembagian">Pembagian</option>
+          <option value="fpb">FPB (Faktor Persekutuan Terbesar)</option>
+          <option value="kpk">KPK (Kelipatan Persekutuan Terkecil)</option>
         </select>
       </div>
 
       <div class="difficulty-btns">
-        <button class="poke-btn green" onclick="startGame('mudah')">🟢 Mudah</button>
-        <button class="poke-btn" onclick="startGame('sedang')">🟡 Sedang</button>
-        <button class="poke-btn" style="background:linear-gradient(135deg,#9C27B0,#E040FB)" onclick="startGame('susah')">🔴 Susah</button>
+        <button class="poke-btn green" onclick="startGame('mudah')">Mudah</button>
+        <button class="poke-btn" onclick="startGame('sedang')">Sedang</button>
+        <button class="poke-btn" style="background:linear-gradient(135deg,#9C27B0,#E040FB)" onclick="startGame('susah')">Susah</button>
       </div>
     </div>
 
@@ -77,7 +80,7 @@
             <div class="hp-bar" id="playerHPBar" style="width:100%"></div>
           </div>
           <div class="hp-text" id="playerHPText">HP: 100/100</div>
-          <div class="pokemon-sprite" id="playerSprite">⚡🐭</div>
+          <div class="pokemon-sprite" id="playerSprite"><img src="../images/pokemon/pikachu.webp" alt="Pikadru" class="pokemon-sprite"></div>
         </div>
 
         <div class="vs-text">VS</div>
@@ -89,12 +92,12 @@
             <div class="hp-bar" id="enemyHPBar" style="width:100%"></div>
           </div>
           <div class="hp-text" id="enemyHPText">HP: 40/40</div>
-          <div class="pokemon-sprite" id="enemySprite">🐀</div>
+          <div class="pokemon-sprite" id="enemySprite"><img src="../images/pokemon/rattata.webp" alt="Rattata" class="pokemon-sprite"></div>
         </div>
       </div>
 
       <div class="question-area">
-        <div class="question-label" id="questionLabel">✖️ Perkalian</div>
+        <div class="question-label" id="questionLabel">Perkalian</div>
         <div class="question-text" id="questionText">6 × 7 = ?</div>
         <div class="answer-options" id="answerOptions"></div>
       </div>
@@ -104,8 +107,8 @@
 
     <!-- CATCH SCREEN -->
     <div id="catchScreen" class="catch-screen">
-      <h2 style="color:var(--poke-yellow);margin-bottom:15px;">🎉 POKEMON KALAH! 🎉</h2>
-      <div class="catch-pokemon" id="catchPokemon">🐀</div>
+      <h2 style="color:var(--poke-yellow);margin-bottom:15px;">POKEMON KALAH!</h2>
+      <div class="catch-pokemon" id="catchPokemon"><img src="../images/pokemon/rattata.webp" alt="Rattata" class="pokemon-sprite large"></div>
       <h3 id="catchPokemonName">Rattata</h3>
       <p style="color:#aaa;margin:10px 0;">Pilih Pokeball untuk menangkap!</p>
 
@@ -115,52 +118,52 @@
 
       <div class="catch-feedback" id="catchFeedback"></div>
       <button class="poke-btn" id="continueBattleBtn" onclick="continueBattle()" style="display:none;margin-top:15px;">
-        ⚡ Lanjut Bertarung
+        Lanjut Bertarung
       </button>
     </div>
 
     <!-- RESULT -->
     <div id="resultScreen" class="result-screen">
-      <h2 id="resultTitle">🏆 KAMU MENANG! 🏆</h2>
-      <div class="result-pokemon" id="resultPokemon">🎉🌟🎊</div>
+      <h2 id="resultTitle">KAMU MENANG!</h2>
+      <div class="result-pokemon" id="resultPokemon"><img src="../images/pokemon/pikachu.webp" alt="Pikachu"></div>
       <p style="color:#aaa;font-size:1.1rem" id="resultMessage"></p>
       <div class="result-stats poke-card" style="margin:20px 0;text-align:left">
-        <p>🏅 Skor Akhir: <span class="highlight" id="resultScore">0</span></p>
-        <p>✅ Jawaban Benar: <span class="highlight" id="resultCorrect">0/0</span></p>
-        <p>🔥 Streak Terbaik: <span class="highlight" id="resultStreak">0</span></p>
-        <p>⚔️ Pokemon Dikalahkan: <span class="highlight" id="resultDefeated">0</span></p>
+        <p>Skor Akhir: <span class="highlight" id="resultScore">0</span></p>
+        <p>Jawaban Benar: <span class="highlight" id="resultCorrect">0/0</span></p>
+        <p>Streak Terbaik: <span class="highlight" id="resultStreak">0</span></p>
+        <p>Pokemon Dikalahkan: <span class="highlight" id="resultDefeated">0</span></p>
       </div>
-      <button class="poke-btn" onclick="backToMenu()">🔄 Main Lagi</button>
+      <button class="poke-btn" onclick="backToMenu()">Main Lagi</button>
     </div>
   </div>
 
-  <script src="game.js?v=20260222b"></script>
+  <script src="game.js?v=20260318"></script>
 
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <a href="../index.html">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"><img src="../assets/icons/home.svg" alt=""></div>
       <div>Home</div>
     </a>
     <a href="../math/index.html" class="active">
-      <div class="nav-icon">⚔️</div>
+      <div class="nav-icon"><img src="../assets/icons/games.svg" alt=""></div>
       <div>Games</div>
     </a>
     <a href="../routes/index.html">
-      <div class="nav-icon">🗺️</div>
+      <div class="nav-icon"><img src="../assets/icons/map.svg" alt=""></div>
       <div>Peta</div>
     </a>
     <a href="../collection/index.html">
-      <div class="nav-icon">📦</div>
+      <div class="nav-icon"><img src="../assets/icons/stats.svg" alt=""></div>
       <div>Koleksi</div>
     </a>
     <a href="../store/index.html">
-      <div class="nav-icon">🏪</div>
+      <div class="nav-icon"><img src="../assets/icons/settings.svg" alt=""></div>
       <div>Toko</div>
     </a>
   </nav>
 
-<script src="../js/analytics.js?v=20260222b"></script>
+<script src="../js/analytics.js?v=20260318"></script>
   <script src="../js/nav-legacy.js"></script>
 </body>
 </html>
