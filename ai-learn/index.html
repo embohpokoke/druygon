@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Learning — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260319">
+  <script src="../js/profile.js?v=20260319"></script>
+  <script src="../js/pokemon.js?v=20260319"></script>
+  <script src="ai-core.js?v=20260319"></script>
+</head>
+<body class="ai-learning">
+  <div class="pokeball-bg"></div>
+  <a href="../index.html" class="back-btn">⬅</a>
+
+  <main class="ai-shell">
+    <section class="ai-panel ai-hero">
+      <div class="ai-badge-row">
+        <div class="ai-badge is-highlight">🐉 Draco's Learning Lab</div>
+        <div class="ai-badge" id="providerBadge">AI siap</div>
+      </div>
+      <h1 class="ai-title">Belajar bareng tutor yang adaptif</h1>
+      <p class="ai-subtitle" id="heroSubtitle">Draco akan pilih latihan dari topik yang paling perlu diperkuat.</p>
+      <div class="ai-action-grid">
+        <a class="ai-action-card" href="quiz.html">
+          <div>📝</div>
+          <strong>Latihan Soal</strong>
+          <span>Batch 5 soal adaptif dengan reward XP, coins, dan Pokemon scholar.</span>
+        </a>
+        <a class="ai-action-card" href="tutor.html">
+          <div>💬</div>
+          <strong>Tanya Draco</strong>
+          <span>Chat singkat, hint bertahap, dan penjelasan langkah demi langkah.</span>
+        </a>
+        <a class="ai-action-card" href="assess.html">
+          <div>📋</div>
+          <strong>Tes Kemampuan</strong>
+          <span>Assessment awal atau reassessment mingguan untuk update learning path.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="ai-panel">
+      <div class="ai-progress-head">
+        <div>
+          <div class="ai-mini-label">Profil Kemampuan</div>
+          <h2>Progress Belajarmu</h2>
+        </div>
+        <div class="ai-pill" id="assessmentPill">Belum assessment</div>
+      </div>
+      <div id="progressList"></div>
+    </section>
+
+    <section class="ai-panel">
+      <div class="ai-progress-head">
+        <div>
+          <div class="ai-mini-label">Misi Hari Ini</div>
+          <h2 id="missionTitle">Selesaikan 5 soal</h2>
+        </div>
+        <div class="ai-pill" id="missionPill">0/5</div>
+      </div>
+      <div class="ai-progress-bar">
+        <div class="ai-progress-fill" id="missionFill" style="width:0%"></div>
+      </div>
+      <p class="ai-copy" id="missionCopy" style="margin-top:10px;">Mulai dari topik yang paling perlu latihan dulu ya.</p>
+    </section>
+
+    <section class="ai-panel">
+      <div class="ai-mini-label">Ringkasan</div>
+      <div class="ai-stat-row" id="summaryStats"></div>
+    </section>
+
+    <section class="ai-panel">
+      <div class="ai-progress-head">
+        <div>
+          <div class="ai-mini-label">Scholar Pokemon</div>
+          <h2>Unlock Eksklusif</h2>
+        </div>
+      </div>
+      <div id="scholarList"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon"><img src="../assets/icons/home.svg" alt=""></div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html" class="active">
+      <div class="nav-icon"><img src="../assets/icons/games.svg" alt=""></div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon"><img src="../assets/icons/map.svg" alt=""></div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon"><img src="../assets/icons/stats.svg" alt=""></div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon"><img src="../assets/icons/settings.svg" alt=""></div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+  <script src="ai-learn.js?v=20260319"></script>
+  <script src="../js/analytics.js?v=20260319"></script>
+</body>
+</html>

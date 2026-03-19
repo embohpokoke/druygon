@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assessment — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260319">
+  <script src="../js/profile.js?v=20260319"></script>
+  <script src="../js/pokemon.js?v=20260319"></script>
+  <script src="ai-core.js?v=20260319"></script>
+</head>
+<body class="ai-learning">
+  <div class="pokeball-bg"></div>
+  <a href="index.html" class="back-btn">⬅</a>
+
+  <main class="ai-shell">
+    <section class="ai-panel">
+      <div class="ai-progress-head">
+        <div>
+          <div class="ai-mini-label">Assessment</div>
+          <h1 class="ai-title" style="font-size:1.65rem;">Tes Kemampuan Mingguan</h1>
+        </div>
+        <div class="ai-pill" id="assessmentStatus">Siap mulai</div>
+      </div>
+      <p class="ai-copy" id="assessmentIntro">Assessment ini berisi 10 soal dari beberapa topik Matematika supaya Draco bisa bikin learning path yang lebih personal.</p>
+      <div class="ai-footer-actions" id="assessmentStart">
+        <button class="ai-btn" id="startAssessmentBtn">Mulai Assessment</button>
+        <a class="ai-btn is-secondary" href="quiz.html">Lewati ke Quiz</a>
+      </div>
+
+      <div id="assessmentQuiz" style="display:none;">
+        <div class="ai-stat-row" style="margin-bottom:14px;">
+          <div class="ai-stat"><div class="ai-stat-label">Soal</div><div class="ai-stat-value" id="assessmentCounter">1/10</div></div>
+          <div class="ai-stat"><div class="ai-stat-label">Benar</div><div class="ai-stat-value" id="assessmentCorrect">0</div></div>
+          <div class="ai-stat"><div class="ai-stat-label">Topik</div><div class="ai-stat-value" id="assessmentTopic">-</div></div>
+        </div>
+        <div class="ai-question" id="assessmentQuestion">Memuat soal...</div>
+        <div id="assessmentOptions"></div>
+        <div class="ai-feedback" id="assessmentFeedback">Jawab jujur ya, supaya rekomendasinya pas.</div>
+        <div class="ai-toolbar">
+          <button class="ai-btn" id="assessmentNext" style="display:none;">Lanjut</button>
+        </div>
+      </div>
+
+      <div id="assessmentSummary" style="display:none;"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon"><img src="../assets/icons/home.svg" alt=""></div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html" class="active">
+      <div class="nav-icon"><img src="../assets/icons/games.svg" alt=""></div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon"><img src="../assets/icons/map.svg" alt=""></div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon"><img src="../assets/icons/stats.svg" alt=""></div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon"><img src="../assets/icons/settings.svg" alt=""></div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+  <script src="ai-assess.js?v=20260319"></script>
+  <script src="../js/analytics.js?v=20260319"></script>
+</body>
+</html>

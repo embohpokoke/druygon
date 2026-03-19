@@ -2,6 +2,9 @@
 var IMG_BASE = /\/(math|wordsearch|fiveminutes|routes|collection|store|leaderboard)\//.test(window.location.pathname)
   ? '../images/pokemon/'
   : 'images/pokemon/';
+if (/\/ai-learn\//.test(window.location.pathname)) {
+  IMG_BASE = '../images/pokemon/';
+}
 var POKEMON_DB = [
   // ROUTE 1 - Padang Hijau (Lv 1-5): Penjumlahan & Pengurangan
   { id: 'rattata', name: 'Rattata', emoji: '🐀', img: 'rattata.webp', type: 'Normal', rarity: 'common', baseHP: 40, attack: 25, catchRate: 0.7, route: 1, minLevel: 1 },
@@ -43,7 +46,13 @@ var POKEMON_DB = [
   { id: 'raikou', name: 'Raikou', emoji: '🐯⚡', img: 'raikou.webp', type: 'Listrik', rarity: 'legendary', baseHP: 135, attack: 105, catchRate: 0.05, route: 4, minLevel: 20 },
   { id: 'dragonite', name: 'Dragonite', emoji: '🐲', img: 'dragonite.png', type: 'Naga', rarity: 'rare', baseHP: 120, attack: 110, catchRate: 0.15, route: 4, minLevel: 19 },
   { id: 'snorlax', name: 'Snorlax', emoji: '😴', img: 'snorlax.png', type: 'Normal', rarity: 'rare', baseHP: 140, attack: 85, catchRate: 0.15, route: 4, minLevel: 20 },
-  { id: 'mewtwo', name: 'Mewtwo', emoji: '🧠✨', img: 'mewtwo.webp', type: 'Psikis', rarity: 'legendary', baseHP: 150, attack: 130, catchRate: 0.05, route: 4, minLevel: 25 }
+  { id: 'mewtwo', name: 'Mewtwo', emoji: '🧠✨', img: 'mewtwo.webp', type: 'Psikis', rarity: 'legendary', baseHP: 150, attack: 130, catchRate: 0.05, route: 4, minLevel: 25 },
+
+  // AI LEARNING - Scholar Pokemon (exclusive)
+  { id: 'scholario', name: 'Scholario', emoji: '📚', img: 'alakazam.webp', type: 'Psikis', rarity: 'rare', baseHP: 95, attack: 88, catchRate: 1, route: 0, minLevel: 1, source: 'ai_module', unlockCondition: 'Selesaikan assessment awal AI Learning' },
+  { id: 'matheon', name: 'Matheon', emoji: '🔢', img: 'eevee.png', type: 'Normal', rarity: 'rare', baseHP: 105, attack: 92, catchRate: 1, route: 0, minLevel: 1, source: 'ai_module', unlockCondition: 'Jawab 100 soal Matematika AI Learning dengan benar' },
+  { id: 'sciendra', name: 'Sciendra', emoji: '🔬', img: 'haunter.png', type: 'Racun', rarity: 'rare', baseHP: 110, attack: 94, catchRate: 1, route: 0, minLevel: 1, source: 'ai_module', unlockCondition: 'Jawab 50 soal IPA AI Learning dengan benar' },
+  { id: 'wisdomoth', name: 'Wisdomoth', emoji: '🦉', img: 'articuno.webp', type: 'Terbang', rarity: 'legendary', baseHP: 135, attack: 115, catchRate: 1, route: 0, minLevel: 1, source: 'ai_module', unlockCondition: 'Capai level Mahir di semua topik Matematika AI Learning' }
 ];
 
 // Route information
@@ -114,8 +123,14 @@ function getPokemonById(id) {
   return POKEMON_DB.find(function(p) { return p.id === id; });
 }
 
+function getPokemonBySource(source) {
+  return POKEMON_DB.filter(function(p) { return (p.source || 'route') === source; });
+}
+
 function getPokemonByRoute(routeNum) {
-  return POKEMON_DB.filter(function(p) { return p.route === routeNum; });
+  return POKEMON_DB.filter(function(p) {
+    return p.route === routeNum && (p.source || 'route') !== 'ai_module';
+  });
 }
 
 function getRandomPokemonFromRoute(routeNum, playerLevel) {
@@ -175,6 +190,7 @@ window.IMG_BASE = IMG_BASE;
 window.getPokemonImg = getPokemonImg;
 window.getPokeballImg = getPokeballImg;
 window.getPokemonById = getPokemonById;
+window.getPokemonBySource = getPokemonBySource;
 window.getPokemonByRoute = getPokemonByRoute;
 window.getRandomPokemonFromRoute = getRandomPokemonFromRoute;
 window.calculateCatchChance = calculateCatchChance;

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draco Tutor — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260319">
+  <script src="../js/profile.js?v=20260319"></script>
+  <script src="../js/pokemon.js?v=20260319"></script>
+  <script src="ai-core.js?v=20260319"></script>
+</head>
+<body class="ai-learning">
+  <div class="pokeball-bg"></div>
+  <a href="index.html" class="back-btn">⬅</a>
+
+  <main class="ai-shell">
+    <section class="ai-panel">
+      <div class="ai-progress-head">
+        <div>
+          <div class="ai-mini-label">AI Tutor</div>
+          <h1 class="ai-title" style="font-size:1.65rem;">Tanya Draco</h1>
+        </div>
+        <div class="ai-pill" id="chatModePill">Tutor aktif</div>
+      </div>
+
+      <div class="ai-summary-card" id="questionContext" style="margin-bottom:14px;display:none;"></div>
+      <div class="ai-chat-log" id="chatLog"></div>
+      <div class="ai-quick-actions" style="margin-top:14px;">
+        <button class="ai-btn is-secondary" data-quick="Jelaskan lagi">Jelaskan lagi</button>
+        <button class="ai-btn is-secondary" data-quick="Kasih hint">Kasih hint</button>
+        <button class="ai-btn is-secondary" data-quick="Kasih soal contoh">Kasih soal</button>
+      </div>
+    </section>
+
+    <section class="ai-panel">
+      <div class="ai-chat-bar">
+        <input class="ai-chat-input" id="chatInput" type="text" placeholder="Ketik pertanyaanmu...">
+        <button class="ai-btn" id="sendBtn">Kirim</button>
+      </div>
+      <p class="ai-helper" style="margin-top:10px;">Draco fokus ke topik akademik ya. Untuk English nanti mode ini bisa switch full English.</p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon"><img src="../assets/icons/home.svg" alt=""></div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html" class="active">
+      <div class="nav-icon"><img src="../assets/icons/games.svg" alt=""></div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon"><img src="../assets/icons/map.svg" alt=""></div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon"><img src="../assets/icons/stats.svg" alt=""></div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon"><img src="../assets/icons/settings.svg" alt=""></div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+  <script src="ai-tutor.js?v=20260319"></script>
+  <script src="../js/analytics.js?v=20260319"></script>
+</body>
+</html>

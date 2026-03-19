@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Quiz — Druygon</title>
+  <link rel="stylesheet" href="../css/style.css?v=20260222b">
+  <link rel="stylesheet" href="style.css?v=20260319">
+  <script src="../js/profile.js?v=20260319"></script>
+  <script src="../js/pokemon.js?v=20260319"></script>
+  <script src="ai-core.js?v=20260319"></script>
+</head>
+<body class="ai-learning">
+  <div class="pokeball-bg"></div>
+  <a href="index.html" class="back-btn">⬅</a>
+
+  <main class="ai-shell">
+    <section class="ai-panel">
+      <div class="ai-progress-head">
+        <div>
+          <div class="ai-mini-label">AI Quiz</div>
+          <h1 class="ai-title" style="font-size:1.65rem;">Latihan Soal Adaptif</h1>
+        </div>
+        <div class="ai-pill" id="quizProvider">Menyiapkan...</div>
+      </div>
+
+      <div id="setupPanel">
+        <div class="ai-field">
+          <label for="topicSelect">Topik</label>
+          <select class="ai-select" id="topicSelect"></select>
+        </div>
+        <div class="ai-field">
+          <label for="difficultySelect">Tingkat</label>
+          <select class="ai-select" id="difficultySelect">
+            <option value="mudah">Mudah</option>
+            <option value="sedang" selected>Sedang</option>
+            <option value="sulit">Sulit</option>
+          </select>
+        </div>
+        <div class="ai-footer-actions">
+          <button class="ai-btn" id="startQuizBtn">Mulai Batch 5 Soal</button>
+          <a class="ai-btn is-secondary" href="assess.html">Tes Kemampuan</a>
+        </div>
+      </div>
+
+      <div id="quizPanel" style="display:none;">
+        <div class="ai-stat-row" style="margin-bottom:14px;">
+          <div class="ai-stat"><div class="ai-stat-label">Soal</div><div class="ai-stat-value" id="questionCounter">1/5</div></div>
+          <div class="ai-stat"><div class="ai-stat-label">Streak</div><div class="ai-stat-value" id="streakCounter">0🔥</div></div>
+          <div class="ai-stat"><div class="ai-stat-label">Reward</div><div class="ai-stat-value" id="rewardPreview">+5🪙</div></div>
+        </div>
+
+        <div class="ai-pill-row">
+          <div class="ai-pill is-highlight" id="topicPill">Pecahan</div>
+          <div class="ai-pill" id="difficultyPill">Sedang</div>
+        </div>
+
+        <div class="ai-question" id="questionText">Memuat soal...</div>
+        <div class="ai-option-list" id="answerOptions" style="display:block;"></div>
+        <div class="ai-feedback" id="feedbackBox">Pilih salah satu jawaban ya.</div>
+        <div class="ai-toolbar">
+          <button class="ai-btn is-secondary" id="hintBtn">💡 Minta Hint</button>
+          <button class="ai-btn is-ghost" id="openTutorBtn">💬 Tanya Draco</button>
+          <button class="ai-btn" id="nextBtn" style="display:none;">Soal Berikutnya</button>
+        </div>
+      </div>
+
+      <div id="summaryPanel" style="display:none;"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="../index.html">
+      <div class="nav-icon"><img src="../assets/icons/home.svg" alt=""></div>
+      <div>Home</div>
+    </a>
+    <a href="../math/index.html" class="active">
+      <div class="nav-icon"><img src="../assets/icons/games.svg" alt=""></div>
+      <div>Games</div>
+    </a>
+    <a href="../routes/index.html">
+      <div class="nav-icon"><img src="../assets/icons/map.svg" alt=""></div>
+      <div>Peta</div>
+    </a>
+    <a href="../collection/index.html">
+      <div class="nav-icon"><img src="../assets/icons/stats.svg" alt=""></div>
+      <div>Koleksi</div>
+    </a>
+    <a href="../store/index.html">
+      <div class="nav-icon"><img src="../assets/icons/settings.svg" alt=""></div>
+      <div>Toko</div>
+    </a>
+  </nav>
+
+  <script src="ai-quiz.js?v=20260319"></script>
+  <script src="../js/analytics.js?v=20260319"></script>
+</body>
+</html>
