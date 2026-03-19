@@ -1,10 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const session = require('express-session');
 const providerManager = require('./providers');
 const rateLimiter = require('./middleware/rate-limiter');
 const costTracker = require('./middleware/cost-tracker');
 const questionValidator = require('./validators/question');
+const authManager = require('./auth-manager');
+const oauthRoutes = require('./routes/oauth');
 
 dotenv.config();
 
@@ -12,8 +15,26 @@ const app = express();
 const PORT = process.env.PORT || 3847;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://druygon.my.id', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(express.json());
+
+// Session (for OAuth support)
+if (process.env.OAUTH_ENABLED === 'true') {
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'druygon-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    }
+  }));
+}
+
 app.use(rateLimiter);
 
 // Health check
@@ -48,10 +69,15 @@ app.get('/api/ai/config', (req, res) => {
       fallbackOrder: (process.env.FALLBACK_ORDER || 'gemini,openai,anthropic').split(','),
       defaultProvider: process.env.DEFAULT_PROVIDER || 'gemini',
       maxRequestsPerDay: parseInt(process.env.MAX_REQUESTS_PER_DAY || '50'),
-      budgetRemaining: costTracker.getRemainingBudget()
+      budgetRemaining: costTracker.getRemainingBudget(),
+      oauthEnabled: process.env.OAUTH_ENABLED === 'true',
+      authStatus: authManager.getAuthStatus(req)
     }
   });
 });
+
+// OAuth routes (optional authentication)
+app.use('/api/oauth', oauthRoutes);
 
 // Generate questions
 app.post('/api/ai/generate', async (req, res) => {
