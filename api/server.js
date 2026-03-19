@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const session = require('express-session');
 const providerManager = require('./providers');
 const rateLimiter = require('./middleware/rate-limiter');
@@ -9,7 +10,8 @@ const questionValidator = require('./validators/question');
 const authManager = require('./auth-manager');
 const oauthRoutes = require('./routes/oauth');
 
-dotenv.config();
+// Load .env from api directory
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3847;
