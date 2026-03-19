@@ -3,15 +3,17 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const session = require('express-session');
+
+// Load .env FIRST before any other modules that read env vars
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// Now load modules that depend on env vars
 const providerManager = require('./providers');
 const rateLimiter = require('./middleware/rate-limiter');
 const costTracker = require('./middleware/cost-tracker');
 const questionValidator = require('./validators/question');
 const authManager = require('./auth-manager');
 const oauthRoutes = require('./routes/oauth');
-
-// Load .env from api directory
-dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3847;
