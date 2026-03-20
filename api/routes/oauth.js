@@ -1,115 +1,63 @@
 /**
- * OAuth Routes (Optional Authentication)
- * Users can login with Google/OpenAI to use their own API quotas
+ * OAuth Routes - Google Authentication
  */
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 
-// OAuth enabled via env var
-const OAUTH_ENABLED = process.env.OAUTH_ENABLED === 'true';
+const OAUTH_ENABLED = process.env.OAUTH_ENABLED === "true";
 
-/**
- * GET /api/oauth/status
- * Check OAuth availability and user session
- */
-router.get('/status', (req, res) => {
+// GET /api/oauth/status
+router.get("/status", (req, res) => {
   if (!OAUTH_ENABLED) {
-    return res.json({
-      enabled: false,
-      message: 'OAuth not enabled. Using server API keys.'
-    });
+    return res.json({ enabled: false, message: "OAuth not enabled. Using server API keys." });
   }
-
-  const authManager = require('../auth-manager');
-  const status = authManager.getAuthStatus(req);
-
   res.json({
     enabled: true,
-    providers: status,
-    message: 'OAuth available. Login optional - API key fallback active.'
+    user: req.user || null,
+    loggedIn: !!req.user,
+    message: req.user ? `Logged in as ${req.user.email}` : "Not logged in"
   });
 });
 
-/**
- * Google OAuth Flow
- */
-
-// Initiate Google OAuth
-router.get('/google/login', (req, res) => {
+// GET /api/oauth/google/login
+router.get("/google/login", (req, res, next) => {
   if (!OAUTH_ENABLED) {
-    return res.status(403).json({ error: 'OAuth not enabled' });
+    return res.status(403).json({ error: "OAuth not enabled" });
   }
-
-  // TODO: Implement Google OAuth initiation
-  // For now, return not implemented
-  res.status(501).json({
-    error: 'Not implemented yet',
-    message: 'Google OAuth coming soon. Use API key for now.'
-  });
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account"
+  })(req, res, next);
 });
 
-// Google OAuth callback
-router.get('/google/callback', async (req, res) => {
-  if (!OAUTH_ENABLED) {
-    return res.status(403).json({ error: 'OAuth not enabled' });
+// GET /api/oauth/google/callback
+router.get("/google/callback",
+  (req, res, next) => {
+    if (!OAUTH_ENABLED) return res.status(403).json({ error: "OAuth not enabled" });
+    next();
+  },
+  passport.authenticate("google", { failureRedirect: "https://druygon.my.id/ai-learn/?auth=failed" }),
+  (req, res) => {
+    res.redirect("https://druygon.my.id/ai-learn/?auth=success");
   }
+);
 
-  // TODO: Implement Google OAuth callback
-  res.status(501).json({
-    error: 'Not implemented yet',
-    message: 'Google OAuth coming soon.'
-  });
+// GET /api/oauth/me
+router.get("/me", (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ loggedIn: false, user: null });
+  }
+  res.json({ loggedIn: true, user: req.user });
 });
 
-/**
- * OpenAI OAuth Flow
- */
-
-// Initiate OpenAI OAuth
-router.get('/openai/login', (req, res) => {
-  if (!OAUTH_ENABLED) {
-    return res.status(403).json({ error: 'OAuth not enabled' });
-  }
-
-  // TODO: Implement OpenAI OAuth initiation
-  res.status(501).json({
-    error: 'Not implemented yet',
-    message: 'OpenAI OAuth coming soon. Use API key for now.'
+// POST /api/oauth/logout
+router.post("/logout", (req, res) => {
+  req.logout(() => {
+    req.session && req.session.destroy(() => {});
+    res.json({ success: true, message: "Logged out" });
   });
-});
-
-// OpenAI OAuth callback
-router.get('/openai/callback', async (req, res) => {
-  if (!OAUTH_ENABLED) {
-    return res.status(403).json({ error: 'OAuth not enabled' });
-  }
-
-  // TODO: Implement OpenAI OAuth callback
-  res.status(501).json({
-    error: 'Not implemented yet',
-    message: 'OpenAI OAuth coming soon.'
-  });
-});
-
-/**
- * Logout
- */
-router.post('/logout', (req, res) => {
-  if (req.session) {
-    // Clear OAuth tokens
-    delete req.session.googleTokens;
-    delete req.session.openaiTokens;
-
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Logout failed' });
-      }
-      res.json({ success: true, message: 'Logged out successfully' });
-    });
-  } else {
-    res.json({ success: true, message: 'No active session' });
-  }
 });
 
 module.exports = router;

@@ -253,8 +253,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Druygon AI API running on port ${PORT}`);
+const HOST = process.env.HOST || '127.0.0.1';
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Druygon AI API running on ${HOST}:${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🧠 AI Status: http://localhost:${PORT}/api/ai/status`);
 });
