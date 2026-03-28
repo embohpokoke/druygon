@@ -18,3 +18,12 @@ api/.env.production
 api/node_modules/
 api/logs/
 api/*.log
+
+# Build artifacts & dependencies
+node_modules/
+android/.gradle/
+android/app/build/
+frontend/druygon.apk
+*.bak
+*.db
+api/.env.backup.*
