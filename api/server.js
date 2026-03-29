@@ -14,6 +14,7 @@ const costTracker = require('./middleware/cost-tracker');
 const questionValidator = require('./validators/question');
 const authManager = require('./auth-manager');
 const oauthRoutes = require('./routes/oauth');
+const tutorRouter = require('./src/routes/tutor');
 
 const app = express();
 const PORT = process.env.PORT || 3847;
@@ -24,6 +25,11 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Serve static files (like tutor.html)
+app.use(express.static(path.join(__dirname, 'public')));
+// Serve druygon assets (trainer avatar, etc.) for tutor UI
+app.use('/assets', express.static('/var/www/druygon/assets'));
 
 // Session (for OAuth support)
 if (process.env.OAUTH_ENABLED === 'true') {
@@ -82,6 +88,19 @@ app.get('/api/ai/config', (req, res) => {
 
 // OAuth routes (optional authentication)
 app.use('/api/oauth', oauthRoutes);
+
+// AI Tutor Session routes
+app.use('/api/tutor', tutorRouter);
+
+// Serve tutor UI
+app.get('/tutor', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'tutor.html'));
+});
+
+// Serve parent UI
+app.get('/parent', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'parent.html'));
+});
 
 // Generate questions
 app.post('/api/ai/generate', async (req, res) => {

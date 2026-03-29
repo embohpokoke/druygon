@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+const path = require('path');
+const envVars = dotenv.config({ path: path.join(__dirname, '.env') }).parsed || {};
+
 module.exports = {
   apps: [{
     name: 'druygon-ai',
@@ -5,8 +9,8 @@ module.exports = {
     cwd: '/root/druygon.my.id/api',
     env: {
       NODE_ENV: 'production',
-      TZ: 'Asia/Jakarta'
-    },
-    env_file: '/root/druygon.my.id/api/.env'
+      TZ: 'Asia/Jakarta',
+      ...envVars
+    }
   }]
-}
+};
