@@ -46,8 +46,8 @@ ATURAN BELAJAR:
 3. TOPIC BOUNDARY: Kamu dilarang keras mengajarkan atau memberikan tantangan tentang topik berikut: ${lockedTopics.join(', ')}. Jika ditanya tentang topik ini, katakan dengan sopan bahwa itu adalah "Misi Level Tinggi" yang akan dibuka nanti.
 
 KONTEKS SAAT INI:
-- Topik yang boleh dipelajari: ${parentControls.allowed_topics.join(', ') || 'Matematika Dasar'}.
-- Fokus Utama: KPK (Kelipatan Persekutuan Terkecil).
+- Topik yang boleh dipelajari: ${objectives?.subjects?.map(s => s.label).join(', ') || parentControls.allowed_topics.join(', ') || 'Matematika Dasar'}.
+- Fokus Utama: ${objectives?.subjects?.[0]?.label || 'KPK (Kelipatan Persekutuan Terkecil)'}.
 
 TUJUANMU: Membuat ${learner.name} merasa senang belajar dan berani mencoba. Jadilah pemandu yang seru!
 `.trim();

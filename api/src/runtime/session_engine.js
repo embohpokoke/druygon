@@ -58,7 +58,7 @@ async function chatTurn(sessionId, learnerId, userMessage, activeTopic, conversa
   const check = checkTopicAllowed(activeTopic, context);
   if (!check.allowed) {
     return {
-      reply: "Topik itu belum bisa kita pelajari sekarang. Kita lanjut KPK dulu ya! ✨",
+      reply: "Wah, topik ini belum dibuka. Coba pilih topik lain yang sudah aktif ya! 🐉",
       topicAllowed: false
     };
   }

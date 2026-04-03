@@ -4,540 +4,609 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Belajar Bareng Draco 🐉</title>
-  
-  <!-- Friendly rounded font for kids -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-deep: #0f0e17;
-      --bg-card: #1a1933;
-      --draco-bubble: #2d6a4f;
-      --user-bubble: #4a3f6b;
-      --accent: #6bcb77;
-      --text: #f8f3e3;
-      --text-muted: #a7a6ba;
-      --danger: #e76f51;
-      --shadow: 0 8px 24px rgba(0,0,0,0.5);
+      --poke-yellow:  #FFD700;
+      --poke-orange:  #FF6B35;
+      --poke-red:     #E53935;
+      --poke-teal:    #00BCD4;
+      --poke-teal-dk: #0097A7;
+      --poke-green:   #43A047;
+      --poke-gold:    #FFC107;
+      --bg:           #FFF9F0;
+      --bg-bar:       #FFFFFF;
+      --text:         #1A1A2E;
+      --text-muted:   #7B7B8F;
+      --chip-blue:    #1976D2;
+      --chip-green:   #388E3C;
+      --chip-orange:  #F57C00;
+      --chip-purple:  #7B1FA2;
+      --shadow-sm:    0 2px 8px rgba(0,0,0,0.10);
+      --shadow-md:    0 4px 16px rgba(0,0,0,0.14);
+      --radius-bubble: 20px;
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    body {
-      margin: 0;
-      padding: 0;
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
       font-family: 'Nunito', sans-serif;
-      background-color: var(--bg-deep);
+      background: var(--bg);
       color: var(--text);
-      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── LAYOUT SHELL ── */
+    #app {
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      font-size: 18px;
+      height: 100dvh;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
     }
 
-    /* --- HEADER --- */
+    /* ── HEADER ── */
     .header {
-      background: var(--bg-card);
-      padding: 12px 16px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--poke-yellow) 0%, var(--poke-orange) 100%);
+      padding: 12px 16px 10px;
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 2px solid rgba(255,255,255,0.05);
-      z-index: 10;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      z-index: 20;
     }
 
-    .mascot {
-      font-size: 32px;
-      filter: drop-shadow(0 0 8px var(--accent));
+    /* Pokeball deco circles in header */
+    .header::before {
+      content: '';
+      position: absolute;
+      right: -30px; top: -30px;
+      width: 100px; height: 100px;
+      border: 16px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      right: 40px; top: -50px;
+      width: 80px; height: 80px;
+      border: 12px solid rgba(255,255,255,0.10);
+      border-radius: 50%;
+    }
+
+    .header-avatar {
+      width: 48px; height: 48px;
+      background: #fff;
+      border: 3px solid rgba(255,255,255,0.8);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      flex-shrink: 0;
       animation: float 3s ease-in-out infinite;
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+      50%       { transform: translateY(-4px); }
     }
 
-    .header-info h1 {
+    .header-info { flex: 1; min-width: 0; }
+    .header-title {
       margin: 0;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 900;
-      color: var(--accent);
-    }
-
-    #period-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* --- TOPIC SELECTOR --- */
-    .topic-selector {
-      display: flex;
-      gap: 12px;
-      padding: 10px 16px;
-      overflow-x: auto;
-      background: rgba(0,0,0,0.2);
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.25);
       white-space: nowrap;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .topic-selector::-webkit-scrollbar {
-      display: none;
+    .header-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      margin-top: 1px;
     }
 
-    .topic-item {
+    .xp-badge {
+      background: var(--poke-green);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 5px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── TOPIC CHIPS ── */
+    .topic-bar {
+      flex-shrink: 0;
+      background: var(--bg-bar);
+      padding: 10px 12px;
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      box-shadow: var(--shadow-sm);
+      z-index: 10;
     }
-
-    .mapel-label {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      padding-left: 4px;
-    }
+    .topic-bar::-webkit-scrollbar { display: none; }
 
     .topic-chip {
-      background: var(--bg-card);
-      border: 2px solid transparent;
-      color: var(--text);
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 14px;
+      border-radius: 30px;
       font-family: 'Nunito', sans-serif;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    .topic-chip.active {
-      background: var(--accent);
-      color: var(--bg-deep);
-      box-shadow: 0 4px 12px rgba(107, 203, 119, 0.4);
-    }
-
-    .topic-chip.locked {
-      opacity: 0.5;
-      cursor: not-allowed;
-      border: 2px dashed var(--text-muted);
+      border: 2.5px solid currentColor;
       background: transparent;
+      white-space: nowrap;
+      transition: all 0.18s ease;
+      flex-shrink: 0;
     }
+    .topic-chip:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      border-style: dashed;
+    }
+    .topic-chip.active {
+      color: #fff !important;
+      border-color: transparent !important;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    }
+    .topic-chip[data-color="blue"]   { color: var(--chip-blue); }
+    .topic-chip[data-color="green"]  { color: var(--chip-green); }
+    .topic-chip[data-color="orange"] { color: var(--chip-orange); }
+    .topic-chip[data-color="purple"] { color: var(--chip-purple); }
+    .topic-chip[data-color="blue"].active   { background: var(--chip-blue); }
+    .topic-chip[data-color="green"].active  { background: var(--chip-green); }
+    .topic-chip[data-color="orange"].active { background: var(--chip-orange); }
+    .topic-chip[data-color="purple"].active { background: var(--chip-purple); }
 
-    /* --- CHAT AREA --- */
-    #chat-container {
+    /* ── CHAT ── */
+    #chat {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 16px 14px 8px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
       scroll-behavior: smooth;
+      overscroll-behavior: contain;
     }
 
-    .msg-wrapper {
+    .msg-row {
       display: flex;
-      gap: 12px;
-      max-width: 90%;
       align-items: flex-end;
-      animation: slideUp 0.3s ease-out forwards;
+      gap: 8px;
       opacity: 0;
+      animation: slideUp 0.28s ease-out forwards;
     }
-
     @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from { transform: translateY(16px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
     }
 
-    .draco-wrapper {
-      align-self: flex-start;
-    }
+    .msg-row.draco { align-self: flex-start; }
+    .msg-row.user  { align-self: flex-end; flex-direction: row-reverse; }
 
-    .user-wrapper {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      background: var(--bg-card);
-      border: 2px solid var(--draco-bubble);
+    .msg-avatar {
+      width: 36px; height: 36px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
+      background: #fff;
+      border: 2.5px solid var(--poke-teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
     }
+    .msg-avatar.user-av { border-color: var(--poke-red); }
 
-    .user-avatar {
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(107, 203, 119, 0.3);
+    .bubble-wrap { display: flex; flex-direction: column; max-width: min(72%, 300px); }
+    .msg-row.user .bubble-wrap { align-items: flex-end; }
+
+    .bubble {
+      padding: 10px 14px;
+      border-radius: var(--radius-bubble);
+      line-height: 1.55;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+      word-break: break-word;
     }
-
-    .message {
-      padding: 14px 18px;
-      border-radius: 22px;
-      line-height: 1.6;
-      position: relative;
-    }
-
-    .draco-msg {
-      background-color: var(--draco-bubble);
+    .draco .bubble {
+      background: var(--poke-teal);
+      color: #fff;
       border-bottom-left-radius: 4px;
-      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
     }
-
-    .user-msg {
-      background-color: var(--user-bubble);
+    .user .bubble {
+      background: var(--poke-red);
+      color: #fff;
       border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 12px rgba(74, 63, 107, 0.3);
     }
 
-    .draco-name {
-      font-size: 11px;
+    .bubble-sender {
+      font-size: 10px;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--accent);
-      margin-bottom: 4px;
-      display: block;
+      letter-spacing: 0.8px;
+      margin-bottom: 3px;
+      color: var(--poke-teal-dk);
     }
+    .msg-row.user .bubble-sender { color: var(--poke-red); }
 
-    .timestamp {
+    .bubble-time {
       font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 6px;
-      display: block;
+      color: rgba(255,255,255,0.75);
+      margin-top: 4px;
       text-align: right;
     }
+    .draco .bubble-time { text-align: left; }
 
-    /* --- TYPING INDICATOR --- */
-    .typing-wrapper {
-      display: flex;
-      gap: 12px;
-      align-self: flex-start;
+    /* XP reward banner */
+    .xp-reward {
+      align-self: center;
+      background: linear-gradient(90deg, var(--poke-gold), #FFB300);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 6px 18px;
+      border-radius: 30px;
+      box-shadow: 0 3px 10px rgba(255,193,7,0.4);
+      animation: popIn 0.4s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* Typing indicator */
+    #typing {
+      display: none;
       align-items: flex-end;
-      margin-left: 0;
+      gap: 8px;
+      padding: 0 14px 4px;
+      flex-shrink: 0;
     }
-
-    .typing {
-      display: flex;
-      gap: 5px;
-      padding: 12px 18px;
-      background: var(--bg-card);
-      border-radius: 20px;
-      border-bottom-left-radius: 4px;
+    .typing-dots {
+      background: var(--poke-teal);
+      padding: 10px 16px;
+      border-radius: 20px 20px 20px 4px;
+      display: flex; gap: 5px; align-items: center;
+      box-shadow: var(--shadow-sm);
     }
-
     .dot {
-      width: 8px;
-      height: 8px;
-      background: var(--text-muted);
+      width: 7px; height: 7px;
+      background: rgba(255,255,255,0.85);
       border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out both;
+      animation: blink 1.2s infinite ease-in-out both;
     }
-
     .dot:nth-child(1) { animation-delay: -0.32s; }
     .dot:nth-child(2) { animation-delay: -0.16s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1.0); }
+    .dot:nth-child(3) { animation-delay: 0; }
+    @keyframes blink {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40%           { transform: scale(1);   opacity: 1; }
     }
 
-    /* --- INPUT AREA --- */
-    .input-area {
-      background: var(--bg-card);
-      padding: 16px;
+    /* ── INPUT BAR ── */
+    .input-bar {
+      flex-shrink: 0;
+      background: var(--bg-bar);
+      padding: 10px 12px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
       display: flex;
-      gap: 12px;
       align-items: center;
-      border-top: 2px solid rgba(255,255,255,0.05);
+      gap: 8px;
+      border-top: 1.5px solid rgba(0,0,0,0.07);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
     }
 
-    #message-input {
+    #msg-input {
       flex: 1;
-      background: var(--bg-deep);
-      border: 2px solid transparent;
+      background: var(--bg);
+      border: 2px solid #E0E0E0;
       border-radius: 30px;
-      padding: 14px 20px;
+      padding: 11px 18px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--text);
-      font-family: inherit;
-      font-size: 18px;
       outline: none;
       transition: border-color 0.2s;
     }
+    #msg-input::placeholder { color: var(--text-muted); font-weight: 600; }
+    #msg-input:focus { border-color: var(--poke-teal); }
 
-    #message-input:focus {
-      border-color: var(--accent);
-    }
-
-    #send-btn {
-      background: var(--accent);
-      border: none;
-      width: 50px;
-      height: 50px;
+    .send-btn {
+      width: 46px; height: 46px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: none;
+      background: linear-gradient(135deg, var(--poke-red) 50%, #fff 50%);
+      outline: 3px solid var(--poke-red);
       cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       font-size: 20px;
-      transition: transform 0.2s;
-      box-shadow: 0 4px 12px rgba(107, 203, 119, 0.4);
+      box-shadow: 0 3px 10px rgba(229,57,53,0.35);
+      transition: transform 0.15s;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
     }
-
-    #send-btn:hover {
-      transform: scale(1.1);
+    .send-btn::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%; height: 3px;
+      background: var(--poke-red);
+      margin-top: -1.5px;
     }
-
-    #send-btn:active {
-      transform: scale(0.9);
+    .send-btn::before {
+      content: '▶';
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      font-size: 14px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      margin-left: 2px;
     }
+    .send-btn:active { transform: scale(0.9); }
 
-    /* --- FOOTER --- */
-    .footer {
-      text-align: center;
-      padding: 4px;
-      font-size: 9px;
-      color: var(--text-muted);
-      opacity: 0.3;
-    }
-
-    /* Desktop View */
+    /* ── DESKTOP SHELL ── */
     @media (min-width: 601px) {
-      body {
-        align-items: center;
+      body { background: #F0F0F5; }
+      #app {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height: calc(100dvh - 40px);
+        border-radius: 40px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        overflow: hidden;
       }
-      .header, .topic-selector, #chat-container, .input-area {
-        width: 100%;
-        max-width: 600px;
-      }
+      .header { border-radius: 0; }
     }
   </style>
 </head>
 <body>
+<div id="app">
 
+  <!-- HEADER -->
   <header class="header">
-    <div class="mascot">🐉</div>
-    <div class="header-info" style="flex: 1;">
-      <h1>Belajar Bareng Draco</h1>
-      <div id="period-label">Memuat kurikulum...</div>
+    <div class="header-avatar">🐉</div>
+    <div class="header-info">
+      <h1 class="header-title">Belajar Bareng Draco</h1>
+      <div class="header-sub" id="period-label">Memuat kurikulum...</div>
     </div>
-    <a href="/parent" style="text-decoration: none; font-size: 18px; opacity: 0.3; padding: 10px;">🛡️</a>
+    <div class="xp-badge" id="xp-badge">LVL 1 ⚡</div>
   </header>
 
-  <div class="topic-selector" id="topic-list">
-    <!-- Chips injected here -->
+  <!-- TOPIC CHIPS -->
+  <div class="topic-bar" id="topic-bar">
+    <!-- chips injected by JS -->
   </div>
 
-  <main id="chat-container">
-    <!-- Messages appear here -->
-  </main>
+  <!-- CHAT -->
+  <main id="chat"></main>
 
-  <div id="typing-indicator" class="typing-wrapper" style="display: none;">
-    <div class="avatar">🐉</div>
-    <div class="typing">
+  <!-- TYPING -->
+  <div id="typing">
+    <div class="msg-avatar">🐉</div>
+    <div class="typing-dots">
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
     </div>
   </div>
 
-  <form class="input-area" id="chat-form">
-    <input type="text" id="message-input" placeholder="Tulis jawabanmu di sini..." autocomplete="off">
-    <button type="submit" id="send-btn">
-      <img src="/assets/trainer-avatar.jpg" alt="Kirim" id="send-avatar" onerror="this.parentElement.innerHTML='✈️'" style="width:32px;height:32px;object-fit:cover;border-radius:50%;">
-    </button>
+  <!-- INPUT -->
+  <form class="input-bar" id="chat-form">
+    <input type="text" id="msg-input" placeholder="Tanya Draco..." autocomplete="off">
+    <button type="submit" class="send-btn" aria-label="Kirim"></button>
   </form>
 
-  <footer class="footer" id="session-tag">sid: unknown</footer>
+</div>
 
-  <script>
-    const LEARNER_ID = '00000000-0000-0000-0000-000000000001';
-    let activeTopic = '';
-    let sessionId = null;
-    let history = [];
+<script>
+  const LEARNER_ID = '00000000-0000-0000-0000-000000000001';
+  const CHIP_COLORS = ['blue', 'green', 'orange', 'purple', 'blue', 'green'];
+  const CHIP_EMOJIS = { Matematika:'🔢', 'Bahasa Indonesia':'📖', IPA:'🔬', IPS:'🌍', Bahasa:'📖', Sains:'🔬', Sejarah:'🏛️', Agama:'🌙' };
 
-    const chatContainer = document.getElementById('chat-container');
-    const chatForm = document.getElementById('chat-form');
-    const messageInput = document.getElementById('message-input');
-    const typingIndicator = document.getElementById('typing-indicator');
-    const sessionTag = document.getElementById('session-tag');
-    const topicList = document.getElementById('topic-list');
-    const periodLabel = document.getElementById('period-label');
+  let activeTopic = '';
+  let sessionId   = null;
+  let history     = [];
+  let xpTotal     = 0;
 
-    function addMessage(role, content) {
-      const wrapper = document.createElement('div');
-      wrapper.className = `msg-wrapper ${role === 'draco' ? 'draco-wrapper' : 'user-wrapper'}`;
-      
-      if (role === 'draco') {
-        const avatar = document.createElement('div');
-        avatar.className = 'avatar';
-        avatar.innerHTML = '🐉';
-        wrapper.appendChild(avatar);
-      } else {
-        const avatar = document.createElement('div');
-        avatar.className = 'avatar user-avatar';
-        const img = document.createElement('img');
-        img.src = '/assets/trainer-avatar.jpg';
-        img.alt = 'Dru';
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
-        img.onerror = () => { avatar.innerHTML = '🧑'; };
-        avatar.appendChild(img);
-        wrapper.appendChild(avatar);
-      }
+  const chat      = document.getElementById('chat');
+  const form      = document.getElementById('chat-form');
+  const input     = document.getElementById('msg-input');
+  const typing    = document.getElementById('typing');
+  const topicBar  = document.getElementById('topic-bar');
+  const periodLbl = document.getElementById('period-label');
+  const xpBadge   = document.getElementById('xp-badge');
 
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `message ${role === 'draco' ? 'draco-msg' : 'user-msg'}`;
-      
-      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
-      let html = '';
-      if (role === 'draco') {
-        html += `<span class="draco-name">DRACO</span>`;
-      }
-      html += `<div>${content}</div>`;
-      html += `<span class="timestamp">${time}</span>`;
-      
-      msgDiv.innerHTML = html;
-      wrapper.appendChild(msgDiv);
-      
-      chatContainer.appendChild(wrapper);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+  // ── HELPERS ──────────────────────────────────────────────
+  function time() {
+    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  }
 
-      // Keep local history (limit to last 10 for API)
-      history.push({ role: role === 'draco' ? 'assistant' : 'user', content });
-      if (history.length > 10) history.shift();
+  function addMessage(role, content) {
+    const isDraco = role === 'draco';
+    const row = document.createElement('div');
+    row.className = `msg-row ${isDraco ? 'draco' : 'user'}`;
+
+    const avatar = document.createElement('div');
+    avatar.className = `msg-avatar ${isDraco ? '' : 'user-av'}`;
+    if (isDraco) {
+      avatar.textContent = '🐉';
+    } else {
+      const img = document.createElement('img');
+      img.src = '/assets/trainer-avatar.jpg';
+      img.alt = 'Dru';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+      img.onerror = () => { avatar.textContent = '🧑'; };
+      avatar.appendChild(img);
     }
 
-    function showTyping(show) {
-      typingIndicator.style.display = show ? 'flex' : 'none';
-      if (show) chatContainer.scrollTop = chatContainer.scrollHeight;
+    const wrap = document.createElement('div');
+    wrap.className = 'bubble-wrap';
+
+    const sender = document.createElement('div');
+    sender.className = 'bubble-sender';
+    sender.textContent = isDraco ? 'DRACO' : 'DRU';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = content;
+
+    const ts = document.createElement('div');
+    ts.className = 'bubble-time';
+    ts.textContent = time();
+
+    wrap.appendChild(sender);
+    wrap.appendChild(bubble);
+    wrap.appendChild(ts);
+
+    row.appendChild(avatar);
+    row.appendChild(wrap);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+
+    history.push({ role: isDraco ? 'assistant' : 'user', content });
+    if (history.length > 10) history.shift();
+  }
+
+  function addXP(amount, reason) {
+    xpTotal += amount;
+    const banner = document.createElement('div');
+    banner.className = 'xp-reward';
+    banner.textContent = `+${amount} XP — ${reason}! ⚡`;
+    chat.appendChild(banner);
+    chat.scrollTop = chat.scrollHeight;
+
+    // Update badge (simplified LVL: every 100xp = 1 level)
+    const lvl = Math.floor(xpTotal / 100) + 1;
+    xpBadge.textContent = `LVL ${lvl} ⚡`;
+  }
+
+  function showTyping(show) {
+    typing.style.display = show ? 'flex' : 'none';
+    if (show) chat.scrollTop = chat.scrollHeight;
+  }
+
+  // ── LOAD SUBJECTS ─────────────────────────────────────────
+  async function loadSubjects() {
+    try {
+      const res  = await fetch(`/api/tutor/subjects?learner_id=${LEARNER_ID}`);
+      const data = await res.json();
+      periodLbl.textContent = data.period || '';
+      topicBar.innerHTML = '';
+
+      data.subjects.forEach((s, i) => {
+        const chip = document.createElement('button');
+        chip.className = `topic-chip ${i === 0 && !s.locked ? 'active' : ''}`;
+        chip.dataset.color = CHIP_COLORS[i % CHIP_COLORS.length];
+        chip.dataset.topic = s.id;
+        chip.disabled = s.locked;
+        const emoji = CHIP_EMOJIS[s.mapel] || CHIP_EMOJIS[s.label] || '📚';
+        chip.textContent = `${emoji} ${s.label}`;
+        if (!s.locked) {
+          chip.onclick = () => {
+            history = []; // Reset context saat ganti topic
+            document.querySelectorAll('.topic-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeTopic = s.id;
+            addMessage('draco', `Oke, ganti ke <b>${s.label}</b>! Ada yang mau ditanya? 🐉`);
+          };
+          if (i === 0) activeTopic = s.id;
+        }
+        topicBar.appendChild(chip);
+      });
+    } catch {
+      periodLbl.textContent = 'Gagal memuat';
     }
+  }
 
-    async function loadSubjects() {
-      try {
-        const res = await fetch(`/api/tutor/subjects?learner_id=${LEARNER_ID}`);
-        const data = await res.json();
-        
-        periodLabel.textContent = data.period;
-        topicList.innerHTML = '';
+  // ── START SESSION ─────────────────────────────────────────
+  async function startTutor() {
+    try {
+      const res  = await fetch('/api/tutor/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ learner_id: LEARNER_ID })
+      });
+      const data = await res.json();
+      sessionId = data.session_id;
 
-        data.subjects.forEach((s, i) => {
-          const item = document.createElement('div');
-          item.className = 'topic-item';
-          
-          const label = document.createElement('span');
-          label.className = 'mapel-label';
-          label.textContent = s.mapel;
-          
-          const chip = document.createElement('button');
-          chip.className = `topic-chip ${s.locked ? 'locked' : ''} ${i === 0 && !s.locked ? 'active' : ''}`;
-          chip.textContent = s.label;
-          chip.dataset.topic = s.id;
-          
-          if (!s.locked) {
-            chip.onclick = () => {
-              document.querySelectorAll('.topic-chip').forEach(c => c.classList.remove('active'));
-              chip.classList.add('active');
-              activeTopic = s.id;
-              addMessage('draco', `Sip! Sekarang kita ganti ke topik <b>${s.label}</b> ya! 🐉 Ada yang mau ditanya?`);
-            };
-            if (i === 0) activeTopic = s.id;
-          } else {
-            chip.disabled = true;
-          }
-          
-          item.appendChild(label);
-          item.appendChild(chip);
-          topicList.appendChild(item);
-        });
-      } catch (err) {
-        periodLabel.textContent = 'Gagal memuat kurikulum';
-      }
-    }
-
-    async function startTutor() {
-      try {
-        const response = await fetch('/api/tutor/start', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ learner_id: LEARNER_ID })
-        });
-        const data = await response.json();
-        
-        sessionId = data.session_id;
-        sessionTag.textContent = `sid: ${sessionId.substring(0, 8)}`;
-
-        // Intro delay for kids
+      setTimeout(() => {
+        showTyping(true);
         setTimeout(() => {
-          showTyping(true);
-          setTimeout(() => {
-            showTyping(false);
-            const firstTopicLabel = document.querySelector('.topic-chip.active')?.textContent || 'belajar';
-            addMessage('draco', `Hai Dru! Siap petualangan hari ini? 🗺️ Kita mulai dari <b>${firstTopicLabel}</b> ya! ✨`);
-          }, 1000);
-        }, 500);
-
-      } catch (err) {
-        addMessage('draco', 'Waduh, Draco lagi ngantuk... coba lagi nanti ya! 😴');
-      }
+          showTyping(false);
+          const firstTopic = document.querySelector('.topic-chip.active')?.textContent?.trim() || 'belajar';
+          addMessage('draco', `Hai Dru! Siap petualangan hari ini? 🗺️<br>Kita mulai dari <b>${firstTopic}</b> ya! ✨`);
+        }, 900);
+      }, 400);
+    } catch {
+      addMessage('draco', 'Waduh, Draco lagi ngantuk... coba lagi nanti ya! 😴');
     }
+  }
 
-    chatForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = messageInput.value.trim();
-      if (!text || !sessionId) return;
+  // ── SEND ──────────────────────────────────────────────────
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text || !sessionId) return;
+    input.value = '';
+    addMessage('user', text);
+    showTyping(true);
 
-      messageInput.value = '';
-      addMessage('user', text);
-      
-      showTyping(true);
+    try {
+      const res  = await fetch('/api/tutor/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionId,
+          learner_id: LEARNER_ID,
+          message: text,
+          topic: activeTopic,
+          history
+        })
+      });
+      const data = await res.json();
+      showTyping(false);
+      addMessage('draco', data.reply);
 
-      try {
-        const response = await fetch('/api/tutor/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            session_id: sessionId,
-            learner_id: LEARNER_ID,
-            message: text,
-            topic: activeTopic,
-            history: history
-          })
-        });
-        const data = await response.json();
-        
-        showTyping(false);
-        addMessage('draco', data.reply);
+      // XP reward if correct answer detected
+      if (data.correct) addXP(25, 'Jawaban Benar');
 
-      } catch (err) {
-        showTyping(false);
-        addMessage('draco', 'Maaf Dru, Draco ada gangguan sedikit. Coba lagi ya! 🐲');
-      }
-    });
+    } catch {
+      showTyping(false);
+      addMessage('draco', 'Maaf Dru, Draco ada gangguan. Coba lagi ya! 🐲');
+    }
+  });
 
-    // Boot sequence
-    window.addEventListener('load', async () => {
-      await loadSubjects();
-      await startTutor();
-    });
-  </script>
+  // ── BOOT ──────────────────────────────────────────────────
+  window.addEventListener('load', async () => {
+    await loadSubjects();
+    await startTutor();
+  });
+</script>
 </body>
 </html>
