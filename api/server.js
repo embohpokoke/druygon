@@ -29,7 +29,7 @@ app.use(express.json());
 // Serve static files (like tutor.html)
 app.use(express.static(path.join(__dirname, 'public')));
 // Serve druygon assets (trainer avatar, etc.) for tutor UI
-app.use('/assets', express.static('/var/www/druygon/assets'));
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
 
 // Session (for OAuth support)
 if (process.env.OAUTH_ENABLED === 'true') {

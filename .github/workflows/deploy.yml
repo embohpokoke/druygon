@@ -17,8 +17,8 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
           script: |
-            cd /var/www/druygon
+            cd /opt/druygon
             git fetch origin
             git reset --hard origin/master
-            pm2 restart druygon
+            systemctl restart druygon
             echo "Deploy done: $(date)"
