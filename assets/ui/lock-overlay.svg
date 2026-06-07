@@ -1,13 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <!-- translucent lock scrim for locked-zone overlay -->
-  <rect width="256" height="256" rx="16" fill="#080714" opacity="0.65"/>
-  <!-- lock body -->
-  <rect x="88" y="128" width="80" height="60" rx="12" fill="#2D2A50" stroke="#4B4680" stroke-width="3"/>
-  <!-- lock shackle -->
-  <path d="M100 128 L100 108 Q100 80 128 80 Q156 80 156 108 L156 128" fill="none" stroke="#4B4680" stroke-width="10" stroke-linecap="round"/>
-  <!-- keyhole -->
-  <circle cx="128" cy="154" r="10" fill="#1a1730"/>
-  <rect x="123" y="154" width="10" height="18" rx="5" fill="#1a1730"/>
-  <!-- outer glow hint -->
-  <rect x="88" y="128" width="80" height="60" rx="12" fill="none" stroke="#8B5CF6" stroke-width="1" opacity="0.4"/>
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="14" fill="#080714" opacity="0.72"/>
+  <rect x="88" y="130" width="80" height="56" rx="14" fill="#1E1B3A" stroke="#4B4680" stroke-width="2.5" filter="url(#glow)"/>
+  <rect x="92" y="134" width="72" height="48" rx="10" fill="#2D2952" opacity="0.6"/>
+  <path d="M98 130 L98 110 Q98 78 128 78 Q158 78 158 110 L158 130" fill="none" stroke="#4B4680" stroke-width="11" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M98 130 L98 110 Q98 78 128 78 Q158 78 158 110 L158 130" fill="none" stroke="#5B5680" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="128" cy="156" r="10" fill="#080714"/>
+  <rect x="123" y="156" width="10" height="16" rx="5" fill="#080714"/>
+  <circle cx="126" cy="154" r="3" fill="white" opacity="0.1"/>
+  <text x="128" y="218" text-anchor="middle" font-family="'Nunito', 'Segoe UI', sans-serif" font-size="12" font-weight="800" fill="#4B4680" opacity="0.7" letter-spacing="3">LOCKED</text>
 </svg>

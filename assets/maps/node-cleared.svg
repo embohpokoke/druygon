@@ -1,21 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
   <defs>
-    <radialGradient id="glow" cx="50%" cy="50%">
-      <stop offset="0%" stop-color="#4ADE80" stop-opacity="0.5"/>
+    <radialGradient id="ringGlow" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#4ADE80" stop-opacity="0.35"/>
       <stop offset="100%" stop-color="#4ADE80" stop-opacity="0"/>
     </radialGradient>
-    <filter id="gf"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="innerFill" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="#1A2E1E"/>
+      <stop offset="100%" stop-color="#0D1410"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="starGlow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <!-- glow halo -->
-  <circle cx="80" cy="80" r="76" fill="url(#glow)"/>
-  <!-- outer ring green -->
-  <circle cx="80" cy="80" r="68" fill="#0E1E14" stroke="#4ADE80" stroke-width="3.5"/>
-  <!-- inner fill -->
-  <circle cx="80" cy="80" r="50" fill="#112016" stroke="#4ADE80" stroke-width="2" opacity="0.5"/>
-  <!-- checkmark -->
-  <path d="M54 82 L70 98 L108 60" stroke="#4ADE80" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#gf)"/>
-  <!-- stars -->
-  <path d="M34 44 L36 50 L42 48 L38 54 L42 60 L36 58 L34 64 L32 58 L26 60 L30 54 L26 48 L32 50 Z" fill="#FFCB05" opacity="0.7" transform="scale(0.7) translate(18 12)"/>
-  <path d="M120 38 L122 43 L127 42 L124 46 L127 51 L122 50 L120 55 L118 50 L113 51 L116 46 L113 42 L118 43 Z" fill="#FFCB05" opacity="0.5" transform="scale(0.6) translate(60 14)"/>
-  <ellipse cx="56" cy="46" rx="10" ry="7" fill="white" opacity="0.07" transform="rotate(-25 56 46)"/>
+  <circle cx="80" cy="80" r="74" fill="url(#ringGlow)"/>
+  <circle cx="80" cy="80" r="66" fill="#152018" stroke="#4ADE80" stroke-width="3.5" filter="url(#glow)"/>
+  <circle cx="80" cy="80" r="54" fill="url(#innerFill)" stroke="#4ADE80" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="80" cy="80" r="42" fill="#0B180F" stroke="#4ADE80" stroke-width="1" opacity="0.3"/>
+  <line x1="78" y1="96" x2="78" y2="46" stroke="#4ADE80" stroke-width="3.5" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M78 48 L110 62 L78 76 Z" fill="#22C55E" opacity="0.85"/>
+  <path d="M56 84 L68 96 L104 62" stroke="#4ADE80" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#glow)"/>
+  <path d="M42 42 L44 48 L50 50 L44 52 L42 58 L40 52 L34 50 L40 48 Z" fill="#FFD700" filter="url(#starGlow)" opacity="0.7"/>
+  <path d="M112 38 L113 42 L117 43 L113 44 L112 48 L111 44 L107 43 L111 42 Z" fill="#FFD700" filter="url(#starGlow)" opacity="0.5"/>
+  <path d="M36 90 L37 93 L40 94 L37 95 L36 98 L35 95 L32 94 L35 93 Z" fill="#FFD700" filter="url(#starGlow)" opacity="0.4"/>
 </svg>

@@ -1,19 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%">
-      <stop offset="0%" stop-color="#4A9EFF" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#4A9EFF" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="hexBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="currentColor" stop-opacity="1"/>
+      <stop offset="100%" stop-color="currentColor" stop-opacity="0.4"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
-  <!-- hexagon frame -->
-  <polygon points="64,8 110,34 110,86 64,112 18,86 18,34" fill="url(#bg)" stroke="#4A9EFF" stroke-width="4" filter="url(#glow)"/>
-  <polygon points="64,16 102,38 102,82 64,104 26,82 26,38" fill="#110F22" stroke="#2D5FA0" stroke-width="1.5"/>
-  <!-- LVL text placeholder (number overlaid at runtime via CSS) -->
-  <text x="64" y="58" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="10" fill="#4A9EFF" opacity="0.7">LVL</text>
-  <text x="64" y="82" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="22" fill="#F0EEFF" font-weight="bold">--</text>
-  <!-- corner sparkles -->
-  <circle cx="64" cy="8" r="4" fill="#4A9EFF" opacity="0.8"/>
-  <circle cx="110" cy="34" r="3" fill="#4A9EFF" opacity="0.6"/>
-  <circle cx="110" cy="86" r="3" fill="#4A9EFF" opacity="0.6"/>
+  <polygon points="64,6 118,36 118,92 64,122 10,92 10,36" fill="#0C0A1E" stroke="currentColor" stroke-width="3.5" filter="url(#glow)"/>
+  <polygon points="64,16 108,40 108,88 64,112 20,88 20,40" fill="#080714" stroke="currentColor" stroke-width="1" opacity="0.3"/>
+  <circle cx="64" cy="6"  r="3" fill="currentColor" opacity="0.7"/>
+  <circle cx="118" cy="36" r="2.5" fill="currentColor" opacity="0.5"/>
+  <circle cx="118" cy="92" r="2.5" fill="currentColor" opacity="0.5"/>
+  <circle cx="64" cy="122" r="2.5" fill="currentColor" opacity="0.4"/>
+  <circle cx="10" cy="92" r="2.5" fill="currentColor" opacity="0.5"/>
+  <circle cx="10" cy="36" r="2.5" fill="currentColor" opacity="0.5"/>
 </svg>

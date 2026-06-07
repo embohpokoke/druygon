@@ -1,22 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 140" width="128" height="140">
   <defs>
-    <radialGradient id="bg" cx="40%" cy="35%">
-      <stop offset="0%" stop-color="#FFCB05" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#C09400" stop-opacity="1"/>
+    <radialGradient id="medalBg" cx="35%" cy="30%">
+      <stop offset="0%" stop-color="#FFCB05" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#E5A800" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#8B6B00" stop-opacity="1"/>
     </radialGradient>
-    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="innerBg" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#B08800"/>
+    </radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="innerGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>
-  <!-- ribbon -->
-  <path d="M48 88 L38 120 L64 108 L90 120 L80 88 Z" fill="#C09400" opacity="0.8"/>
-  <path d="M56 88 L50 108 L64 102 L78 108 L72 88 Z" fill="#FFCB05" opacity="0.6"/>
-  <!-- medal circle -->
-  <circle cx="64" cy="64" r="50" fill="#C09400" filter="url(#glow)"/>
-  <circle cx="64" cy="64" r="46" fill="url(#bg)"/>
-  <circle cx="64" cy="64" r="38" fill="#1A1200" stroke="#FFCB05" stroke-width="2" opacity="0.9"/>
-  <!-- star ring -->
-  <circle cx="92" cy="64" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="83" cy="83" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="64" cy="92" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="44" cy="83" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="36" cy="64" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="44" cy="44" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="63" cy="36" r="4" fill="#FFCB05" opacity="0.6"/><circle cx="83" cy="44" r="4" fill="#FFCB05" opacity="0.6"/>
-  <!-- letter -->
-  <text x="64" y="76" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="40" font-weight="900" fill="#FFCB05">C</text>
-  <!-- shine -->
-  <ellipse cx="50" cy="46" rx="10" ry="7" fill="white" opacity="0.2" transform="rotate(-30 50 46)"/>
+  <path d="M50 88 L40 128 L62 116 L68 88 Z" fill="#C87F00" opacity="0.9"/>
+  <path d="M46 88 L38 122 L58 112 L62 88 Z" fill="#FFCB05" opacity="0.7"/>
+  <path d="M78 88 L88 128 L66 116 L60 88 Z" fill="#C87F00" opacity="0.9"/>
+  <path d="M82 88 L90 122 L70 112 L66 88 Z" fill="#FFCB05" opacity="0.7"/>
+  <circle cx="64" cy="116" r="7" fill="#C87F00"/>
+  <circle cx="64" cy="116" r="4" fill="#FFCB05"/>
+  <circle cx="64" cy="64" r="46" fill="#A30000" filter="url(#glow)"/>
+  <circle cx="64" cy="64" r="43" fill="url(#medalBg)"/>
+  <circle cx="64" cy="64" r="38" fill="none" stroke="#FFE066" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+  <circle cx="64" cy="64" r="32" fill="#1A1200" stroke="#FFCB05" stroke-width="2" filter="url(#innerGlow)"/>
+  <text x="64" y="75" text-anchor="middle" font-family="'Segoe UI Symbol', sans-serif" font-size="36" font-weight="bold" fill="#FFCB05" filter="url(#innerGlow)">★</text>
+  <ellipse cx="50" cy="36" rx="14" ry="6" fill="white" opacity="0.12" transform="rotate(-20 50 36)"/>
 </svg>
