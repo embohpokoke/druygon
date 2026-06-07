@@ -18,8 +18,8 @@
 <link rel="manifest" href="manifest.json" />
 
 <!-- App styles (shared with redesign) -->
-<link rel="stylesheet" href="redesign/app/design-system.css?v=26eeba02" />
-<link rel="stylesheet" href="redesign/app/app.css?v=26eeba02" />
+<link rel="stylesheet" href="redesign/app/design-system.css?v=8ebbecfd" />
+<link rel="stylesheet" href="redesign/app/app.css?v=8ebbecfd" />
 
 <!-- Service worker registration -->
 <script>
@@ -31,13 +31,50 @@ if ('serviceWorker' in navigator) {
 </script>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+  <div class="boot-fallback" role="status">
+    <div class="recovery-card">
+      <div class="recovery-mark" aria-hidden="true">!</div>
+      <p class="eyebrow">Druygon belum dapat dimuat</p>
+      <h1>Petualangan berhenti sebentar</h1>
+      <p>Muat ulang halaman. Jika layar masih kosong, perbaiki cache aplikasi lalu coba lagi.</p>
+      <div class="recovery-actions">
+        <button class="btn btn-primary btn-block" onclick="window.location.reload()">Coba lagi</button>
+        <button class="btn btn-ghost btn-block" onclick="window.druygonRecover()">Perbaiki tampilan</button>
+      </div>
+      <a class="recovery-link" href="/tutor">Buka Draco Tutor</a>
+    </div>
+  </div>
+</div>
+<noscript><p>Druygon membutuhkan JavaScript untuk berjalan.</p></noscript>
+
+<script>
+window.druygonRecover = async function () {
+  try {
+    localStorage.removeItem('druygon-nav-v2');
+    localStorage.removeItem('druygon-slot-v1');
+  } catch (_) {}
+  try {
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(key => caches.delete(key)));
+    }
+  } catch (_) {}
+  try {
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(registration => registration.unregister()));
+    }
+  } catch (_) {}
+  window.location.reload();
+};
+</script>
 
 <!-- React 18 production (self-hosted) -->
 <script src="redesign/app/assets/js/react.production.min.js?v=18.3.1"></script>
 <script src="redesign/app/assets/js/react-dom.production.min.js?v=18.3.1"></script>
 
 <!-- App bundle (JSX pre-compiled, no Babel) -->
-<script src="redesign/app/bundle.js?v=26eeba02"></script>
+<script src="redesign/app/bundle.js?v=8ebbecfd"></script>
 </body>
 </html>

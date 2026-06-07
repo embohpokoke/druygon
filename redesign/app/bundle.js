@@ -173,7 +173,7 @@
     RARITY,
     POKEBALLS,
     REGION_META,
-    // Live-updated refs -- components read these after ready
+    // Live-updated refs — components read these after ready
     get REGIONS() {
       return REGIONS;
     },
@@ -490,6 +490,28 @@
   const SLOT_LS = "druygon-slot-v1";
   const VALID_SLOTS = [1, 2, 3, 4];
   const NAV_DEFAULT = { screen: "home", region: "science", zone: 1 };
+  async function recoverApp() {
+    try {
+      localStorage.removeItem(NAV_LS);
+      localStorage.removeItem(SLOT_LS);
+    } catch {
+    }
+    try {
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((key) => caches.delete(key)));
+      }
+    } catch {
+    }
+    try {
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map((registration) => registration.unregister()));
+      }
+    } catch {
+    }
+    window.location.reload();
+  }
   function loadNav() {
     try {
       return { ...NAV_DEFAULT, ...JSON.parse(localStorage.getItem(NAV_LS) || "{}") };
@@ -540,6 +562,22 @@
       return d;
     } catch {
       return null;
+    }
+  }
+  class AppErrorBoundary extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { error: null };
+    }
+    static getDerivedStateFromError(error) {
+      return { error };
+    }
+    componentDidCatch(error, info) {
+      console.error("[Druygon] render failed:", error, info);
+    }
+    render() {
+      if (!this.state.error) return this.props.children;
+      return /* @__PURE__ */ React.createElement("div", { className: "device recovery-shell", role: "alert" }, /* @__PURE__ */ React.createElement("div", { className: "recovery-card" }, /* @__PURE__ */ React.createElement("div", { className: "recovery-mark", "aria-hidden": "true" }, "!"), /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, "Druygon perlu dimuat ulang"), /* @__PURE__ */ React.createElement("h1", null, "Petualangan berhenti sebentar"), /* @__PURE__ */ React.createElement("p", null, "Kami menemukan masalah saat menampilkan halaman ini. Progress yang sudah tersimpan tetap aman."), /* @__PURE__ */ React.createElement("div", { className: "recovery-actions" }, /* @__PURE__ */ React.createElement("button", { className: "btn btn-primary btn-block", onClick: () => window.location.reload() }, "Coba lagi"), /* @__PURE__ */ React.createElement("button", { className: "btn btn-ghost btn-block", onClick: recoverApp }, "Perbaiki tampilan")), /* @__PURE__ */ React.createElement("a", { className: "recovery-link", href: "/tutor" }, "Buka Draco Tutor")));
     }
   }
   function App() {
@@ -699,5 +737,12 @@
     const navActive = screen === "catch" ? "map" : screen;
     return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
   }
-  ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
+  const rootElement = document.getElementById("root");
+  try {
+    ReactDOM.createRoot(rootElement).render(
+      /* @__PURE__ */ React.createElement(AppErrorBoundary, null, /* @__PURE__ */ React.createElement(App, null))
+    );
+  } catch (error) {
+    console.error("[Druygon] bootstrap failed:", error);
+  }
 })();
