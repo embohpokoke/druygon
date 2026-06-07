@@ -1,8 +1,8 @@
 {
-  "name": "Druygon",
+  "name": "Druygon — Dru Learning Portal",
   "short_name": "Druygon",
-  "description": "Portal game edukasi Druygon",
-  "start_url": "/index.html",
+  "description": "Portal belajar dan gamifikasi untuk anak — Science, Sirkuit Digital, Kurikulum",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#080714",
   "theme_color": "#080714",
@@ -17,5 +17,7 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "scope": "/",
+  "orientation": "portrait"
 }

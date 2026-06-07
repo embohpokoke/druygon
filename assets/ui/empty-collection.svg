@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="60%">
+      <stop offset="0%" stop-color="#4A9EFF" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#4A9EFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- background glow -->
+  <circle cx="256" cy="300" r="200" fill="url(#bg)"/>
+  <!-- Dru silhouette (simple dragon mascot holding pokeball) -->
+  <!-- body -->
+  <ellipse cx="256" cy="310" rx="80" ry="90" fill="#2D2A50" stroke="#4B4680" stroke-width="3"/>
+  <!-- head -->
+  <circle cx="256" cy="210" r="60" fill="#2D2A50" stroke="#4B4680" stroke-width="3"/>
+  <!-- eye left -->
+  <circle cx="238" cy="205" r="10" fill="#F0EEFF"/>
+  <circle cx="241" cy="205" r="6" fill="#080714"/>
+  <circle cx="239" cy="203" r="2" fill="white"/>
+  <!-- eye right -->
+  <circle cx="274" cy="205" r="10" fill="#F0EEFF"/>
+  <circle cx="277" cy="205" r="6" fill="#080714"/>
+  <circle cx="275" cy="203" r="2" fill="white"/>
+  <!-- ear/horn -->
+  <path d="M228 168 L218 142 L240 160 Z" fill="#3D3760"/>
+  <path d="M284 168 L294 142 L272 160 Z" fill="#3D3760"/>
+  <!-- arms -->
+  <path d="M180 290 Q150 310 160 340 L200 320 Z" fill="#2D2A50" stroke="#4B4680" stroke-width="2"/>
+  <path d="M332 290 Q362 310 352 340 L312 320 Z" fill="#2D2A50" stroke="#4B4680" stroke-width="2"/>
+  <!-- pokeball (empty, held) -->
+  <circle cx="256" cy="400" r="50" fill="#3D3760" stroke="#4B4680" stroke-width="3"/>
+  <path d="M206 400 A50 50 0 0 1 306 400 Z" fill="#EE3D34" opacity="0.5"/>
+  <rect x="206" y="396" width="100" height="8" fill="#4B4680"/>
+  <circle cx="256" cy="400" r="14" fill="#4B4680"/>
+  <circle cx="256" cy="400" r="9" fill="#2D2A50"/>
+  <!-- sad/hopeful expression -->
+  <path d="M240 232 Q256 224 272 232" stroke="#F0EEFF" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- question marks floating -->
+  <text x="150" y="180" font-family="Arial Black, sans-serif" font-size="36" fill="#4B4680" opacity="0.5">?</text>
+  <text x="340" y="200" font-family="Arial Black, sans-serif" font-size="28" fill="#4B4680" opacity="0.4">?</text>
+  <text x="180" y="380" font-family="Arial Black, sans-serif" font-size="22" fill="#4B4680" opacity="0.3">?</text>
+</svg>

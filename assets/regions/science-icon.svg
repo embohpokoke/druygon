@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00D9B8" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#00D9B8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- glow background -->
+  <circle cx="128" cy="128" r="110" fill="url(#bg)"/>
+  <!-- outer ring -->
+  <circle cx="128" cy="128" r="106" fill="none" stroke="#00D9B8" stroke-width="2.5" stroke-opacity="0.4"/>
+  <!-- leaf/plant stem -->
+  <path d="M128 200 L128 130" stroke="#00D9B8" stroke-width="7" stroke-linecap="round" fill="none" filter="url(#glow)"/>
+  <!-- left leaf -->
+  <path d="M128 160 Q90 130 96 96 Q120 108 128 140" fill="#00D9B8" opacity="0.9" filter="url(#glow)"/>
+  <!-- right leaf -->
+  <path d="M128 148 Q168 118 162 84 Q138 96 128 128" fill="#00D9B8" opacity="0.7" filter="url(#glow)"/>
+  <!-- top bud -->
+  <circle cx="128" cy="90" r="16" fill="#00D9B8" filter="url(#glow)"/>
+  <circle cx="128" cy="90" r="8" fill="#F0EEFF"/>
+  <!-- molecule dots -->
+  <circle cx="76" cy="164" r="6" fill="#00D9B8" opacity="0.5"/>
+  <circle cx="180" cy="170" r="5" fill="#00D9B8" opacity="0.4"/>
+  <circle cx="168" cy="76" r="4" fill="#00D9B8" opacity="0.3"/>
+</svg>

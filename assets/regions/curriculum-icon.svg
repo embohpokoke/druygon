@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#FFCB05" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FFCB05" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="128" cy="128" r="110" fill="url(#bg)"/>
+  <circle cx="128" cy="128" r="106" fill="none" stroke="#FFCB05" stroke-width="2.5" stroke-opacity="0.4"/>
+  <!-- book body -->
+  <path d="M80 80 L80 180 Q80 186 86 186 L128 180 L170 186 Q176 186 176 180 L176 80 Q176 74 170 74 L134 78 L128 80 L122 78 L86 74 Q80 74 80 80Z" fill="#FFCB05" opacity="0.15" stroke="#FFCB05" stroke-width="4" filter="url(#glow)"/>
+  <!-- spine -->
+  <line x1="128" y1="80" x2="128" y2="180" stroke="#FFCB05" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+  <!-- left page lines -->
+  <line x1="92" y1="104" x2="122" y2="102" stroke="#FFCB05" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <line x1="92" y1="116" x2="122" y2="114" stroke="#FFCB05" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <line x1="92" y1="128" x2="122" y2="126" stroke="#FFCB05" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <line x1="92" y1="140" x2="122" y2="138" stroke="#FFCB05" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="92" y1="152" x2="118" y2="150" stroke="#FFCB05" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+  <!-- right page lines -->
+  <line x1="134" y1="102" x2="164" y2="104" stroke="#FFCB05" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <line x1="134" y1="114" x2="164" y2="116" stroke="#FFCB05" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  <line x1="134" y1="126" x2="164" y2="128" stroke="#FFCB05" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <line x1="134" y1="138" x2="164" y2="140" stroke="#FFCB05" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="134" y1="150" x2="160" y2="152" stroke="#FFCB05" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+  <!-- star accent top -->
+  <path d="M128 58 L132 70 L144 68 L135 76 L138 88 L128 82 L118 88 L121 76 L112 68 L124 70 Z" fill="#FFCB05" filter="url(#glow)"/>
+</svg>

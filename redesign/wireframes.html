@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Druygon · Redesign Wireframes</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #f0eee9; }
+  #root { height: 100vh; }
+  /* tweak-driven global overrides (rewritten at runtime) */
+  #wf-tweak-css {}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<style id="wf-tweak-css"></style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="wf-lib.jsx"></script>
+<script type="text/babel" src="screens-home-map.jsx"></script>
+<script type="text/babel" src="screens-catch.jsx"></script>
+<script type="text/babel" src="screens-rest.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const W = 320, H = 660;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "roughEdges": true,
+  "handFont": true,
+  "showNotes": true,
+  "paper": "#f0eee9"
+}/*EDITMODE-END*/;
+
+function Frame({ children }) {
+  // phone frames render at native size inside fixed-size artboards
+  return <div style={{ width: W, height: H }}>{children}</div>;
+}
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    const css = [];
+    if (!t.roughEdges) css.push('.wf-rough{filter:none !important}');
+    if (!t.handFont) css.push(".wf *, .wf-marker{font-family:'Trebuchet MS',system-ui,sans-serif !important}");
+    if (!t.showNotes) css.push('.wf-anno{display:none !important}');
+    document.getElementById('wf-tweak-css').textContent = css.join('\n');
+  }, [t.roughEdges, t.handFont, t.showNotes]);
+
+  const ab = (id, label, node) => (
+    <DCArtboard id={id} label={label} width={W} height={H}><Frame>{node}</Frame></DCArtboard>
+  );
+
+  return (
+    <React.Fragment>
+      <DesignCanvas style={{ background: t.paper }}>
+        <DCSection id="home" title="Home" subtitle="3 region cards + player hero · evolves index.html">
+          {ab('home-a', 'A · Stacked worlds', <HomeA />)}
+          {ab('home-b', 'B · Continue + grid', <HomeB />)}
+        </DCSection>
+
+        <DCSection id="map" title="Region map" subtitle="Ordered zone path (locked → open → cleared) · evolves routes/">
+          {ab('map-a', 'A · Winding journey', <MapA />)}
+          {ab('map-b', 'B · Linear stepper', <MapB />)}
+        </DCSection>
+
+        <DCSection id="catch" title="Zone · Catch loop  ⟵ the core screen" subtitle="Interactive — answer → HP → throw → result. 3 takes on the catch interaction (quiz-first).">
+          {ab('catch-a', 'A · Quiz-first', <CatchA />)}
+          {ab('catch-b', 'B · Battle stage', <CatchB />)}
+          {ab('catch-c', 'C · Combo + power-throw', <CatchC />)}
+        </DCSection>
+
+        <DCSection id="celeb" title="Catch celebration" subtitle="The reward moment">
+          {ab('celeb-a', 'A · Full-screen burst', <CelebA />)}
+          {ab('celeb-b', 'B · Slide-up sheet', <CelebB />)}
+        </DCSection>
+
+        <DCSection id="collection" title="Collection" subtitle="Grouped by subject · silhouettes for uncaught · re-skin of /collection">
+          {ab('collection', 'Koleksi', <Collection />)}
+        </DCSection>
+
+        <DCSection id="store" title="Store" subtitle="4 pokéball tiers with per-tier art · re-skin of /store">
+          {ab('store', 'Toko', <Store />)}
+        </DCSection>
+
+        <DCSection id="profile" title="Profile / Parent" subtitle="Slot UI + parent dashboard + Modul Lama (archive)">
+          {ab('profile', 'Profil', <Profile />)}
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel title="Wireframe tweaks">
+        <TweakSection label="Sketch style" />
+        <TweakToggle label="Rough edges" value={t.roughEdges} onChange={(v) => setTweak('roughEdges', v)} />
+        <TweakToggle label="Handwriting font" value={t.handFont} onChange={(v) => setTweak('handFont', v)} />
+        <TweakSection label="Review" />
+        <TweakToggle label="Designer notes" value={t.showNotes} onChange={(v) => setTweak('showNotes', v)} />
+        <TweakColor label="Canvas" value={t.paper} options={['#f0eee9', '#e8e9ec', '#1b1828']} onChange={(v) => setTweak('paper', v)} />
+      </TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

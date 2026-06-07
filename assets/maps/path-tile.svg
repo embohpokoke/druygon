@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- tileable path segment — dotted road -->
+  <rect width="128" height="128" fill="none"/>
+  <!-- path track -->
+  <rect x="44" y="0" width="40" height="128" rx="8" fill="#1E1B3A" opacity="0.8"/>
+  <!-- center dashes -->
+  <rect x="60" y="4" width="8" height="20" rx="4" fill="#3D3760" opacity="0.7"/>
+  <rect x="60" y="36" width="8" height="20" rx="4" fill="#3D3760" opacity="0.7"/>
+  <rect x="60" y="68" width="8" height="20" rx="4" fill="#3D3760" opacity="0.7"/>
+  <rect x="60" y="100" width="8" height="24" rx="4" fill="#3D3760" opacity="0.7"/>
+  <!-- edge glow -->
+  <rect x="44" y="0" width="4" height="128" fill="#4A9EFF" opacity="0.15"/>
+  <rect x="80" y="0" width="4" height="128" fill="#4A9EFF" opacity="0.15"/>
+</svg>
