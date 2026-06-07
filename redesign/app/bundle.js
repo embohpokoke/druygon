@@ -173,7 +173,7 @@
     RARITY,
     POKEBALLS,
     REGION_META,
-    // Live-updated refs — components read these after ready
+    // Live-updated refs -- components read these after ready
     get REGIONS() {
       return REGIONS;
     },
@@ -282,7 +282,7 @@
   function ContentLoading() {
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad", style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 16, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 14 } }, "Loading world data\u2026")));
   }
-  function Home({ go, caught, coins, profile, playerName }) {
+  function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) {
     var _a;
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
@@ -295,7 +295,13 @@
       const r = regions[id];
       const next = r.zones.find((z) => zoneState(z) !== "cleared") || r.zones[2];
       return /* @__PURE__ */ React.createElement("div", { key: id, className: "region-card", "data-region": id, style: { "--rc": r.accent, "--rc-soft": "var(--accent-soft)" }, onClick: () => go("map", id) }, /* @__PURE__ */ React.createElement("div", { className: "region-glow" }), /* @__PURE__ */ React.createElement("div", { className: "region-emblem" }, /* @__PURE__ */ React.createElement(Icon, { name: r.icon, size: 30 })), /* @__PURE__ */ React.createElement("div", { className: "region-main" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "region-name" }, r.name), /* @__PURE__ */ React.createElement("div", { className: "region-tag" }, r.blurb, " \xB7 next: ", next.name)), /* @__PURE__ */ React.createElement("div", { className: "region-foot" }, /* @__PURE__ */ React.createElement("b", null, prog[id], "/3 zones"), /* @__PURE__ */ React.createElement("div", { className: "region-mons" }, r.zones[0].mons.slice(0, 3).map((m) => /* @__PURE__ */ React.createElement("img", { key: m.dex, src: m.sprite, alt: "", crossOrigin: "anonymous" })))), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: prog[id] / 3 * 100 + "%" } }))), /* @__PURE__ */ React.createElement("div", { className: "region-arrow" }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 20, color: r.accent })));
-    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Daily mission"), /* @__PURE__ */ React.createElement("a", null, "Refresh")), /* @__PURE__ */ React.createElement("div", { className: "mission", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "mission-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 22 })), /* @__PURE__ */ React.createElement("div", { className: "mission-main" }, /* @__PURE__ */ React.createElement("b", null, "Catch 3 in Sirkuit Digital"), /* @__PURE__ */ React.createElement("p", null, "1 of 3 done \xB7 streak \xD710 bonus active"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: "33%" } }))), /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: "var(--accent)", borderColor: "var(--accent)" } }, "+50")), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements"), /* @__PURE__ */ React.createElement("a", null, "All")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": "compsci" }, [["zap", "Logika Master", "Cleared zone 1"], ["flame", "Streak \xD710", "Today"], ["star", "First Catch", "Unlocked"]].map(([ic, n, d]) => /* @__PURE__ */ React.createElement("div", { key: n, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: ic, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, n), /* @__PURE__ */ React.createElement("span", null, d))))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Leaderboard"), /* @__PURE__ */ React.createElement("a", null, "Class 4B")), /* @__PURE__ */ React.createElement("div", { className: "lb", "data-region": "compsci" }, [["1", "Nadia", "24 caught", "4,820"], ["2", "Dru", "you \xB7 12 caught", "3,140", true], ["3", "Bima", "9 caught", "2,510"]].map(([rk, nm, sub, sc, me]) => /* @__PURE__ */ React.createElement("div", { key: rk, className: "lb-row" + (me ? " me" : "") }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, rk), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, me ? /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "" }) : "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, nm), /* @__PURE__ */ React.createElement("span", null, sub)), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, sc)))))));
+    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Daily mission"), /* @__PURE__ */ React.createElement("a", null, "Refresh")), /* @__PURE__ */ React.createElement("div", { className: "mission", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "mission-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 22 })), /* @__PURE__ */ React.createElement("div", { className: "mission-main" }, /* @__PURE__ */ React.createElement("b", null, "Catch 3 in Sirkuit Digital"), /* @__PURE__ */ React.createElement("p", null, "1 of 3 done \xB7 streak \xD710 bonus active"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: "33%" } }))), /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: "var(--accent)", borderColor: "var(--accent)" } }, "+50")), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements"), /* @__PURE__ */ React.createElement("a", null, "All")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": "compsci" }, [["zap", "Logika Master", "Cleared zone 1"], ["flame", "Streak \xD710", "Today"], ["star", "First Catch", "Unlocked"]].map(([ic, n, d]) => /* @__PURE__ */ React.createElement("div", { key: n, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: ic, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, n), /* @__PURE__ */ React.createElement("span", null, d))))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Leaderboard")), /* @__PURE__ */ React.createElement("div", { className: "lb", "data-region": "compsci" }, allSlots && allSlots.length > 0 ? [...allSlots].sort((a, b) => b.coins - a.coins || b.caughtCount - a.caughtCount).map((s, i) => {
+      const isMe = s.slot === activeSlot;
+      return /* @__PURE__ */ React.createElement("div", { key: s.slot, className: "lb-row" + (isMe ? " me" : "") }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i + 1), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, isMe ? /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "" }) : "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, s.name), /* @__PURE__ */ React.createElement("span", null, isMe ? "kamu \xB7 " : "", s.caughtCount, " caught")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, s.coins.toLocaleString())));
+    }) : (
+      /* loading skeleton */
+      [1, 2, 3].map((i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "lb-row", style: { opacity: 0.3 } }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"), /* @__PURE__ */ React.createElement("span", null, "loading\u2026")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"))))
+    ))));
   }
   function RegionMap({ region, go, caught }) {
     const { regions, ready } = useContent();
@@ -490,28 +496,6 @@
   const SLOT_LS = "druygon-slot-v1";
   const VALID_SLOTS = [1, 2, 3, 4];
   const NAV_DEFAULT = { screen: "home", region: "science", zone: 1 };
-  async function recoverApp() {
-    try {
-      localStorage.removeItem(NAV_LS);
-      localStorage.removeItem(SLOT_LS);
-    } catch {
-    }
-    try {
-      if ("caches" in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map((key) => caches.delete(key)));
-      }
-    } catch {
-    }
-    try {
-      if ("serviceWorker" in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map((registration) => registration.unregister()));
-      }
-    } catch {
-    }
-    window.location.reload();
-  }
   function loadNav() {
     try {
       return { ...NAV_DEFAULT, ...JSON.parse(localStorage.getItem(NAV_LS) || "{}") };
@@ -562,22 +546,6 @@
       return d;
     } catch {
       return null;
-    }
-  }
-  class AppErrorBoundary extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = { error: null };
-    }
-    static getDerivedStateFromError(error) {
-      return { error };
-    }
-    componentDidCatch(error, info) {
-      console.error("[Druygon] render failed:", error, info);
-    }
-    render() {
-      if (!this.state.error) return this.props.children;
-      return /* @__PURE__ */ React.createElement("div", { className: "device recovery-shell", role: "alert" }, /* @__PURE__ */ React.createElement("div", { className: "recovery-card" }, /* @__PURE__ */ React.createElement("div", { className: "recovery-mark", "aria-hidden": "true" }, "!"), /* @__PURE__ */ React.createElement("p", { className: "eyebrow" }, "Druygon perlu dimuat ulang"), /* @__PURE__ */ React.createElement("h1", null, "Petualangan berhenti sebentar"), /* @__PURE__ */ React.createElement("p", null, "Kami menemukan masalah saat menampilkan halaman ini. Progress yang sudah tersimpan tetap aman."), /* @__PURE__ */ React.createElement("div", { className: "recovery-actions" }, /* @__PURE__ */ React.createElement("button", { className: "btn btn-primary btn-block", onClick: () => window.location.reload() }, "Coba lagi"), /* @__PURE__ */ React.createElement("button", { className: "btn btn-ghost btn-block", onClick: recoverApp }, "Perbaiki tampilan")), /* @__PURE__ */ React.createElement("a", { className: "recovery-link", href: "/tutor" }, "Buka Draco Tutor")));
     }
   }
   function App() {
@@ -703,7 +671,7 @@
     let header, content, showNav = true;
     if (screen === "home") {
       header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, playerName });
-      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName });
+      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName, allSlots, activeSlot });
     } else if (screen === "map") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home") });
       content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught: caughtDex });
@@ -737,12 +705,5 @@
     const navActive = screen === "catch" ? "map" : screen;
     return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
   }
-  const rootElement = document.getElementById("root");
-  try {
-    ReactDOM.createRoot(rootElement).render(
-      /* @__PURE__ */ React.createElement(AppErrorBoundary, null, /* @__PURE__ */ React.createElement(App, null))
-    );
-  } catch (error) {
-    console.error("[Druygon] bootstrap failed:", error);
-  }
+  ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();

@@ -8,29 +8,6 @@ const VALID_SLOTS = [1, 2, 3, 4];     // slot 5 is disabled (design-only removed
 
 const NAV_DEFAULT = { screen: 'home', region: 'science', zone: 1 };
 
-async function recoverApp() {
-  try {
-    localStorage.removeItem(NAV_LS);
-    localStorage.removeItem(SLOT_LS);
-  } catch {}
-
-  try {
-    if ('caches' in window) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(key => caches.delete(key)));
-    }
-  } catch {}
-
-  try {
-    if ('serviceWorker' in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(registrations.map(registration => registration.unregister()));
-    }
-  } catch {}
-
-  window.location.reload();
-}
-
 function loadNav() {
   try { return { ...NAV_DEFAULT, ...JSON.parse(localStorage.getItem(NAV_LS) || '{}') }; }
   catch { return NAV_DEFAULT; }
@@ -73,41 +50,6 @@ async function fetchPlayer(slot) {
     if (!d.name || d.profile?.disabled) return null;
     return d;
   } catch { return null; }
-}
-
-class AppErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { error };
-  }
-
-  componentDidCatch(error, info) {
-    console.error('[Druygon] render failed:', error, info);
-  }
-
-  render() {
-    if (!this.state.error) return this.props.children;
-
-    return (
-      <div className="device recovery-shell" role="alert">
-        <div className="recovery-card">
-          <div className="recovery-mark" aria-hidden="true">!</div>
-          <p className="eyebrow">Druygon perlu dimuat ulang</p>
-          <h1>Petualangan berhenti sebentar</h1>
-          <p>Kami menemukan masalah saat menampilkan halaman ini. Progress yang sudah tersimpan tetap aman.</p>
-          <div className="recovery-actions">
-            <button className="btn btn-primary btn-block" onClick={() => window.location.reload()}>Coba lagi</button>
-            <button className="btn btn-ghost btn-block" onClick={recoverApp}>Perbaiki tampilan</button>
-          </div>
-          <a className="recovery-link" href="/tutor">Buka Draco Tutor</a>
-        </div>
-      </div>
-    );
-  }
 }
 
 // ── App ───────────────────────────────────────────────────────────────────
@@ -250,7 +192,7 @@ function App() {
 
   if (screen === 'home') {
     header  = <Header region={region} coins={profile.coins} playerName={playerName} />;
-    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} />;
+    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} />;
   } else if (screen === 'map') {
     header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} />;
     content = <RegionMap region={region} go={go} caught={caughtDex} />;
@@ -291,14 +233,4 @@ function App() {
   );
 }
 
-const rootElement = document.getElementById('root');
-
-try {
-  ReactDOM.createRoot(rootElement).render(
-    <AppErrorBoundary>
-      <App />
-    </AppErrorBoundary>
-  );
-} catch (error) {
-  console.error('[Druygon] bootstrap failed:', error);
-}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
