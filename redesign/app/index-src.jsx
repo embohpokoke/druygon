@@ -192,7 +192,7 @@ function App() {
 
   if (screen === 'home') {
     header  = <Header region={region} coins={profile.coins} playerName={playerName} />;
-    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} />;
+    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} />;
   } else if (screen === 'map') {
     header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} />;
     content = <RegionMap region={region} go={go} caught={caughtDex} />;

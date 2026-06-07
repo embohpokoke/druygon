@@ -19,7 +19,7 @@ function ContentLoading() {
 }
 
 // ───────────────────────── HOME (variant A) ─────────────────────────
-function Home({ go, caught, coins, profile, playerName }) {
+function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
@@ -103,17 +103,36 @@ function Home({ go, caught, coins, profile, playerName }) {
           ))}
         </div>
 
-        {/* leaderboard */}
-        <div className="sec-head"><h2>Leaderboard</h2><a>Class 4B</a></div>
+        {/* leaderboard — real players from /api/player */}
+        <div className="sec-head"><h2>Leaderboard</h2></div>
         <div className="lb" data-region="compsci">
-          {[['1', 'Nadia', '24 caught', '4,820'], ['2', 'Dru', 'you · 12 caught', '3,140', true], ['3', 'Bima', '9 caught', '2,510']].map(([rk, nm, sub, sc, me]) => (
-            <div key={rk} className={'lb-row' + (me ? ' me' : '')}>
-              <div className="lb-rank">{rk}</div>
-              <div className="lb-av">{me ? <img src={AVATAR} alt="" /> : '🧑'}</div>
-              <div className="lb-name"><b>{nm}</b><span>{sub}</span></div>
-              <div className="lb-score"><b>{sc}</b></div>
-            </div>
-          ))}
+          {(allSlots && allSlots.length > 0
+            ? [...allSlots]
+                .sort((a, b) => (b.coins - a.coins) || (b.caughtCount - a.caughtCount))
+                .map((s, i) => {
+                  const isMe = s.slot === activeSlot;
+                  return (
+                    <div key={s.slot} className={'lb-row' + (isMe ? ' me' : '')}>
+                      <div className="lb-rank">{i + 1}</div>
+                      <div className="lb-av">{isMe ? <img src={AVATAR} alt="" /> : '🧑'}</div>
+                      <div className="lb-name">
+                        <b>{s.name}</b>
+                        <span>{isMe ? 'kamu · ' : ''}{s.caughtCount} caught</span>
+                      </div>
+                      <div className="lb-score"><b>{s.coins.toLocaleString()}</b></div>
+                    </div>
+                  );
+                })
+            : /* loading skeleton */
+              [1, 2, 3].map(i => (
+                <div key={i} className="lb-row" style={{ opacity: 0.3 }}>
+                  <div className="lb-rank">{i}</div>
+                  <div className="lb-av">🧑</div>
+                  <div className="lb-name"><b>—</b><span>loading…</span></div>
+                  <div className="lb-score"><b>—</b></div>
+                </div>
+              ))
+          )}
         </div>
       </div>
     </div>

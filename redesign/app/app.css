@@ -291,3 +291,15 @@ body { background: radial-gradient(120% 90% at 50% -10%, #15122a 0%, #0a0818 55%
   .device { width:100vw; height:100vh; border-radius:0; border:0; box-shadow:none; }
   .device::after { display:none; }
 }
+
+/* Recovery UI remains usable when React or the generated bundle fails. */
+.boot-fallback, .recovery-shell { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; }
+.recovery-shell { min-height:100%; }
+.recovery-card { width:min(100%, 390px); text-align:center; padding:28px 24px; border-radius:var(--r-lg); background:var(--bg-card); border:1px solid var(--border-medium); box-shadow:var(--card-shadow); }
+.recovery-mark { width:52px; height:52px; margin:0 auto 18px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,203,5,.12); border:1px solid rgba(255,203,5,.45); color:var(--yellow); font-family:var(--font-display); font-size:28px; font-weight:800; }
+.recovery-card .eyebrow { color:var(--yellow); }
+.recovery-card h1 { margin:8px 0 10px; font-family:var(--font-display); font-size:22px; line-height:1.25; }
+.recovery-card p:not(.eyebrow) { color:var(--text-secondary); font-size:13px; line-height:1.6; }
+.recovery-actions { display:grid; gap:10px; margin-top:22px; }
+.recovery-actions .btn { width:100%; }
+.recovery-link { display:inline-block; margin-top:18px; color:var(--text-secondary); font-size:12px; text-decoration:underline; text-underline-offset:3px; }
