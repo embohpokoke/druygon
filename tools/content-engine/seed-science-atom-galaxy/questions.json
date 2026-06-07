@@ -1,0 +1,214 @@
+{
+  "atom_dan_unsur": [
+    {
+      "q": "Apa nama bagian paling kecil dari suatu unsur yang masih memiliki sifat unsur tersebut, seperti bata penyusun gedung?",
+      "expr": "🧱 ➡️ 🏢",
+      "opts": [
+        "Atom",
+        "Molekul",
+        "Sel",
+        "Inti"
+      ],
+      "a": 0,
+      "hint": "Bayangkan ini sebagai unit terkecil yang tidak bisa dibagi lagi tanpa kehilangan sifat aslinya.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Di dalam inti atom (nucleus), terdapat dua jenis partikel utama. Salah satunya bermuatan positif disebut proton, sedangkan yang lainnya tidak bermuatan listrik disebut...",
+      "expr": "⚛️ Inti: (+) Proton + (?)",
+      "opts": [
+        "Elektron",
+        "Neutron",
+        "Foton",
+        "Ion"
+      ],
+      "a": 1,
+      "hint": "Namanya terdengar mirip dengan 'proton', tetapi partikel ini netral atau tidak punya muatan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Elektron adalah partikel kecil yang bergerak mengelilingi inti atom. Berapakah jenis muatan listrik yang dimiliki oleh elektron?",
+      "expr": "🌪️ Elektron mengorbit inti...",
+      "opts": [
+        "Positif (+)",
+        "Netral (0)",
+        "Negatif (-)",
+        "Ganda (+ dan -)"
+      ],
+      "a": 2,
+      "hint": "Muatan ini berlawanan dengan muatan proton yang ada di dalam inti.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Setiap unsur memiliki 'Nomor Atom' yang unik, seperti nomor identitas. Nomor atom ini ditentukan oleh jumlah partikel apa di dalam inti atom?",
+      "expr": "🆔 Nomor Atom = Jumlah ...?",
+      "opts": [
+        "Jumlah Neutron",
+        "Jumlah Elektron",
+        "Jumlah Proton",
+        "Jumlah Proton + Neutron"
+      ],
+      "a": 2,
+      "hint": "Jika jumlah partikel ini berubah, maka jenis unsurnya juga akan berubah menjadi unsur lain.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa perbedaan utama antara 'Atom' dan 'Molekul'?",
+      "expr": "⚛️ Atom vs 🧬 Molekul",
+      "opts": [
+        "Atom lebih besar daripada molekul",
+        "Molekul terdiri dari dua atau lebih atom yang bergabung",
+        "Atom hanya ada di udara, molekul ada di air",
+        "Tidak ada perbedaan, keduanya sama saja"
+      ],
+      "a": 1,
+      "hint": "Pikirkan atom sebagai huruf tunggal, dan molekul sebagai kata yang terbentuk dari gabungan huruf-huruf tersebut.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika sebuah atom memiliki jumlah proton sama dengan jumlah elektronnya, bagaimana keadaan muatan listrik atom tersebut secara keseluruhan?",
+      "expr": "⚖️ Proton (+) = Elektron (-)",
+      "opts": [
+        "Bermuatan Positif",
+        "Bermuatan Negatif",
+        "Netral (Tidak bermuatan)",
+        "Meledak"
+      ],
+      "a": 2,
+      "hint": "Muatan positif dan negatif yang jumlahnya sama akan saling meniadakan atau menyeimbangkan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Segala sesuatu di sekitar kita yang memiliki massa dan menempati ruang (seperti meja, air, dan udara) disebut materi. Dari apakah materi tersebut dibangun?",
+      "expr": "🌍 Materi = Kumpulan ...?",
+      "opts": [
+        "Hanya energi cahaya",
+        "Hampa udara",
+        "Atom-atom",
+        "Gelombang suara"
+      ],
+      "a": 2,
+      "hint": "Benda padat, cair, maupun gas semuanya tersusun dari partikel-partikel kecil ini.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Mengapa kita tidak bisa melihat atom tunggal hanya dengan menggunakan kaca pembesar biasa?",
+      "expr": "🔍 Melihat Atom? Tidak bisa!",
+      "opts": [
+        "Karena atom tembus pandang seperti hantu",
+        "Karena ukurannya jauh terlalu kecil dibandingkan panjang gelombang cahaya tampak",
+        "Karena atom bergerak terlalu cepat hingga blur",
+        "Karena atom bersembunyi di dalam inti bumi"
+      ],
+      "a": 1,
+      "hint": "Ukuran atom sangatlah mikroskopis, bahkan jauh lebih kecil dari sel tubuh manusia.",
+      "difficulty": "hard"
+    }
+  ],
+  "galaksi_dan_angkasa": [
+    {
+      "q": "Apa definisi yang paling tepat untuk sebuah galaksi?",
+      "expr": "🌌 ✨ 🌑",
+      "opts": [
+        "Kumpulan bintang, gas, dan debu raksasa yang terikat oleh gaya gravitasi",
+        "Satu bintang besar yang bersinar sangat terang di tengah angkasa",
+        "Hanya kumpulan planet-planet yang mengelilingi matahari",
+        "Awan putih biasa yang terlihat di langit siang hari"
+      ],
+      "a": 0,
+      "hint": "Ingatlah bahwa galaksi itu sangat besar dan menahan semuanya agar tidak terbang berjauhan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Di galaksi manakah Tata Surya kita, termasuk Bumi, berada?",
+      "expr": "☀️ 🌍 🪐",
+      "opts": [
+        "Galaksi Andromeda",
+        "Galaksi Bima Sakti (Milky Way)",
+        "Galaksi Triangulum",
+        "Galaksi Sombrero"
+      ],
+      "a": 1,
+      "hint": "Nama galaksi kita menggambarkan jalur putih seperti susu yang terlihat di langit malam.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Para astronom menggunakan satuan 'tahun cahaya' untuk mengukur jarak di antariksa. Apa arti dari satu tahun cahaya?",
+      "expr": "💡 📏 🚀",
+      "opts": [
+        "Waktu yang dibutuhkan Bumi untuk mengelilingi Matahari selama satu tahun",
+        "Jarak yang ditempuh oleh cahaya dalam kecepatan penuh selama satu tahun",
+        "Umur rata-rata sebuah bintang sebelum mati",
+        "Jarak antara Bumi dan Bulan dikalikan dengan 365"
+      ],
+      "a": 1,
+      "hint": "Ini adalah satuan jarak, bukan satuan waktu, meskipun namanya mengandung kata 'tahun'.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa perbedaan utama antara bintang dan planet?",
+      "expr": "⭐ vs 🪐",
+      "opts": [
+        "Bintang memancarkan cahayanya sendiri, sedangkan planet hanya memantulkan cahaya bintang",
+        "Planet lebih panas daripada bintang",
+        "Bintang mengelilingi planet, bukan sebaliknya",
+        "Planet terbuat dari gas, sedangkan bintang terbuat dari batu"
+      ],
+      "a": 0,
+      "hint": "Coba lihat ke langit malam; benda mana yang berkedip karena menghasilkan energinya sendiri?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Galaksi besar terdekat dengan Bima Sakti yang sedang bergerak mendekati kita adalah...",
+      "expr": "🔭 🔜 🌌",
+      "opts": [
+        "Galaksi Andromeda",
+        "Awan Magellan Besar",
+        "Galaksi Pusaran",
+        "Galaksi Elips Draco"
+      ],
+      "a": 0,
+      "hint": "Nama galaksi ini diambil dari nama putri dalam mitologi Yunani yang juga merupakan nama rasi bintang.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa yang dimaksud dengan lubang hitam (black hole) di luar angkasa?",
+      "expr": "⚫ 🌀 🕳️",
+      "opts": [
+        "Lubang kosong di tanah bulan yang berisi air",
+        "Daerah di angkasa dengan gravitasi begitu kuat hingga cahaya pun tidak bisa lolos",
+        "Planet yang warnanya hitam pekat karena tertutup awan tebal",
+        "Terowongan rahasia yang menghubungkan dua galaksi secara instan"
+      ],
+      "a": 1,
+      "hint": "Gravitasi di tempat ini sangat ekstrem, bahkan sesuatu yang tercepat di alam semesta pun terjebak di sana.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Mengapa alam semesta dikatakan sangat luas?",
+      "expr": "🔭 🌌 ↔️ ♾️",
+      "opts": [
+        "Karena hanya ada beberapa ribu bintang yang bisa kita hitung",
+        "Karena terdapat miliaran galaksi, dan setiap galaksi memiliki miliaran bintang",
+        "Karena jarak antar planet di Tata Surya kita sangat jauh",
+        "Karena alam semesta terus menyusut setiap harinya"
+      ],
+      "a": 1,
+      "hint": "Bayangkan jumlah pasir di semua pantai di Bumi, lalu kalikan dengan angka yang sangat besar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika kamu melihat bintang yang jaraknya 100 tahun cahaya, apa yang sebenarnya kamu lihat?",
+      "expr": "👀 ✨ ⏳",
+      "opts": [
+        "Kondisi bintang tersebut tepat saat ini",
+        "Kondisi bintang tersebut 100 tahun yang lalu",
+        "Kondisi bintang tersebut 100 tahun ke depan",
+        "Pantulan cahaya dari Matahari kita"
+      ],
+      "a": 1,
+      "hint": "Cahaya butuh waktu untuk bepergian melintasi ruang angkasa yang sangat jauh.",
+      "difficulty": "hard"
+    }
+  ]
+}

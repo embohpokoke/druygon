@@ -1,7 +1,7 @@
 # Druygon Content Engine
 
 Add or refresh subject content (questions + tutor knowledge) **without** the Claude Code Workflow —
-runnable by the opencode VPS agent or by hand. Uses the Anthropic API (key already in `api/.env`).
+runnable by the opencode VPS agent or by hand. Supports Anthropic API or the VPS Ollama endpoint.
 
 > Architecture: `08-content-engine.md` in the Obsidian vault / handoff. Two layers — gameplay content
 > (this DB, deterministic + QA'd) and tutor knowledge (ChromaDB). Questions are **built offline + QA'd**,
@@ -27,6 +27,13 @@ subjects.json  ──generate.mjs──▶  out/{regions,questions,knowledge.*} 
    ```
    Output lands in `./out/` (`regions.json`, `questions.json`, `knowledge.<region>.jsonl`).
    Review `out/questions.json` before seeding (it's kids' content — eyeball it).
+
+   To generate and QA through Ollama using a cloud model:
+   ```bash
+   CONTENT_LLM_PROVIDER=ollama \
+   GEN_MODEL=qwen3.5:cloud QA_MODEL=qwen3.5:cloud \
+   node generate.mjs subjects.json --n 8
+   ```
 3. Seed the gameplay DB:
    ```bash
    node seed.mjs out/
@@ -46,9 +53,13 @@ subjects.json  ──generate.mjs──▶  out/{regions,questions,knowledge.*} 
 - Node 18+ (global `fetch`) and the `sqlite3` CLI on PATH. **No native node modules** — `generate.mjs`
   uses `fetch`, `seed.mjs` shells out to `sqlite3` (so any Node version works, unlike the app's
   `better-sqlite3` which is pinned to the service's Node).
+- Anthropic provider requires `ANTHROPIC_API_KEY`. Ollama provider requires a reachable Ollama endpoint
+  and the requested model; override its default URL with `OLLAMA_BASE_URL`.
 
 ## Models (cheap by default)
 - Generate: `claude-haiku-4-5` · QA: `claude-sonnet-4-6`. Override with env `GEN_MODEL` / `QA_MODEL`.
+- Set `CONTENT_LLM_PROVIDER=ollama` to use Ollama. Its default generate and QA model is
+  `qwen3.5:cloud`; keep the separate generate and QA passes even when both use the same model.
 
 ## Rebuild batch-1 content (science + compsci) from the committed snapshot
 ```bash

@@ -4,7 +4,10 @@
 // (Haiku generate -> Sonnet QA), and writes drop-in seed files to ./out/.
 //
 // Usage:  node generate.mjs [config.json] [--n 8]
-// Needs:  ANTHROPIC_API_KEY (read from ../../api/.env or the environment). Node 18+ (global fetch).
+// Providers:
+//   Anthropic (default): needs ANTHROPIC_API_KEY from ../../api/.env or environment.
+//   Ollama: CONTENT_LLM_PROVIDER=ollama, optional OLLAMA_BASE_URL/GEN_MODEL/QA_MODEL.
+// Node 18+ required (global fetch).
 //
 // Output (./out/):
 //   regions.json              <- subjects + zones + zone_pokemon (straight from config; deterministic)
@@ -17,9 +20,11 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const GEN_MODEL = process.env.GEN_MODEL || 'claude-haiku-4-5';
-const QA_MODEL  = process.env.QA_MODEL  || 'claude-sonnet-4-6';
+const PROVIDER = process.env.CONTENT_LLM_PROVIDER || 'anthropic';
+const GEN_MODEL = process.env.GEN_MODEL || (PROVIDER === 'ollama' ? 'qwen3.5:cloud' : 'claude-haiku-4-5');
+const QA_MODEL  = process.env.QA_MODEL  || (PROVIDER === 'ollama' ? 'qwen3.5:cloud' : 'claude-sonnet-4-6');
 const API = 'https://api.anthropic.com/v1/messages';
+const OLLAMA_BASE_URL = (process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434').replace(/\/$/, '');
 
 function getKey() {
   if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY;
@@ -30,18 +35,32 @@ function getKey() {
   }
   throw new Error('ANTHROPIC_API_KEY not found (env or api/.env)');
 }
-const KEY = getKey();
+const KEY = PROVIDER === 'anthropic' ? getKey() : null;
 
 async function ask(model, prompt, { maxTokens = 4096, tries = 3 } = {}) {
   for (let i = 1; i <= tries; i++) {
-    const r = await fetch(API, {
+    const isOllama = PROVIDER === 'ollama';
+    const r = await fetch(isOllama ? `${OLLAMA_BASE_URL}/api/chat` : API, {
       method: 'POST',
-      headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] }),
+      headers: isOllama
+        ? { 'content-type': 'application/json' }
+        : { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+      body: JSON.stringify(isOllama
+        ? {
+            model,
+            stream: false,
+            think: false,
+            format: 'json',
+            messages: [{ role: 'user', content: prompt }],
+            options: { num_predict: maxTokens, temperature: 0.2 },
+          }
+        : { model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] }),
     });
     if (!r.ok) { if (i === tries) throw new Error(`${model} ${r.status}: ${await r.text()}`); await sleep(1500 * i); continue; }
     const j = await r.json();
-    const text = (j.content || []).map(c => c.text || '').join('');
+    const text = isOllama
+      ? (j.message?.content || j.response || '')
+      : (j.content || []).map(c => c.text || '').join('');
     const parsed = tryJson(text);
     if (parsed) return parsed;
     if (i === tries) throw new Error(`${model}: could not parse JSON from response`);
@@ -85,6 +104,7 @@ async function main() {
   const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
   const outDir = join(__dirname, 'out');
   mkdirSync(outDir, { recursive: true });
+  console.error(`provider: ${PROVIDER} | generate: ${GEN_MODEL} | qa: ${QA_MODEL}`);
 
   // flatten zones with their subject/region context
   const zones = [];

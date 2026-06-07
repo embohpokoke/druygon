@@ -1,0 +1,82 @@
+[
+  {
+    "id": "science",
+    "name": "Rimba Sains",
+    "accent": "#00D9B8",
+    "status": "active",
+    "zones": [
+      {
+        "zone": 4,
+        "id": "science_4",
+        "name": "Laboratorium Atom",
+        "topic": "atom_dan_unsur",
+        "min_level": 16,
+        "mons": [
+          {
+            "dex": 599,
+            "name": "Klink",
+            "type": "Steel",
+            "rarity": "common"
+          },
+          {
+            "dex": 577,
+            "name": "Solosis",
+            "type": "Psychic",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 82,
+            "name": "Magneton",
+            "type": "Electric",
+            "rarity": "rare"
+          },
+          {
+            "dex": 894,
+            "name": "Regieleki",
+            "type": "Electric",
+            "rarity": "legendary"
+          }
+        ]
+      },
+      {
+        "zone": 5,
+        "id": "science_5",
+        "name": "Observatorium Galaksi",
+        "topic": "galaksi_dan_angkasa",
+        "min_level": 21,
+        "mons": [
+          {
+            "dex": 173,
+            "name": "Cleffa",
+            "type": "Fairy",
+            "rarity": "common"
+          },
+          {
+            "dex": 337,
+            "name": "Lunatone",
+            "type": "Rock",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 338,
+            "name": "Solrock",
+            "type": "Rock",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 774,
+            "name": "Minior",
+            "type": "Rock",
+            "rarity": "rare"
+          },
+          {
+            "dex": 386,
+            "name": "Deoxys",
+            "type": "Psychic",
+            "rarity": "legendary"
+          }
+        ]
+      }
+    ]
+  }
+]
