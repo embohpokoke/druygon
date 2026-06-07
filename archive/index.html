@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Druygon — Modul Lama</title>
+  <style>
+    :root { --bg: #0b0a18; --card: #16132e; --accent: #8B5CF6; --text: #f0eeff; --muted: #9aa0b5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+    .wrap { max-width: 640px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    p.lead { color: var(--muted); font-size: 13px; margin: 0 0 20px; }
+    .card { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--text); }
+    .card:hover { border-color: var(--accent); }
+    .icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(139,92,246,.15); display: grid; place-items: center; font-size: 18px; }
+    .info { flex: 1; }
+    .info b { font-size: 14px; display: block; }
+    .info span { font-size: 12px; color: var(--muted); }
+    .arrow { color: var(--muted); }
+    .back { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; font-size: 12px; margin-bottom: 16px; }
+    .back:hover { color: var(--text); }
+    .unavailable { opacity: 0.5; pointer-events: none; }
+    .section-title { font-size: 14px; color: var(--muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">← Kembali ke Druygon</a>
+    <h1>Modul Lama</h1>
+    <p class="lead">Koleksi modul dan game edukasi sebelumnya.</p>
+
+    <div class="section-title">Matematika & Logika</div>
+    <a class="card" href="/math/">
+      <div class="icon">🔢</div>
+      <div class="info"><b>Math Arena</b><span>Latihan matematika interaktif</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="/wordsearch/">
+      <div class="icon">🔤</div>
+      <div class="info"><b>Word Search</b><span>Cari kata dalam bahasa Inggris</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="/fiveminutes/">
+      <div class="icon">⏱️</div>
+      <div class="info"><b>Five Minutes</b><span>Game 5 menit matematika</span></div>
+      <span class="arrow">→</span>
+    </a>
+
+    <div class="section-title">Bahasa & Literasi</div>
+    <a class="card" href="/english/">
+      <div class="icon">🇬🇧</div>
+      <div class="info"><b>English</b><span>Latihan bahasa Inggris</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="/hijaiyah/">
+      <div class="icon">📝</div>
+      <div class="info"><b>Hijaiyah</b><span>Belajar huruf hijaiyah</span></div>
+      <span class="arrow">→</span>
+    </a>
+
+    <div class="section-title">Agama</div>
+    <a class="card" href="/sholat/">
+      <div class="icon">🕌</div>
+      <div class="info"><b>Sholat</b><span>Panduan dan kuis sholat</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="/ramadhan/">
+      <div class="icon">🌙</div>
+      <div class="info"><b>Ramadhan Quiz</b><span>Kuis seputar Ramadhan</span></div>
+      <span class="arrow">→</span>
+    </a>
+
+    <div class="section-title">Panduan & Referensi</div>
+    <a class="card" href="/guide/">
+      <div class="icon">📖</div>
+      <div class="info"><b>Guide</b><span>Panduan matematika</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="/routes/">
+      <div class="icon">🗺️</div>
+      <div class="info"><b>Routes</b><span>Peta route</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card" href="/belajar/">
+      <div class="icon">📚</div>
+      <div class="info"><b>Belajar Tambahan</b><span>Modul belajar tambahan</span></div>
+      <span class="arrow">→</span>
+    </a>
+
+    <div class="section-title">Lainnya</div>
+    <a class="card" href="/feedback/">
+      <div class="icon">💬</div>
+      <div class="info"><b>Feedback</b><span>Kirim masukan</span></div>
+      <span class="arrow">→</span>
+    </a>
+    <div class="card unavailable">
+      <div class="icon">🤖</div>
+      <div class="info"><b>AI Learn</b><span>Dialihkan ke /tutor (tidak tersedia)</span></div>
+    </div>
+    <div class="card unavailable">
+      <div class="icon">📦</div>
+      <div class="info"><b>Collection</b><span>Terintegrasi di app redesign</span></div>
+    </div>
+    <div class="card unavailable">
+      <div class="icon">🏪</div>
+      <div class="info"><b>Store</b><span>Terintegrasi di app redesign</span></div>
+    </div>
+  </div>
+</body>
+</html>
