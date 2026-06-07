@@ -477,7 +477,7 @@
   function ContentLoading() {
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad", style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 16, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 14 } }, "Loading world data\u2026")));
   }
-  function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress }) {
+  function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission }) {
     var _a;
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
@@ -494,7 +494,7 @@
       const r = regions[id];
       const next = r.zones.find((z) => zoneState(z, profile, caught, progress, r.zones) !== "cleared") || r.zones[r.zones.length - 1];
       return /* @__PURE__ */ React.createElement("div", { key: id, className: "region-card", "data-region": id, style: { "--rc": r.accent, "--rc-soft": "var(--accent-soft)" }, onClick: () => go("map", id) }, /* @__PURE__ */ React.createElement("div", { className: "region-glow" }), /* @__PURE__ */ React.createElement("div", { className: "region-emblem" }, /* @__PURE__ */ React.createElement(Icon, { name: r.icon, size: 30 })), /* @__PURE__ */ React.createElement("div", { className: "region-main" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "region-name" }, r.name), /* @__PURE__ */ React.createElement("div", { className: "region-tag" }, r.blurb, " \xB7 next: ", next.name)), /* @__PURE__ */ React.createElement("div", { className: "region-foot" }, /* @__PURE__ */ React.createElement("b", null, prog[id], "/", r.zones.length, " zones"), /* @__PURE__ */ React.createElement("div", { className: "region-mons" }, r.zones[0].mons.slice(0, 3).map((m) => /* @__PURE__ */ React.createElement("img", { key: m.dex, src: m.sprite, alt: "", crossOrigin: "anonymous" })))), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: prog[id] / r.zones.length * 100 + "%" } }))), /* @__PURE__ */ React.createElement("div", { className: "region-arrow" }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 20, color: r.accent })));
-    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Daily mission"), /* @__PURE__ */ React.createElement("a", null, "Refresh")), /* @__PURE__ */ React.createElement("div", { className: "mission", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "mission-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 22 })), /* @__PURE__ */ React.createElement("div", { className: "mission-main" }, /* @__PURE__ */ React.createElement("b", null, "Catch 3 in Sirkuit Digital"), /* @__PURE__ */ React.createElement("p", null, "1 of 3 done \xB7 streak \xD710 bonus active"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: "33%" } }))), /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: "var(--accent)", borderColor: "var(--accent)" } }, "+50")), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements"), /* @__PURE__ */ React.createElement("a", null, "All")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": "compsci" }, [["zap", "Logika Master", "Cleared zone 1"], ["flame", "Streak \xD710", "Today"], ["star", "First Catch", "Unlocked"]].map(([ic, n, d]) => /* @__PURE__ */ React.createElement("div", { key: n, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: ic, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, n), /* @__PURE__ */ React.createElement("span", null, d))))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Leaderboard")), /* @__PURE__ */ React.createElement("div", { className: "lb", "data-region": "compsci" }, allSlots && allSlots.length > 0 ? [...allSlots].sort((a, b) => b.coins - a.coins || b.caughtCount - a.caughtCount).map((s, i) => {
+    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Daily mission"), dailyMission && !dailyMission.claimed && dailyMission.completed && /* @__PURE__ */ React.createElement("a", { onClick: onClaimMission, style: { cursor: "pointer" } }, "Claim")), /* @__PURE__ */ React.createElement("div", { className: "mission", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "mission-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 22 })), /* @__PURE__ */ React.createElement("div", { className: "mission-main" }, /* @__PURE__ */ React.createElement("b", null, "Catch 3 Pok\xE9mon today"), /* @__PURE__ */ React.createElement("p", null, dailyMission ? dailyMission.progress : 0, " of ", dailyMission ? dailyMission.target : 3, " done \xB7 streak \xD7", dailyMission ? dailyMission.streak : 0, " active"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: (dailyMission ? dailyMission.progress / dailyMission.target * 100 : 0) + "%" } }))), dailyMission ? dailyMission.claimed ? /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: "var(--green)", borderColor: "var(--green)" } }, "Done") : dailyMission.completed ? /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: "var(--accent)", borderColor: "var(--accent)", cursor: "pointer" }, onClick: onClaimMission }, "+50") : null : null), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": "compsci" }, badges && badges.length > 0 ? badges.map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: b.icon, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, b.description)))) : /* @__PURE__ */ React.createElement("div", { style: { padding: "16px 0", color: "var(--text-tertiary)", fontSize: 13, textAlign: "center", width: "100%" } }, "Catch Pok\xE9mon and clear zones to earn badges!")), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Leaderboard")), /* @__PURE__ */ React.createElement("div", { className: "lb", "data-region": "compsci" }, allSlots && allSlots.length > 0 ? [...allSlots].sort((a, b) => b.coins - a.coins || b.caughtCount - a.caughtCount).map((s, i) => {
       const isMe = s.slot === activeSlot;
       return /* @__PURE__ */ React.createElement("div", { key: s.slot, className: "lb-row" + (isMe ? " me" : "") }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i + 1), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, isMe ? /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "" }) : "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, s.name), /* @__PURE__ */ React.createElement("span", null, isMe ? "kamu \xB7 " : "", s.caughtCount, " caught")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, s.coins.toLocaleString())));
     }) : (
@@ -585,7 +585,17 @@
     }));
     return out;
   };
-  function Collection({ caught, region, go }) {
+  const findMonByDex = (regions, dex) => {
+    if (!regions) return null;
+    for (const r of Object.values(regions)) {
+      for (const z of r.zones || []) {
+        const m = (z.mons || []).find((mm) => mm.dex === dex);
+        if (m) return m;
+      }
+    }
+    return null;
+  };
+  function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
     const order = ["curriculum", "science", "compsci"].filter((id) => regions[id]);
@@ -599,17 +609,29 @@
       const r = regions[id];
       const mons = regionMons(regions, id);
       const c = mons.filter((m) => has(m.dex)).length;
-      return /* @__PURE__ */ React.createElement("div", { key: id, "data-region": id }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", { style: { color: "var(--accent)", fontSize: 15 } }, r.name), /* @__PURE__ */ React.createElement("a", null, c, "/", mons.length)), /* @__PURE__ */ React.createElement("div", { className: "col-grid" }, mons.map((m) => /* @__PURE__ */ React.createElement(
-        "div",
-        {
-          key: m.dex,
-          className: "dex" + (has(m.dex) ? "" : " un"),
-          style: has(m.dex) ? { borderColor: "var(--accent)", background: "var(--accent-soft)" } : {}
-        },
-        /* @__PURE__ */ React.createElement("span", { className: "rar", style: { background: RARITY[m.rarity].c } }),
-        /* @__PURE__ */ React.createElement("img", { src: m.sprite, alt: has(m.dex) ? m.name : "???", crossOrigin: "anonymous" }),
-        /* @__PURE__ */ React.createElement("span", { className: "no" }, "#", String(m.dex).padStart(3, "0"))
-      ))));
+      return /* @__PURE__ */ React.createElement("div", { key: id, "data-region": id }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", { style: { color: "var(--accent)", fontSize: 15 } }, r.name), /* @__PURE__ */ React.createElement("a", null, c, "/", mons.length)), /* @__PURE__ */ React.createElement("div", { className: "col-grid" }, mons.map((m) => {
+        const inTeam = (team || []).includes(m.dex);
+        const caught2 = has(m.dex);
+        return /* @__PURE__ */ React.createElement(
+          "div",
+          {
+            key: m.dex,
+            className: "dex" + (caught2 ? "" : " un"),
+            style: caught2 ? { borderColor: inTeam ? "var(--yellow)" : "var(--accent)", background: inTeam ? "rgba(255,203,5,.08)" : "var(--accent-soft)" } : {}
+          },
+          /* @__PURE__ */ React.createElement("span", { className: "rar", style: { background: RARITY[m.rarity].c } }),
+          /* @__PURE__ */ React.createElement("img", { src: m.sprite, alt: caught2 ? m.name : "???", crossOrigin: "anonymous" }),
+          /* @__PURE__ */ React.createElement("span", { className: "no" }, "#", String(m.dex).padStart(3, "0")),
+          inTeam && /* @__PURE__ */ React.createElement("span", { style: { position: "absolute", top: 2, right: 2, fontSize: 14, lineHeight: 1, filter: "drop-shadow(0 0 3px rgba(255,203,5,.6))" }, title: "In team" }, "\u2B50"),
+          caught2 && onTeamAdd && onTeamRemove && (inTeam ? /* @__PURE__ */ React.createElement("div", { onClick: (e) => {
+            e.stopPropagation();
+            onTeamRemove(m.dex);
+          }, style: { position: "absolute", bottom: 2, right: 2, width: 20, height: 20, borderRadius: "50%", background: "rgba(238,61,52,.8)", color: "#fff", fontSize: 14, lineHeight: "18px", textAlign: "center", cursor: "pointer" }, title: "Remove from team" }, "\u2212") : !inTeam && (team || []).length < 3 ? /* @__PURE__ */ React.createElement("div", { onClick: (e) => {
+            e.stopPropagation();
+            onTeamAdd(m.dex);
+          }, style: { position: "absolute", bottom: 2, right: 2, width: 20, height: 20, borderRadius: "50%", background: "rgba(139,92,246,.8)", color: "#fff", fontSize: 14, lineHeight: "18px", textAlign: "center", cursor: "pointer" }, title: "Add to team" }, "+") : null)
+        );
+      })));
     })));
   }
   function Store({ coins, region, pokeballs, activeSlot, onPurchase }) {
@@ -657,7 +679,7 @@
       flexShrink: 0
     } }, initial);
   }
-  function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot }) {
+  function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove }) {
     const { regions } = useContent();
     const xpPct = profile.xpToNext > 0 ? Math.round(profile.xp / profile.xpToNext * 100) : 100;
     const clearedByRegion = React.useMemo(() => {
@@ -666,15 +688,12 @@
       for (const [rid, r] of Object.entries(regions)) {
         const total = r.zones.length;
         const cleared = r.zones.filter(
-          (z) => (window._progress || []).some((p) => p.zoneId === z.id && p.status === "cleared")
+          (z) => (progress || []).some((p) => p.zoneId === z.id && p.status === "cleared")
         ).length;
         out[rid] = total > 0 ? Math.round(cleared / total * 100) : 0;
       }
       return out;
-    }, [regions]);
-    React.useEffect(() => {
-      window._progress = [];
-    }, []);
+    }, [regions, progress]);
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "prof-card" }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 56, active: true }), /* @__PURE__ */ React.createElement("div", { className: "who" }, /* @__PURE__ */ React.createElement("b", null, playerName), /* @__PURE__ */ React.createElement("span", null, "Level ", profile.level, " \xB7 ", caught.length, " caught \xB7 ", profile.coins, " koin"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } })), /* @__PURE__ */ React.createElement("small", { style: { color: "var(--text-tertiary)", fontSize: 10 } }, profile.xp, " / ", profile.xpToNext, " XP"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Ganti pemain")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, allSlots.length > 0 ? allSlots.map((s) => /* @__PURE__ */ React.createElement(
       "div",
       {
@@ -701,7 +720,19 @@
     )), regions && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Progress per dunia")), Object.entries(regions).map(([id, r]) => {
       var _a, _b;
       return /* @__PURE__ */ React.createElement("div", { key: id, className: "prog-row", "data-region": id }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)", minWidth: 110, fontSize: 13 } }, r.name), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: ((_a = clearedByRegion[id]) != null ? _a : 0) + "%" } })), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, minWidth: 32, textAlign: "right" } }, (_b = clearedByRegion[id]) != null ? _b : 0, "%"));
-    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Pok\xE9ball")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 } }, POKEBALLS.map((b) => {
+    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Team (", team ? team.length : 0, "/3)")), team && team.length > 0 ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 } }, team.map((dex) => {
+      const mon = findMonByDex(regions, dex);
+      return /* @__PURE__ */ React.createElement("div", { key: dex, style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        background: "var(--surface-2)",
+        borderRadius: 10,
+        padding: "6px 12px",
+        fontSize: 13,
+        position: "relative"
+      } }, mon && /* @__PURE__ */ React.createElement("img", { src: mon.sprite, alt: mon.name, width: 32, height: 32, style: { objectFit: "contain" }, crossOrigin: "anonymous" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 13, lineHeight: 1.3 } }, mon ? mon.name : "#" + String(dex).padStart(3, "0")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: "var(--text-tertiary)" } }, "#", String(dex).padStart(3, "0"), " \xB7 ", mon ? mon.type : "???")), onTeamRemove && /* @__PURE__ */ React.createElement("span", { onClick: () => onTeamRemove(dex), style: { cursor: "pointer", color: "var(--red)", fontSize: 18, lineHeight: 1, marginLeft: "auto" }, title: "Remove from team" }, "\xD7"));
+    })) : /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "var(--text-tertiary)", marginBottom: 12 } }, "No team yet \u2014 catch Pok\xE9mon and add them from the celebration screen!"), badges && badges.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements (", badges.length, ")")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": region, style: { marginBottom: 12 } }, badges.map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: b.icon, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, b.description)))))), dailyMission && dailyMission.streak > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", marginBottom: 12, fontSize: 13 } }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 20, color: "var(--yellow)" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--yellow)" } }, dailyMission.streak, "-day streak"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", margin: "2px 0 0" } }, "Keep catching every day to grow it!"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Pok\xE9ball")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 } }, POKEBALLS.map((b) => {
       var _a, _b;
       return /* @__PURE__ */ React.createElement("div", { key: b.id, style: {
         display: "flex",
@@ -783,6 +814,9 @@
     const [profile, setProfile] = React.useState({ level: 1, xp: 0, xpToNext: 100, coins: 0, stats: {}, pokeballs: { pokeball: 5, greatball: 0, ultraball: 0, masterball: 0 } });
     const [caught, setCaught] = React.useState([]);
     const [progress, setProgress] = React.useState([]);
+    const [team, setTeam] = React.useState([]);
+    const [badges, setBadges] = React.useState([]);
+    const [dailyMission, setDailyMission] = React.useState({ progress: 0, target: 3, completed: false, claimed: false, streak: 0 });
     const [allSlots, setAllSlots] = React.useState([]);
     const [pickerOpen, setPickerOpen] = React.useState(false);
     const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);
@@ -795,6 +829,9 @@
         setProfile(data.profile);
         setCaught(data.caught || []);
         setProgress(data.progress || []);
+        setTeam(data.team || []);
+        setBadges(data.badges || []);
+        setDailyMission(data.dailyMission || { progress: 0, target: 3, completed: false, claimed: false, streak: 0 });
         setPlayerReady(true);
       }).catch((err) => {
         console.warn("[App] player load failed:", err.message);
@@ -826,6 +863,41 @@
       setZone(newNav.zone);
       saveNav(newNav.screen, newNav.region, newNav.zone);
       loadActivePlayer(slot);
+    };
+    const onTeamAdd = async (dex) => {
+      try {
+        const data = await apiPost(`/api/player/${activeSlot}/team`, { action: "add", dex });
+        setTeam(data.team || []);
+      } catch (err) {
+        console.error("[App] team add failed:", err.message);
+      }
+    };
+    const onTeamRemove = async (dex) => {
+      try {
+        const data = await apiPost(`/api/player/${activeSlot}/team`, { action: "remove", dex });
+        setTeam(data.team || []);
+      } catch (err) {
+        console.error("[App] team remove failed:", err.message);
+      }
+    };
+    const onClaimMission = async () => {
+      const idem = "mission_" + activeSlot + "_" + (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) + "_" + Date.now();
+      try {
+        const data = await apiPost(`/api/player/${activeSlot}/mission/claim`, { idempotencyKey: idem });
+        setProfile((prev) => {
+          var _a, _b, _c, _d;
+          return {
+            ...prev,
+            coins: (_a = data.coinsNow) != null ? _a : prev.coins,
+            xp: (_b = data.xpNow) != null ? _b : prev.xp,
+            level: (_c = data.levelNow) != null ? _c : prev.level,
+            pokeballs: (_d = data.pokeballs) != null ? _d : prev.pokeballs
+          };
+        });
+        setDailyMission((prev) => ({ ...prev, claimed: true, completed: true }));
+      } catch (err) {
+        console.error("[App] mission claim failed:", err.message);
+      }
     };
     const go = (toScreen, toRegion, toZone) => {
       const s = toScreen;
@@ -869,6 +941,11 @@
             pokeballs: (_d = data.pokeballs) != null ? _d : prev.pokeballs
           };
         });
+        setDailyMission((prev) => ({
+          ...prev,
+          progress: Math.min(prev.target, prev.progress + 1),
+          completed: prev.progress + 1 >= prev.target
+        }));
       } catch (err) {
         console.error("[App] catch persist failed:", err.message);
       }
@@ -905,7 +982,7 @@
     const hProps = { playerName, onAvatarTap: openPicker };
     if (screen === "home") {
       header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, ...hProps });
-      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName, allSlots, activeSlot });
+      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission });
     } else if (screen === "map") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home"), ...hProps });
       content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught: caughtDex });
@@ -916,7 +993,7 @@
       showNav = false;
     } else if (screen === "collection") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: "Koleksi", sub: "Your Pok\xE9dex", coins: profile.coins, ...hProps });
-      content = /* @__PURE__ */ React.createElement(Collection, { caught: caughtDex, region, go });
+      content = /* @__PURE__ */ React.createElement(Collection, { caught: caughtDex, region, go, team, onTeamAdd, onTeamRemove });
     } else if (screen === "store") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: "Toko", sub: "Balls & items", coins: profile.coins, ...hProps });
       content = /* @__PURE__ */ React.createElement(Store, { coins: profile.coins, region, pokeballs, activeSlot, onPurchase: (data) => setProfile((prev) => {
@@ -935,12 +1012,17 @@
           playerName,
           activeSlot,
           allSlots,
-          onSwitchSlot: switchSlot
+          onSwitchSlot: switchSlot,
+          team,
+          badges,
+          dailyMission,
+          progress,
+          onTeamRemove
         }
       );
     }
     const navActive = screen === "catch" ? "map" : screen;
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), pickerOpen && /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb, activeSlot, onTeamAdd })), pickerOpen && /* @__PURE__ */ React.createElement(
       PlayerPicker,
       {
         allSlots,

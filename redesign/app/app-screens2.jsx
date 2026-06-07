@@ -10,7 +10,19 @@ const regionMons = (regions, id) => {
   return out;
 };
 
-function Collection({ caught, region, go }) {
+// Look up a Pokémon by dex number across all loaded regions.
+const findMonByDex = (regions, dex) => {
+  if (!regions) return null;
+  for (const r of Object.values(regions)) {
+    for (const z of (r.zones || [])) {
+      const m = (z.mons || []).find(mm => mm.dex === dex);
+      if (m) return m;
+    }
+  }
+  return null;
+};
+
+function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
 
@@ -48,14 +60,26 @@ function Collection({ caught, region, go }) {
                 <a>{c}/{mons.length}</a>
               </div>
               <div className="col-grid">
-                {mons.map((m) => (
-                  <div key={m.dex} className={'dex' + (has(m.dex) ? '' : ' un')}
-                    style={has(m.dex) ? { borderColor: 'var(--accent)', background: 'var(--accent-soft)' } : {}}>
+                {mons.map((m) => {
+                  const inTeam = (team || []).includes(m.dex);
+                  const caught = has(m.dex);
+                  return (
+                  <div key={m.dex} className={'dex' + (caught ? '' : ' un')}
+                    style={caught ? { borderColor: inTeam ? 'var(--yellow)' : 'var(--accent)', background: inTeam ? 'rgba(255,203,5,.08)' : 'var(--accent-soft)' } : {}}>
                     <span className="rar" style={{ background: RARITY[m.rarity].c }} />
-                    <img src={m.sprite} alt={has(m.dex) ? m.name : '???'} crossOrigin="anonymous" />
+                    <img src={m.sprite} alt={caught ? m.name : '???'} crossOrigin="anonymous" />
                     <span className="no">#{String(m.dex).padStart(3, '0')}</span>
+                    {inTeam && <span style={{ position: 'absolute', top: 2, right: 2, fontSize: 14, lineHeight: 1, filter: 'drop-shadow(0 0 3px rgba(255,203,5,.6))' }} title="In team">⭐</span>}
+                    {caught && onTeamAdd && onTeamRemove && (
+                      inTeam
+                        ? <div onClick={(e) => { e.stopPropagation(); onTeamRemove(m.dex); }} style={{ position: 'absolute', bottom: 2, right: 2, width: 20, height: 20, borderRadius: '50%', background: 'rgba(238,61,52,.8)', color: '#fff', fontSize: 14, lineHeight: '18px', textAlign: 'center', cursor: 'pointer' }} title="Remove from team">−</div>
+                        : (!inTeam && (team || []).length < 3)
+                          ? <div onClick={(e) => { e.stopPropagation(); onTeamAdd(m.dex); }} style={{ position: 'absolute', bottom: 2, right: 2, width: 20, height: 20, borderRadius: '50%', background: 'rgba(139,92,246,.8)', color: '#fff', fontSize: 14, lineHeight: '18px', textAlign: 'center', cursor: 'pointer' }} title="Add to team">+</div>
+                          : null
+                    )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
@@ -139,7 +163,7 @@ function SlotAvatar({ name, size = 44, active }) {
   );
 }
 
-function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot }) {
+function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove }) {
   const { regions } = useContent();
 
   // XP % for meter
@@ -147,22 +171,21 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
     ? Math.round((profile.xp / profile.xpToNext) * 100)
     : 100;
 
-  // Zone progress per region
+  // Zone progress per region — uses server-authoritative progress data
   const clearedByRegion = React.useMemo(() => {
     const out = {};
     if (!regions) return out;
     for (const [rid, r] of Object.entries(regions)) {
       const total   = r.zones.length;
       const cleared = r.zones.filter(z =>
-        (window._progress || []).some(p => p.zoneId === z.id && p.status === 'cleared')
+        (progress || []).some(p => p.zoneId === z.id && p.status === 'cleared')
       ).length;
       out[rid] = total > 0 ? Math.round((cleared / total) * 100) : 0;
     }
     return out;
-  }, [regions]);
+  }, [regions, progress]);
 
-  // expose progress to the memo above via window (simple bridge)
-  React.useEffect(() => { window._progress = []; }, []);
+  // ── Achievements badges ──
 
   return (
     <div className="body screen-anim" data-region={region}>
@@ -233,6 +256,54 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
               </div>
             ))}
           </React.Fragment>
+        )}
+
+        {/* ── Team ── */}
+        <div className="sec-head"><h2>Team ({team ? team.length : 0}/3)</h2></div>
+        {team && team.length > 0 ? (
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+            {team.map((dex) => {
+              const mon = findMonByDex(regions, dex);
+              return (
+                <div key={dex} style={{ display: 'flex', alignItems: 'center', gap: 6,
+                  background: 'var(--surface-2)', borderRadius: 10, padding: '6px 12px', fontSize: 13, position: 'relative' }}>
+                  {mon && <img src={mon.sprite} alt={mon.name} width={32} height={32} style={{ objectFit: 'contain' }} crossOrigin="anonymous" />}
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.3 }}>{mon ? mon.name : '#' + String(dex).padStart(3, '0')}</div>
+                    <div style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>#{String(dex).padStart(3, '0')} · {mon ? mon.type : '???'}</div>
+                  </div>
+                  {onTeamRemove && (
+                    <span onClick={() => onTeamRemove(dex)} style={{ cursor: 'pointer', color: 'var(--red)', fontSize: 18, lineHeight: 1, marginLeft: 'auto' }} title="Remove from team">×</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 12 }}>No team yet — catch Pokémon and add them from the celebration screen!</p>
+        )}
+
+        {/* ── Achievements ── */}
+        {badges && badges.length > 0 && (
+          <React.Fragment>
+            <div className="sec-head"><h2>Achievements ({badges.length})</h2></div>
+            <div className="chips-row" data-region={region} style={{ marginBottom: 12 }}>
+              {badges.map(b => (
+                <div key={b.id} className="ach"><div className="ach-ico"><Icon name={b.icon} size={16} /></div><div><b>{b.name}</b><span>{b.description}</span></div></div>
+              ))}
+            </div>
+          </React.Fragment>
+        )}
+
+        {/* ── Streak ── */}
+        {dailyMission && dailyMission.streak > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--surface-2)', borderRadius: 10, padding: '10px 14px', marginBottom: 12, fontSize: 13 }}>
+            <Icon name="flame" size={20} color="var(--yellow)" />
+            <div>
+              <b style={{ color: 'var(--yellow)' }}>{dailyMission.streak}-day streak</b>
+              <p style={{ fontSize: 11, color: 'var(--text-tertiary)', margin: '2px 0 0' }}>Keep catching every day to grow it!</p>
+            </div>
+          </div>
         )}
 
         {/* ── Pokéball inventory ── */}

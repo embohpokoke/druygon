@@ -71,6 +71,9 @@ function App() {
   const [profile,   setProfile]   = React.useState({ level: 1, xp: 0, xpToNext: 100, coins: 0, stats: {}, pokeballs: { pokeball: 5, greatball: 0, ultraball: 0, masterball: 0 } });
   const [caught,    setCaught]    = React.useState([]);
   const [progress,  setProgress]  = React.useState([]);
+  const [team,         setTeam]         = React.useState([]);
+  const [badges,       setBadges]       = React.useState([]);
+  const [dailyMission, setDailyMission] = React.useState({ progress: 0, target: 3, completed: false, claimed: false, streak: 0 });
 
   // All slots summary (for selector in Profile + PlayerPicker)
   const [allSlots, setAllSlots] = React.useState([]);
@@ -92,6 +95,9 @@ function App() {
         setProfile(data.profile);
         setCaught(data.caught   || []);
         setProgress(data.progress || []);
+        setTeam(data.team || []);
+        setBadges(data.badges || []);
+        setDailyMission(data.dailyMission || { progress: 0, target: 3, completed: false, claimed: false, streak: 0 });
         setPlayerReady(true);
       })
       .catch(err => {
@@ -132,6 +138,37 @@ function App() {
     loadActivePlayer(slot);
   };
 
+  // ── Team management ───────────────────────────────────────────────────
+  const onTeamAdd = async (dex) => {
+    try {
+      const data = await apiPost(`/api/player/${activeSlot}/team`, { action: 'add', dex });
+      setTeam(data.team || []);
+    } catch (err) { console.error('[App] team add failed:', err.message); }
+  };
+
+  const onTeamRemove = async (dex) => {
+    try {
+      const data = await apiPost(`/api/player/${activeSlot}/team`, { action: 'remove', dex });
+      setTeam(data.team || []);
+    } catch (err) { console.error('[App] team remove failed:', err.message); }
+  };
+
+  // ── Daily mission claim (idempotent) ──────────────────────────────────
+  const onClaimMission = async () => {
+    const idem = 'mission_' + activeSlot + '_' + new Date().toISOString().slice(0, 10) + '_' + Date.now();
+    try {
+      const data = await apiPost(`/api/player/${activeSlot}/mission/claim`, { idempotencyKey: idem });
+      setProfile(prev => ({
+        ...prev,
+        coins: data.coinsNow   ?? prev.coins,
+        xp:    data.xpNow      ?? prev.xp,
+        level: data.levelNow   ?? prev.level,
+        pokeballs: data.pokeballs ?? prev.pokeballs,
+      }));
+      setDailyMission(prev => ({ ...prev, claimed: true, completed: true }));
+    } catch (err) { console.error('[App] mission claim failed:', err.message); }
+  };
+
   // Navigation helper
   const go = (toScreen, toRegion, toZone) => {
     const s = toScreen;
@@ -165,6 +202,12 @@ function App() {
         level:     data.levelNow    ?? prev.level,
         xp:        data.xpNow       ?? prev.xp,
         pokeballs: data.pokeballs   ?? prev.pokeballs,
+      }));
+      // Optimistically advance daily mission (will reconcile on next full load)
+      setDailyMission(prev => ({
+        ...prev,
+        progress: Math.min(prev.target, prev.progress + 1),
+        completed: prev.progress + 1 >= prev.target,
       }));
     } catch (err) {
       console.error('[App] catch persist failed:', err.message);
@@ -209,7 +252,7 @@ function App() {
 
   if (screen === 'home') {
     header  = <Header region={region} coins={profile.coins} {...hProps} />;
-    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} />;
+    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} />;
   } else if (screen === 'map') {
     header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
     content = <RegionMap region={region} go={go} caught={caughtDex} />;
@@ -220,7 +263,7 @@ function App() {
     showNav = false;
   } else if (screen === 'collection') {
     header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
-    content = <Collection caught={caughtDex} region={region} go={go} />;
+    content = <Collection caught={caughtDex} region={region} go={go} team={team} onTeamAdd={onTeamAdd} onTeamRemove={onTeamRemove} />;
   } else if (screen === 'store') {
     header  = <Header region={region} title="Toko" sub="Balls & items" coins={profile.coins} {...hProps} />;
     content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} activeSlot={activeSlot} onPurchase={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, pokeballs: data.pokeballs ?? prev.pokeballs }))} />;
@@ -228,7 +271,7 @@ function App() {
     header  = <Header region={region} title="Profil" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
     content = <Profile caught={caughtDex} region={region} go={go} profile={profile}
                 playerName={playerName} activeSlot={activeSlot} allSlots={allSlots}
-                onSwitchSlot={switchSlot} />;
+                onSwitchSlot={switchSlot} team={team} badges={badges} dailyMission={dailyMission} progress={progress} onTeamRemove={onTeamRemove} />;
   }
 
   const navActive = screen === 'catch' ? 'map' : screen;
@@ -239,7 +282,7 @@ function App() {
         {header}
         {content}
         {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
-        {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} />}
+        {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} />}
       </div>
 
       {/* Player picker — first launch splash + header avatar tap */}

@@ -67,7 +67,7 @@ function ContentLoading() {
 }
 
 // ───────────────────────── HOME (variant A) ─────────────────────────
-function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress }) {
+function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
@@ -135,24 +135,35 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
           })}
         </div>
 
-        {/* daily mission */}
-        <div className="sec-head"><h2>Daily mission</h2><a>Refresh</a></div>
+        {/* daily mission — driven by real player activity */}
+        <div className="sec-head"><h2>Daily mission</h2>{dailyMission && !dailyMission.claimed && dailyMission.completed && <a onClick={onClaimMission} style={{ cursor: 'pointer' }}>Claim</a>}</div>
         <div className="mission" data-region="compsci">
           <div className="mission-ico"><Icon name="flame" size={22} /></div>
           <div className="mission-main">
-            <b>Catch 3 in Sirkuit Digital</b>
-            <p>1 of 3 done · streak ×10 bonus active</p>
-            <div className="meter"><i style={{ width: '33%' }} /></div>
+            <b>Catch 3 Pokémon today</b>
+            <p>{dailyMission ? dailyMission.progress : 0} of {dailyMission ? dailyMission.target : 3} done · streak ×{dailyMission ? dailyMission.streak : 0} active</p>
+            <div className="meter"><i style={{ width: (dailyMission ? (dailyMission.progress / dailyMission.target * 100) : 0) + '%' }} /></div>
           </div>
-          <div className="pill" style={{ color: 'var(--accent)', borderColor: 'var(--accent)' }}>+50</div>
+          {dailyMission ? (
+            dailyMission.claimed
+              ? <div className="pill" style={{ color: 'var(--green)', borderColor: 'var(--green)' }}>Done</div>
+              : dailyMission.completed
+                ? <div className="pill" style={{ color: 'var(--accent)', borderColor: 'var(--accent)', cursor: 'pointer' }} onClick={onClaimMission}>+50</div>
+                : null
+          ) : null}
         </div>
 
-        {/* achievements */}
-        <div className="sec-head"><h2>Achievements</h2><a>All</a></div>
+        {/* achievements — derived from real player state */}
+        <div className="sec-head"><h2>Achievements</h2></div>
         <div className="chips-row" data-region="compsci">
-          {[['zap', 'Logika Master', 'Cleared zone 1'], ['flame', 'Streak ×10', 'Today'], ['star', 'First Catch', 'Unlocked']].map(([ic, n, d]) => (
-            <div key={n} className="ach"><div className="ach-ico"><Icon name={ic} size={16} /></div><div><b>{n}</b><span>{d}</span></div></div>
-          ))}
+          {badges && badges.length > 0
+            ? badges.map(b => (
+                <div key={b.id} className="ach"><div className="ach-ico"><Icon name={b.icon} size={16} /></div><div><b>{b.name}</b><span>{b.description}</span></div></div>
+              ))
+            : <div style={{ padding: '16px 0', color: 'var(--text-tertiary)', fontSize: 13, textAlign: 'center', width: '100%' }}>
+                Catch Pokémon and clear zones to earn badges!
+              </div>
+          }
         </div>
 
         {/* leaderboard — real players from /api/player */}
