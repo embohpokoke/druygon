@@ -1,0 +1,40 @@
+{
+  "_comment": "Add a new subject by copying a block. region id = subject id (science/compsci/...). Each zone: zone (order int), name, topic (unique key used by /api/content/questions), minLevel, theme (what to teach), diff (easy|medium|hard), ageBand, and mons[] = the Pokémon catchable in that zone (deterministic gameplay mapping, pick dex from redesign-plan/03b-roster.csv). The generator writes questions+knowledge; this file drives regions/zones/pokemon.",
+  "subjects": [
+    {
+      "id": "math",
+      "name": "Dataran Angka",
+      "accent": "#FFCB05",
+      "status": "active",
+      "zones": [
+        {
+          "zone": 1,
+          "name": "Padang Bilangan",
+          "topic": "bilangan_operasi",
+          "minLevel": 1,
+          "diff": "easy",
+          "ageBand": "10-12",
+          "theme": "Bilangan & operasi: penjumlahan/pengurangan/perkalian/pembagian, urutan operasi sederhana, faktor & kelipatan.",
+          "mons": [
+            { "dex": 19, "name": "Rattata", "type": "Normal", "rarity": "common" },
+            { "dex": 16, "name": "Pidgey", "type": "Flying", "rarity": "common" },
+            { "dex": 25, "name": "Pikachu", "type": "Electric", "rarity": "rare" }
+          ]
+        },
+        {
+          "zone": 2,
+          "name": "Lembah Pecahan",
+          "topic": "pecahan_desimal",
+          "minLevel": 6,
+          "diff": "medium",
+          "ageBand": "10-12",
+          "theme": "Pecahan & desimal: membandingkan pecahan, pecahan senilai, mengubah pecahan ke desimal, operasi pecahan sederhana.",
+          "mons": [
+            { "dex": 7, "name": "Squirtle", "type": "Water", "rarity": "uncommon" },
+            { "dex": 4, "name": "Charmander", "type": "Fire", "rarity": "uncommon" }
+          ]
+        }
+      ]
+    }
+  ]
+}

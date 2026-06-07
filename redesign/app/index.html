@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080714" />
+<title>Druygon · App</title>
+<link rel="stylesheet" href="design-system.css" />
+<link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="../tweaks-panel.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="app-screens1.jsx"></script>
+<script type="text/babel" src="app-screens2.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const LS = 'druygon-proto-v1';
+const SEED = { screen: 'home', region: 'compsci', zone: 1, coins: 240, caught: [19, 16, 133, 25, 43, 69, 81, 100, 137, 135] };
+function load() { try { return { ...SEED, ...JSON.parse(localStorage.getItem(LS) || '{}'), screen: 'home' }; } catch { return SEED; } }
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "cardShadow": "Lifted",
+  "cardOutline": "Hairline",
+  "cardRadius": 11
+}/*EDITMODE-END*/;
+const SHADOWMAP = { None: 'none', Soft: '0 6px 18px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.28)', Lifted: '0 14px 34px rgba(0,0,0,.52), 0 4px 10px rgba(0,0,0,.36)' };
+const OUTLINEMAP = { None: ['0px', 'transparent'], Hairline: ['1px', 'rgba(255,255,255,.05)'], Subtle: ['1px', 'rgba(255,255,255,.14)'] };
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [st, setSt] = React.useState(load);
+  const [celeb, setCeleb] = React.useState(null);
+  const bodyRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const { screen, region, zone, coins, caught } = st;
+    localStorage.setItem(LS, JSON.stringify({ screen, region, zone, coins, caught }));
+  }, [st]);
+
+  const go = (screen, region, zone) => {
+    setSt((s) => ({ ...s, screen, region: region || s.region, zone: zone != null ? zone : s.zone }));
+    requestAnimationFrame(() => { const b = document.querySelector('.body'); if (b) b.scrollTop = 0; });
+  };
+
+  const onCaught = (mon, ball) => {
+    setSt((s) => ({ ...s, caught: s.caught.includes(mon.dex) ? s.caught : [...s.caught, mon.dex], coins: s.coins + 50 }));
+    setCeleb({ mon, region: st.region });
+  };
+  const closeCeleb = () => { setCeleb(null); go('map', st.region); };
+
+  const { screen, region, zone, coins, caught } = st;
+  const r = REGIONS[region];
+
+  let header, content, showNav = true;
+  if (screen === 'home') {
+    header = <Header region={region} coins={coins} />;
+    content = <Home go={go} caught={caught} coins={coins} />;
+  } else if (screen === 'map') {
+    header = <Header region={region} title={r.name} sub="Region map" coins={coins} onBack={() => go('home')} />;
+    content = <RegionMap region={region} go={go} caught={caught} />;
+  } else if (screen === 'catch') {
+    const z = r.zones.find((x) => x.zone === zone) || r.zones[0];
+    header = <Header region={region} title={z.name} sub={r.name} coins={coins} onBack={() => go('map', region)} />;
+    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} />;
+    showNav = false;
+  } else if (screen === 'collection') {
+    header = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={coins} />;
+    content = <Collection caught={caught} region={region} go={go} />;
+  } else if (screen === 'store') {
+    header = <Header region={region} title="Toko" sub="Balls & items" coins={coins} />;
+    content = <Store coins={coins} region={region} />;
+  } else if (screen === 'profile') {
+    header = <Header region={region} title="Profil" sub="Trainer & parent" coins={coins} />;
+    content = <Profile caught={caught} region={region} go={go} />;
+  }
+
+  const navActive = screen === 'catch' ? 'map' : screen;
+  const dev = { '--card-shadow': SHADOWMAP[t.cardShadow], '--card-line-w': OUTLINEMAP[t.cardOutline][0], '--card-line': OUTLINEMAP[t.cardOutline][1], '--card-rad': t.cardRadius + 'px' };
+
+  return (
+    <React.Fragment>
+      <div className="device" data-region={region} style={dev}>
+        {header}
+        {content}
+        {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
+        {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} />}
+      </div>
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Cards" />
+        <TweakRadio label="Shadow" value={t.cardShadow} options={['None', 'Soft', 'Lifted']} onChange={(v) => setTweak('cardShadow', v)} />
+        <TweakRadio label="Outline" value={t.cardOutline} options={['None', 'Hairline', 'Subtle']} onChange={(v) => setTweak('cardOutline', v)} />
+        <TweakSlider label="Corner radius" value={t.cardRadius} min={8} max={28} step={1} unit="px" onChange={(v) => setTweak('cardRadius', v)} />
+      </TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

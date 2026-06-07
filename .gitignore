@@ -27,3 +27,10 @@ frontend/druygon.apk
 *.bak
 *.db
 api/.env.backup.*
+
+# timestamped backups
+*.bak.*
+*.broken-*
+
+# content-engine scratch
+tools/content-engine/out/

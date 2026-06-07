@@ -1,0 +1,625 @@
+{
+  "makhluk_hidup": [
+    {
+      "q": "Apa yang membedakan makhluk hidup dari benda mati?",
+      "expr": "🌱 ↔ 🪨",
+      "opts": [
+        "Makhluk hidup bisa tumbuh, bergerak, dan membutuhkan makanan",
+        "Makhluk hidup bisa berubah warna",
+        "Makhluk hidup selalu diam di tempat yang sama",
+        "Makhluk hidup tidak perlu makan"
+      ],
+      "a": 0,
+      "hint": "Ingat ciri-ciri makhluk hidup: tumbuh, bergerak, butuh makan, dan bernapas. Benda mati tidak memiliki ciri-ciri ini.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pohon kelapa termasuk dalam kelompok apa?",
+      "expr": "🥥 = tumbuhan",
+      "opts": [
+        "Hewan, karena bisa menghasilkan buah",
+        "Tumbuhan, karena memiliki akar, batang, dan daun",
+        "Hewan, karena bisa tumbuh besar",
+        "Bukan hewan maupun tumbuhan"
+      ],
+      "a": 1,
+      "hint": "Periksa ciri-ciri pohon kelapa: apakah ia punya akar di tanah, batang, dan daun? Itulah ciri khas tumbuhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Proses apa yang dilakukan tumbuhan untuk membuat makanannya sendiri dengan bantuan cahaya matahari?",
+      "expr": "☀️ + 💧 + CO₂ → makanan + O₂",
+      "opts": [
+        "Respirasi",
+        "Pencernaan",
+        "Fotosintesis",
+        "Fermentasi"
+      ],
+      "a": 2,
+      "hint": "Cari kata yang mengandung 'foto' yang artinya cahaya — proses ini terjadi di daun dengan bantuan sinar matahari.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berikut ini adalah ciri makhluk hidup, KECUALI...",
+      "expr": "❌ tidak harus hijau",
+      "opts": [
+        "Membutuhkan makanan untuk hidup",
+        "Bisa berkembang biak",
+        "Selalu berwarna hijau",
+        "Bisa merespons perubahan di sekitarnya"
+      ],
+      "a": 2,
+      "hint": "Pikirkan: apakah semua makhluk hidup harus berwarna hijau? Lihat sapi, ayam, atau anjing — apa warna mereka?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ikan memiliki sirip yang membantu mereka berenang di air. Ciri tubuh seperti ini disebut...",
+      "expr": "🐟 + 🌊 = sirip",
+      "opts": [
+        "Evolusi",
+        "Adaptasi",
+        "Imigrasi",
+        "Mutasi"
+      ],
+      "a": 1,
+      "hint": "Cari kata yang berarti 'penyesuaian' — yaitu saat tubuh atau perilaku makhluk hidup cocok dengan tempat hidupnya.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Kelompok hewan apa yang memiliki tubuh berdarah dingin dan kulit bersisik?",
+      "expr": "🦎 / 🐍",
+      "opts": [
+        "Mamalia",
+        "Reptil",
+        "Burung",
+        "Amfibi"
+      ],
+      "a": 1,
+      "hint": "Bayangkan ular, buaya, dan kadal — apa kesamaan kulit dan suhu tubuh mereka? Kelompok itulah jawabannya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Tumbuhan membutuhkan air untuk...",
+      "expr": "💧 + 🌱",
+      "opts": [
+        "Hanya menambah berat daun",
+        "Fotosintesis, penyerapan nutrisi, dan menjaga kesegaran tubuh",
+        "Membuat daun berwarna hijau",
+        "Bergerak berpindah tempat"
+      ],
+      "a": 1,
+      "hint": "Air dibutuhkan untuk banyak hal dalam tumbuhan — salah satunya untuk membuat makanan. Apa saja fungsi lainnya?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Burung memiliki bulu yang ringan dan rapat. Bulu ini merupakan bentuk adaptasi untuk...",
+      "expr": "🕊️ ☁️",
+      "opts": [
+        "Membuat burung lebih berat agar tidak terbang",
+        "Membantu terbang dan menjaga suhu tubuh tetap hangat",
+        "Membuat burung bisa berenang lebih cepat",
+        "Mencegah burung minum air"
+      ],
+      "a": 1,
+      "hint": "Bulu burung punya dua fungsi utama: membantu saat terbang dan melindungi dari udara dingin. Pilihan mana yang menyebutkan keduanya?",
+      "difficulty": "easy"
+    }
+  ],
+  "serangga_ekosistem": [
+    {
+      "q": "Apa urutan tahap metamorfosis lengkap pada kupu-kupu?",
+      "expr": "🥚 → 🐛 → 🎀 → 🦋",
+      "opts": [
+        "Telur → Larva → Kepompong → Kupu-kupu",
+        "Telur → Kepompong → Larva → Kupu-kupu",
+        "Larva → Telur → Kepompong → Kupu-kupu",
+        "Kupu-kupu → Telur → Larva → Kepompong"
+      ],
+      "a": 0,
+      "hint": "Ingat bahwa telur selalu menjadi awal, dan larva (ulat) makan banyak sebelum membuat rumah keras bernama kepompong.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Dalam rantai makanan: Bunga → Lebah → Burung → Elang, siapa yang disebut konsumen tingkat 2?",
+      "expr": "🌻 → 🐝 → 🐦 → 🦅",
+      "opts": [
+        "Bunga",
+        "Lebah",
+        "Burung",
+        "Elang"
+      ],
+      "a": 2,
+      "hint": "Konsumen tingkat 2 adalah yang memakan konsumen tingkat 1. Siapa yang makan lebah?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Peran utama pengurai (seperti jamur dan bakteri) dalam ekosistem adalah...",
+      "expr": "🍄 + 🧬 → 🌱 (nutrisi)",
+      "opts": [
+        "Memangsa hewan kecil",
+        "Mengubah sisa makhluk mati menjadi zat hara untuk tanah",
+        "Menghasilkan makanan dari sinar matahari",
+        "Melindungi tanaman dari serangga"
+      ],
+      "a": 1,
+      "hint": "Bayangkan pengurai seperti 'daur ulang alam' — mereka membuat benda mati berguna lagi untuk tumbuhan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mengapa lebah sangat penting bagi bunga dan tanaman berbunga?",
+      "expr": "🐝 ↔️ 🌸 (serbuk sari)",
+      "opts": [
+        "Lebah menjadi makanan utama semua tanaman",
+        "Lebah membawa serbuk sari dari bunga satu ke bunga lain sehingga penyerbukan bisa terjadi",
+        "Lebah menghasilkan air untuk menyiram tanaman",
+        "Lebah melindungi tanaman dari hewan pemangsa"
+      ],
+      "a": 1,
+      "hint": "Pikirkan tentang serbuk kuning yang lengket di tubuh lebah ketika mengunjungi bunga — apa gunanya bagi tanaman?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika semua serangga pemakan daun di hutan hilang, apa yang paling mungkin terjadi?",
+      "expr": "❌ 🐛 → ❌ 🐦 (rantai putus)",
+      "opts": [
+        "Tidak ada dampak, karena hewan lain punya makanan lain",
+        "Burung dan predator serangga akan kekurangan makanan karena sumber makannya hilang",
+        "Semua pohon akan tiba-tiba tumbuh lebih besar",
+        "Tanah akan langsung menjadi lebih subur"
+      ],
+      "a": 1,
+      "hint": "Pikirkan rantai makanan: jika hewan yang dimakan predator hilang, apa yang terjadi pada predator itu?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Metamorfosis yang tidak sempurna (bertahap) ditunjukkan oleh serangga mana?",
+      "expr": "🥚 → 🦗 (kecil) → 🦗 (besar)",
+      "opts": [
+        "Kupu-kupu (punya tahap kepompong)",
+        "Belalang (tidak punya tahap pupa, langsung telur → nimfa → dewasa)",
+        "Semua serangga mengalami metamorfosis tidak sempurna",
+        "Kecoa (punya kepompong sebelum menjadi dewasa)"
+      ],
+      "a": 1,
+      "hint": "Bandingkan dengan kupu-kupu yang punya kepompong keras. Belalang tidak punya tahap itu — dia langsung membesar dari nimfa.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Dalam jaring makanan yang terdiri dari pohon, belalang, burung, dan ular, hubungan mana yang TIDAK mungkin terjadi di alam?",
+      "expr": "🌳 ❌ memakan 🐍",
+      "opts": [
+        "Belalang memakan pohon",
+        "Ular memakan belalang",
+        "Pohon memakan ular",
+        "Burung memakan belalang"
+      ],
+      "a": 2,
+      "hint": "Ingat: pohon adalah produsen yang membuat makanannya sendiri dari matahari. Pohon tidak bisa memakan hewan apa pun.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Bunga memiliki warna cerah dan aroma kuat. Mengapa adaptasi ini penting bagi kelangsungan hidup bunga?",
+      "expr": "🌸 (cerah & wangi) → 🐝 (datang) → ✓ biji",
+      "opts": [
+        "Membuat bunga terlihat cantik untuk manusia",
+        "Memastikan serangga penyerbuk tertarik datang sehingga bunga dapat menghasilkan biji dan meneruskan spesiesnya",
+        "Agar serangga tidak dimakan oleh predator",
+        "Membantu tanaman menyerap lebih banyak air dari tanah"
+      ],
+      "a": 1,
+      "hint": "Pikirkan: apa manfaat bagi bunga jika lebah datang berkali-kali membawa serbuk sari?",
+      "difficulty": "hard"
+    }
+  ],
+  "materi_energi": [
+    {
+      "q": "Ketika es mencair menjadi air, apa yang BERUBAH?",
+      "expr": "❄️ → 💧",
+      "opts": [
+        "Wujudnya (dari padat menjadi cair)",
+        "Berat total es dan airnya",
+        "Jumlah partikel penyusunnya",
+        "Nama kimianya (H₂O)"
+      ],
+      "a": 0,
+      "hint": "Pikirkan: apa yang berbeda antara es dan air? Apakah bahan dasarnya (H₂O) ikut berubah, atau hanya bentuknya?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Reaktor Mineral memanaskan batu mineral. Apa yang terjadi pada partikel-partikel di dalam batu ketika menerima energi panas?",
+      "expr": "🔥 + 🪨 → partikel gerak cepat",
+      "opts": [
+        "Partikel bergerak lebih cepat dan saling menjauh",
+        "Partikel berhenti bergerak sama sekali",
+        "Jumlah partikel berkurang setengahnya",
+        "Partikel berubah warna menjadi merah"
+      ],
+      "a": 0,
+      "hint": "Ketika sesuatu dipanaskan, apakah partikel di dalamnya bergerak lebih lambat atau lebih cepat?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Batu mineral dipanaskan sampai 1.000°C dan berubah menjadi cairan pijar. Perubahan wujud ini disebut?",
+      "expr": "🪨 🌡️ 1000°C → 🧈",
+      "opts": [
+        "Mencair",
+        "Menguap",
+        "Membeku",
+        "Sublimasi"
+      ],
+      "a": 0,
+      "hint": "Nama prosesnya dimulai dengan 'm-', sama seperti ketika es berubah menjadi air.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Saat air menguap menjadi uap air, pernyataan mana yang BENAR tentang uap air itu?",
+      "expr": "💧 → 💨 (tetap H₂O)",
+      "opts": [
+        "Uap air masih mengandung molekul H₂O — hanya wujudnya yang berubah menjadi gas",
+        "Uap air sudah bukan lagi air, melainkan zat baru yang berbeda",
+        "Uap air tidak memiliki berat dan tidak menempati ruang",
+        "Uap air adalah energi murni tanpa substansi"
+      ],
+      "a": 0,
+      "hint": "Ketika uap air didinginkan, apa yang terbentuk? Apakah kembali air biasa atau sesuatu yang sama sekali baru?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Mineral di Reaktor menerima gaya gesekan dari mesin penggerus. Apa yang terjadi pada mineral tersebut?",
+      "expr": "⚙️ + 🪨 → 💥 (pecah kecil)",
+      "opts": [
+        "Mineral pecah menjadi potongan-potongan yang lebih kecil",
+        "Mineral berpindah ke tempat lain dengan sendirinya",
+        "Gaya gravitasi mineral menjadi hilang",
+        "Warna mineral berubah permanen menjadi hitam"
+      ],
+      "a": 0,
+      "hint": "Ketika sebuah batu digosok atau digerus, apa yang terjadi pada ukurannya?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ketika magma panas dimasukkan ke air dingin, magma tersebut mengeras dengan cepat. Proses fisika apa yang terjadi?",
+      "expr": "🔥 → ❄️ (energi keluar)",
+      "opts": [
+        "Magma melepaskan energi panas ke air sehingga partikelnya melambat dan mengeras",
+        "Air memberikan energi panas ke mineral sehingga mineral terbakar",
+        "Partikel mineral berpindah ke dimensi lain",
+        "Gravitasi menarik magma ke pusat bumi dan membuatnya beku"
+      ],
+      "a": 0,
+      "hint": "Bayangkan teh panas yang dimasukkan ke kulkas. Energi apa yang mengalir keluar dari teh?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Sifat mineral apa yang PALING penting diketahui sebelum memasukkannya ke Reaktor?",
+      "expr": "🌡️ + 🪨 = keselamatan",
+      "opts": [
+        "Titik lelehnya — suhu di mana mineral mulai mencair",
+        "Warnanya agar Reaktor tidak silau",
+        "Nama Latin mineralnya agar terkenal",
+        "Bentuk kristalnya yang sempurna"
+      ],
+      "a": 0,
+      "hint": "Kalau kamu mau memasak sesuatu, apa yang perlu kamu tahu agar tidak terjadi kecelakaan atau kegagalan?",
+      "difficulty": "hard"
+    }
+  ],
+  "urutan_logika": [
+    {
+      "q": "Jika kamu mau membuat sandwich, urutan mana yang benar?",
+      "expr": "🍞 → 🧀 → 🥬 → 🍞",
+      "opts": [
+        "Letakkan selai, ambil roti, letakkan keju, letakkan roti",
+        "Ambil roti, letakkan selai, letakkan keju, letakkan roti atas",
+        "Letakkan roti, minum air, letakkan keju, tutup",
+        "Ambil keju, letakkan roti, ambil selai, letakkan roti"
+      ],
+      "a": 1,
+      "hint": "Pikirkan langkah yang masuk akal: mulai dengan apa yang jadi dasar, lalu tambahkan isinya, terakhir tutup dengan roti atas.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pola bilangan berikutnya apa? 2, 4, 6, 8, ...",
+      "expr": "2 → 4 → 6 → 8 → ?",
+      "opts": [
+        "9",
+        "10",
+        "12",
+        "14"
+      ],
+      "a": 1,
+      "hint": "Lihat selisih antara angka berurutan. Berapa yang ditambah setiap kali?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Gerbang AND berarti kedua kondisi HARUS BENAR. Mana pernyataan yang BENAR? Jika (Hari ini hujan) AND (Suhu dingin)?",
+      "expr": "🌧️ AND ❄️",
+      "opts": [
+        "Hanya hari ini hujan saja sudah cukup",
+        "Harus hari ini hujan DAN suhu dingin bersamaan",
+        "Cukup suhu dingin saja, hujan boleh tidak",
+        "Tidak perlu dua-duanya, yang penting ada satu"
+      ],
+      "a": 1,
+      "hint": "AND berarti 'dan', bukan 'atau'. Artinya semua kondisi harus terpenuhi bersamaan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Gerbang OR berarti SETIDAKNYA SATU kondisi BENAR. Mana pernyataan yang BENAR? Jika (Kamu punya mainan) OR (Temanmu punya mainan)?",
+      "expr": "🧸 OR 🎮",
+      "opts": [
+        "Hanya kamu yang boleh punya mainan",
+        "Hanya temanmu yang boleh punya mainan",
+        "Kamu atau temanmu (atau keduanya) punya mainan, itu sudah cukup",
+        "Harus keduanya punya mainan"
+      ],
+      "a": 2,
+      "hint": "OR berarti 'atau'; kalau salah satu atau keduanya benar, hasilnya sudah BENAR.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Peraturan: 'Boleh main kuis IF nilai > 80 AND waktu < 1 jam'. Hari ini nilaimu 85 dan waktu 45 menit. Boleh main?",
+      "expr": "85 > 80 ✓ AND 45min < 60min ✓",
+      "opts": [
+        "Tidak boleh, karena syarat kurang jelas",
+        "Boleh, karena kedua syarat terpenuhi",
+        "Tidak boleh, karena hanya nilai saja yang tinggi",
+        "Boleh, kalau sekolah izin"
+      ],
+      "a": 1,
+      "hint": "Periksa setiap syarat: apakah nilai > 80? Apakah waktu < 1 jam? Jika kedua BENAR, maka hasilnya?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pola emoji berikutnya apa? 🟢 🔴 🟢 🔴 🟢 ...",
+      "expr": "🟢 🔴 🟢 🔴 🟢 ?",
+      "opts": [
+        "🟢",
+        "🔴",
+        "🟡",
+        "🟣"
+      ],
+      "a": 1,
+      "hint": "Lihat urutan: hijau, merah, hijau, merah... Apa yang datang setelah hijau?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Langkah-langkah menyalakan lampu: (1) tekan tombol, (2) lampu menyala, (3) lihat cahaya. Mana urutan yang SALAH?",
+      "expr": "❌ (1)(3)(2) atau ✓ (1)(2)(3)",
+      "opts": [
+        "Tekan tombol, lampu menyala, lihat cahaya",
+        "Lihat cahaya, tekan tombol, lampu menyala",
+        "Tekan tombol, lampu menyala, lihat cahaya lagi",
+        "Semua urutan sama saja hasilnya"
+      ],
+      "a": 1,
+      "hint": "Mana yang tidak masuk akal? Bagaimana bisa lihat cahaya sebelum lampu menyala?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Peraturan: 'Jika (Punya PR) AND (Sudah selesai) maka boleh main game'. Hari ini kamu punya PR tapi belum selesai. Boleh main?",
+      "expr": "Punya PR ✓ AND Selesai ✗",
+      "opts": [
+        "Boleh, karena punya PR",
+        "Tidak boleh, karena PR belum selesai",
+        "Boleh, kalau janji akan selesai nanti",
+        "Tergantung permintaan orang tua"
+      ],
+      "a": 1,
+      "hint": "Ingat: AND berarti KEDUA syarat harus BENAR. Punya PR saja tidak cukup, PR harus selesai juga.",
+      "difficulty": "medium"
+    }
+  ],
+  "perulangan_jaringan": [
+    {
+      "q": "Apa yang dimaksud dengan 'loop' atau perulangan dalam komputer?",
+      "expr": "Ulangi... ulangi... ulangi...",
+      "opts": [
+        "Perintah yang membuat komputer melakukan sesuatu berulang-ulang sampai kondisi terpenuhi",
+        "Cara komputer mengirim pesan ke jaringan internet",
+        "Tombol di keyboard yang digunakan untuk menghapus tulisan",
+        "Bagian dari Pokéball yang berwarna merah"
+      ],
+      "a": 0,
+      "hint": "Bayangkan Pokémon yang terus-menerus menyerang musuh sampai musuh kalah — itu seperti loop.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Jika kita punya variabel 'HP' dan setiap putaran game HP berkurang 10, berapa HP setelah 3 putaran jika HP awal 100?",
+      "expr": "HP: 100 → -10 → -10 → -10 = ?",
+      "opts": [
+        "70",
+        "80",
+        "60",
+        "90"
+      ],
+      "a": 0,
+      "hint": "Hitung mundur dari 100, kurangi 10 tiga kali: 100 - 10 = 90, 90 - 10 = 80, 80 - 10 = ?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Dalam jaringan komputer, apa yang disebut 'node'?",
+      "expr": "Komputer - Komputer - Komputer: setiap titik = node",
+      "opts": [
+        "Perangkat atau komputer yang terhubung dalam jaringan",
+        "Harga barang di toko online",
+        "Jenis Pokémon yang langka",
+        "Program untuk memainkan musik"
+      ],
+      "a": 0,
+      "hint": "Bayangkan jaringan seperti jaringan jalan kota — setiap perempatan atau rumah bisa disebut 'titik' dalam jaringan yang lebih besar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pesan dari Kota A perlu sampai ke Kota B melalui 3 relay (perantara). Jika setiap relay membutuhkan 2 detik, berapa lama pesan tiba? (Abaikan waktu awal kirim)",
+      "expr": "A → relay1 (2d) → relay2 (2d) → relay3 (2d) → B",
+      "opts": [
+        "6 detik",
+        "5 detik",
+        "3 detik",
+        "9 detik"
+      ],
+      "a": 0,
+      "hint": "Setiap relay memakan waktu 2 detik. Ada 3 relay. Kalikan saja: 3 × 2 = ?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "GPS dan aplikasi peta menggunakan algoritma khusus untuk menemukan rute tercepat antara dua tempat. Apa nama jenis algoritma itu?",
+      "expr": "Start → titik A → titik B → titik C → Finish: mana yang paling cepat?",
+      "opts": [
+        "Shortest Path (jalur terpendek)",
+        "Loop Search (pencarian berulang)",
+        "Random Walk (jalan acak)",
+        "Cloud Computing (perhitungan awan)"
+      ],
+      "a": 0,
+      "hint": "GPS mencari jalan yang paling hemat waktu. Pikirkan dua kata dalam bahasa Inggris: satu berarti 'jalan', satu berarti 'terpendek'.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Dalam pemrograman, apa arti operator 'OR'? Misalnya: 'Jika Pokémon bertipe Air OR bertipe Terbang, ia bisa kabur'.",
+      "expr": "A OR B: cukup salah satu, tidak perlu dua-duanya",
+      "opts": [
+        "Salah satu kondisi saja sudah cukup, tidak harus kedua-duanya",
+        "Harus kedua kondisi terpenuhi sekaligus",
+        "Tidak ada satu pun kondisi yang terpenuhi",
+        "Kondisi dibalik menjadi kebalikannya"
+      ],
+      "a": 0,
+      "hint": "OR dalam logika komputer mirip dengan kata 'atau' dalam bahasa — jika salah satu pilihan benar, hasilnya sudah dianggap benar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Saat bermain game online, data posisi pemain dikirim ke server pusat setiap 5 detik. Proses ini termasuk contoh dari apa?",
+      "expr": "HP → server → HP (setiap 5 detik)",
+      "opts": [
+        "Sinkronisasi data (komunikasi jaringan berkala)",
+        "Penyimpanan lokal tanpa internet",
+        "Pemilihan warna karakter secara acak",
+        "Debug program yang error"
+      ],
+      "a": 0,
+      "hint": "Ketika bermain game online, data kamu perlu dikirim ke server agar pemain lain juga tahu posisi kamu. Proses pembaruan rutin ini disebut apa?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Loop 'REPEAT 4 kali: gerakkan karakter ke kanan 1 langkah' akan membuat karakter bergerak berapa langkah total?",
+      "expr": "→ → → → (4 kali gerak ke kanan = berapa langkah?)",
+      "opts": [
+        "4 langkah",
+        "5 langkah",
+        "3 langkah",
+        "8 langkah"
+      ],
+      "a": 0,
+      "hint": "Loop REPEAT 4 kali berarti perintah 'gerakkan ke kanan' dijalankan 4 kali berturut-turut. Hitung saja: 4 × 1 = ?",
+      "difficulty": "easy"
+    }
+  ],
+  "algoritma_debug": [
+    {
+      "q": "Apa itu algoritma dalam pemrograman?",
+      "expr": "📝 Langkah demi langkah = ?",
+      "opts": [
+        "Urutan langkah-langkah jelas untuk menyelesaikan suatu masalah",
+        "Nama sebuah permainan komputer yang berat",
+        "Tombol di keyboard yang warna biru",
+        "Program yang hanya berjalan di ponsel"
+      ],
+      "a": 0,
+      "hint": "Pikir tentang resep masakan: urutan langkah apa yang diikuti untuk membuat hasil yang benar?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ani ingin menulis langkah-langkah membuat sandwich. Urutan mana yang PALING BENAR?",
+      "expr": "🥪 Ambil roti → Oleskan selai → Tumpuk → Makan",
+      "opts": [
+        "Ambil roti, oleskan selai, tumpuk dua roti, tambah keju, potong diagonal",
+        "Makan, ambil roti, oleskan selai, tumpuk dua roti",
+        "Oleskan selai, makan, ambil roti, tumpuk dua roti",
+        "Ambil roti, tumpuk dua roti tanpa apapun, oleskan selai di luar"
+      ],
+      "a": 0,
+      "hint": "Urutan algoritma HARUS logis: mulai dari bahan mentah, proses bertahap, hingga hasil jadi. Mana yang tidak masuk akal?",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Beni menulis program untuk menghitung jumlah uang saku. Hasilnya salah. Langkah mencari kesalahan ini disebut...",
+      "expr": "🐛 Cari kesalahan → Betulkan",
+      "opts": [
+        "Debug (mencari dan memperbaiki kesalahan dalam program)",
+        "Loop (mengulang perintah berkali-kali)",
+        "Algoritma (langkah-langkah program)",
+        "Variabel (tempat menyimpan data)"
+      ],
+      "a": 0,
+      "hint": "Kata 'bug' dalam Inggris berarti serangga atau kesalahan kecil. Apa yang programmer lakukan saat menemukan kesalahan dalam program?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Siti membuat algoritma: 'Jika hujan, ambil payung. Jika tidak hujan, tidak perlu payung.' Ini disebut...",
+      "expr": "☔ IF hujan THEN payung ELSE tidak perlu",
+      "opts": [
+        "Percabangan (if-else), memilih tindakan berdasarkan kondisi",
+        "Loop, mengulang langkah berkali-kali",
+        "Data, informasi yang disimpan di komputer",
+        "Variabel, tempat menyimpan angka atau teks"
+      ],
+      "a": 0,
+      "hint": "Lihat kata 'Jika' dan 'tidak' di dalam algoritma. Ini menunjukkan keputusan berdasarkan dua pilihan. Apa nama pola ini?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Rian ingin memproses 100 nomor telepon dengan cara yang sama. Daripada menulis ulang 100 kali, ia pakai...",
+      "expr": "🔄 Data 1, Data 2, Data 3... (diproses sama semua)",
+      "opts": [
+        "Loop (mengulang blok perintah yang sama untuk setiap data)",
+        "Kondisi if-else (memilih dua aksi berbeda)",
+        "Variabel (tempat simpan satu nilai)",
+        "Debug (cari dan perbaiki kesalahan)"
+      ],
+      "a": 0,
+      "hint": "Kata 'berkali-kali' adalah kunci. Struktur program apa yang memungkinkan kita menjalankan perintah yang sama berulang tanpa menulis ulang?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Dina membuat password 'dina123' untuk email-nya. Mengapa password ini TIDAK AMAN?",
+      "expr": "🔐 d-i-n-a-1-2-3 = nama + angka sederhana?",
+      "opts": [
+        "Terlalu pendek dan mudah ditebak karena memakai nama dan angka yang berurutan",
+        "Karena tidak mengandung simbol apapun seperti !, @, atau #",
+        "Karena mengandung angka",
+        "Karena panjangnya ganjil"
+      ],
+      "a": 0,
+      "hint": "Password aman memerlukan kombinasi huruf, angka, dan simbol, dan TIDAK boleh menggunakan nama pribadi atau tanggal lahir. Mengapa 'dina123' mudah ditebak?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Algoritma untuk memeriksa apakah seseorang bisa naik roller coaster: 'Jika tinggi badan ≥ 120 cm DAN umur ≥ 8 tahun, boleh naik.' Ini pakai operator logika...",
+      "expr": "120cm ≥? DAN 8yr ≥? → Boleh/Tidak",
+      "opts": [
+        "AND (HARUS penuhi SEMUA kondisi untuk hasil benar)",
+        "OR (cukup penuhi SALAH SATU kondisi)",
+        "NOT (kebalikan dari kondisi)",
+        "IF-ELSE (pilih satu dari dua aksi)"
+      ],
+      "a": 0,
+      "hint": "Kata 'DAN' berarti HARUS terpenuhi kedua-duanya. Jika hanya satu yang terpenuhi, boleh tidak boleh naik? Operator logika mana ini?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Eka mendapat pesan aneh dari akun yang katanya temannya: 'Klik sini untuk dapatkan hadiah gratis!' Apa yang harus dilakukan Eka?",
+      "expr": "⚠️ Pesan aneh dari 'teman' = ?",
+      "opts": [
+        "Jangan klik, tanyakan langsung ke teman via chat pribadi atau bertemu, laporkan ke orang tua/guru",
+        "Klik tautan untuk lihat hadiahnya apa",
+        "Balas dengan password email untuk verifikasi",
+        "Bagikan pesan itu ke teman-teman lainnya"
+      ],
+      "a": 0,
+      "hint": "Pesan mencurigakan dari akun yang 'katanya' teman bisa jadi penipuan (phishing). Apa langkah aman: klik atau tidak? Siapa yang harus diminta bantuan?",
+      "difficulty": "hard"
+    }
+  ]
+}

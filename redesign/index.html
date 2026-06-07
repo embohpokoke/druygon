@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080714" />
+<title>Druygon Redesign · Preview</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: #080714; color: #F0EEFF;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .wrap { width: 100%; max-width: 540px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -.02em; }
+  .sub { color: #9b97c4; font-size: 14px; margin: 0 0 28px; }
+  a.card {
+    display: block; text-decoration: none; color: inherit; margin-bottom: 14px;
+    padding: 20px 22px; border-radius: 16px; background: #110F22;
+    border: 1px solid rgba(255,255,255,.07); transition: border-color .15s, transform .15s;
+  }
+  a.card:hover { border-color: rgba(255,203,5,.4); transform: translateY(-2px); }
+  a.card h2 { margin: 0 0 4px; font-size: 17px; }
+  a.card p { margin: 0; font-size: 13px; color: #9b97c4; }
+  .tag { font-size: 11px; color: #00D9B8; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  footer { margin-top: 22px; font-size: 12px; color: #6b6890; line-height: 1.6; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Druygon Redesign — Preview</h1>
+    <p class="sub">Output desain dari Claude. Static React prototype (CDN React 18 + Babel). Sprite Pokémon ditarik live dari PokéAPI.</p>
+
+    <a class="card" href="app/index.html">
+      <span class="tag">Prototype</span>
+      <h2>Aplikasi Druygon →</h2>
+      <p>App interaktif: Home (3 region) · Region map · Catch loop · Collection · Store · Profile. State tersimpan di localStorage.</p>
+    </a>
+
+    <a class="card" href="wireframes.html">
+      <span class="tag">Design canvas</span>
+      <h2>Wireframes (A/B options) →</h2>
+      <p>Eksplorasi tiap layar dalam beberapa varian — untuk review arah desain sebelum finalisasi.</p>
+    </a>
+
+    <footer>
+      Butuh koneksi internet (React/Babel/Fonts via CDN + sprite PokéAPI).<br>
+      Cara menjalankan & deploy: lihat <strong>DEPLOYMENT.md</strong>.
+    </footer>
+  </div>
+</body>
+</html>

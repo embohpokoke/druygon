@@ -1,0 +1,359 @@
+[
+  {
+    "id": "compsci",
+    "name": "Sirkuit Digital",
+    "accent": "#8B5CF6",
+    "status": "active",
+    "zones": [
+      {
+        "zone": 1,
+        "id": "compsci_1",
+        "name": "Gerbang Logika",
+        "topic": "urutan_logika",
+        "min_level": 1,
+        "mons": [
+          {
+            "dex": 81,
+            "name": "Magnemite",
+            "type": "Electric",
+            "rarity": "common"
+          },
+          {
+            "dex": 100,
+            "name": "Voltorb",
+            "type": "Electric",
+            "rarity": "common"
+          },
+          {
+            "dex": 137,
+            "name": "Porygon",
+            "type": "Normal",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 25,
+            "name": "Pikachu",
+            "type": "Electric",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 2,
+        "id": "compsci_2",
+        "name": "Jaringan",
+        "topic": "perulangan_jaringan",
+        "min_level": 6,
+        "mons": [
+          {
+            "dex": 82,
+            "name": "Magneton",
+            "type": "Electric",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 233,
+            "name": "Porygon2",
+            "type": "Normal",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 135,
+            "name": "Jolteon",
+            "type": "Electric",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 479,
+            "name": "Rotom",
+            "type": "Electric",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 3,
+        "id": "compsci_3",
+        "name": "Inti Prosesor",
+        "topic": "algoritma_debug",
+        "min_level": 11,
+        "mons": [
+          {
+            "dex": 474,
+            "name": "Porygon-Z",
+            "type": "Normal",
+            "rarity": "rare"
+          },
+          {
+            "dex": 243,
+            "name": "Raikou",
+            "type": "Electric",
+            "rarity": "legendary"
+          },
+          {
+            "dex": 801,
+            "name": "Magearna",
+            "type": "Steel",
+            "rarity": "legendary"
+          },
+          {
+            "dex": 1008,
+            "name": "Miraidon",
+            "type": "Electric",
+            "rarity": "legendary"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "curriculum",
+    "name": "Dataran Ilmu",
+    "accent": "#FFCB05",
+    "status": "locked",
+    "zones": [
+      {
+        "zone": 1,
+        "id": "curriculum_1",
+        "name": "Padang Pemula",
+        "topic": "operasi_hitung",
+        "min_level": 1,
+        "mons": [
+          {
+            "dex": 19,
+            "name": "Rattata",
+            "type": "Normal",
+            "rarity": "common"
+          },
+          {
+            "dex": 16,
+            "name": "Pidgey",
+            "type": "Flying",
+            "rarity": "common"
+          },
+          {
+            "dex": 10,
+            "name": "Caterpie",
+            "type": "Bug",
+            "rarity": "common"
+          },
+          {
+            "dex": 133,
+            "name": "Eevee",
+            "type": "Normal",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 25,
+            "name": "Pikachu",
+            "type": "Electric",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 2,
+        "id": "curriculum_2",
+        "name": "Lembah Belajar",
+        "topic": "pecahan",
+        "min_level": 6,
+        "mons": [
+          {
+            "dex": 52,
+            "name": "Meowth",
+            "type": "Normal",
+            "rarity": "common"
+          },
+          {
+            "dex": 66,
+            "name": "Machop",
+            "type": "Fighting",
+            "rarity": "common"
+          },
+          {
+            "dex": 7,
+            "name": "Squirtle",
+            "type": "Water",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 4,
+            "name": "Charmander",
+            "type": "Fire",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 39,
+            "name": "Jigglypuff",
+            "type": "Fairy",
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      {
+        "zone": 3,
+        "id": "curriculum_3",
+        "name": "Puncak Cendekia",
+        "topic": "geometri",
+        "min_level": 11,
+        "mons": [
+          {
+            "dex": 1,
+            "name": "Bulbasaur",
+            "type": "Grass",
+            "rarity": "common"
+          },
+          {
+            "dex": 143,
+            "name": "Snorlax",
+            "type": "Normal",
+            "rarity": "rare"
+          },
+          {
+            "dex": 65,
+            "name": "Alakazam",
+            "type": "Psychic",
+            "rarity": "rare"
+          },
+          {
+            "dex": 131,
+            "name": "Lapras",
+            "type": "Water",
+            "rarity": "rare"
+          },
+          {
+            "dex": 150,
+            "name": "Mewtwo",
+            "type": "Psychic",
+            "rarity": "legendary"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "science",
+    "name": "Rimba Sains",
+    "accent": "#00D9B8",
+    "status": "active",
+    "zones": [
+      {
+        "zone": 1,
+        "id": "science_1",
+        "name": "Tunas Hijau",
+        "topic": "makhluk_hidup",
+        "min_level": 1,
+        "mons": [
+          {
+            "dex": 43,
+            "name": "Oddish",
+            "type": "Grass",
+            "rarity": "common"
+          },
+          {
+            "dex": 69,
+            "name": "Bellsprout",
+            "type": "Grass",
+            "rarity": "common"
+          },
+          {
+            "dex": 60,
+            "name": "Poliwag",
+            "type": "Water",
+            "rarity": "common"
+          },
+          {
+            "dex": 54,
+            "name": "Psyduck",
+            "type": "Water",
+            "rarity": "common"
+          },
+          {
+            "dex": 548,
+            "name": "Petilil",
+            "type": "Grass",
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      {
+        "zone": 2,
+        "id": "science_2",
+        "name": "Sarang Serangga",
+        "topic": "serangga_ekosistem",
+        "min_level": 6,
+        "mons": [
+          {
+            "dex": 13,
+            "name": "Weedle",
+            "type": "Bug",
+            "rarity": "common"
+          },
+          {
+            "dex": 41,
+            "name": "Zubat",
+            "type": "Poison",
+            "rarity": "common"
+          },
+          {
+            "dex": 49,
+            "name": "Venomoth",
+            "type": "Bug",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 123,
+            "name": "Scyther",
+            "type": "Bug",
+            "rarity": "rare"
+          },
+          {
+            "dex": 637,
+            "name": "Volcarona",
+            "type": "Bug",
+            "rarity": "legendary"
+          }
+        ]
+      },
+      {
+        "zone": 3,
+        "id": "science_3",
+        "name": "Reaktor Mineral",
+        "topic": "materi_energi",
+        "min_level": 11,
+        "mons": [
+          {
+            "dex": 74,
+            "name": "Geodude",
+            "type": "Rock",
+            "rarity": "common"
+          },
+          {
+            "dex": 27,
+            "name": "Sandshrew",
+            "type": "Ground",
+            "rarity": "common"
+          },
+          {
+            "dex": 95,
+            "name": "Onix",
+            "type": "Rock",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 145,
+            "name": "Zapdos",
+            "type": "Electric",
+            "rarity": "legendary"
+          },
+          {
+            "dex": 994,
+            "name": "Iron Moth",
+            "type": "Fire",
+            "rarity": "legendary"
+          }
+        ]
+      }
+    ]
+  }
+]
