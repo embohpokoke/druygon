@@ -20,6 +20,7 @@ const imageRoutes = require('./routes/image');
 const tutorRouter = require('./src/routes/tutor');
 const parentRouter = require('./src/routes/parent');
 const contentRouter = require('./src/routes/content');
+const playerRouter  = require('./src/routes/player');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -117,6 +118,9 @@ app.use('/api/parent', parentRouter);
 
 // Content (Phase B) — read-only gameplay content
 app.use('/api/content', contentRouter);
+
+// Player (T1) — persistent player state
+app.use('/api/player', playerRouter);
 
 // Legacy AI generation/chat/assess routes
 app.use('/api/ai', legacyAiRouter);

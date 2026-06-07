@@ -15,90 +15,204 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="../tweaks-panel.jsx"></script>
 <script type="text/babel" src="data.jsx"></script>
 <script type="text/babel" src="components.jsx"></script>
 <script type="text/babel" src="app-screens1.jsx"></script>
 <script type="text/babel" src="app-screens2.jsx"></script>
 
 <script type="text/babel" data-presets="react">
-const LS = 'druygon-proto-v1';
-const SEED = { screen: 'home', region: 'compsci', zone: 1, coins: 240, caught: [19, 16, 133, 25, 43, 69, 81, 100, 137, 135] };
-function load() { try { return { ...SEED, ...JSON.parse(localStorage.getItem(LS) || '{}'), screen: 'home' }; } catch { return SEED; } }
+// ── Constants ──────────────────────────────────────────────────────────────
+// NAV_LS: only stores screen/region/zone — NEVER coins, caught, pokeballs.
+// All game state comes from the server. Clearing localStorage loses nothing important.
+const NAV_LS  = 'druygon-nav-v2';
+const SLOT    = 1;   // active player slot (selector UI is Phase D)
 
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "cardShadow": "Lifted",
-  "cardOutline": "Hairline",
-  "cardRadius": 11
-}/*EDITMODE-END*/;
-const SHADOWMAP = { None: 'none', Soft: '0 6px 18px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.28)', Lifted: '0 14px 34px rgba(0,0,0,.52), 0 4px 10px rgba(0,0,0,.36)' };
-const OUTLINEMAP = { None: ['0px', 'transparent'], Hairline: ['1px', 'rgba(255,255,255,.05)'], Subtle: ['1px', 'rgba(255,255,255,.14)'] };
+const NAV_DEFAULT = { screen: 'home', region: 'science', zone: 1 };
+function loadNav() {
+  try { return { ...NAV_DEFAULT, ...JSON.parse(localStorage.getItem(NAV_LS) || '{}') }; }
+  catch { return NAV_DEFAULT; }
+}
+function saveNav(screen, region, zone) {
+  try { localStorage.setItem(NAV_LS, JSON.stringify({ screen, region, zone })); } catch { /* storage full */ }
+}
 
+// ── Server API helpers ─────────────────────────────────────────────────────
+async function apiGet(path) {
+  const r = await fetch(path);
+  if (!r.ok) throw new Error(`${path} → ${r.status}`);
+  return r.json();
+}
+async function apiPost(path, body) {
+  const r = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await r.json();
+  if (!r.ok || !data.success) throw new Error(data.error || `${path} → ${r.status}`);
+  return data;
+}
+
+// ── App ───────────────────────────────────────────────────────────────────
 function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
-  const [st, setSt] = React.useState(load);
+  const nav = loadNav();
+
+  // Navigation state (localStorage-cached, cheap to lose)
+  const [screen, setScreen]   = React.useState(nav.screen);
+  const [region, setRegion]   = React.useState(nav.region);
+  const [zone,   setZone]     = React.useState(nav.zone);
+
+  // Server-authoritative game state
+  const [playerReady, setPlayerReady] = React.useState(false);
+  const [playerErr,   setPlayerErr]   = React.useState(null);
+  const [profile,   setProfile]   = React.useState({ level: 1, xp: 0, xpToNext: 100, coins: 0, stats: {}, pokeballs: { pokeball: 5, greatball: 0, ultraball: 0, masterball: 0 } });
+  const [caught,    setCaught]    = React.useState([]);   // [{dex, zoneId, caughtAt}]
+  const [progress,  setProgress]  = React.useState([]);   // [{zoneId, status, clearedAt}]
+
+  // Celebration overlay
   const [celeb, setCeleb] = React.useState(null);
-  const bodyRef = React.useRef(null);
 
+  // Load player from server on mount
   React.useEffect(() => {
-    const { screen, region, zone, coins, caught } = st;
-    localStorage.setItem(LS, JSON.stringify({ screen, region, zone, coins, caught }));
-  }, [st]);
+    apiGet(`/api/player/${SLOT}`)
+      .then(data => {
+        setProfile(data.profile);
+        setCaught(data.caught   || []);
+        setProgress(data.progress || []);
+        setPlayerReady(true);
+      })
+      .catch(err => {
+        console.warn('[App] player load failed, using defaults:', err.message);
+        setPlayerReady(true);   // still render — offline mode
+        setPlayerErr(err.message);
+      });
+  }, []);
 
-  const go = (screen, region, zone) => {
-    setSt((s) => ({ ...s, screen, region: region || s.region, zone: zone != null ? zone : s.zone }));
+  // Navigation helper — always saves to localStorage
+  const go = (toScreen, toRegion, toZone) => {
+    const s = toScreen;
+    const r = toRegion || region;
+    const z = toZone != null ? toZone : zone;
+    setScreen(s); setRegion(r); setZone(z);
+    saveNav(s, r, z);
     requestAnimationFrame(() => { const b = document.querySelector('.body'); if (b) b.scrollTop = 0; });
   };
 
-  const onCaught = (mon, ball) => {
-    setSt((s) => ({ ...s, caught: s.caught.includes(mon.dex) ? s.caught : [...s.caught, mon.dex], coins: s.coins + 50 }));
-    setCeleb({ mon, region: st.region });
-  };
-  const closeCeleb = () => { setCeleb(null); go('map', st.region); };
+  // Called by Catch screen when a Pokémon is successfully thrown at
+  const onCaught = async (mon, ball) => {
+    // Optimistic UI update immediately
+    setCaught(prev => prev.some(c => c.dex === mon.dex)
+      ? prev
+      : [...prev, { dex: mon.dex, zoneId: ball._zoneId || '', caughtAt: new Date().toISOString() }]
+    );
+    setProfile(prev => ({
+      ...prev,
+      coins: prev.coins + (ball._coinAward ?? 50),
+      pokeballs: {
+        ...prev.pokeballs,
+        [ball.id]: Math.max(0, (prev.pokeballs[ball.id] ?? 0) - 1),
+      },
+    }));
+    setCeleb({ mon, region });
 
-  const { screen, region, zone, coins, caught } = st;
-  const r = REGIONS[region];
+    // Persist to server (non-blocking — failure doesn't crash UI)
+    try {
+      const data = await apiPost(`/api/player/${SLOT}/catch`, {
+        dex:      mon.dex,
+        zoneId:   ball._zoneId || '',
+        ballType: ball.id,
+      });
+      // Reconcile with server truth
+      setProfile(prev => ({
+        ...prev,
+        coins:    data.coinsNow    ?? prev.coins,
+        level:    data.levelNow    ?? prev.level,
+        xp:       data.xpNow       ?? prev.xp,
+        pokeballs: data.pokeballs  ?? prev.pokeballs,
+      }));
+    } catch (err) {
+      console.error('[App] catch persist failed:', err.message);
+      // State remains in optimistic form; will reconcile on next page load
+    }
+  };
+
+  const closeCeleb = () => { setCeleb(null); go('map', region); };
+
+  // Provide caught dex array for legacy components that expect [dex, dex, ...]
+  const caughtDex = caught.map(c => c.dex);
+
+  // Pokeball list for Catch screen (injects _zoneId + _coinAward into each ball)
+  const currentZoneId = (() => {
+    if (!window.REGIONS || !window.REGIONS[region]) return '';
+    const z = window.REGIONS[region].zones.find(x => x.zone === zone);
+    return z ? z.id : '';
+  })();
+
+  const pokeballs = POKEBALLS.map(b => ({
+    ...b,
+    own:       profile.pokeballs[b.id] ?? 0,
+    _zoneId:   currentZoneId,
+    _coinAward: b.id === 'pokeball' ? 50 : b.id === 'greatball' ? 80 : b.id === 'ultraball' ? 120 : 300,
+  }));
+
+  if (!playerReady) {
+    return (
+      <div className="device">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', flexDirection: 'column', gap: 12, color: 'var(--text-secondary)' }}>
+          <div style={{ fontSize: 32 }}>⚡</div>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: 13 }}>Loading Dru's data…</div>
+        </div>
+      </div>
+    );
+  }
+
+  // REGIONS may be null while content is still loading (useContent hook handles this per-screen)
+  const r = window.REGIONS && window.REGIONS[region];
 
   let header, content, showNav = true;
+
   if (screen === 'home') {
-    header = <Header region={region} coins={coins} />;
-    content = <Home go={go} caught={caught} coins={coins} />;
+    header  = <Header region={region} coins={profile.coins} />;
+    content = <Home go={go} caught={caughtDex} coins={profile.coins} />;
+
   } else if (screen === 'map') {
-    header = <Header region={region} title={r.name} sub="Region map" coins={coins} onBack={() => go('home')} />;
-    content = <RegionMap region={region} go={go} caught={caught} />;
+    header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} />;
+    content = <RegionMap region={region} go={go} caught={caughtDex} />;
+
   } else if (screen === 'catch') {
-    const z = r.zones.find((x) => x.zone === zone) || r.zones[0];
-    header = <Header region={region} title={z.name} sub={r.name} coins={coins} onBack={() => go('map', region)} />;
-    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} />;
+    const z = r && r.zones.find(x => x.zone === zone);
+    header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} />;
+    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} />;
     showNav = false;
+
   } else if (screen === 'collection') {
-    header = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={coins} />;
-    content = <Collection caught={caught} region={region} go={go} />;
+    header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} />;
+    content = <Collection caught={caughtDex} region={region} go={go} />;
+
   } else if (screen === 'store') {
-    header = <Header region={region} title="Toko" sub="Balls & items" coins={coins} />;
-    content = <Store coins={coins} region={region} />;
+    header  = <Header region={region} title="Toko" sub="Balls & items" coins={profile.coins} />;
+    content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} />;
+
   } else if (screen === 'profile') {
-    header = <Header region={region} title="Profil" sub="Trainer & parent" coins={coins} />;
-    content = <Profile caught={caught} region={region} go={go} />;
+    header  = <Header region={region} title="Profil" sub="Trainer & parent" coins={profile.coins} />;
+    content = <Profile caught={caughtDex} region={region} go={go} profile={profile} />;
   }
 
   const navActive = screen === 'catch' ? 'map' : screen;
-  const dev = { '--card-shadow': SHADOWMAP[t.cardShadow], '--card-line-w': OUTLINEMAP[t.cardOutline][0], '--card-line': OUTLINEMAP[t.cardOutline][1], '--card-rad': t.cardRadius + 'px' };
 
   return (
     <React.Fragment>
-      <div className="device" data-region={region} style={dev}>
+      <div className="device" data-region={region}>
         {header}
         {content}
         {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
         {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} />}
       </div>
-      <TweaksPanel title="Tweaks">
-        <TweakSection label="Cards" />
-        <TweakRadio label="Shadow" value={t.cardShadow} options={['None', 'Soft', 'Lifted']} onChange={(v) => setTweak('cardShadow', v)} />
-        <TweakRadio label="Outline" value={t.cardOutline} options={['None', 'Hairline', 'Subtle']} onChange={(v) => setTweak('cardOutline', v)} />
-        <TweakSlider label="Corner radius" value={t.cardRadius} min={8} max={28} step={1} unit="px" onChange={(v) => setTweak('cardRadius', v)} />
-      </TweaksPanel>
+      {playerErr && (
+        <div style={{ position: 'fixed', bottom: 8, left: '50%', transform: 'translateX(-50%)', background: '#2a1a1a', color: '#f87171', padding: '6px 14px', borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: 'center' }}>
+          Offline mode — progress may not save. ({playerErr})
+        </div>
+      )}
     </React.Fragment>
   );
 }

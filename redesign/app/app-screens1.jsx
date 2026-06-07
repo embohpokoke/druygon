@@ -165,7 +165,7 @@ function RegionMap({ region, go, caught }) {
 }
 
 // ───────────────────────── CATCH / BATTLE (variant B) ─────────────────────────
-function Catch({ region, zone, go, onCaught }) {
+function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
   const { regions, questions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const r = regions[region];
@@ -244,7 +244,7 @@ function Catch({ region, zone, go, onCaught }) {
           <React.Fragment>
             <div className="ball-prompt">It’s weak — choose a Poké Ball!</div>
             <div className="balls">
-              {POKEBALLS.map((b) => (
+              {(pokeballsProp || POKEBALLS).map((b) => (
                 <div key={b.id} className={'ball-opt' + (b.own === 0 ? ' dim' : '')} onClick={() => b.own > 0 && throwBall(b)}>
                   <Pokeball size={30} top={b.top} />
                   <div><b>{b.name}</b><span>×{b.own} · {Math.round(b.rate * 100)}%</span></div>
