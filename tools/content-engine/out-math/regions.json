@@ -1,0 +1,184 @@
+[
+  {
+    "id": "curriculum",
+    "name": "5 Menit Matematika",
+    "accent": "#FFCB05",
+    "status": "active",
+    "zones": [
+      {
+        "zone": 1,
+        "id": "curriculum_1",
+        "name": "Padang Tambah",
+        "topic": "penjumlahan",
+        "min_level": 1,
+        "mons": [
+          {
+            "dex": 19,
+            "name": "Rattata",
+            "type": "Normal",
+            "rarity": "common"
+          },
+          {
+            "dex": 16,
+            "name": "Pidgey",
+            "type": "Flying",
+            "rarity": "common"
+          },
+          {
+            "dex": 10,
+            "name": "Caterpie",
+            "type": "Bug",
+            "rarity": "common"
+          }
+        ]
+      },
+      {
+        "zone": 2,
+        "id": "curriculum_2",
+        "name": "Lembah Kurang",
+        "topic": "pengurangan",
+        "min_level": 3,
+        "mons": [
+          {
+            "dex": 21,
+            "name": "Spearow",
+            "type": "Flying",
+            "rarity": "common"
+          },
+          {
+            "dex": 129,
+            "name": "Magikarp",
+            "type": "Water",
+            "rarity": "common"
+          },
+          {
+            "dex": 13,
+            "name": "Weedle",
+            "type": "Bug",
+            "rarity": "common"
+          }
+        ]
+      },
+      {
+        "zone": 3,
+        "id": "curriculum_3",
+        "name": "Bukit Kali",
+        "topic": "perkalian",
+        "min_level": 5,
+        "mons": [
+          {
+            "dex": 52,
+            "name": "Meowth",
+            "type": "Normal",
+            "rarity": "common"
+          },
+          {
+            "dex": 56,
+            "name": "Mankey",
+            "type": "Fighting",
+            "rarity": "common"
+          },
+          {
+            "dex": 54,
+            "name": "Psyduck",
+            "type": "Water",
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      {
+        "zone": 4,
+        "id": "curriculum_4",
+        "name": "Ngarai Bagi",
+        "topic": "pembagian",
+        "min_level": 8,
+        "mons": [
+          {
+            "dex": 66,
+            "name": "Machop",
+            "type": "Fighting",
+            "rarity": "common"
+          },
+          {
+            "dex": 74,
+            "name": "Geodude",
+            "type": "Rock",
+            "rarity": "common"
+          },
+          {
+            "dex": 27,
+            "name": "Sandshrew",
+            "type": "Ground",
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      {
+        "zone": 5,
+        "id": "curriculum_5",
+        "name": "Telaga Pecahan",
+        "topic": "pecahan",
+        "min_level": 11,
+        "mons": [
+          {
+            "dex": 7,
+            "name": "Squirtle",
+            "type": "Water",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 4,
+            "name": "Charmander",
+            "type": "Fire",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 1,
+            "name": "Bulbasaur",
+            "type": "Grass",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 133,
+            "name": "Eevee",
+            "type": "Normal",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 6,
+        "id": "curriculum_6",
+        "name": "Puncak Desimal",
+        "topic": "desimal",
+        "min_level": 14,
+        "mons": [
+          {
+            "dex": 25,
+            "name": "Pikachu",
+            "type": "Electric",
+            "rarity": "rare"
+          },
+          {
+            "dex": 63,
+            "name": "Abra",
+            "type": "Psychic",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 147,
+            "name": "Dratini",
+            "type": "Dragon",
+            "rarity": "rare"
+          },
+          {
+            "dex": 39,
+            "name": "Jigglypuff",
+            "type": "Fairy",
+            "rarity": "uncommon"
+          }
+        ]
+      }
+    ]
+  }
+]
