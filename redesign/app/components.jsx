@@ -61,7 +61,7 @@ const AVATAR = '../assets/druygon-avatar.png';
 const TUTOR_URL = '/tutor';   // the separate AI-tutor app; swap for the real path
 function openTutor(topic) { try { window.open(TUTOR_URL + (topic ? ('?topic=' + encodeURIComponent(topic)) : ''), '_blank'); } catch (e) {} }
 
-function Header({ region, title, sub, onBack, coins }) {
+function Header({ region, title, sub, onBack, coins, playerName }) {
   const r = region ? REGIONS[region] : null;
   return (
     <div className="appbar">

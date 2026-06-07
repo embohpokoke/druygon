@@ -80,51 +80,148 @@ function Store({ coins, region, pokeballs }) {
   );
 }
 
-function Profile({ caught, region, go }) {
-  const prog = { curriculum: 66, science: 33, compsci: 12 };
+// Slot avatar initials (no raster avatar per-player yet)
+function SlotAvatar({ name, size = 44, active }) {
+  const initial = (name || '?')[0].toUpperCase();
+  const colors  = ['#8B5CF6','#00D9B8','#FFCB05','#EE3D34'];
+  const idx     = Math.max(0, ['Dru','Oming','Reymar','Ilyas'].indexOf(name));
+  const bg      = colors[idx % colors.length];
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: '50%',
+      background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: size * 0.4,
+      color: '#fff', border: active ? `2px solid ${bg}` : '2px solid transparent',
+      boxShadow: active ? `0 0 12px ${bg}66` : 'none', flexShrink: 0,
+    }}>
+      {initial}
+    </div>
+  );
+}
+
+function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot }) {
+  const { regions } = useContent();
+
+  // XP % for meter
+  const xpPct = profile.xpToNext > 0
+    ? Math.round((profile.xp / profile.xpToNext) * 100)
+    : 100;
+
+  // Zone progress per region
+  const clearedByRegion = React.useMemo(() => {
+    const out = {};
+    if (!regions) return out;
+    for (const [rid, r] of Object.entries(regions)) {
+      const total   = r.zones.length;
+      const cleared = r.zones.filter(z =>
+        (window._progress || []).some(p => p.zoneId === z.id && p.status === 'cleared')
+      ).length;
+      out[rid] = total > 0 ? Math.round((cleared / total) * 100) : 0;
+    }
+    return out;
+  }, [regions]);
+
+  // expose progress to the memo above via window (simple bridge)
+  React.useEffect(() => { window._progress = []; }, []);
+
   return (
     <div className="body screen-anim" data-region={region}>
       <div className="pad">
+
+        {/* ── Active player card ── */}
         <div className="prof-card">
-          <div className="prof-av"><img src={AVATAR} alt="Dru" /></div>
+          <SlotAvatar name={playerName} size={56} active />
           <div className="who">
-            <b>Dru</b>
-            <span>Trainer · Level {PLAYER.level} · {caught.length} caught</span>
-            <div className="meter" style={{ marginTop: 8 }}><i style={{ width: PLAYER.xpPct + '%' }} /></div>
-          </div>
-        </div>
-
-        <div className="sec-head"><h2>Player slots</h2></div>
-        <div className="slots">
-          <div className="slot on">
-            <div className="slot-av"><img src={AVATAR} alt="Dru" /></div><b>Dru</b>
-          </div>
-          <div className="slot add"><Icon name="plus" size={26} /><b>Add</b></div>
-        </div>
-
-        <div className="sec-head"><h2>Progress by world</h2></div>
-        {['curriculum', 'science', 'compsci'].map((id) => {
-          const r = REGIONS[id];
-          return (
-            <div key={id} className="prog-row" data-region={id}>
-              <b style={{ color: 'var(--accent)' }}>{r.name}</b>
-              <div className="meter"><i style={{ width: prog[id] + '%' }} /></div>
-              <span>{prog[id]}%</span>
+            <b>{playerName}</b>
+            <span>Level {profile.level} · {caught.length} caught · {profile.coins} koin</span>
+            <div className="meter" style={{ marginTop: 8 }}>
+              <i style={{ width: xpPct + '%' }} />
             </div>
-          );
-        })}
+            <small style={{ color: 'var(--text-tertiary)', fontSize: 10 }}>
+              {profile.xp} / {profile.xpToNext} XP
+            </small>
+          </div>
+        </div>
 
-        <div className="sec-head"><h2>For grown-ups</h2></div>
-        <div className="link-row">
+        {/* ── Slot selector ── */}
+        <div className="sec-head"><h2>Ganti pemain</h2></div>
+        <div className="slots">
+          {allSlots.length > 0
+            ? allSlots.map(s => (
+                <div
+                  key={s.slot}
+                  className={'slot' + (s.slot === activeSlot ? ' on' : '')}
+                  onClick={() => onSwitchSlot && onSwitchSlot(s.slot)}
+                  style={{ cursor: s.slot === activeSlot ? 'default' : 'pointer' }}
+                >
+                  <SlotAvatar name={s.name} size={40} active={s.slot === activeSlot} />
+                  <div style={{ display:'flex', flexDirection:'column', gap:1, minWidth:0 }}>
+                    <b style={{ fontSize:13 }}>{s.name}</b>
+                    <span style={{ fontSize:10, color:'var(--text-tertiary)' }}>
+                      Lv {s.level} · {s.caughtCount} caught
+                    </span>
+                  </div>
+                  {s.slot === activeSlot && (
+                    <span style={{ marginLeft:'auto', fontSize:10, color:'var(--accent)', fontWeight:700 }}>AKTIF</span>
+                  )}
+                </div>
+              ))
+            : /* loading fallback */
+              [1,2,3,4].map(n => (
+                <div key={n} className={'slot' + (n === activeSlot ? ' on' : '')}
+                  style={{ opacity: 0.4, cursor: 'default' }}>
+                  <div style={{ width:40, height:40, borderRadius:'50%', background:'var(--surface-2)' }}/>
+                  <b style={{ fontSize:13 }}>—</b>
+                </div>
+              ))
+          }
+        </div>
+
+        {/* ── Progress by world ── */}
+        {regions && (
+          <React.Fragment>
+            <div className="sec-head"><h2>Progress per dunia</h2></div>
+            {Object.entries(regions).map(([id, r]) => (
+              <div key={id} className="prog-row" data-region={id}>
+                <b style={{ color:'var(--accent)', minWidth:110, fontSize:13 }}>{r.name}</b>
+                <div className="meter" style={{ flex:1 }}>
+                  <i style={{ width: (clearedByRegion[id] ?? 0) + '%' }} />
+                </div>
+                <span style={{ fontSize:11, minWidth:32, textAlign:'right' }}>
+                  {clearedByRegion[id] ?? 0}%
+                </span>
+              </div>
+            ))}
+          </React.Fragment>
+        )}
+
+        {/* ── Pokéball inventory ── */}
+        <div className="sec-head"><h2>Pokéball</h2></div>
+        <div style={{ display:'flex', gap:12, flexWrap:'wrap', marginBottom:8 }}>
+          {POKEBALLS.map(b => (
+            <div key={b.id} style={{ display:'flex', alignItems:'center', gap:6,
+              background:'var(--surface-2)', borderRadius:10, padding:'6px 12px', fontSize:13 }}>
+              <Pokeball size={24} id={b.id} top={b.top} />
+              <span style={{ fontWeight:700 }}>
+                ×{profile.pokeballs?.[b.id] ?? 0}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Links ── */}
+        <div className="sec-head"><h2>Untuk orang tua</h2></div>
+        <div className="link-row" onClick={() => window.open('/parent','_blank')}>
           <div className="ic"><Icon name="chart" size={20} /></div>
-          <div className="tx"><b>Parent dashboard</b><span>Time played · topics · accuracy · /parent</span></div>
+          <div className="tx"><b>Parent dashboard</b><span>Waktu main · topik · akurasi</span></div>
           <Icon name="arrowR" size={18} color="var(--text-tertiary)" />
         </div>
         <div className="link-row archive">
           <div className="ic"><Icon name="archive" size={20} /></div>
-          <div className="tx"><b>Modul Lama</b><span>Math Arena, Word Search, Ramadhan… · /archive</span></div>
+          <div className="tx"><b>Modul Lama</b><span>Math Arena, Word Search, Ramadhan…</span></div>
           <Icon name="arrowR" size={18} color="var(--text-tertiary)" />
         </div>
+
       </div>
     </div>
   );

@@ -19,11 +19,17 @@ function ContentLoading() {
 }
 
 // ───────────────────────── HOME (variant A) ─────────────────────────
-function Home({ go, caught, coins }) {
+function Home({ go, caught, coins, profile, playerName }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
-  const prog = { curriculum: 2, science: 1, compsci: 1 };
+  const level  = profile?.level  ?? PLAYER.level;
+  const xpPct  = profile && profile.xpToNext > 0
+    ? Math.round((profile.xp / profile.xpToNext) * 100)
+    : PLAYER.xpPct;
+  const name   = playerName || 'Trainer';
+  // Cleared zone count per region (from progress prop if available)
+  const prog   = Object.fromEntries(order.map(id => [id, 0]));
   return (
     <div className="body screen-anim">
       <div className="pad">
@@ -33,16 +39,16 @@ function Home({ go, caught, coins }) {
           <div className="hero-glow" />
           <div className="hero-top">
             <div>
-              <div className="hero-greet">Hi, <b>Dru</b> 👋</div>
+              <div className="hero-greet">Hi, <b>{name}</b> 👋</div>
               <div className="hero-sub">Trainer · {caught.length} caught · keep the streak!</div>
             </div>
-            <div className="hero-lvl">LVL {PLAYER.level}</div>
+            <div className="hero-lvl">LVL {level}</div>
           </div>
           <div className="hero-xp">
-            <small>XP</small><div className="meter" style={{ flex: 1 }}><i style={{ width: PLAYER.xpPct + '%' }} /></div>
+            <small>XP</small><div className="meter" style={{ flex: 1 }}><i style={{ width: xpPct + '%' }} /></div>
           </div>
           <div className="hero-stats">
-            <div className="hero-stat"><b>{PLAYER.level}</b><span>Level</span></div>
+            <div className="hero-stat"><b>{level}</b><span>Level</span></div>
             <div className="hero-stat"><b>{coins}</b><span>Coins</span></div>
             <div className="hero-stat"><b>{caught.length}</b><span>Caught</span></div>
           </div>

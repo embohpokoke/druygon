@@ -259,7 +259,7 @@
     } catch (e) {
     }
   }
-  function Header({ region, title, sub, onBack, coins }) {
+  function Header({ region, title, sub, onBack, coins, playerName }) {
     const r = region ? REGIONS[region] : null;
     return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", coins), /* @__PURE__ */ React.createElement("div", { className: "avatar" }, /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "Dru" })));
   }
@@ -282,12 +282,15 @@
   function ContentLoading() {
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad", style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 16, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 14 } }, "Loading world data\u2026")));
   }
-  function Home({ go, caught, coins }) {
+  function Home({ go, caught, coins, profile, playerName }) {
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
     const order = ["curriculum", "science", "compsci"].filter((id) => regions[id]);
-    const prog = { curriculum: 2, science: 1, compsci: 1 };
-    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "hero", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: "radial-gradient(130% 130% at 88% -20%, rgba(139,92,246,.5), transparent 55%), radial-gradient(90% 120% at 0% 120%, rgba(74,158,255,.28), transparent 60%), linear-gradient(160deg, #1b1540, #0c0a1e 72%)" } }), /* @__PURE__ */ React.createElement("div", { className: "hero-glow" }), /* @__PURE__ */ React.createElement("div", { className: "hero-top" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "hero-greet" }, "Hi, ", /* @__PURE__ */ React.createElement("b", null, "Dru"), " \u{1F44B}"), /* @__PURE__ */ React.createElement("div", { className: "hero-sub" }, "Trainer \xB7 ", caught.length, " caught \xB7 keep the streak!")), /* @__PURE__ */ React.createElement("div", { className: "hero-lvl" }, "LVL ", PLAYER.level)), /* @__PURE__ */ React.createElement("div", { className: "hero-xp" }, /* @__PURE__ */ React.createElement("small", null, "XP"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: PLAYER.xpPct + "%" } }))), /* @__PURE__ */ React.createElement("div", { className: "hero-stats" }, /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, PLAYER.level), /* @__PURE__ */ React.createElement("span", null, "Level")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, coins), /* @__PURE__ */ React.createElement("span", null, "Coins")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Choose a world")), /* @__PURE__ */ React.createElement("div", { className: "regions" }, order.map((id) => {
+    const level = profile?.level ?? PLAYER.level;
+    const xpPct = profile && profile.xpToNext > 0 ? Math.round(profile.xp / profile.xpToNext * 100) : PLAYER.xpPct;
+    const name = playerName || "Trainer";
+    const prog = Object.fromEntries(order.map((id) => [id, 0]));
+    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "hero", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: "radial-gradient(130% 130% at 88% -20%, rgba(139,92,246,.5), transparent 55%), radial-gradient(90% 120% at 0% 120%, rgba(74,158,255,.28), transparent 60%), linear-gradient(160deg, #1b1540, #0c0a1e 72%)" } }), /* @__PURE__ */ React.createElement("div", { className: "hero-glow" }), /* @__PURE__ */ React.createElement("div", { className: "hero-top" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "hero-greet" }, "Hi, ", /* @__PURE__ */ React.createElement("b", null, name), " \u{1F44B}"), /* @__PURE__ */ React.createElement("div", { className: "hero-sub" }, "Trainer \xB7 ", caught.length, " caught \xB7 keep the streak!")), /* @__PURE__ */ React.createElement("div", { className: "hero-lvl" }, "LVL ", level)), /* @__PURE__ */ React.createElement("div", { className: "hero-xp" }, /* @__PURE__ */ React.createElement("small", null, "XP"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } }))), /* @__PURE__ */ React.createElement("div", { className: "hero-stats" }, /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, level), /* @__PURE__ */ React.createElement("span", null, "Level")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, coins), /* @__PURE__ */ React.createElement("span", null, "Coins")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Choose a world")), /* @__PURE__ */ React.createElement("div", { className: "regions" }, order.map((id) => {
       const r = regions[id];
       const next = r.zones.find((z) => zoneState(z) !== "cleared") || r.zones[2];
       return /* @__PURE__ */ React.createElement("div", { key: id, className: "region-card", "data-region": id, style: { "--rc": r.accent, "--rc-soft": "var(--accent-soft)" }, onClick: () => go("map", id) }, /* @__PURE__ */ React.createElement("div", { className: "region-glow" }), /* @__PURE__ */ React.createElement("div", { className: "region-emblem" }, /* @__PURE__ */ React.createElement(Icon, { name: r.icon, size: 30 })), /* @__PURE__ */ React.createElement("div", { className: "region-main" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "region-name" }, r.name), /* @__PURE__ */ React.createElement("div", { className: "region-tag" }, r.blurb, " \xB7 next: ", next.name)), /* @__PURE__ */ React.createElement("div", { className: "region-foot" }, /* @__PURE__ */ React.createElement("b", null, prog[id], "/3 zones"), /* @__PURE__ */ React.createElement("div", { className: "region-mons" }, r.zones[0].mons.slice(0, 3).map((m) => /* @__PURE__ */ React.createElement("img", { key: m.dex, src: m.sprite, alt: "", crossOrigin: "anonymous" })))), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: prog[id] / 3 * 100 + "%" } }))), /* @__PURE__ */ React.createElement("div", { className: "region-arrow" }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 20, color: r.accent })));
@@ -387,16 +390,83 @@
       return /* @__PURE__ */ React.createElement("div", { key: b.id, className: "store-row", style: { borderLeft: `4px solid ${b.top}` } }, /* @__PURE__ */ React.createElement(Pokeball, { size: 46, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "Catch rate ", Math.round(b.rate * 100), "% \xB7 you own ", b.own)), /* @__PURE__ */ React.createElement("div", { className: "buy" + (afford ? "" : " disabled") }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 13, color: afford ? "#0b0a16" : "var(--text-tertiary)" }), " ", b.price));
     }), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Items")), /* @__PURE__ */ React.createElement("div", { className: "store-row" }, /* @__PURE__ */ React.createElement("div", { className: "mission-ico", style: { width: 46, height: 46 } }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 22 })), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("b", null, "Draco Hint \xD73"), /* @__PURE__ */ React.createElement("span", null, "Reveal a clue during any zone")), /* @__PURE__ */ React.createElement("div", { className: "buy" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 13, color: "#0b0a16" }), " 150"))));
   }
-  function Profile({ caught, region, go }) {
-    const prog = { curriculum: 66, science: 33, compsci: 12 };
-    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "prof-card" }, /* @__PURE__ */ React.createElement("div", { className: "prof-av" }, /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "Dru" })), /* @__PURE__ */ React.createElement("div", { className: "who" }, /* @__PURE__ */ React.createElement("b", null, "Dru"), /* @__PURE__ */ React.createElement("span", null, "Trainer \xB7 Level ", PLAYER.level, " \xB7 ", caught.length, " caught"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: PLAYER.xpPct + "%" } })))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Player slots")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, /* @__PURE__ */ React.createElement("div", { className: "slot on" }, /* @__PURE__ */ React.createElement("div", { className: "slot-av" }, /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "Dru" })), /* @__PURE__ */ React.createElement("b", null, "Dru")), /* @__PURE__ */ React.createElement("div", { className: "slot add" }, /* @__PURE__ */ React.createElement(Icon, { name: "plus", size: 26 }), /* @__PURE__ */ React.createElement("b", null, "Add"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Progress by world")), ["curriculum", "science", "compsci"].map((id) => {
-      const r = REGIONS[id];
-      return /* @__PURE__ */ React.createElement("div", { key: id, className: "prog-row", "data-region": id }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)" } }, r.name), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: prog[id] + "%" } })), /* @__PURE__ */ React.createElement("span", null, prog[id], "%"));
-    }), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "For grown-ups")), /* @__PURE__ */ React.createElement("div", { className: "link-row" }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "chart", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Parent dashboard"), /* @__PURE__ */ React.createElement("span", null, "Time played \xB7 topics \xB7 accuracy \xB7 /parent")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" })), /* @__PURE__ */ React.createElement("div", { className: "link-row archive" }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "archive", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Modul Lama"), /* @__PURE__ */ React.createElement("span", null, "Math Arena, Word Search, Ramadhan\u2026 \xB7 /archive")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" }))));
+  function SlotAvatar({ name, size = 44, active }) {
+    const initial = (name || "?")[0].toUpperCase();
+    const colors = ["#8B5CF6", "#00D9B8", "#FFCB05", "#EE3D34"];
+    const idx = Math.max(0, ["Dru", "Oming", "Reymar", "Ilyas"].indexOf(name));
+    const bg = colors[idx % colors.length];
+    return /* @__PURE__ */ React.createElement("div", { style: {
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      background: bg,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontFamily: "var(--font-display)",
+      fontWeight: 700,
+      fontSize: size * 0.4,
+      color: "#fff",
+      border: active ? `2px solid ${bg}` : "2px solid transparent",
+      boxShadow: active ? `0 0 12px ${bg}66` : "none",
+      flexShrink: 0
+    } }, initial);
+  }
+  function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot }) {
+    const { regions } = useContent();
+    const xpPct = profile.xpToNext > 0 ? Math.round(profile.xp / profile.xpToNext * 100) : 100;
+    const clearedByRegion = React.useMemo(() => {
+      const out = {};
+      if (!regions) return out;
+      for (const [rid, r] of Object.entries(regions)) {
+        const total = r.zones.length;
+        const cleared = r.zones.filter(
+          (z) => (window._progress || []).some((p) => p.zoneId === z.id && p.status === "cleared")
+        ).length;
+        out[rid] = total > 0 ? Math.round(cleared / total * 100) : 0;
+      }
+      return out;
+    }, [regions]);
+    React.useEffect(() => {
+      window._progress = [];
+    }, []);
+    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "prof-card" }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 56, active: true }), /* @__PURE__ */ React.createElement("div", { className: "who" }, /* @__PURE__ */ React.createElement("b", null, playerName), /* @__PURE__ */ React.createElement("span", null, "Level ", profile.level, " \xB7 ", caught.length, " caught \xB7 ", profile.coins, " koin"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } })), /* @__PURE__ */ React.createElement("small", { style: { color: "var(--text-tertiary)", fontSize: 10 } }, profile.xp, " / ", profile.xpToNext, " XP"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Ganti pemain")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, allSlots.length > 0 ? allSlots.map((s) => /* @__PURE__ */ React.createElement(
+      "div",
+      {
+        key: s.slot,
+        className: "slot" + (s.slot === activeSlot ? " on" : ""),
+        onClick: () => onSwitchSlot && onSwitchSlot(s.slot),
+        style: { cursor: s.slot === activeSlot ? "default" : "pointer" }
+      },
+      /* @__PURE__ */ React.createElement(SlotAvatar, { name: s.name, size: 40, active: s.slot === activeSlot }),
+      /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("b", { style: { fontSize: 13 } }, s.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, color: "var(--text-tertiary)" } }, "Lv ", s.level, " \xB7 ", s.caughtCount, " caught")),
+      s.slot === activeSlot && /* @__PURE__ */ React.createElement("span", { style: { marginLeft: "auto", fontSize: 10, color: "var(--accent)", fontWeight: 700 } }, "AKTIF")
+    )) : (
+      /* loading fallback */
+      [1, 2, 3, 4].map((n) => /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          key: n,
+          className: "slot" + (n === activeSlot ? " on" : ""),
+          style: { opacity: 0.4, cursor: "default" }
+        },
+        /* @__PURE__ */ React.createElement("div", { style: { width: 40, height: 40, borderRadius: "50%", background: "var(--surface-2)" } }),
+        /* @__PURE__ */ React.createElement("b", { style: { fontSize: 13 } }, "\u2014")
+      ))
+    )), regions && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Progress per dunia")), Object.entries(regions).map(([id, r]) => /* @__PURE__ */ React.createElement("div", { key: id, className: "prog-row", "data-region": id }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)", minWidth: 110, fontSize: 13 } }, r.name), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: (clearedByRegion[id] ?? 0) + "%" } })), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, minWidth: 32, textAlign: "right" } }, clearedByRegion[id] ?? 0, "%")))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Pok\xE9ball")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 } }, POKEBALLS.map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      background: "var(--surface-2)",
+      borderRadius: 10,
+      padding: "6px 12px",
+      fontSize: 13
+    } }, /* @__PURE__ */ React.createElement(Pokeball, { size: 24, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 700 } }, "\xD7", profile.pokeballs?.[b.id] ?? 0)))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Untuk orang tua")), /* @__PURE__ */ React.createElement("div", { className: "link-row", onClick: () => window.open("/parent", "_blank") }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "chart", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Parent dashboard"), /* @__PURE__ */ React.createElement("span", null, "Waktu main \xB7 topik \xB7 akurasi")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" })), /* @__PURE__ */ React.createElement("div", { className: "link-row archive" }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "archive", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Modul Lama"), /* @__PURE__ */ React.createElement("span", null, "Math Arena, Word Search, Ramadhan\u2026")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" }))));
   }
   Object.assign(window, { Collection, Store, Profile, regionMons });
   const NAV_LS = "druygon-nav-v2";
-  const SLOT = 1;
+  const SLOT_LS = "druygon-slot-v1";
+  const VALID_SLOTS = [1, 2, 3, 4];
   const NAV_DEFAULT = { screen: "home", region: "science", zone: 1 };
   function loadNav() {
     try {
@@ -408,6 +478,20 @@
   function saveNav(screen, region, zone) {
     try {
       localStorage.setItem(NAV_LS, JSON.stringify({ screen, region, zone }));
+    } catch {
+    }
+  }
+  function loadSlot() {
+    try {
+      const n = parseInt(localStorage.getItem(SLOT_LS) || "1", 10);
+      return VALID_SLOTS.includes(n) ? n : 1;
+    } catch {
+      return 1;
+    }
+  }
+  function saveSlot(slot) {
+    try {
+      localStorage.setItem(SLOT_LS, String(slot));
     } catch {
     }
   }
@@ -426,29 +510,63 @@
     if (!r.ok || !data.success) throw new Error(data.error || `${path} \u2192 ${r.status}`);
     return data;
   }
+  async function fetchPlayer(slot) {
+    try {
+      const d = await apiGet(`/api/player/${slot}`);
+      if (!d.name || d.profile?.disabled) return null;
+      return d;
+    } catch {
+      return null;
+    }
+  }
   function App() {
     const nav = loadNav();
+    const [activeSlot, setActiveSlot] = React.useState(loadSlot);
     const [screen, setScreen] = React.useState(nav.screen);
     const [region, setRegion] = React.useState(nav.region);
     const [zone, setZone] = React.useState(nav.zone);
     const [playerReady, setPlayerReady] = React.useState(false);
     const [playerErr, setPlayerErr] = React.useState(null);
+    const [playerName, setPlayerName] = React.useState("");
     const [profile, setProfile] = React.useState({ level: 1, xp: 0, xpToNext: 100, coins: 0, stats: {}, pokeballs: { pokeball: 5, greatball: 0, ultraball: 0, masterball: 0 } });
     const [caught, setCaught] = React.useState([]);
     const [progress, setProgress] = React.useState([]);
+    const [allSlots, setAllSlots] = React.useState([]);
     const [celeb, setCeleb] = React.useState(null);
-    React.useEffect(() => {
-      apiGet(`/api/player/${SLOT}`).then((data) => {
+    const loadActivePlayer = React.useCallback((slot) => {
+      setPlayerReady(false);
+      setPlayerErr(null);
+      apiGet(`/api/player/${slot}`).then((data) => {
+        setPlayerName(data.name || "Trainer");
         setProfile(data.profile);
         setCaught(data.caught || []);
         setProgress(data.progress || []);
         setPlayerReady(true);
       }).catch((err) => {
-        console.warn("[App] player load failed, using defaults:", err.message);
+        console.warn("[App] player load failed:", err.message);
         setPlayerReady(true);
         setPlayerErr(err.message);
       });
     }, []);
+    React.useEffect(() => {
+      loadActivePlayer(activeSlot);
+      Promise.all(VALID_SLOTS.map((s) => fetchPlayer(s))).then((results) => {
+        setAllSlots(results.map(
+          (d, i) => d ? { slot: VALID_SLOTS[i], name: d.name, level: d.profile?.level ?? 1, coins: d.profile?.coins ?? 0, caughtCount: (d.caught || []).length } : null
+        ).filter(Boolean));
+      });
+    }, []);
+    const switchSlot = (slot) => {
+      if (slot === activeSlot) return;
+      saveSlot(slot);
+      setActiveSlot(slot);
+      const newNav = { screen: "home", region: "science", zone: 1 };
+      setScreen(newNav.screen);
+      setRegion(newNav.region);
+      setZone(newNav.zone);
+      saveNav(newNav.screen, newNav.region, newNav.zone);
+      loadActivePlayer(slot);
+    };
     const go = (toScreen, toRegion, toZone) => {
       const s = toScreen;
       const r2 = toRegion || region;
@@ -469,14 +587,11 @@
       setProfile((prev) => ({
         ...prev,
         coins: prev.coins + (ball._coinAward ?? 50),
-        pokeballs: {
-          ...prev.pokeballs,
-          [ball.id]: Math.max(0, (prev.pokeballs[ball.id] ?? 0) - 1)
-        }
+        pokeballs: { ...prev.pokeballs, [ball.id]: Math.max(0, (prev.pokeballs[ball.id] ?? 0) - 1) }
       }));
       setCeleb({ mon, region });
       try {
-        const data = await apiPost(`/api/player/${SLOT}/catch`, {
+        const data = await apiPost(`/api/player/${activeSlot}/catch`, {
           dex: mon.dex,
           zoneId: ball._zoneId || "",
           ballType: ball.id
@@ -509,13 +624,13 @@
       _coinAward: b.id === "pokeball" ? 50 : b.id === "greatball" ? 80 : b.id === "ultraball" ? 120 : 300
     }));
     if (!playerReady) {
-      return /* @__PURE__ */ React.createElement("div", { className: "device" }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 12, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 13 } }, "Loading Dru's data\u2026")));
+      return /* @__PURE__ */ React.createElement("div", { className: "device" }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 12, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 13 } }, "Loading\u2026")));
     }
     const r = window.REGIONS && window.REGIONS[region];
     let header, content, showNav = true;
     if (screen === "home") {
-      header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins });
-      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins });
+      header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, playerName });
+      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName });
     } else if (screen === "map") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home") });
       content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught: caughtDex });
@@ -532,10 +647,22 @@
       content = /* @__PURE__ */ React.createElement(Store, { coins: profile.coins, region, pokeballs });
     } else if (screen === "profile") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: "Profil", sub: "Trainer & parent", coins: profile.coins });
-      content = /* @__PURE__ */ React.createElement(Profile, { caught: caughtDex, region, go, profile });
+      content = /* @__PURE__ */ React.createElement(
+        Profile,
+        {
+          caught: caughtDex,
+          region,
+          go,
+          profile,
+          playerName,
+          activeSlot,
+          allSlots,
+          onSwitchSlot: switchSlot
+        }
+      );
     }
     const navActive = screen === "catch" ? "map" : screen;
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save. (", playerErr, ")"));
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
   }
   ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();
