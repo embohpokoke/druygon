@@ -267,14 +267,33 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught })
   if (!r) return <ContentLoading />;
   const z = r.zones.find((x) => x.zone === zone) || r.zones[0];
 
-  // Weighted wild selection, excluding already-caught zone mons when possible
-  const caughtDex = (caught || []).map(c => c.dex);
-  const uncaughtMons = (z.mons || []).filter(m => !caughtDex.includes(m.dex));
-  const wildPool = uncaughtMons.length > 0 ? uncaughtMons : (z.mons || []);
-  const wild = uR1(weightedPick(wildPool) || (z.mons && z.mons[0])).current;
-
+  // Weighted wild selection — useState for re-roll (P1b+P1c)
+  const caughtDex = React.useMemo(() => (caught || []).map(c => c.dex), [caught]);
   const firstFallback = Object.values(questions)[0] || [];
-  const bank = questions[z.topic] || firstFallback;
+
+  // P1a — shuffled question bank per catch session
+  const [shuffledBank] = uS1(() => {
+    const raw = questions[z.topic] || firstFallback;
+    if (!raw || raw.length === 0) return [];
+    const copy = [...raw];
+    for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
+    return copy;
+  });
+  const bank = shuffledBank.length > 0 ? shuffledBank : (questions[z.topic] || firstFallback);
+
+  const pickWild = (excludeDex) => {
+    const uncaught = (z.mons || []).filter(m => !caughtDex.includes(m.dex) && m.dex !== excludeDex);
+    let pool = uncaught.length > 0 ? uncaught : (z.mons || []).filter(m => m.dex !== excludeDex);
+    if (pool.length === 0) pool = z.mons || [];
+    return weightedPick(pool) || pool[0];
+  };
+  const [wild, setWild] = uS1(() => pickWild(null));
+
+  // P1c — flee/skip: re-roll wild without spending a pokéball
+  const rerollWild = () => {
+    setWild(pickWild(wild ? wild.dex : null));
+    setHp(100); setQi(0); setPhase('quiz'); setFb(null); setBall(null);
+  };
 
   const [hp, setHp] = uS1(100);
   const [qi, setQi] = uS1(0);
@@ -337,8 +356,12 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught })
               ))}
             </div>
             <div className="cmd-foot">
+              <img src="assets/dru/dru-think.png" alt="Ask Draco" style={{ width: 36, height: 36, objectFit: 'contain', marginRight: 4, flexShrink: 0 }} />
               <div className="draco wf-tap" onClick={() => openTutor(z.topic)}><Icon name="hint" size={15} /> Ask Draco</div>
               <span className="cmd-hint">Correct answer → attack ↓ HP</span>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: 8 }}>
+              <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Cari Pokémon lain</span>
             </div>
           </React.Fragment>
         )}
@@ -354,6 +377,9 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught })
               ))}
             </div>
             <p style={{ fontSize: 11, color: 'var(--text-tertiary)', textAlign: 'center', marginTop: 14 }}>Higher tiers catch better but are scarcer.</p>
+            <div style={{ textAlign: 'center', marginTop: 6 }}>
+              <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Cari Pokémon lain</span>
+            </div>
           </React.Fragment>
         )}
         {phase === 'wobble' && (

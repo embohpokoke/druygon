@@ -259,7 +259,7 @@ function App() {
   } else if (screen === 'catch') {
     const z = r && r.zones.find(x => x.zone === zone);
     header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} {...hProps} />;
-    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} />;
+    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} />;
     showNav = false;
   } else if (screen === 'collection') {
     header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
