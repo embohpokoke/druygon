@@ -223,7 +223,7 @@ function App() {
     content = <Collection caught={caughtDex} region={region} go={go} />;
   } else if (screen === 'store') {
     header  = <Header region={region} title="Toko" sub="Balls & items" coins={profile.coins} {...hProps} />;
-    content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} />;
+    content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} activeSlot={activeSlot} onPurchase={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, pokeballs: data.pokeballs ?? prev.pokeballs }))} />;
   } else if (screen === 'profile') {
     header  = <Header region={region} title="Profil" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
     content = <Profile caught={caughtDex} region={region} go={go} profile={profile}

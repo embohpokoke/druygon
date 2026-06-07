@@ -3,8 +3,56 @@
 const { useState: uS1, useRef: uR1, useEffect: uE1 } = React;
 const PLAYER = { name: 'Dru', level: 7, xpPct: 62 };
 const RANK = { common: 0, uncommon: 1, rare: 2, legendary: 3 };
+
+// Weighted rarity helper
+function weightedPick(mons) {
+  if (!mons || mons.length === 0) return null;
+  const weights = mons.map(m => {
+    switch (m.rarity) {
+      case 'legendary': return 2;
+      case 'rare': return 8;
+      case 'uncommon': return 20;
+      default: return 70;
+    }
+  });
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < mons.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return mons[i];
+  }
+  return mons[mons.length - 1];
+}
+
 const rarest = (mons) => mons.reduce((a, b) => (RANK[b.rarity] > RANK[a.rarity] ? b : a), mons[0]);
-const zoneState = (z) => (z.zone === 1 ? 'cleared' : PLAYER.level >= z.minLevel ? 'open' : 'locked');
+
+// Pure zone state based on real player state
+const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = []) => {
+  if (!z) return 'locked';
+  // Explicit cleared in progress table
+  const prog = progress.find(p => p.zoneId === z.id);
+  if (prog?.status === 'cleared') return 'cleared';
+
+  // Zone cleared when 3 distinct Pokémon caught in that zone
+  const zoneCaught = caught.filter(c => c.zoneId === z.id);
+  if (new Set(zoneCaught.map(c => c.dex)).size >= 3) return 'cleared';
+
+  // Open only if previous zone is cleared (or this is zone 1) AND level >= minLevel
+  const prevZone = (allZones || []).find(x => x.zone === z.zone - 1);
+  let prevCleared = !prevZone;
+  if (prevZone) {
+    const prevProg = progress.find(p => p.zoneId === prevZone.id);
+    if (prevProg?.status === 'cleared') prevCleared = true;
+    else {
+      const prevCaught = caught.filter(c => c.zoneId === prevZone.id);
+      if (new Set(prevCaught.map(c => c.dex)).size >= 3) prevCleared = true;
+    }
+  }
+
+  const levelOk = (profile?.level ?? PLAYER.level) >= z.minLevel;
+  if (prevCleared && levelOk) return 'open';
+  return 'locked';
+};
 
 // Loading skeleton shown while API content is fetched
 function ContentLoading() {
@@ -19,7 +67,7 @@ function ContentLoading() {
 }
 
 // ───────────────────────── HOME (variant A) ─────────────────────────
-function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) {
+function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
@@ -28,8 +76,12 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) 
     ? Math.round((profile.xp / profile.xpToNext) * 100)
     : PLAYER.xpPct;
   const name   = playerName || 'Trainer';
-  // Cleared zone count per region (from progress prop if available)
-  const prog   = Object.fromEntries(order.map(id => [id, 0]));
+  // Real cleared zone count per region
+  const prog   = Object.fromEntries(order.map(id => {
+    const r = regions[id];
+    const cleared = r.zones.filter(z => zoneState(z, profile, caught, progress, r.zones) === 'cleared').length;
+    return [id, cleared];
+  }));
   return (
     <div className="body screen-anim">
       <div className="pad">
@@ -59,7 +111,7 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) 
         <div className="regions">
           {order.map((id) => {
             const r = regions[id];
-            const next = r.zones.find((z) => zoneState(z) !== 'cleared') || r.zones[2];
+            const next = r.zones.find((z) => zoneState(z, profile, caught, progress, r.zones) !== 'cleared') || r.zones[r.zones.length - 1];
             return (
               <div key={id} className="region-card" data-region={id} style={{ '--rc': r.accent, '--rc-soft': 'var(--accent-soft)' }} onClick={() => go('map', id)}>
                 <div className="region-glow" />
@@ -70,12 +122,12 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) 
                     <div className="region-tag">{r.blurb} · next: {next.name}</div>
                   </div>
                   <div className="region-foot">
-                    <b>{prog[id]}/3 zones</b>
+                    <b>{prog[id]}/{r.zones.length} zones</b>
                     <div className="region-mons">
                       {r.zones[0].mons.slice(0, 3).map((m) => <img key={m.dex} src={m.sprite} alt="" crossOrigin="anonymous" />)}
                     </div>
                   </div>
-                  <div className="meter"><i style={{ width: (prog[id] / 3 * 100) + '%' }} /></div>
+                  <div className="meter"><i style={{ width: (prog[id] / r.zones.length * 100) + '%' }} /></div>
                 </div>
                 <div className="region-arrow"><Icon name="arrowR" size={20} color={r.accent} /></div>
               </div>
@@ -140,13 +192,13 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot }) 
 }
 
 // ───────────────────────── REGION MAP (variant B) ─────────────────────────
-function RegionMap({ region, go, caught }) {
+function RegionMap({ region, go, caught, profile, progress }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const r = regions[region];
   if (!r) return <ContentLoading />;
   const feat = rarest(r.zones[r.zones.length - 1].mons);
-  const clearedCount = r.zones.filter((z) => zoneState(z) === 'cleared').length;
+  const clearedCount = r.zones.filter((z) => zoneState(z, profile, caught, progress, r.zones) === 'cleared').length;
   return (
     <div className="body screen-anim">
       <div className="pad">
@@ -159,11 +211,11 @@ function RegionMap({ region, go, caught }) {
           </div>
         </div>
         <div className="map-meta">
-          <div className="pill" style={{ color: r.accent, borderColor: r.accent }}>LVL {PLAYER.level}</div>
+          <div className="pill" style={{ color: r.accent, borderColor: r.accent }}>LVL {profile?.level ?? PLAYER.level}</div>
           <span className="eyebrow">{clearedCount} / {r.zones.length} zones cleared</span>
         </div>
         {r.zones.map((z) => {
-          const st = zoneState(z);
+          const st = zoneState(z, profile, caught, progress, r.zones);
           const locked = st === 'locked', cleared = st === 'cleared';
           return (
             <div key={z.zone} className={'zone ' + st} onClick={() => !locked && go('catch', region, z.zone)}>
@@ -190,13 +242,19 @@ function RegionMap({ region, go, caught }) {
 }
 
 // ───────────────────────── CATCH / BATTLE (variant B) ─────────────────────────
-function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
+function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught }) {
   const { regions, questions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const r = regions[region];
   if (!r) return <ContentLoading />;
   const z = r.zones.find((x) => x.zone === zone) || r.zones[0];
-  const wild = uR1(rarest(z.mons)).current;
+
+  // Weighted wild selection, excluding already-caught zone mons when possible
+  const caughtDex = (caught || []).map(c => c.dex);
+  const uncaughtMons = (z.mons || []).filter(m => !caughtDex.includes(m.dex));
+  const wildPool = uncaughtMons.length > 0 ? uncaughtMons : (z.mons || []);
+  const wild = uR1(weightedPick(wildPool) || (z.mons && z.mons[0])).current;
+
   const firstFallback = Object.values(questions)[0] || [];
   const bank = questions[z.topic] || firstFallback;
 
@@ -223,8 +281,9 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
     }, 700);
   };
   const throwBall = (b) => {
-    setBall(b); setPhase('wobble');
-    setTimeout(() => onCaught(wild, b), 1500);
+    setBall(b);
+    setPhase('wobble');
+    onCaught(wild, b);
   };
 
   return (
@@ -267,7 +326,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
         )}
         {phase === 'ready' && (
           <React.Fragment>
-            <div className="ball-prompt">It’s weak — choose a Poké Ball!</div>
+            <div className="ball-prompt">It's weak — choose a Poké Ball!</div>
             <div className="balls">
               {(pokeballsProp || POKEBALLS).map((b) => (
                 <div key={b.id} className={'ball-opt' + (b.own === 0 ? ' dim' : '')} onClick={() => b.own > 0 && throwBall(b)}>
@@ -288,7 +347,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
 }
 
 // ───────────────────────── CELEBRATION (variant A) ─────────────────────────
-function Celebration({ mon, region, onDone, onTeam }) {
+function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd }) {
   const { regions } = useContent();
   const r   = (regions && regions[region]) || { accent: '#8B5CF6' };
   const rar = RARITY[mon.rarity] || RARITY.common;
@@ -313,7 +372,9 @@ function Celebration({ mon, region, onDone, onTeam }) {
         ))}
       </div>
       <div className="celeb-actions">
-        <button className="btn btn-primary btn-block" onClick={onTeam}><Icon name="plus" size={16} color="#0b0a16" /> Add to team</button>
+        <button className="btn btn-primary btn-block" onClick={() => { if (activeSlot && onTeamAdd) onTeamAdd(mon.dex); onTeam(); }}>
+          <Icon name="plus" size={16} color="#0b0a16" /> Add to team
+        </button>
         <div className="celeb-skip" onClick={onDone}>Continue →</div>
       </div>
     </div>

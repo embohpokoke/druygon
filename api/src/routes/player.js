@@ -27,6 +27,7 @@ const xpFor  = (lvl) => XP_THR[Math.min(lvl, XP_THR.length - 1)] || (4600 + (lvl
 const BALL_TYPES = ['pokeball', 'greatball', 'ultraball', 'masterball'];
 const COIN_AWARD = { pokeball: 50, greatball: 80, ultraball: 120, masterball: 300 };
 const XP_AWARD   = 50;
+const BALL_PRICE = { pokeball: 100, greatball: 300, ultraball: 800, masterball: 5000 };
 
 function getDb() { return new Database(PLAYERS_DB); }
 
@@ -227,6 +228,61 @@ router.post('/:slot/progress', (req, res) => {
     res.json({ success: true, slot, zoneId, status });
   } catch (err) {
     console.error('[player/progress]', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ── POST /api/player/:slot/purchase ──────────────────────────────────────────
+// Body: { item: ballType, idempotencyKey: string }
+// Atomic: validate price server-side, deduct coins, add 1 ball to ledger. Idempotent.
+router.post('/:slot/purchase', (req, res) => {
+  const slot = parseSlot(req.params.slot);
+  if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
+
+  const { item, idempotencyKey } = req.body;
+  if (!BALL_TYPES.includes(item)) return res.status(400).json({ success: false, error: `item must be one of ${BALL_TYPES.join('|')}` });
+  if (!idempotencyKey || typeof idempotencyKey !== 'string') return res.status(400).json({ success: false, error: 'idempotencyKey required' });
+  const price = BALL_PRICE[item];
+
+  try {
+    const db = getDb();
+    db.prepare(
+      "CREATE TABLE IF NOT EXISTS purchase_log(idempotency_key TEXT PRIMARY KEY, slot INTEGER, item TEXT, coins_spent INTEGER, created_at TEXT DEFAULT (datetime('now')))"
+    ).run();
+
+    const player = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
+    if (!player) { db.close(); return res.status(404).json({ success: false, error: `No player at slot ${slot}` }); }
+
+    let p = {};
+    try { p = JSON.parse(player.profile_json); } catch { /* defaults */ }
+
+    // Idempotency: already processed → return current state, no double-charge.
+    const prior = db.prepare('SELECT 1 FROM purchase_log WHERE idempotency_key=?').get(idempotencyKey);
+    if (prior) {
+      const pokeballs = pokeballBalances(db, slot);
+      db.close();
+      return res.json({ success: true, idempotent: true, coinsNow: p.coins ?? 0, pokeballs });
+    }
+
+    if ((p.coins ?? 0) < price) {
+      const pokeballs = pokeballBalances(db, slot);
+      db.close();
+      return res.status(409).json({ success: false, error: 'Koin tidak cukup', coinsNow: p.coins ?? 0, pokeballs });
+    }
+
+    db.transaction(() => {
+      // PRIMARY KEY on idempotency_key makes a concurrent duplicate throw → rolls back (no double-charge).
+      db.prepare('INSERT INTO purchase_log(idempotency_key, slot, item, coins_spent) VALUES (?,?,?,?)').run(idempotencyKey, slot, item, price);
+      p.coins = (p.coins ?? 0) - price;
+      db.prepare("UPDATE players SET profile_json=?, updated_at=datetime('now') WHERE slot=?").run(JSON.stringify(p), slot);
+      db.prepare("INSERT INTO pokeball_ledger(slot, ball_type, delta, reason) VALUES (?,?,?,?)").run(slot, item, 1, 'purchase');
+    })();
+
+    const pokeballs = pokeballBalances(db, slot);
+    db.close();
+    res.json({ success: true, item, coinsNow: p.coins, pokeballs });
+  } catch (err) {
+    console.error('[player/purchase]', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });

@@ -65,31 +65,55 @@ function Collection({ caught, region, go }) {
   );
 }
 
-function Store({ coins, region, pokeballs }) {
+function Store({ coins, region, pokeballs, activeSlot, onPurchase }) {
+  const [buying, setBuying] = React.useState(null);
+  const [err, setErr] = React.useState(null);
+  const buy = async (b) => {
+    if (!activeSlot || buying) return;
+    setBuying(b.id);
+    setErr(null);
+    try {
+      const idem = 'purchase_' + activeSlot + '_' + b.id + '_' + Date.now();
+      const data = await apiPost('/api/player/' + activeSlot + '/purchase', { item: b.id, idempotencyKey: idem });
+      if (onPurchase) onPurchase(data);
+    } catch (e) {
+      setErr(e.message || 'Purchase failed');
+    } finally {
+      setBuying(null);
+    }
+  };
   return (
     <div className="body screen-anim" data-region={region}>
       <div className="pad">
         <div className="wallet">
           <Pokeball size={40} id="pokeball" top="#EE3D34" />
           <div style={{ flex: 1 }}><span>Your coins</span><b>{coins}</b></div>
-          <div className="pill"><Icon name="zap" size={13} /> Earn more</div>
+          <div className="pill" onClick={() => window.open('https://druygon.my.id', '_self')} style={{ cursor: 'pointer' }}>
+            <Icon name="zap" size={13} /> Earn more
+          </div>
         </div>
         <div className="sec-head"><h2>Poké Balls</h2></div>
         {(pokeballs || POKEBALLS).map((b) => {
           const afford = coins >= b.price;
+          const busy = buying === b.id;
           return (
-            <div key={b.id} className="store-row" style={{ borderLeft: `4px solid ${b.top}` }}>
+            <div key={b.id} className="store-row" style={{ borderLeft: '4px solid ' + b.top, opacity: busy ? 0.6 : 1 }}>
               <Pokeball size={46} id={b.id} top={b.top} />
               <div className="info"><b>{b.name}</b><span>Catch rate {Math.round(b.rate * 100)}% · you own {b.own}</span></div>
-              <div className={'buy' + (afford ? '' : ' disabled')}><Icon name="coin" size={13} color={afford ? '#0b0a16' : 'var(--text-tertiary)'} /> {b.price}</div>
+              <div className={'buy' + (afford && !busy ? '' : ' disabled')} onClick={() => afford && !busy && buy(b)} style={{ cursor: afford && !busy ? 'pointer' : 'not-allowed' }}>
+                <Icon name="coin" size={13} color={afford && !busy ? '#0b0a16' : 'var(--text-tertiary)'} /> {busy ? '...' : b.price}
+              </div>
             </div>
           );
         })}
+        {err && <div style={{ color: 'var(--red)', fontSize: 12, textAlign: 'center', marginTop: 8 }}>{err}</div>}
         <div className="sec-head"><h2>Items</h2></div>
         <div className="store-row">
           <div className="mission-ico" style={{ width: 46, height: 46 }}><Icon name="hint" size={22} /></div>
           <div className="info"><b>Draco Hint ×3</b><span>Reveal a clue during any zone</span></div>
-          <div className="buy"><Icon name="coin" size={13} color="#0b0a16" /> 150</div>
+          <div className="buy disabled" style={{ cursor: 'not-allowed' }}>
+            <Icon name="coin" size={13} color="var(--text-tertiary)" /> 150 (soon)
+          </div>
         </div>
       </div>
     </div>
@@ -186,7 +210,7 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
               [1,2,3,4].map(n => (
                 <div key={n} className={'slot' + (n === activeSlot ? ' on' : '')}
                   style={{ opacity: 0.4, cursor: 'default' }}>
-                  <div style={{ width:40, height:40, borderRadius:'50%', background:'var(--surface-2)' }}/>
+                  <div style={{ width:40, height:40, borderRadius:'50%', background:'var(--surface-2)'}}/>
                   <b style={{ fontSize:13 }}>—</b>
                 </div>
               ))
