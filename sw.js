@@ -1,13 +1,18 @@
-// Druygon Service Worker v2.1 — redesign (replaces all old caches)
-const CACHE = 'druygon-v2';
+// Druygon Service Worker v3 — redesign (replaces all old caches)
+// BUMP the cache name on every deploy that changes cached assets.
+// Inline this value from build.sh or change manually.
+const CACHE = 'druygon-v3';
 const PRECACHE = [
   '/',
   '/redesign/app/design-system.css',
   '/redesign/app/app.css',
+  '/redesign/app/bundle.js',
   '/redesign/app/assets/js/react.production.min.js',
   '/redesign/app/assets/js/react-dom.production.min.js',
   '/redesign/app/assets/fonts/fonts.css',
   '/manifest.json',
+  '/assets/icons/app/icon-192.png',
+  '/assets/icons/app/icon-512.png',
 ];
 
 self.addEventListener('install', e => {

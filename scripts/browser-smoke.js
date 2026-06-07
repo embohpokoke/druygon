@@ -1,14 +1,20 @@
 const { chromium, webkit } = require('playwright');
 
 const baseUrl = process.env.DRUYGON_URL || 'https://druygon.my.id';
+const launchTimeout = parseInt(process.env.DRUYGON_SMOKE_TIMEOUT || '30000', 10);
 const browsers = { chromium, webkit };
-const requestedBrowsers = (process.env.DRUYGON_BROWSERS || 'chromium,webkit')
+const requestedBrowsers = (process.env.DRUYGON_SMOKE_BROWSER || process.env.DRUYGON_BROWSERS || 'chromium')
   .split(',')
   .map(name => name.trim())
   .filter(Boolean);
 
 async function inspect(browserName, browserType) {
-  const browser = await browserType.launch({ headless: true });
+  let browser;
+  try {
+    browser = await browserType.launch({ headless: true, timeout: launchTimeout });
+  } catch (launchErr) {
+    throw new Error(`${browserName}: launch failed — ${launchErr.message} (headless VPS may need GPU/Wayland; use Chromium or Mac Safari instead)`);
+  }
   const context = await browser.newContext();
   const page = await context.newPage();
   const errors = [];
