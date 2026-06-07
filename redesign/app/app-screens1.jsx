@@ -260,7 +260,7 @@ function RegionMap({ region, go, caught, profile, progress }) {
 }
 
 // ───────────────────────── CATCH / BATTLE (variant B) ─────────────────────────
-function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught }) {
+function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer }) {
   const { regions, questions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const r = regions[region];
@@ -292,7 +292,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught })
   // P1c — flee/skip: re-roll wild without spending a pokéball
   const rerollWild = () => {
     setWild(pickWild(wild ? wild.dex : null));
-    setHp(100); setQi(0); setPhase('quiz'); setFb(null); setBall(null);
+    setHp(100); setQi(0); setPhase('quiz'); setFb(null); setBall(null); setAnswerReward(false);
   };
 
   const [hp, setHp] = uS1(100);
@@ -301,13 +301,18 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught })
   const [fb, setFb] = uS1(null);
   const [hit, setHit] = uS1(false);
   const [ball, setBall] = uS1(null);
+  const [answerReward, setAnswerReward] = uS1(false);
   const q = bank[qi % bank.length];
 
   const answer = (i) => {
     if (phase !== 'quiz' || fb) return;
     const ok = i === q.a;
     setFb({ ok, pick: i });
-    if (ok) { setHit(true); setTimeout(() => setHit(false), 400); }
+    if (ok) {
+      setHit(true); setTimeout(() => setHit(false), 400);
+      if (onAnswer) onAnswer(true, z.id);
+      setAnswerReward(true); setTimeout(() => setAnswerReward(false), 1600);
+    }
     setTimeout(() => {
       setFb(null);
       if (ok) {
@@ -343,7 +348,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught })
         {phase === 'quiz' && (
           <React.Fragment>
             <div className="q-prompt">
-              <div className="eyebrow">Question {qi + 1} · {z.topic}</div>
+              <div className="eyebrow">Question {qi + 1} · {z.topic}{answerReward ? <span style={{ color: 'var(--yellow)', marginLeft: 8, fontWeight: 700, fontSize: 11 }}>+1 🪙 +5 XP</span> : null}</div>
               <h3>{q.q}</h3>
               <div className="expr">{q.expr}</div>
             </div>

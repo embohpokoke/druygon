@@ -37,6 +37,17 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
   return (
     <div className="body screen-anim">
       <div className="pad">
+        {caught.length === 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center' }}>
+            <img src="/assets/dru/dru-idle.png" alt="Dru" width={96} height={96}
+              style={{ objectFit: 'contain', marginBottom: 16 }} />
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 6px', color: 'var(--text-primary, #f0eeff)' }}>Belum ada Pokémon</h3>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary, #9aa0b5)', margin: 0, maxWidth: 280 }}>
+              Ayo tangkap! Kembali ke Peta dan jawab soal untuk bertemu Pokémon liar.
+            </p>
+          </div>
+        ) : (
+          <React.Fragment>
         <div className="col-stats">
           <div className="col-stat" style={{ '--accent': accent }}>
             <b style={{ color: 'var(--accent)' }}>{caught.length}</b><span>Caught</span>
@@ -55,7 +66,9 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
           const c = mons.filter((m) => has(m.dex)).length;
           return (
             <div key={id} data-region={id}>
-              <div className="sec-head">
+              <div className="sec-head" style={{ gap: 8 }}>
+                <img src={'/assets/regions/' + id + '-icon.png'} alt={r.name} width={22} height={22}
+                  style={{ objectFit: 'contain', flexShrink: 0 }} />
                 <h2 style={{ color: 'var(--accent)', fontSize: 15 }}>{r.name}</h2>
                 <a>{c}/{mons.length}</a>
               </div>
@@ -84,6 +97,8 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
             </div>
           );
         })}
+          </React.Fragment>
+        )}
       </div>
     </div>
   );
@@ -193,7 +208,8 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
 
         {/* ── Active player card ── */}
         <div className="prof-card">
-          <SlotAvatar name={playerName} size={56} active />
+          <img src="/assets/dru/dru-trainer.png" alt="Dru" width={56} height={56}
+            style={{ objectFit: 'contain', flexShrink: 0 }} />
           <div className="who">
             <b>{playerName}</b>
             <span>Level {profile.level} · {caught.length} caught · {profile.coins} koin</span>
@@ -246,7 +262,9 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
             <div className="sec-head"><h2>Progress per dunia</h2></div>
             {Object.entries(regions).map(([id, r]) => (
               <div key={id} className="prog-row" data-region={id}>
-                <b style={{ color:'var(--accent)', minWidth:110, fontSize:13 }}>{r.name}</b>
+                <img src={'/assets/regions/' + id + '-icon.png'} alt={r.name} width={24} height={24}
+                  style={{ objectFit: 'contain', flexShrink: 0 }} />
+                <b style={{ color:'var(--accent)', minWidth:90, fontSize:13 }}>{r.name}</b>
                 <div className="meter" style={{ flex:1 }}>
                   <i style={{ width: (clearedByRegion[id] ?? 0) + '%' }} />
                 </div>
@@ -291,6 +309,29 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
               {badges.map(b => (
                 <div key={b.id} className="ach"><div className="ach-ico"><Icon name={b.icon} size={16} /></div><div><b>{b.name}</b><span>{b.description}</span></div></div>
               ))}
+            </div>
+          </React.Fragment>
+        )}
+
+        {/* ── Region medals ── */}
+        {regions && (
+          <React.Fragment>
+            <div className="sec-head"><h2>Medali Region</h2></div>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
+              {Object.entries(regions).map(([id, r]) => {
+                const pct = clearedByRegion[id] ?? 0;
+                const earned = pct > 0;
+                return (
+                  <div key={id} title={r.name + (earned ? ' (' + pct + '% clear)' : ' — locked')}
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, opacity: earned ? 1 : 0.35 }}>
+                    <img src={'/assets/ui/medal-' + id + '.svg'} alt={r.name + ' medal'} width={56} height={62}
+                      style={{ objectFit: 'contain', filter: earned ? 'none' : 'grayscale(1)' }} />
+                    <span style={{ fontSize: 10, fontWeight: 700, color: earned ? 'var(--accent)' : 'var(--text-tertiary)' }}>
+                      {pct}%
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </React.Fragment>
         )}

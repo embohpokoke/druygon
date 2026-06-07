@@ -169,6 +169,20 @@ function App() {
     } catch (err) { console.error('[App] mission claim failed:', err.message); }
   };
 
+  // ── Answer reward — +1 coin +5 XP per correct answer (T12) ───────────
+  const onAnswer = async (correct, zoneId) => {
+    if (!correct) return;
+    try {
+      const data = await apiPost(`/api/player/${activeSlot}/answer`, { correct: true, zoneId });
+      setProfile(prev => ({
+        ...prev,
+        coins: data.coinsNow ?? prev.coins,
+        xp:    data.xpNow    ?? prev.xp,
+        level: data.levelNow ?? prev.level,
+      }));
+    } catch (err) { console.error('[App] answer reward failed:', err.message); }
+  };
+
   // Navigation helper
   const go = (toScreen, toRegion, toZone) => {
     const s = toScreen;
@@ -259,7 +273,7 @@ function App() {
   } else if (screen === 'catch') {
     const z = r && r.zones.find(x => x.zone === zone);
     header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} {...hProps} />;
-    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} />;
+    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} onAnswer={onAnswer} />;
     showNav = false;
   } else if (screen === 'collection') {
     header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} {...hProps} />;

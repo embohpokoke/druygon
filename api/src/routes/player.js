@@ -546,4 +546,58 @@ router.post('/:slot/mathblitz', (req, res) => {
   }
 });
 
+// ── POST /api/player/:slot/answer ───────────────────────────────────────
+// Body: { correct: boolean, zoneId?: string }
+// Awards +1 coin +5 XP per correct answer (server-authoritative).
+// Anti-farming: caps answer-reward coins at 100/day per slot.
+router.post('/:slot/answer', (req, res) => {
+  const slot = parseSlot(req.params.slot);
+  if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
+
+  const { correct, zoneId } = req.body;
+  if (typeof correct !== 'boolean') return res.status(400).json({ success: false, error: 'correct (boolean) required' });
+
+  const today = new Date().toISOString().slice(0, 10);
+  const DAILY_COIN_CAP = 100;
+
+  try {
+    const db = getDb();
+    const player = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
+    if (!player) { db.close(); return res.status(404).json({ success: false, error: `No player at slot ${slot}` }); }
+
+    let p = {};
+    try { p = JSON.parse(player.profile_json); } catch {}
+
+    if (!correct) {
+      db.close();
+      return res.json({ success: true, coinsNow: p.coins ?? 0, xpNow: p.xp ?? 0, levelNow: p.level ?? 1, capped: false });
+    }
+
+    // Daily cap check — reset counter when date rolls over
+    const rewardDate = p.answerRewardDate;
+    let coinsToday = (rewardDate === today) ? (p.answerCoinsToday ?? 0) : 0;
+    const capped = coinsToday >= DAILY_COIN_CAP;
+
+    if (!capped) {
+      const coinsToAdd = Math.min(1, DAILY_COIN_CAP - coinsToday);
+      db.transaction(() => {
+        p.coins  = (p.coins  ?? 0) + coinsToAdd;
+        p.xp     = (p.xp     ?? 0) + 5;
+        p.answerRewardDate  = today;
+        p.answerCoinsToday  = coinsToday + coinsToAdd;
+        while (p.xp >= xpFor(p.level ?? 1)) { p.level = (p.level ?? 1) + 1; }
+        p.xpToNext = xpFor(p.level ?? 1);
+        db.prepare("UPDATE players SET profile_json=?, updated_at=datetime('now') WHERE slot=?").run(JSON.stringify(p), slot);
+        db.prepare("INSERT INTO profile_history(slot, event, profile_json) VALUES (?,?,?)").run(slot, `answer-correct-zone${zoneId||''}`, JSON.stringify(p));
+      })();
+    }
+
+    db.close();
+    res.json({ success: true, coinsNow: p.coins, xpNow: p.xp, levelNow: p.level, capped, coinsAwarded: capped ? 0 : 1, xpAwarded: capped ? 0 : 5 });
+  } catch (err) {
+    console.error('[player/answer]', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router;

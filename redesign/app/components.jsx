@@ -39,17 +39,17 @@ function Icon({ name, size = 22, color = 'currentColor', sw = 1.7, style }) {
   );
 }
 
-const POKEBALL_SVG = {
-  pokeball:   '/images/pokeballs/pokeball.svg',
-  greatball:  '/images/pokeballs/greatball.svg',
-  ultraball:  '/images/pokeballs/ultraball.svg',
-  masterball: '/images/pokeballs/masterball.svg',
+const POKEBALL_IMG = {
+  pokeball:   '/images/pokeballs/pokeball.png',
+  greatball:  '/images/pokeballs/greatball.png',
+  ultraball:  '/images/pokeballs/ultraball.png',
+  masterball: '/images/pokeballs/masterball.png',
 };
-function getPokeballImg(ballId) { return POKEBALL_SVG[ballId] || POKEBALL_SVG.pokeball; }
+function getPokeballImg(ballId) { return POKEBALL_IMG[ballId] || POKEBALL_IMG.pokeball; }
 
 function Pokeball({ size = 30, top = '#EE3D34', id, style }) {
-  if (id && POKEBALL_SVG[id]) {
-    return <img src={POKEBALL_SVG[id]} width={size} height={size} alt={id}
+  if (id && POKEBALL_IMG[id]) {
+    return <img src={POKEBALL_IMG[id]} width={size} height={size} alt={id}
       style={{ objectFit: 'contain', flexShrink: 0, ...style }} />;
   }
   return <div className="pokeball" style={{ width: size, height: size, '--ball-top': top, ...style }} />;
@@ -205,10 +205,11 @@ function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap }) 
       {/* Avatar button — tap to open player picker */}
       <button aria-label={'Ganti pemain. Pemain aktif: ' + (playerName || 'belum dipilih')}
         onClick={onAvatarTap} style={{
-        background: 'none', border: 'none', padding: 2, cursor: 'pointer',
-        borderRadius: '50%', lineHeight: 0,
+        background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+        borderRadius: '50%', lineHeight: 0, overflow: 'hidden',
       }} title={'Pemain: ' + (playerName || 'Pilih karakter')}>
-        <SlotAvatar name={playerName} size={32} active />
+        <img src="/assets/dru/dru-idle.png" width={32} height={32}
+          alt={playerName || 'Dru'} style={{ objectFit: 'cover', display: 'block' }} />
       </button>
     </div>
   );

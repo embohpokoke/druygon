@@ -230,18 +230,18 @@
       /* @__PURE__ */ React.createElement("path", { d: ICONS[name] || ICONS.target })
     );
   }
-  const POKEBALL_SVG = {
-    pokeball: "/images/pokeballs/pokeball.svg",
-    greatball: "/images/pokeballs/greatball.svg",
-    ultraball: "/images/pokeballs/ultraball.svg",
-    masterball: "/images/pokeballs/masterball.svg"
+  const POKEBALL_IMG = {
+    pokeball: "/images/pokeballs/pokeball.png",
+    greatball: "/images/pokeballs/greatball.png",
+    ultraball: "/images/pokeballs/ultraball.png",
+    masterball: "/images/pokeballs/masterball.png"
   };
   function Pokeball({ size = 30, top = "#EE3D34", id, style }) {
-    if (id && POKEBALL_SVG[id]) {
+    if (id && POKEBALL_IMG[id]) {
       return /* @__PURE__ */ React.createElement(
         "img",
         {
-          src: POKEBALL_SVG[id],
+          src: POKEBALL_IMG[id],
           width: size,
           height: size,
           alt: id,
@@ -394,14 +394,24 @@
         style: {
           background: "none",
           border: "none",
-          padding: 2,
+          padding: 0,
           cursor: "pointer",
           borderRadius: "50%",
-          lineHeight: 0
+          lineHeight: 0,
+          overflow: "hidden"
         },
         title: "Pemain: " + (playerName || "Pilih karakter")
       },
-      /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 32, active: true })
+      /* @__PURE__ */ React.createElement(
+        "img",
+        {
+          src: "/assets/dru/dru-idle.png",
+          width: 32,
+          height: 32,
+          alt: playerName || "Dru",
+          style: { objectFit: "cover", display: "block" }
+        }
+      )
     ));
   }
   function BottomNav({ active, go }) {
@@ -519,7 +529,7 @@
       return /* @__PURE__ */ React.createElement("div", { key: z.zone, className: "zone " + st, onClick: () => !locked && go("catch", region, z.zone) }, /* @__PURE__ */ React.createElement("div", { className: "zone-no" }, cleared ? /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 }) : locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 15 }) : z.zone), /* @__PURE__ */ React.createElement("div", { className: "zone-main" }, /* @__PURE__ */ React.createElement("b", null, z.name), /* @__PURE__ */ React.createElement("code", null, z.topic, locked ? ` \xB7 unlocks LVL ${z.minLevel}` : "")), /* @__PURE__ */ React.createElement("div", { className: "zone-mons" }, z.mons.slice(0, 3).map((m, i) => locked || !cleared && i > 0 ? /* @__PURE__ */ React.createElement("div", { key: i, className: "silh" }, "?") : /* @__PURE__ */ React.createElement("img", { key: i, src: m.sprite, alt: "", crossOrigin: "anonymous" }))), locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 16, color: "var(--text-tertiary)" }) : /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: r.accent }));
     }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 6 } }, "Tap an open zone to enter the catch loop.")));
   }
-  function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught }) {
+  function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer }) {
     const { regions, questions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
     const r = regions[region];
@@ -552,6 +562,7 @@
       setPhase("quiz");
       setFb(null);
       setBall(null);
+      setAnswerReward(false);
     };
     const [hp, setHp] = uS1(100);
     const [qi, setQi] = uS1(0);
@@ -559,6 +570,7 @@
     const [fb, setFb] = uS1(null);
     const [hit, setHit] = uS1(false);
     const [ball, setBall] = uS1(null);
+    const [answerReward, setAnswerReward] = uS1(false);
     const q = bank[qi % bank.length];
     const answer = (i) => {
       if (phase !== "quiz" || fb) return;
@@ -567,6 +579,9 @@
       if (ok) {
         setHit(true);
         setTimeout(() => setHit(false), 400);
+        if (onAnswer) onAnswer(true, z.id);
+        setAnswerReward(true);
+        setTimeout(() => setAnswerReward(false), 1600);
       }
       setTimeout(() => {
         setFb(null);
@@ -583,7 +598,7 @@
       setPhase("wobble");
       onCaught(wild, b);
     };
-    return /* @__PURE__ */ React.createElement("div", { className: "catch screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "stage" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(120% 90% at 50% 0%, ${r.accent}3a, transparent 55%), linear-gradient(180deg, #15122b, #0a0818)` } }), /* @__PURE__ */ React.createElement("div", { className: "stage-field" }), /* @__PURE__ */ React.createElement("div", { className: "wild-card" }, /* @__PURE__ */ React.createElement("div", { className: "nm" }, /* @__PURE__ */ React.createElement("b", null, wild.name), /* @__PURE__ */ React.createElement("span", null, "Lv ", 3 + zone * 2)), /* @__PURE__ */ React.createElement("div", { className: "hp" }, /* @__PURE__ */ React.createElement("small", null, "HP"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: hp + "%", background: hp <= 8 ? "var(--red)" : hp < 40 ? "linear-gradient(90deg,#FF6B2B,#FFCB05)" : "linear-gradient(90deg,#4ADE80,#00D9B8)" } }))), /* @__PURE__ */ React.createElement("div", { className: "type-chip", style: { marginTop: 7, background: TYPE_COLOR[wild.type] } }, wild.type)), /* @__PURE__ */ React.createElement("img", { className: "wild-sprite" + (hit ? " hit" : "") + (phase === "wobble" ? " wobble" : ""), src: wild.sprite, alt: wild.name, crossOrigin: "anonymous" }), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { className: "thrown" }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, top: ball == null ? void 0 : ball.top }))), /* @__PURE__ */ React.createElement("div", { className: "cmd" }, phase === "quiz" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "q-prompt" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Question ", qi + 1, " \xB7 ", z.topic), /* @__PURE__ */ React.createElement("h3", null, q.q), /* @__PURE__ */ React.createElement("div", { className: "expr" }, q.expr)), /* @__PURE__ */ React.createElement("div", { className: "answers" + (q.opts.length > 2 ? " two" : "") }, q.opts.map((o, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "ans" + (fb ? i === q.a ? " ok" : i === fb.pick ? " no" : "" : ""), onClick: () => answer(i) }, q.opts.length <= 2 && /* @__PURE__ */ React.createElement("kbd", null, i + 1), /* @__PURE__ */ React.createElement("span", { className: "grow" }, o), fb && i === q.a && /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 })))), /* @__PURE__ */ React.createElement("div", { className: "cmd-foot" }, /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-think.png", alt: "Ask Draco", style: { width: 36, height: 36, objectFit: "contain", marginRight: 4, flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { className: "draco wf-tap", onClick: () => openTutor(z.topic) }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Ask Draco"), /* @__PURE__ */ React.createElement("span", { className: "cmd-hint" }, "Correct answer \u2192 attack \u2193 HP")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "ready" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ball-prompt" }, "It's weak \u2014 choose a Pok\xE9 Ball!"), /* @__PURE__ */ React.createElement("div", { className: "balls" }, (pokeballsProp || POKEBALLS).map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ball-opt" + (b.own === 0 ? " dim" : ""), onClick: () => b.own > 0 && throwBall(b) }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "\xD7", b.own, " \xB7 ", Math.round(b.rate * 100), "%"))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 14 } }, "Higher tiers catch better but are scarcer."), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { style: { margin: "auto", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-display)", fontWeight: 700 } }, "\u2026wobble\u2026 wobble\u2026")));
+    return /* @__PURE__ */ React.createElement("div", { className: "catch screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "stage" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(120% 90% at 50% 0%, ${r.accent}3a, transparent 55%), linear-gradient(180deg, #15122b, #0a0818)` } }), /* @__PURE__ */ React.createElement("div", { className: "stage-field" }), /* @__PURE__ */ React.createElement("div", { className: "wild-card" }, /* @__PURE__ */ React.createElement("div", { className: "nm" }, /* @__PURE__ */ React.createElement("b", null, wild.name), /* @__PURE__ */ React.createElement("span", null, "Lv ", 3 + zone * 2)), /* @__PURE__ */ React.createElement("div", { className: "hp" }, /* @__PURE__ */ React.createElement("small", null, "HP"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: hp + "%", background: hp <= 8 ? "var(--red)" : hp < 40 ? "linear-gradient(90deg,#FF6B2B,#FFCB05)" : "linear-gradient(90deg,#4ADE80,#00D9B8)" } }))), /* @__PURE__ */ React.createElement("div", { className: "type-chip", style: { marginTop: 7, background: TYPE_COLOR[wild.type] } }, wild.type)), /* @__PURE__ */ React.createElement("img", { className: "wild-sprite" + (hit ? " hit" : "") + (phase === "wobble" ? " wobble" : ""), src: wild.sprite, alt: wild.name, crossOrigin: "anonymous" }), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { className: "thrown" }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, top: ball == null ? void 0 : ball.top }))), /* @__PURE__ */ React.createElement("div", { className: "cmd" }, phase === "quiz" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "q-prompt" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Question ", qi + 1, " \xB7 ", z.topic, answerReward ? /* @__PURE__ */ React.createElement("span", { style: { color: "var(--yellow)", marginLeft: 8, fontWeight: 700, fontSize: 11 } }, "+1 \u{1FA99} +5 XP") : null), /* @__PURE__ */ React.createElement("h3", null, q.q), /* @__PURE__ */ React.createElement("div", { className: "expr" }, q.expr)), /* @__PURE__ */ React.createElement("div", { className: "answers" + (q.opts.length > 2 ? " two" : "") }, q.opts.map((o, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "ans" + (fb ? i === q.a ? " ok" : i === fb.pick ? " no" : "" : ""), onClick: () => answer(i) }, q.opts.length <= 2 && /* @__PURE__ */ React.createElement("kbd", null, i + 1), /* @__PURE__ */ React.createElement("span", { className: "grow" }, o), fb && i === q.a && /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 })))), /* @__PURE__ */ React.createElement("div", { className: "cmd-foot" }, /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-think.png", alt: "Ask Draco", style: { width: 36, height: 36, objectFit: "contain", marginRight: 4, flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { className: "draco wf-tap", onClick: () => openTutor(z.topic) }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Ask Draco"), /* @__PURE__ */ React.createElement("span", { className: "cmd-hint" }, "Correct answer \u2192 attack \u2193 HP")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "ready" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ball-prompt" }, "It's weak \u2014 choose a Pok\xE9 Ball!"), /* @__PURE__ */ React.createElement("div", { className: "balls" }, (pokeballsProp || POKEBALLS).map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ball-opt" + (b.own === 0 ? " dim" : ""), onClick: () => b.own > 0 && throwBall(b) }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "\xD7", b.own, " \xB7 ", Math.round(b.rate * 100), "%"))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 14 } }, "Higher tiers catch better but are scarcer."), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { style: { margin: "auto", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-display)", fontWeight: 700 } }, "\u2026wobble\u2026 wobble\u2026")));
   }
   function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd }) {
     const { regions } = useContent();
@@ -746,11 +761,29 @@
     const total = all.length;
     const legend = all.filter((m) => has(m.dex) && m.rarity === "legendary").length;
     const accent = (regions[region] || regions[order[0]] || {}).accent || "var(--accent)";
-    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "col-stats" }, /* @__PURE__ */ React.createElement("div", { className: "col-stat", style: { "--accent": accent } }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)" } }, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")), /* @__PURE__ */ React.createElement("div", { className: "col-stat" }, /* @__PURE__ */ React.createElement("b", null, total), /* @__PURE__ */ React.createElement("span", null, "Pok\xE9dex")), /* @__PURE__ */ React.createElement("div", { className: "col-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--yellow)" } }, legend), /* @__PURE__ */ React.createElement("span", null, "Legendary"))), /* @__PURE__ */ React.createElement("div", { className: "col-filters", "data-region": region }, [["all", "All"], ...order.map((id) => [id, regions[id].tag || id])].map(([id, label]) => /* @__PURE__ */ React.createElement("div", { key: id, className: "filter" + (filter === id ? " on" : ""), onClick: () => setFilter(id) }, label))), order.filter((id) => filter === "all" || filter === id).map((id) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, caught.length === 0 ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 20px", textAlign: "center" } }, /* @__PURE__ */ React.createElement(
+      "img",
+      {
+        src: "/assets/dru/dru-idle.png",
+        alt: "Dru",
+        width: 96,
+        height: 96,
+        style: { objectFit: "contain", marginBottom: 16 }
+      }
+    ), /* @__PURE__ */ React.createElement("h3", { style: { fontSize: 16, fontWeight: 700, margin: "0 0 6px", color: "var(--text-primary, #f0eeff)" } }, "Belum ada Pok\xE9mon"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: "var(--text-secondary, #9aa0b5)", margin: 0, maxWidth: 280 } }, "Ayo tangkap! Kembali ke Peta dan jawab soal untuk bertemu Pok\xE9mon liar.")) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "col-stats" }, /* @__PURE__ */ React.createElement("div", { className: "col-stat", style: { "--accent": accent } }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)" } }, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")), /* @__PURE__ */ React.createElement("div", { className: "col-stat" }, /* @__PURE__ */ React.createElement("b", null, total), /* @__PURE__ */ React.createElement("span", null, "Pok\xE9dex")), /* @__PURE__ */ React.createElement("div", { className: "col-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--yellow)" } }, legend), /* @__PURE__ */ React.createElement("span", null, "Legendary"))), /* @__PURE__ */ React.createElement("div", { className: "col-filters", "data-region": region }, [["all", "All"], ...order.map((id) => [id, regions[id].tag || id])].map(([id, label]) => /* @__PURE__ */ React.createElement("div", { key: id, className: "filter" + (filter === id ? " on" : ""), onClick: () => setFilter(id) }, label))), order.filter((id) => filter === "all" || filter === id).map((id) => {
       const r = regions[id];
       const mons = regionMons(regions, id);
       const c = mons.filter((m) => has(m.dex)).length;
-      return /* @__PURE__ */ React.createElement("div", { key: id, "data-region": id }, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", { style: { color: "var(--accent)", fontSize: 15 } }, r.name), /* @__PURE__ */ React.createElement("a", null, c, "/", mons.length)), /* @__PURE__ */ React.createElement("div", { className: "col-grid" }, mons.map((m) => {
+      return /* @__PURE__ */ React.createElement("div", { key: id, "data-region": id }, /* @__PURE__ */ React.createElement("div", { className: "sec-head", style: { gap: 8 } }, /* @__PURE__ */ React.createElement(
+        "img",
+        {
+          src: "/assets/regions/" + id + "-icon.png",
+          alt: r.name,
+          width: 22,
+          height: 22,
+          style: { objectFit: "contain", flexShrink: 0 }
+        }
+      ), /* @__PURE__ */ React.createElement("h2", { style: { color: "var(--accent)", fontSize: 15 } }, r.name), /* @__PURE__ */ React.createElement("a", null, c, "/", mons.length)), /* @__PURE__ */ React.createElement("div", { className: "col-grid" }, mons.map((m) => {
         const inTeam = (team || []).includes(m.dex);
         const caught2 = has(m.dex);
         return /* @__PURE__ */ React.createElement(
@@ -773,7 +806,7 @@
           }, style: { position: "absolute", bottom: 2, right: 2, width: 20, height: 20, borderRadius: "50%", background: "rgba(139,92,246,.8)", color: "#fff", fontSize: 14, lineHeight: "18px", textAlign: "center", cursor: "pointer" }, title: "Add to team" }, "+") : null)
         );
       })));
-    })));
+    }))));
   }
   function Store({ coins, region, pokeballs, activeSlot, onPurchase }) {
     const [buying, setBuying] = React.useState(null);
@@ -835,7 +868,16 @@
       }
       return out;
     }, [regions, progress]);
-    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "prof-card" }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 56, active: true }), /* @__PURE__ */ React.createElement("div", { className: "who" }, /* @__PURE__ */ React.createElement("b", null, playerName), /* @__PURE__ */ React.createElement("span", null, "Level ", profile.level, " \xB7 ", caught.length, " caught \xB7 ", profile.coins, " koin"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } })), /* @__PURE__ */ React.createElement("small", { style: { color: "var(--text-tertiary)", fontSize: 10 } }, profile.xp, " / ", profile.xpToNext, " XP"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Ganti pemain")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, allSlots.length > 0 ? allSlots.map((s) => /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "prof-card" }, /* @__PURE__ */ React.createElement(
+      "img",
+      {
+        src: "/assets/dru/dru-trainer.png",
+        alt: "Dru",
+        width: 56,
+        height: 56,
+        style: { objectFit: "contain", flexShrink: 0 }
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "who" }, /* @__PURE__ */ React.createElement("b", null, playerName), /* @__PURE__ */ React.createElement("span", null, "Level ", profile.level, " \xB7 ", caught.length, " caught \xB7 ", profile.coins, " koin"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } })), /* @__PURE__ */ React.createElement("small", { style: { color: "var(--text-tertiary)", fontSize: 10 } }, profile.xp, " / ", profile.xpToNext, " XP"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Ganti pemain")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, allSlots.length > 0 ? allSlots.map((s) => /* @__PURE__ */ React.createElement(
       "div",
       {
         key: s.slot,
@@ -860,7 +902,16 @@
       ))
     )), regions && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Progress per dunia")), Object.entries(regions).map(([id, r]) => {
       var _a, _b;
-      return /* @__PURE__ */ React.createElement("div", { key: id, className: "prog-row", "data-region": id }, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)", minWidth: 110, fontSize: 13 } }, r.name), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: ((_a = clearedByRegion[id]) != null ? _a : 0) + "%" } })), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, minWidth: 32, textAlign: "right" } }, (_b = clearedByRegion[id]) != null ? _b : 0, "%"));
+      return /* @__PURE__ */ React.createElement("div", { key: id, className: "prog-row", "data-region": id }, /* @__PURE__ */ React.createElement(
+        "img",
+        {
+          src: "/assets/regions/" + id + "-icon.png",
+          alt: r.name,
+          width: 24,
+          height: 24,
+          style: { objectFit: "contain", flexShrink: 0 }
+        }
+      ), /* @__PURE__ */ React.createElement("b", { style: { color: "var(--accent)", minWidth: 90, fontSize: 13 } }, r.name), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: ((_a = clearedByRegion[id]) != null ? _a : 0) + "%" } })), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, minWidth: 32, textAlign: "right" } }, (_b = clearedByRegion[id]) != null ? _b : 0, "%"));
     })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Team (", team ? team.length : 0, "/3)")), team && team.length > 0 ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 } }, team.map((dex) => {
       const mon = findMonByDex(regions, dex);
       return /* @__PURE__ */ React.createElement("div", { key: dex, style: {
@@ -873,7 +924,30 @@
         fontSize: 13,
         position: "relative"
       } }, mon && /* @__PURE__ */ React.createElement("img", { src: mon.sprite, alt: mon.name, width: 32, height: 32, style: { objectFit: "contain" }, crossOrigin: "anonymous" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 13, lineHeight: 1.3 } }, mon ? mon.name : "#" + String(dex).padStart(3, "0")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: "var(--text-tertiary)" } }, "#", String(dex).padStart(3, "0"), " \xB7 ", mon ? mon.type : "???")), onTeamRemove && /* @__PURE__ */ React.createElement("span", { onClick: () => onTeamRemove(dex), style: { cursor: "pointer", color: "var(--red)", fontSize: 18, lineHeight: 1, marginLeft: "auto" }, title: "Remove from team" }, "\xD7"));
-    })) : /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "var(--text-tertiary)", marginBottom: 12 } }, "No team yet \u2014 catch Pok\xE9mon and add them from the celebration screen!"), badges && badges.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements (", badges.length, ")")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": region, style: { marginBottom: 12 } }, badges.map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: b.icon, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, b.description)))))), dailyMission && dailyMission.streak > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", marginBottom: 12, fontSize: 13 } }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 20, color: "var(--yellow)" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--yellow)" } }, dailyMission.streak, "-day streak"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", margin: "2px 0 0" } }, "Keep catching every day to grow it!"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Pok\xE9ball")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 } }, POKEBALLS.map((b) => {
+    })) : /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "var(--text-tertiary)", marginBottom: 12 } }, "No team yet \u2014 catch Pok\xE9mon and add them from the celebration screen!"), badges && badges.length > 0 && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Achievements (", badges.length, ")")), /* @__PURE__ */ React.createElement("div", { className: "chips-row", "data-region": region, style: { marginBottom: 12 } }, badges.map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ach" }, /* @__PURE__ */ React.createElement("div", { className: "ach-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: b.icon, size: 16 })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, b.description)))))), regions && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Medali Region")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, justifyContent: "center", marginBottom: 16, flexWrap: "wrap" } }, Object.entries(regions).map(([id, r]) => {
+      var _a;
+      const pct = (_a = clearedByRegion[id]) != null ? _a : 0;
+      const earned = pct > 0;
+      return /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          key: id,
+          title: r.name + (earned ? " (" + pct + "% clear)" : " \u2014 locked"),
+          style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, opacity: earned ? 1 : 0.35 }
+        },
+        /* @__PURE__ */ React.createElement(
+          "img",
+          {
+            src: "/assets/ui/medal-" + id + ".svg",
+            alt: r.name + " medal",
+            width: 56,
+            height: 62,
+            style: { objectFit: "contain", filter: earned ? "none" : "grayscale(1)" }
+          }
+        ),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, fontWeight: 700, color: earned ? "var(--accent)" : "var(--text-tertiary)" } }, pct, "%")
+      );
+    }))), dailyMission && dailyMission.streak > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, background: "var(--surface-2)", borderRadius: 10, padding: "10px 14px", marginBottom: 12, fontSize: 13 } }, /* @__PURE__ */ React.createElement(Icon, { name: "flame", size: 20, color: "var(--yellow)" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", { style: { color: "var(--yellow)" } }, dailyMission.streak, "-day streak"), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", margin: "2px 0 0" } }, "Keep catching every day to grow it!"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Pok\xE9ball")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 } }, POKEBALLS.map((b) => {
       var _a, _b;
       return /* @__PURE__ */ React.createElement("div", { key: b.id, style: {
         display: "flex",
@@ -1040,6 +1114,23 @@
         console.error("[App] mission claim failed:", err.message);
       }
     };
+    const onAnswer = async (correct, zoneId) => {
+      if (!correct) return;
+      try {
+        const data = await apiPost(`/api/player/${activeSlot}/answer`, { correct: true, zoneId });
+        setProfile((prev) => {
+          var _a, _b, _c;
+          return {
+            ...prev,
+            coins: (_a = data.coinsNow) != null ? _a : prev.coins,
+            xp: (_b = data.xpNow) != null ? _b : prev.xp,
+            level: (_c = data.levelNow) != null ? _c : prev.level
+          };
+        });
+      } catch (err) {
+        console.error("[App] answer reward failed:", err.message);
+      }
+    };
     const go = (toScreen, toRegion, toZone) => {
       const s = toScreen;
       const r2 = toRegion || region;
@@ -1130,7 +1221,7 @@
     } else if (screen === "catch") {
       const z = r && r.zones.find((x) => x.zone === zone);
       header = /* @__PURE__ */ React.createElement(Header, { region, title: z ? z.name : "\u2026", sub: r ? r.name : "\u2026", coins: profile.coins, onBack: () => go("map", region), ...hProps });
-      content = /* @__PURE__ */ React.createElement(Catch, { region, zone, go, onCaught, pokeballs, caught });
+      content = /* @__PURE__ */ React.createElement(Catch, { region, zone, go, onCaught, pokeballs, caught, onAnswer });
       showNav = false;
     } else if (screen === "collection") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: "Koleksi", sub: "Your Pok\xE9dex", coins: profile.coins, ...hProps });
