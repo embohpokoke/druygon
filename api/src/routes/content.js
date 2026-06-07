@@ -50,7 +50,7 @@ router.get('/regions', (req, res) => {
         name:   p.name,
         type:   p.type,
         rarity: p.rarity,
-        sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.dex}.png`
+        sprite: `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${p.dex}.png`
       });
     }
 

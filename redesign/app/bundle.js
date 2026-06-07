@@ -1,5 +1,5 @@
 (() => {
-  const SPRITE = (dex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${dex}.png`;
+  const SPRITE = (dex) => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${dex}.png`;
   const TYPE_COLOR = {
     Normal: "#A8A878",
     Fire: "#F08030",

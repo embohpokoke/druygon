@@ -3,7 +3,7 @@
 // Static fallbacks are used until the first fetch resolves.
 
 const SPRITE = (dex) =>
-  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${dex}.png`;
+  `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/${dex}.png`;
 
 // type → accent color
 const TYPE_COLOR = {
