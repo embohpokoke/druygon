@@ -57,7 +57,7 @@ function Pokeball({ size = 30, top = '#EE3D34', id, style }) {
   return <div className="pokeball" style={{ width: size, height: size, '--ball-top': top, ...style }} />;
 }
 
-const AVATAR = '../assets/druygon-avatar.png';
+const AVATAR = '/assets/druygon-avatar.png';  // absolute — safe from any page URL
 const TUTOR_URL = '/tutor';   // the separate AI-tutor app; swap for the real path
 function openTutor(topic) { try { window.open(TUTOR_URL + (topic ? ('?topic=' + encodeURIComponent(topic)) : ''), '_blank'); } catch (e) {} }
 

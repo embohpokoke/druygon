@@ -270,8 +270,9 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
 
 // ───────────────────────── CELEBRATION (variant A) ─────────────────────────
 function Celebration({ mon, region, onDone, onTeam }) {
-  const r = REGIONS[region];
-  const rar = RARITY[mon.rarity];
+  const { regions } = useContent();
+  const r   = (regions && regions[region]) || { accent: '#8B5CF6' };
+  const rar = RARITY[mon.rarity] || RARITY.common;
   return (
     <div className="celeb" data-region={region}>
       <svg className="celeb-rays" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">

@@ -1,40 +1,56 @@
 // app-screens2.jsx — Collection, Store, Profile / Parent.
 
-const regionMons = (id) => {
+// regionMons: safe helper — requires regions object from useContent()
+const regionMons = (regions, id) => {
+  if (!regions || !regions[id]) return [];
   const seen = {}; const out = [];
-  REGIONS[id].zones.forEach((z) => z.mons.forEach((m) => { if (!seen[m.dex]) { seen[m.dex] = 1; out.push(m); } }));
+  regions[id].zones.forEach((z) => (z.mons || []).forEach((m) => {
+    if (!seen[m.dex]) { seen[m.dex] = 1; out.push(m); }
+  }));
   return out;
 };
 
 function Collection({ caught, region, go }) {
-  const order = ['curriculum', 'science', 'compsci'];
+  const { regions, ready } = useContent();
+  if (!ready || !regions) return <ContentLoading />;
+
+  const order = ['curriculum', 'science', 'compsci'].filter(id => regions[id]);
   const [filter, setFilter] = React.useState('all');
   const has = (dex) => caught.includes(dex);
-  const all = order.flatMap(regionMons);
+  const all = order.flatMap(id => regionMons(regions, id));
   const total = all.length;
   const legend = all.filter((m) => has(m.dex) && m.rarity === 'legendary').length;
+  const accent = (regions[region] || regions[order[0]] || {}).accent || 'var(--accent)';
+
   return (
     <div className="body screen-anim">
       <div className="pad">
         <div className="col-stats">
-          <div className="col-stat" style={{ '--accent': REGIONS[region].accent }}><b style={{ color: 'var(--accent)' }}>{caught.length}</b><span>Caught</span></div>
+          <div className="col-stat" style={{ '--accent': accent }}>
+            <b style={{ color: 'var(--accent)' }}>{caught.length}</b><span>Caught</span>
+          </div>
           <div className="col-stat"><b>{total}</b><span>Pokédex</span></div>
           <div className="col-stat"><b style={{ color: 'var(--yellow)' }}>{legend}</b><span>Legendary</span></div>
         </div>
         <div className="col-filters" data-region={region}>
-          {[['all', 'All'], ...order.map((id) => [id, REGIONS[id].tag])].map(([id, label]) => (
+          {[['all', 'All'], ...order.map((id) => [id, regions[id].tag || id])].map(([id, label]) => (
             <div key={id} className={'filter' + (filter === id ? ' on' : '')} onClick={() => setFilter(id)}>{label}</div>
           ))}
         </div>
         {order.filter((id) => filter === 'all' || filter === id).map((id) => {
-          const r = REGIONS[id]; const mons = regionMons(id);
+          const r = regions[id];
+          const mons = regionMons(regions, id);
           const c = mons.filter((m) => has(m.dex)).length;
           return (
             <div key={id} data-region={id}>
-              <div className="sec-head"><h2 style={{ color: 'var(--accent)', fontSize: 15 }}>{r.name}</h2><a>{c}/{mons.length}</a></div>
+              <div className="sec-head">
+                <h2 style={{ color: 'var(--accent)', fontSize: 15 }}>{r.name}</h2>
+                <a>{c}/{mons.length}</a>
+              </div>
               <div className="col-grid">
                 {mons.map((m) => (
-                  <div key={m.dex} className={'dex' + (has(m.dex) ? '' : ' un')} style={has(m.dex) ? { borderColor: 'var(--accent)', background: 'var(--accent-soft)' } : {}}>
+                  <div key={m.dex} className={'dex' + (has(m.dex) ? '' : ' un')}
+                    style={has(m.dex) ? { borderColor: 'var(--accent)', background: 'var(--accent-soft)' } : {}}>
                     <span className="rar" style={{ background: RARITY[m.rarity].c }} />
                     <img src={m.sprite} alt={has(m.dex) ? m.name : '???'} crossOrigin="anonymous" />
                     <span className="no">#{String(m.dex).padStart(3, '0')}</span>
