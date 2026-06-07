@@ -118,6 +118,53 @@
       font-size: 14px;
       font-weight: 800;
     }
+
+    /* Player data section */
+    .player-card {
+      background: var(--bg-card);
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      border: 2px solid transparent;
+    }
+    .player-card:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
+    .player-card.selected { border-color: var(--accent); }
+    .player-card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .player-card .name { font-weight: 900; font-size: 16px; }
+    .player-card .stats { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+    .player-detail .meta { font-size: 13px; color: var(--text-muted); margin: 4px 0; }
+    .player-detail .meta strong { color: var(--text); }
+    .player-detail .section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 16px 0 8px;
+      letter-spacing: 0.5px;
+    }
+    .player-detail .catch-row {
+      font-size: 13px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .player-detail .progress-pill {
+      display: inline-block;
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+      margin: 2px 4px 2px 0;
+    }
+    .progress-pill.open { background: rgba(255,255,255,0.07); color: var(--text-muted); }
+    .progress-pill.cleared { background: var(--accent); color: var(--bg-deep); }
+    .event-item { font-size: 12px; padding: 3px 0; color: var(--text-muted); }
+    .event-item .evt { font-weight: 700; color: var(--text); }
   </style>
 </head>
 <body>
@@ -149,21 +196,41 @@
 
     <button class="btn" id="save-btn" onclick="saveObjectives()">Simpan Perubahan ✨</button>
     <p id="status-msg" style="text-align: center; font-size: 13px; margin-top: 12px; display: none;"></p>
+
+    <!-- Redesign Player Data -->
+    <div id="players-section" style="margin-top: 24px;">
+      <h2 style="font-size: 18px; color: var(--accent); margin-bottom: 12px;">Pemain Redesign</h2>
+      <div id="players-list"></div>
+      <div id="player-detail" style="display:none;"></div>
+    </div>
   </div>
 
   <script>
     const LEARNER_ID = '00000000-0000-0000-0000-000000000001';
     let currentSubjects = [];
+    let playerList = [];
 
     function checkPin() {
-      if (document.getElementById('pin-input').value === 'dru2026') {
+      const pin = document.getElementById('pin-input').value;
+      if (pin === 'dru2026') {
         document.getElementById('pin-screen').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
+        authenticateParent(pin);
         loadData();
-      } else { 
-        alert('PIN Salah!'); 
+      } else {
+        alert('PIN Salah!');
         document.getElementById('pin-input').value = '';
       }
+    }
+
+    async function authenticateParent(pin) {
+      try {
+        await fetch('/api/parent/auth/pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin })
+        });
+      } catch (e) { /* non-fatal — player section may fail but curriculum still works */ }
     }
 
     document.getElementById('pin-input').addEventListener('keypress', function(e) {
@@ -181,6 +248,119 @@
       } catch (err) {
         alert('Gagal memuat data!');
       }
+      loadPlayers();
+    }
+
+    async function loadPlayers() {
+      try {
+        const res = await fetch('/api/parent/players');
+        const data = await res.json();
+        if (data.success && data.players) {
+          playerList = data.players;
+          renderPlayerList();
+        }
+      } catch (e) {
+        document.getElementById('players-list').innerHTML =
+          '<p style="opacity:0.5;font-size:13px;">Gagal memuat data pemain — coba refresh.</p>';
+      }
+    }
+
+    function renderPlayerList() {
+      const el = document.getElementById('players-list');
+      if (playerList.length === 0) {
+        el.innerHTML = '<p style="opacity:0.5;font-size:13px;">Belum ada pemain.</p>';
+        return;
+      }
+      el.innerHTML = playerList.map(p => {
+        const disabled = !p.name || p.name.trim() === '';
+        return '<div class="player-card" onclick="showPlayerDetail(' + p.slot + ')"' +
+          (disabled ? ' style="opacity:0.4;cursor:default"' : '') + '>' +
+          '<div class="row">' +
+            '<span class="name">' + (p.name || 'Slot ' + p.slot) + '</span>' +
+            '<span class="stats">Lv' + p.level + ' · ' + p.xp + 'XP · ' + p.coins + '🪙 · ' +
+              p.caught + '🦖 · ' + p.cleared + '✓</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    async function showPlayerDetail(slot) {
+      const player = playerList.find(p => p.slot === slot);
+      if (!player || !player.name || player.name.trim() === '') return;
+
+      // Highlight selected
+      document.querySelectorAll('.player-card').forEach((c, i) => {
+        c.classList.toggle('selected', i === slot - 1);
+      });
+
+      const detail = document.getElementById('player-detail');
+      detail.style.display = 'block';
+      detail.innerHTML = '<p style="opacity:0.7;font-size:13px;">Memuat...</p>';
+
+      try {
+        const res = await fetch('/api/parent/player/' + slot);
+        const d = await res.json();
+        if (!d.success) {
+          detail.innerHTML = '<p style="color:var(--danger);">Gagal: ' + (d.error || '') + '</p>';
+          return;
+        }
+
+        const p = d.profile;
+        const acc = p.stats.accuracy || 0;
+        const pokeballStr = Object.entries(p.pokeballs).map(([k, v]) => v + ' ' + k).join(' · ');
+
+        let catchHtml = '';
+        if (d.catchesByRegion && d.catchesByRegion.length > 0) {
+          catchHtml = '<div class="section-title">Tangkapan per Region</div>';
+          for (const region of d.catchesByRegion) {
+            for (const zone of region.zones) {
+              catchHtml += '<div class="catch-row">' +
+                '<strong>' + region.label + ' — ' + zone.zoneId + '</strong>: ' +
+                zone.count + ' pokemon (dex: ' + zone.pokemon.map(m => m.dex).join(', ') + ')' +
+              '</div>';
+            }
+          }
+        }
+
+        let progressHtml = '';
+        if (d.progress && d.progress.length > 0) {
+          progressHtml = '<div class="section-title">Progress Zone</div>';
+          progressHtml += d.progress.map(z =>
+            '<span class="progress-pill ' + z.status + '">' + z.zoneId + ': ' + z.status + '</span>'
+          ).join('');
+        }
+
+        let activityHtml = '';
+        if (d.recentActivity && d.recentActivity.length > 0) {
+          activityHtml = '<div class="section-title">Aktivitas Terakhir</div>';
+          activityHtml += d.recentActivity.slice(0, 8).map(a =>
+            '<div class="event-item"><span class="evt">' + a.event + '</span> — ' + a.at + '</div>'
+          ).join('');
+        }
+
+        detail.innerHTML =
+          '<div class="player-detail">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+              '<strong style="font-size:16px;">' + d.name + ' — Level ' + p.level + '</strong>' +
+              '<span style="font-size:11px;color:var(--text-muted);cursor:pointer;" onclick="closePlayerDetail()">✕ Tutup</span>' +
+            '</div>' +
+            '<div class="meta">XP: <strong>' + p.xp + ' / ' + p.xpToNext + '</strong></div>' +
+            '<div class="meta">Koin: <strong>' + p.coins + '🪙</strong></div>' +
+            '<div class="meta">Akurasi: <strong>' + acc + '%</strong> (' +
+              (p.stats.totalCorrect || 0) + ' benar, ' + (p.stats.totalWrong || 0) + ' salah)</div>' +
+            '<div class="meta">Pokeball: <strong>' + pokeballStr + '</strong></div>' +
+            catchHtml +
+            progressHtml +
+            activityHtml +
+          '</div>';
+      } catch (e) {
+        detail.innerHTML = '<p style="color:var(--danger);">Gagal memuat detail pemain.</p>';
+      }
+    }
+
+    function closePlayerDetail() {
+      document.getElementById('player-detail').style.display = 'none';
+      document.querySelectorAll('.player-card').forEach(c => c.classList.remove('selected'));
     }
 
     function renderSubjects() {
