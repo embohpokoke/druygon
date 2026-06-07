@@ -1,390 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#080714">
-  <title>Druygon — Pokemon Game Portal</title>
-  <link rel="stylesheet" href="css/design-system.css">
-  <link rel="icon" type="image/x-icon" href="assets/icons/app/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/app/icon-32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="assets/icons/app/icon-96.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/app/icon-180.png">
-  <link rel="manifest" href="manifest.json">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080714" />
+<meta name="description" content="Dru — Portal belajar dan gamifikasi untuk anak. Petualangan Pokémon: Science, Sirkuit Digital, dan Kurikulum." />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Druygon" />
+<title>Druygon — Dru Learning Portal</title>
+
+<!-- Icons & PWA -->
+<link rel="icon" type="image/x-icon" href="assets/icons/app/favicon.ico" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/app/icon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/app/icon-192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/app/icon-180.png" />
+<link rel="manifest" href="manifest.json" />
+
+<!-- App styles (shared with redesign) -->
+<link rel="stylesheet" href="redesign/app/design-system.css" />
+<link rel="stylesheet" href="redesign/app/app.css" />
+
+<!-- Service worker registration -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
 </head>
 <body>
+<div id="root"></div>
 
-  <!-- ════════════════════════════════════════
-       HEADER
-  ════════════════════════════════════════ -->
-  <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="header-logo">
-        <div class="header-logo-dot"></div>
-        DRUYGON
-      </a>
-      <div class="header-actions">
-        <a class="icon-btn" aria-label="Koleksi" href="collection/index.html">
-          <img src="assets/icons/trophy.svg" alt="">
-        </a>
-        <a class="avatar-btn" aria-label="Feedback" href="feedback/index.html" style="padding:0;overflow:hidden;">
-          <img src="assets/trainer-avatar.jpg" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">
-        </a>
-      </div>
-    </div>
-  </header>
+<!-- React 18 production (self-hosted) -->
+<script src="redesign/app/assets/js/react.production.min.js"></script>
+<script src="redesign/app/assets/js/react-dom.production.min.js"></script>
 
-  <!-- ════════════════════════════════════════
-       MAIN
-  ════════════════════════════════════════ -->
-  <main class="page">
-    <div class="container">
-
-      <!-- ── PLAYER HERO ────────────────── -->
-      <div class="player-hero anim-1">
-        <div class="player-hero-overlay"></div>
-
-        <div class="player-hero-top">
-          <div>
-            <div class="player-greeting">Halo, <span>Erik</span>! ⚡</div>
-            <div class="player-subtitle">Lanjut petualangan hari ini?</div>
-          </div>
-          <div class="player-level-badge">LVL 12</div>
-        </div>
-
-        <div class="player-xp-row">
-          <div class="player-xp-label">1,250 / 1,560 XP</div>
-          <div class="xp-bar-track">
-            <div class="xp-bar-fill" style="width: 80%;"></div>
-          </div>
-        </div>
-
-        <div class="player-stats-row">
-          <div class="player-stat">
-            <div class="player-stat-val">7🔥</div>
-            <div class="player-stat-label">Streak</div>
-          </div>
-          <div class="player-stat">
-            <div class="player-stat-val">128⭐</div>
-            <div class="player-stat-label">Stars</div>
-          </div>
-          <div class="player-stat">
-            <div class="player-stat-val">4🏆</div>
-            <div class="player-stat-label">Badges</div>
-          </div>
-          <div class="player-stat">
-            <div class="player-stat-val">#3</div>
-            <div class="player-stat-label">Rank</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── FEATURED GAME ──────────────── -->
-      <section class="anim-2">
-        <div class="section-head">
-          <h2 class="section-title">🎯 Featured</h2>
-          <a href="#portal-links" class="section-link">See all →</a>
-        </div>
-
-        <div class="game-card-featured mb-4">
-          <!-- Background image layer — trainer hero -->
-          <div class="card-bg" style="background-image: url(assets/heroes/math-arena-ai.jpg);"></div>
-          <!-- Gradient overlay -->
-          <div class="card-overlay"></div>
-          <!-- Content -->
-          <div class="card-body">
-            <div class="card-top">
-              <span class="featured-badge">⚡ POPULAR</span>
-              <!-- Druygon mascot — bottom right corner, floating -->
-              <div class="card-sprite" style="position:absolute;right:12px;bottom:60px;animation:float 3s ease-in-out infinite;z-index:3;">
-                <img src="assets/sprites/pikachu.png" alt="Pikachu"
-                     style="width:90px;height:90px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.7));">
-              </div>
-            </div>
-            <div class="card-bottom">
-              <span class="card-type-badge type-electric">⚡ Electric</span>
-              <div class="card-title">Math Arena</div>
-              <div class="card-subtitle">Lawan Pokemon dengan matematika kilat!</div>
-              <div class="card-meta-row">
-                <div class="meta-chip">
-                  <img src="assets/icons/clock.svg" alt="">
-                  10 min
-                </div>
-                <div class="meta-chip">
-                  <img src="assets/icons/users.svg" alt="">
-                  1.2k players
-                </div>
-                <div class="meta-chip">
-                  <img src="assets/icons/star.svg" alt="">
-                  +50 XP
-                </div>
-              </div>
-              <a href="math/" class="card-cta">
-                ▶ Play Now
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── MORE GAMES ─────────────────── -->
-      <section class="anim-3">
-        <div class="section-head">
-          <h2 class="section-title">🎮 All Games</h2>
-        </div>
-
-        <div class="cards-stack">
-
-          <!-- Word Search -->
-          <a href="wordsearch/" class="game-card-compact" style="display: flex; text-decoration: none; color: inherit;">
-            <div class="compact-thumb">
-              <div class="card-bg" style="background-image: url(assets/heroes/word-search-ai.jpg);"></div>
-              <div class="card-overlay"></div>
-              <div class="card-sprite">
-                <img src="assets/sprites/alakazam.png" alt="Alakazam">
-              </div>
-            </div>
-            <div class="compact-body">
-              <div>
-                <div class="compact-title">💡 Word Search</div>
-                <div class="compact-desc">Temukan kata tersembunyi di dunia Pokemon</div>
-              </div>
-              <div class="compact-footer">
-                <div class="compact-meta">
-                  <div class="meta-chip">
-                    <img src="assets/icons/clock.svg" alt="">
-                    5 min
-                  </div>
-                  <div class="meta-chip">⭐ +30 XP</div>
-                </div>
-                <div class="compact-play-btn">▶</div>
-              </div>
-            </div>
-          </a>
-
-          <!-- 5 Menit Matematika -->
-          <a href="fiveminutes/" class="game-card-compact" style="display: flex; text-decoration: none; color: inherit;">
-            <div class="compact-thumb">
-              <div class="card-bg" style="background-image: url(assets/heroes/speed-math-ai.jpg);"></div>
-              <div class="card-overlay"></div>
-              <div class="card-sprite">
-                <img src="assets/sprites/jolteon.png" alt="Jolteon">
-              </div>
-            </div>
-            <div class="compact-body">
-              <div>
-                <div class="compact-title">🚀 5 Menit Matematika</div>
-                <div class="compact-desc">Speed challenge! Seberapa cepat kamu?</div>
-              </div>
-              <div class="compact-footer">
-                <div class="compact-meta">
-                  <div class="meta-chip">
-                    <img src="assets/icons/clock.svg" alt="">
-                    5 min
-                  </div>
-                  <div class="meta-chip">⭐ +75 XP</div>
-                </div>
-                <div class="compact-play-btn">▶</div>
-              </div>
-            </div>
-          </a>
-
-          <!-- AI Learning (Draco Tutor) -->
-          <a href="/tutor" class="game-card-compact" style="display: flex; text-decoration: none; color: inherit;">
-            <div class="compact-thumb">
-              <div class="card-bg" style="background-image: url(assets/heroes/druygon-banner.jpg);"></div>
-              <div class="card-overlay"></div>
-              <div class="card-sprite">
-                <img src="assets/sprites/alakazam.png" alt="Draco Tutor">
-              </div>
-            </div>
-            <div class="compact-body">
-              <div>
-                <div class="compact-title">🐉 AI Tutor: Draco</div>
-                <div class="compact-desc">Belajar KPK, Puisi, dan Sains bareng Draco!</div>
-              </div>
-              <div class="compact-footer">
-                <div class="compact-meta">
-                  <div class="meta-chip">
-                    <img src="assets/icons/clock.svg" alt="">
-                    5-15 min
-                  </div>
-                  <div class="meta-chip">⭐ +20 XP</div>
-                </div>
-                <div class="compact-play-btn" style="background: var(--accent); color: var(--bg-deep);">MULAI</div>
-              </div>
-            </div>
-          </a>
-
-          <!-- Pokemon RPG — LOCKED -->
-          <a href="routes/" class="game-card-compact is-locked" style="display: flex; text-decoration: none; color: inherit;">
-            <div class="compact-thumb">
-              <div class="card-bg" style="background-image: url(assets/heroes/pokemon-rpg-ai.jpg);"></div>
-              <div class="card-overlay"></div>
-              <div class="lock-overlay">
-                <img src="assets/icons/lock.svg" alt="">
-                <span>LVL 15</span>
-              </div>
-            </div>
-            <div class="compact-body">
-              <div>
-                <div class="compact-title">🌟 Pokemon RPG</div>
-                <div class="compact-desc">Petualangan epik menantimu di level 15!</div>
-              </div>
-              <div class="compact-footer">
-                <div class="compact-meta">
-                  <div class="meta-chip">
-                    <img src="assets/icons/clock.svg" alt="">
-                    ~30 min
-                  </div>
-                  <div class="meta-chip">⭐ +100 XP</div>
-                </div>
-                <div class="compact-play-btn" style="background: var(--bg-elevated); color: var(--text-tertiary); box-shadow: none;">🔒</div>
-              </div>
-            </div>
-          </a>
-
-        </div>
-      </section>
-
-      <!-- ── PORTAL LINKS ────────────────── -->
-      <section class="anim-3" id="portal-links">
-        <div class="section-head">
-          <h2 class="section-title">🧭 Portal Links</h2>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;">
-          <a href="collection/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">📦 Koleksi</a>
-          <a href="store/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">🏪 Toko</a>
-          <a href="guide/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">📚 Panduan Matematika</a>
-          <a href="/tutor" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">🐉 Belajar Bareng Draco</a>
-          <a href="english/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">📝 English Writing</a>
-          <a href="feedback/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">💬 Feedback</a>
-          <a href="belajar/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">🎓 Belajar</a>
-          <a href="/parent" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;border-color:var(--accent);">🛡️ Parent Control</a>
-          <a href="ramadhan/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">🌙 Ramadhan</a>
-          <a href="hijaiyah/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">🔤 Hijaiyah</a>
-          <a href="sholat/index.html" class="meta-chip" style="justify-content:center;padding:12px 10px;text-decoration:none;">🕌 Sholat</a>
-        </div>
-      </section>
-
-      <!-- ── ACHIEVEMENTS ────────────────── -->
-      <section class="mt-8 anim-4" style="position:relative;">
-        <!-- Druygon peeking from corner -->
-        <img src="assets/druygon-logo-sm.png" alt=""
-             style="position:absolute;right:0;top:-8px;height:44px;width:auto;
-                    opacity:0.7;transform:scaleX(-1);" aria-hidden="true">
-        <div class="section-head">
-          <h2 class="section-title">🏅 Achievements</h2>
-          <a href="collection/index.html" class="section-link">All →</a>
-        </div>
-
-        <div class="achievements-scroll">
-          <div class="achievement-chip is-new">
-            <div class="achievement-icon">🥇</div>
-            <div class="achievement-info">
-              <div class="achievement-name">Math Master</div>
-              <div class="achievement-desc">100 battle wins</div>
-            </div>
-            <div class="new-tag">NEW</div>
-          </div>
-          <div class="achievement-chip">
-            <div class="achievement-icon">⚡</div>
-            <div class="achievement-info">
-              <div class="achievement-name">Speed Demon</div>
-              <div class="achievement-desc">10 perfect scores</div>
-            </div>
-          </div>
-          <div class="achievement-chip">
-            <div class="achievement-icon">🔥</div>
-            <div class="achievement-info">
-              <div class="achievement-name">7-Day Streak</div>
-              <div class="achievement-desc">Daily login bonus</div>
-            </div>
-          </div>
-          <div class="achievement-chip">
-            <div class="achievement-icon">🌟</div>
-            <div class="achievement-info">
-              <div class="achievement-name">Explorer</div>
-              <div class="achievement-desc">All games tried</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── LEADERBOARD ─────────────────── -->
-      <section class="mt-8 mb-6 anim-5" id="leaderboard">
-        <div class="section-head">
-          <h2 class="section-title">🏆 Leaderboard</h2>
-          <a href="#leaderboard" class="section-link">Full →</a>
-        </div>
-
-        <div class="leaderboard">
-          <div class="leaderboard-row">
-            <div class="leaderboard-name">
-              <div class="leaderboard-username">Memuat leaderboard...</div>
-              <div class="leaderboard-sub">Mengambil data pemain dari server</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
-  </main>
-
-  <!-- ════════════════════════════════════════
-       BOTTOM NAV
-  ════════════════════════════════════════ -->
-  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama">
-    <div class="bottom-nav-inner">
-
-      <a href="index.html" class="nav-item active" aria-label="Home">
-        <div class="nav-dot"></div>
-        <div class="nav-icon-wrap">
-          <img src="assets/icons/home.svg" alt="">
-        </div>
-        <span class="nav-label">Home</span>
-      </a>
-
-      <a href="math/index.html" class="nav-item" aria-label="Games">
-        <div class="nav-dot"></div>
-        <div class="nav-icon-wrap">
-          <img src="assets/icons/games.svg" alt="">
-        </div>
-        <span class="nav-label">Games</span>
-      </a>
-
-      <a href="routes/index.html" class="nav-item" aria-label="Map">
-        <div class="nav-dot"></div>
-        <div class="nav-icon-wrap">
-          <img src="assets/icons/map.svg" alt="">
-        </div>
-        <span class="nav-label">Map</span>
-      </a>
-
-      <a href="collection/index.html" class="nav-item" aria-label="Collection">
-        <div class="nav-dot"></div>
-        <div class="nav-icon-wrap">
-          <img src="assets/icons/stats.svg" alt="">
-        </div>
-        <span class="nav-label">Koleksi</span>
-      </a>
-
-      <a href="store/index.html" class="nav-item" aria-label="Store">
-        <div class="nav-dot"></div>
-        <div class="nav-icon-wrap">
-          <img src="assets/icons/settings.svg" alt="">
-        </div>
-        <span class="nav-label">Toko</span>
-      </a>
-
-    </div>
-  </nav>
-
-  <!-- Core Scripts -->
-  <script src="js/profile.js?v=20260318"></script>
-  <script src="js/app.js?v=20260318"></script>
-  <script src="js/analytics.js?v=20260318"></script>
-  <script src="js/nav-legacy.js"></script>
-
+<!-- App bundle (JSX pre-compiled, no Babel) -->
+<script src="redesign/app/bundle.js"></script>
 </body>
 </html>
