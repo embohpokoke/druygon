@@ -115,7 +115,13 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
             return (
               <div key={id} className="region-card" data-region={id} style={{ '--rc': r.accent, '--rc-soft': 'var(--accent-soft)' }} onClick={() => go('map', id)}>
                 <div className="region-glow" />
-                <div className="region-emblem"><Icon name={r.icon} size={30} /></div>
+                <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: `linear-gradient(90deg, rgba(10,8,24,.88) 0%, rgba(10,8,24,.35) 60%, rgba(10,8,24,.12) 100%), url(assets/regions/${id}-hero.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+                <div className="region-emblem" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon name={r.icon} size={30} />
+                  <img src={'assets/regions/' + id + '-icon.png'} alt="" width={42} height={42}
+                    style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', objectFit: 'contain' }}
+                    onError={function(e) { e.target.remove(); }} />
+                </div>
                 <div className="region-main">
                   <div>
                     <div className="region-name">{r.name}</div>
@@ -173,6 +179,21 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
           }
         </div>
 
+        {/* region progress medals */}
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 18, marginTop: 2 }}>
+          {order.map((id) => {
+            const c = prog[id] || 0;
+            const t = (regions[id]?.zones || []).length;
+            const earned = c > 0;
+            return (
+              <div key={id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, opacity: earned ? 1 : .35, filter: earned ? 'none' : 'grayscale(1)' }}>
+                <img src={`assets/ui/medal-${id}.svg`} alt={regions[id]?.name || id} width={52} height={52} style={{ objectFit: 'contain' }} />
+                <span style={{ fontSize: 9, color: 'var(--text-tertiary)', fontWeight: 700 }}>{c}/{t}</span>
+              </div>
+            );
+          })}
+        </div>
+
         {/* leaderboard — real players from /api/player */}
         <div className="sec-head"><h2>Leaderboard</h2></div>
         <div className="lb" data-region="compsci">
@@ -221,7 +242,7 @@ function RegionMap({ region, go, caught, profile, progress }) {
     <div className="body screen-anim">
       <div className="pad">
         <div className="map-banner">
-          <div className="hero-bg" style={{ background: `radial-gradient(120% 120% at 80% 10%, ${r.accent}44, transparent 60%), linear-gradient(135deg, #16122c, #0b0a18)` }} />
+          <div className="hero-bg" style={{ background: `url(assets/maps/${region}-bg.jpg) center/cover no-repeat, radial-gradient(120% 120% at 80% 10%, ${r.accent}44, transparent 60%), linear-gradient(135deg, #16122c, #0b0a18)` }} />
           <img className="map-banner-mon" src={feat.sprite} alt="" crossOrigin="anonymous" />
           <div>
             <div className="eyebrow" style={{ color: r.accent }}>Region · {r.tag}</div>
@@ -237,7 +258,9 @@ function RegionMap({ region, go, caught, profile, progress }) {
           const locked = st === 'locked', cleared = st === 'cleared';
           return (
             <div key={z.zone} className={'zone ' + st} onClick={() => !locked && go('catch', region, z.zone)}>
-              <div className="zone-no">{cleared ? <Icon name="check" size={18} color="var(--green)" sw={2.4} /> : locked ? <Icon name="lock" size={15} /> : z.zone}</div>
+              <div className="zone-no" style={{ border: 'none', background: 'transparent', borderRadius: 0, width: 52, height: 52 }}>
+                <img src={`assets/maps/node-${st}.svg`} alt={st} width={52} height={52} style={{ objectFit: 'contain' }} />
+              </div>
               <div className="zone-main">
                 <b>{z.name}</b>
                 <code>{z.topic}{locked ? ` · unlocks LVL ${z.minLevel}` : ''}</code>
@@ -409,6 +432,7 @@ function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd }) {
         })}
       </svg>
       <div className="celeb-eyebrow" style={{ color: rar.c }}>{mon.rarity === 'legendary' ? '★ LEGENDARY CATCH ★' : 'GOTCHA!'}</div>
+      <img src="assets/dru/dru-cheer.png" alt="Dru cheering" style={{ width: 80, height: 80, objectFit: 'contain', marginBottom: -18, zIndex: 1, position: 'relative', filter: 'drop-shadow(0 0 12px rgba(255,203,5,.25))' }} />
       <img className="celeb-sprite" src={mon.sprite} alt={mon.name} crossOrigin="anonymous" />
       <h2>{mon.name}</h2>
       <div className="meta">
