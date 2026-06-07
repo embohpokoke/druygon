@@ -72,8 +72,12 @@ function App() {
   const [caught,    setCaught]    = React.useState([]);
   const [progress,  setProgress]  = React.useState([]);
 
-  // All slots summary (for selector in Profile)
+  // All slots summary (for selector in Profile + PlayerPicker)
   const [allSlots, setAllSlots] = React.useState([]);
+
+  // Player picker overlay
+  const [pickerOpen,    setPickerOpen]    = React.useState(false);
+  const [isFirstLaunch, setIsFirstLaunch] = React.useState(false); // set true after slots load if never chosen
 
   // Celebration overlay
   const [celeb, setCeleb] = React.useState(null);
@@ -97,24 +101,31 @@ function App() {
       });
   }, []);
 
-  // On mount: load active player + snapshot all 4 slots for selector
+  // On mount: load active player + snapshot all 4 slots + check first launch
   React.useEffect(() => {
+    // First launch = SLOT_LS key never been set by user
+    const neverChosen = !localStorage.getItem(SLOT_LS);
+    if (neverChosen) setIsFirstLaunch(true);
+
     loadActivePlayer(activeSlot);
-    // Load all slots for the profile selector (lightweight)
     Promise.all(VALID_SLOTS.map(s => fetchPlayer(s))).then(results => {
-      setAllSlots(results.map((d, i) => d
-        ? { slot: VALID_SLOTS[i], name: d.name, level: d.profile?.level ?? 1, coins: d.profile?.coins ?? 0, caughtCount: (d.caught || []).length }
+      const slots = results.map((d, i) => d
+        ? { slot: VALID_SLOTS[i], name: d.name, level: d.profile ? d.profile.level : 1, coins: d.profile ? d.profile.coins : 0, caughtCount: (d.caught || []).length }
         : null
-      ).filter(Boolean));
+      ).filter(Boolean);
+      setAllSlots(slots);
+      // Show picker on first launch once slots are loaded
+      if (neverChosen) setPickerOpen(true);
     });
   }, []);  // eslint-disable-line
 
   // Switch to a different player slot
   const switchSlot = (slot) => {
-    if (slot === activeSlot) return;
+    setPickerOpen(false);
+    setIsFirstLaunch(false);
     saveSlot(slot);
+    if (slot === activeSlot) return;
     setActiveSlot(slot);
-    // Reset nav to home for the new player
     const newNav = { screen: 'home', region: 'science', zone: 1 };
     setScreen(newNav.screen); setRegion(newNav.region); setZone(newNav.zone);
     saveNav(newNav.screen, newNav.region, newNav.zone);
@@ -190,25 +201,31 @@ function App() {
   const r = window.REGIONS && window.REGIONS[region];
   let header, content, showNav = true;
 
+  const openPicker = () => setPickerOpen(true);
+  const closePicker = () => { setPickerOpen(false); setIsFirstLaunch(false); };
+
+  // All headers share the same avatar tap handler
+  const hProps = { playerName, onAvatarTap: openPicker };
+
   if (screen === 'home') {
-    header  = <Header region={region} coins={profile.coins} playerName={playerName} />;
+    header  = <Header region={region} coins={profile.coins} {...hProps} />;
     content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} />;
   } else if (screen === 'map') {
-    header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} />;
+    header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
     content = <RegionMap region={region} go={go} caught={caughtDex} />;
   } else if (screen === 'catch') {
     const z = r && r.zones.find(x => x.zone === zone);
-    header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} />;
+    header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} {...hProps} />;
     content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} />;
     showNav = false;
   } else if (screen === 'collection') {
-    header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} />;
+    header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
     content = <Collection caught={caughtDex} region={region} go={go} />;
   } else if (screen === 'store') {
-    header  = <Header region={region} title="Toko" sub="Balls & items" coins={profile.coins} />;
+    header  = <Header region={region} title="Toko" sub="Balls & items" coins={profile.coins} {...hProps} />;
     content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} />;
   } else if (screen === 'profile') {
-    header  = <Header region={region} title="Profil" sub="Trainer & parent" coins={profile.coins} />;
+    header  = <Header region={region} title="Profil" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
     content = <Profile caught={caughtDex} region={region} go={go} profile={profile}
                 playerName={playerName} activeSlot={activeSlot} allSlots={allSlots}
                 onSwitchSlot={switchSlot} />;
@@ -224,6 +241,18 @@ function App() {
         {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
         {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} />}
       </div>
+
+      {/* Player picker — first launch splash + header avatar tap */}
+      {pickerOpen && (
+        <PlayerPicker
+          allSlots={allSlots}
+          activeSlot={activeSlot}
+          onSelect={switchSlot}
+          onClose={closePicker}
+          isFirstLaunch={isFirstLaunch}
+        />
+      )}
+
       {playerErr && (
         <div style={{ position:'fixed', bottom:8, left:'50%', transform:'translateX(-50%)', background:'#2a1a1a', color:'#f87171', padding:'6px 14px', borderRadius:8, fontSize:11, zIndex:9999, maxWidth:300, textAlign:'center' }}>
           Offline mode — progress may not save.

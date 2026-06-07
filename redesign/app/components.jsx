@@ -1,4 +1,4 @@
-// components.jsx — Icon set (Feather/Tabler 1.5px stroke), CSS Pokéball, Header, BottomNav.
+// components.jsx — Icon set, Pokéball, Header, BottomNav, PlayerPicker.
 
 const ICONS = {
   home: 'M3 10.5 12 3l9 7.5M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5',
@@ -39,8 +39,6 @@ function Icon({ name, size = 22, color = 'currentColor', sw = 1.7, style }) {
   );
 }
 
-// Per-tier pokéball SVG paths (served from /images/pokeballs/<id>.svg)
-// Falls back to CSS-art div if SVG not loaded
 const POKEBALL_SVG = {
   pokeball:   '/images/pokeballs/pokeball.svg',
   greatball:  '/images/pokeballs/greatball.svg',
@@ -57,21 +55,149 @@ function Pokeball({ size = 30, top = '#EE3D34', id, style }) {
   return <div className="pokeball" style={{ width: size, height: size, '--ball-top': top, ...style }} />;
 }
 
-const AVATAR = '/assets/druygon-avatar.png';  // absolute — safe from any page URL
-const TUTOR_URL = '/tutor';   // the separate AI-tutor app; swap for the real path
+const AVATAR = '/assets/druygon-avatar.png';
+const TUTOR_URL = '/tutor';
 function openTutor(topic) { try { window.open(TUTOR_URL + (topic ? ('?topic=' + encodeURIComponent(topic)) : ''), '_blank'); } catch (e) {} }
 
-function Header({ region, title, sub, onBack, coins, playerName }) {
-  const r = region ? REGIONS[region] : null;
+// ── SlotAvatar — trainer icon per player ────────────────────────────────────
+const SLOT_COLORS = ['#8B5CF6', '#00D9B8', '#FFCB05', '#EE3D34'];
+const SLOT_NAMES  = ['Dru', 'Oming', 'Reymar', 'Ilyas'];
+const TRAINER_IMGS = {
+  'Dru':    '/assets/trainers/trainer-dru.svg',
+  'Oming':  '/assets/trainers/trainer-oming.svg',
+  'Reymar': '/assets/trainers/trainer-reymar.svg',
+  'Ilyas':  '/assets/trainers/trainer-ilyas.svg',
+};
+
+function SlotAvatar({ name, size = 36, active = false }) {
+  const idx  = Math.max(0, SLOT_NAMES.indexOf(name));
+  const bg   = SLOT_COLORS[idx % SLOT_COLORS.length];
+  const img  = TRAINER_IMGS[name];
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: '50%', flexShrink: 0,
+      background: bg + '22',
+      border: active ? `2.5px solid ${bg}` : '2.5px solid rgba(255,255,255,.1)',
+      boxShadow: active ? `0 0 0 2px #0b0a16, 0 0 10px ${bg}88` : 'none',
+      overflow: 'hidden', transition: 'box-shadow .15s',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      {img
+        ? <img src={img} width={size - 4} height={size - 4} alt={name || '?'}
+            style={{ objectFit: 'contain', display: 'block' }} />
+        : <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: Math.round(size * 0.4), color: bg }}>
+            {(name || '?')[0].toUpperCase()}
+          </span>
+      }
+    </div>
+  );
+}
+
+// ── PlayerPicker overlay — shown on avatar tap or first launch ────────────────
+function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 1000,
+      background: 'rgba(8,7,20,.88)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: 24,
+    }} onClick={isFirstLaunch ? undefined : onClose}>
+      <div style={{
+        width: '100%', maxWidth: 360,
+        background: 'var(--bg-card, #16132e)',
+        border: '1px solid rgba(255,255,255,.08)',
+        borderRadius: 20, padding: '28px 20px 20px',
+        boxShadow: '0 24px 64px rgba(0,0,0,.6)',
+      }} onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 11, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 }}>
+              {isFirstLaunch ? 'Selamat Datang' : 'Ganti Pemain'}
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary, #f0eeff)' }}>
+              {isFirstLaunch ? 'Pilih karaktermu' : 'Pilih karakter'}
+            </div>
+          </div>
+          {!isFirstLaunch && (
+            <button onClick={onClose} style={{
+              background: 'rgba(255,255,255,.07)', border: 'none', borderRadius: 8,
+              width: 32, height: 32, cursor: 'pointer', color: 'var(--text-secondary)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Icon name="x" size={16} />
+            </button>
+          )}
+        </div>
+
+        {/* Slot grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {(allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }))).map(s => {
+            const isActive = s.slot === activeSlot;
+            return (
+              <button key={s.slot} onClick={() => onSelect(s.slot)} style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 8, padding: '16px 12px', borderRadius: 14, cursor: 'pointer',
+                border: isActive ? '2px solid var(--accent)' : '2px solid rgba(255,255,255,.07)',
+                background: isActive ? 'var(--accent-soft, rgba(139,92,246,.12))' : 'rgba(255,255,255,.04)',
+                transition: 'all .15s',
+                position: 'relative',
+              }}>
+                <SlotAvatar name={s.name} size={52} active={isActive} />
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: isActive ? 'var(--accent)' : 'var(--text-primary, #f0eeff)' }}>
+                    {s.name}
+                  </div>
+                  <div style={{ fontSize: 11, color: 'var(--text-secondary, #9aa0b5)', marginTop: 2 }}>
+                    Lv {s.level} &middot; {s.caughtCount} caught
+                  </div>
+                </div>
+                {isActive && (
+                  <div style={{
+                    position: 'absolute', top: 6, right: 6,
+                    background: 'var(--accent)', borderRadius: 4,
+                    fontSize: 8, fontWeight: 700, color: '#fff',
+                    padding: '2px 5px', letterSpacing: .5,
+                  }}>
+                    AKTIF
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {isFirstLaunch && (
+          <p style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-tertiary, #4b4680)', marginTop: 16, marginBottom: 0 }}>
+            Bisa diganti kapan saja lewat ikon di pojok kanan atas
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Header — avatar tap opens PlayerPicker ───────────────────────────────────
+function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap }) {
   return (
     <div className="appbar">
       {onBack && <button className="appbar-back" onClick={onBack}><Icon name="back" size={20} /></button>}
       {title
         ? <div className="appbar-title">{title}{sub && <small>{sub}</small>}</div>
         : <div className="appbar-logo">DRUYGON</div>}
-      <button className="appbar-draco" onClick={() => openTutor()} title="Tanya Draco — AI tutor"><Icon name="hint" size={15} /> Draco</button>
+      <button className="appbar-draco" onClick={() => openTutor()} title="Tanya Draco — AI tutor">
+        <Icon name="hint" size={15} /> Draco
+      </button>
       <div className="coin-chip"><Icon name="coin" size={15} color="var(--yellow)" /> {coins}</div>
-      <div className="avatar"><img src={AVATAR} alt="Dru" /></div>
+      {/* Avatar button — tap to open player picker */}
+      <button onClick={onAvatarTap} style={{
+        background: 'none', border: 'none', padding: 2, cursor: 'pointer',
+        borderRadius: '50%', lineHeight: 0,
+      }} title={'Pemain: ' + (playerName || 'Pilih karakter')}>
+        <SlotAvatar name={playerName} size={32} active />
+      </button>
     </div>
   );
 }
@@ -93,4 +219,7 @@ function BottomNav({ active, go }) {
   );
 }
 
-Object.assign(window, { Icon, Pokeball, Header, BottomNav, AVATAR, openTutor, TUTOR_URL });
+Object.assign(window, {
+  Icon, Pokeball, Header, BottomNav, SlotAvatar, PlayerPicker,
+  AVATAR, openTutor, TUTOR_URL, SLOT_COLORS, SLOT_NAMES,
+});

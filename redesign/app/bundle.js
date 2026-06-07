@@ -259,9 +259,109 @@
     } catch (e) {
     }
   }
-  function Header({ region, title, sub, onBack, coins, playerName }) {
-    const r = region ? REGIONS[region] : null;
-    return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", coins), /* @__PURE__ */ React.createElement("div", { className: "avatar" }, /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "Dru" })));
+  const SLOT_COLORS = ["#8B5CF6", "#00D9B8", "#FFCB05", "#EE3D34"];
+  const SLOT_NAMES = ["Dru", "Oming", "Reymar", "Ilyas"];
+  const TRAINER_IMGS = {
+    "Dru": "/assets/trainers/trainer-dru.svg",
+    "Oming": "/assets/trainers/trainer-oming.svg",
+    "Reymar": "/assets/trainers/trainer-reymar.svg",
+    "Ilyas": "/assets/trainers/trainer-ilyas.svg"
+  };
+  function SlotAvatar({ name, size = 36, active = false }) {
+    const idx = Math.max(0, SLOT_NAMES.indexOf(name));
+    const bg = SLOT_COLORS[idx % SLOT_COLORS.length];
+    const img = TRAINER_IMGS[name];
+    return /* @__PURE__ */ React.createElement("div", { style: {
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      flexShrink: 0,
+      background: bg + "22",
+      border: active ? `2.5px solid ${bg}` : "2.5px solid rgba(255,255,255,.1)",
+      boxShadow: active ? `0 0 0 2px #0b0a16, 0 0 10px ${bg}88` : "none",
+      overflow: "hidden",
+      transition: "box-shadow .15s",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    } }, img ? /* @__PURE__ */ React.createElement(
+      "img",
+      {
+        src: img,
+        width: size - 4,
+        height: size - 4,
+        alt: name || "?",
+        style: { objectFit: "contain", display: "block" }
+      }
+    ) : /* @__PURE__ */ React.createElement("span", { style: { fontFamily: "var(--font-display)", fontWeight: 700, fontSize: Math.round(size * 0.4), color: bg } }, (name || "?")[0].toUpperCase()));
+  }
+  function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }) {
+    return /* @__PURE__ */ React.createElement("div", { style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 1e3,
+      background: "rgba(8,7,20,.88)",
+      backdropFilter: "blur(8px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 24
+    }, onClick: isFirstLaunch ? void 0 : onClose }, /* @__PURE__ */ React.createElement("div", { style: {
+      width: "100%",
+      maxWidth: 360,
+      background: "var(--bg-card, #16132e)",
+      border: "1px solid rgba(255,255,255,.08)",
+      borderRadius: 20,
+      padding: "28px 20px 20px",
+      boxShadow: "0 24px 64px rgba(0,0,0,.6)"
+    }, onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", marginBottom: 20 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 11, color: "var(--accent)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 } }, isFirstLaunch ? "Selamat Datang" : "Ganti Pemain"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 700, color: "var(--text-primary, #f0eeff)" } }, isFirstLaunch ? "Pilih karaktermu" : "Pilih karakter")), !isFirstLaunch && /* @__PURE__ */ React.createElement("button", { onClick: onClose, style: {
+      background: "rgba(255,255,255,.07)",
+      border: "none",
+      borderRadius: 8,
+      width: 32,
+      height: 32,
+      cursor: "pointer",
+      color: "var(--text-secondary)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    } }, /* @__PURE__ */ React.createElement(Icon, { name: "x", size: 16 }))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 } }, (allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }))).map((s) => {
+      const isActive = s.slot === activeSlot;
+      return /* @__PURE__ */ React.createElement("button", { key: s.slot, onClick: () => onSelect(s.slot), style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 8,
+        padding: "16px 12px",
+        borderRadius: 14,
+        cursor: "pointer",
+        border: isActive ? "2px solid var(--accent)" : "2px solid rgba(255,255,255,.07)",
+        background: isActive ? "var(--accent-soft, rgba(139,92,246,.12))" : "rgba(255,255,255,.04)",
+        transition: "all .15s",
+        position: "relative"
+      } }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: s.name, size: 52, active: isActive }), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14, color: isActive ? "var(--accent)" : "var(--text-primary, #f0eeff)" } }, s.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary, #9aa0b5)", marginTop: 2 } }, "Lv ", s.level, " \xB7 ", s.caughtCount, " caught")), isActive && /* @__PURE__ */ React.createElement("div", { style: {
+        position: "absolute",
+        top: 6,
+        right: 6,
+        background: "var(--accent)",
+        borderRadius: 4,
+        fontSize: 8,
+        fontWeight: 700,
+        color: "#fff",
+        padding: "2px 5px",
+        letterSpacing: 0.5
+      } }, "AKTIF"));
+    })), isFirstLaunch && /* @__PURE__ */ React.createElement("p", { style: { textAlign: "center", fontSize: 11, color: "var(--text-tertiary, #4b4680)", marginTop: 16, marginBottom: 0 } }, "Bisa diganti kapan saja lewat ikon di pojok kanan atas")));
+  }
+  function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap }) {
+    return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", coins), /* @__PURE__ */ React.createElement("button", { onClick: onAvatarTap, style: {
+      background: "none",
+      border: "none",
+      padding: 2,
+      cursor: "pointer",
+      borderRadius: "50%",
+      lineHeight: 0
+    }, title: "Pemain: " + (playerName || "Pilih karakter") }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 32, active: true })));
   }
   function BottomNav({ active, go }) {
     const items = [
@@ -273,7 +373,19 @@
     ];
     return /* @__PURE__ */ React.createElement("div", { className: "nav" }, items.map(([id, ic, label]) => /* @__PURE__ */ React.createElement("button", { key: id, className: "nav-slot" + (active === id ? " on" : ""), onClick: () => go(id) }, /* @__PURE__ */ React.createElement("span", { className: "nav-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: ic, size: 22 })), /* @__PURE__ */ React.createElement("span", null, label))));
   }
-  Object.assign(window, { Icon, Pokeball, Header, BottomNav, AVATAR, openTutor, TUTOR_URL });
+  Object.assign(window, {
+    Icon,
+    Pokeball,
+    Header,
+    BottomNav,
+    SlotAvatar,
+    PlayerPicker,
+    AVATAR,
+    openTutor,
+    TUTOR_URL,
+    SLOT_COLORS,
+    SLOT_NAMES
+  });
   const { useState: uS1, useRef: uR1, useEffect: uE1 } = React;
   const PLAYER = { name: "Dru", level: 7, xpPct: 62 };
   const RANK = { common: 0, uncommon: 1, rare: 2, legendary: 3 };
@@ -561,6 +673,8 @@
     const [caught, setCaught] = React.useState([]);
     const [progress, setProgress] = React.useState([]);
     const [allSlots, setAllSlots] = React.useState([]);
+    const [pickerOpen, setPickerOpen] = React.useState(false);
+    const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);
     const [celeb, setCeleb] = React.useState(null);
     const loadActivePlayer = React.useCallback((slot) => {
       setPlayerReady(false);
@@ -578,19 +692,22 @@
       });
     }, []);
     React.useEffect(() => {
+      const neverChosen = !localStorage.getItem(SLOT_LS);
+      if (neverChosen) setIsFirstLaunch(true);
       loadActivePlayer(activeSlot);
       Promise.all(VALID_SLOTS.map((s) => fetchPlayer(s))).then((results) => {
-        setAllSlots(results.map(
-          (d, i) => {
-            var _a, _b, _c, _d;
-            return d ? { slot: VALID_SLOTS[i], name: d.name, level: (_b = (_a = d.profile) == null ? void 0 : _a.level) != null ? _b : 1, coins: (_d = (_c = d.profile) == null ? void 0 : _c.coins) != null ? _d : 0, caughtCount: (d.caught || []).length } : null;
-          }
-        ).filter(Boolean));
+        const slots = results.map(
+          (d, i) => d ? { slot: VALID_SLOTS[i], name: d.name, level: d.profile ? d.profile.level : 1, coins: d.profile ? d.profile.coins : 0, caughtCount: (d.caught || []).length } : null
+        ).filter(Boolean);
+        setAllSlots(slots);
+        if (neverChosen) setPickerOpen(true);
       });
     }, []);
     const switchSlot = (slot) => {
-      if (slot === activeSlot) return;
+      setPickerOpen(false);
+      setIsFirstLaunch(false);
       saveSlot(slot);
+      if (slot === activeSlot) return;
       setActiveSlot(slot);
       const newNav = { screen: "home", region: "science", zone: 1 };
       setScreen(newNav.screen);
@@ -669,25 +786,31 @@
     }
     const r = window.REGIONS && window.REGIONS[region];
     let header, content, showNav = true;
+    const openPicker = () => setPickerOpen(true);
+    const closePicker = () => {
+      setPickerOpen(false);
+      setIsFirstLaunch(false);
+    };
+    const hProps = { playerName, onAvatarTap: openPicker };
     if (screen === "home") {
-      header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, playerName });
+      header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, ...hProps });
       content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName, allSlots, activeSlot });
     } else if (screen === "map") {
-      header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home") });
+      header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home"), ...hProps });
       content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught: caughtDex });
     } else if (screen === "catch") {
       const z = r && r.zones.find((x) => x.zone === zone);
-      header = /* @__PURE__ */ React.createElement(Header, { region, title: z ? z.name : "\u2026", sub: r ? r.name : "\u2026", coins: profile.coins, onBack: () => go("map", region) });
+      header = /* @__PURE__ */ React.createElement(Header, { region, title: z ? z.name : "\u2026", sub: r ? r.name : "\u2026", coins: profile.coins, onBack: () => go("map", region), ...hProps });
       content = /* @__PURE__ */ React.createElement(Catch, { region, zone, go, onCaught, pokeballs });
       showNav = false;
     } else if (screen === "collection") {
-      header = /* @__PURE__ */ React.createElement(Header, { region, title: "Koleksi", sub: "Your Pok\xE9dex", coins: profile.coins });
+      header = /* @__PURE__ */ React.createElement(Header, { region, title: "Koleksi", sub: "Your Pok\xE9dex", coins: profile.coins, ...hProps });
       content = /* @__PURE__ */ React.createElement(Collection, { caught: caughtDex, region, go });
     } else if (screen === "store") {
-      header = /* @__PURE__ */ React.createElement(Header, { region, title: "Toko", sub: "Balls & items", coins: profile.coins });
+      header = /* @__PURE__ */ React.createElement(Header, { region, title: "Toko", sub: "Balls & items", coins: profile.coins, ...hProps });
       content = /* @__PURE__ */ React.createElement(Store, { coins: profile.coins, region, pokeballs });
     } else if (screen === "profile") {
-      header = /* @__PURE__ */ React.createElement(Header, { region, title: "Profil", sub: "Trainer & parent", coins: profile.coins });
+      header = /* @__PURE__ */ React.createElement(Header, { region, title: "Profil", sub: "Trainer & parent", coins: profile.coins, ...hProps });
       content = /* @__PURE__ */ React.createElement(
         Profile,
         {
@@ -703,7 +826,16 @@
       );
     }
     const navActive = screen === "catch" ? "map" : screen;
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb })), pickerOpen && /* @__PURE__ */ React.createElement(
+      PlayerPicker,
+      {
+        allSlots,
+        activeSlot,
+        onSelect: switchSlot,
+        onClose: closePicker,
+        isFirstLaunch
+      }
+    ), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
   }
   ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();
