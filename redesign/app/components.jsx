@@ -95,15 +95,25 @@ function SlotAvatar({ name, size = 36, active = false }) {
 
 // ── PlayerPicker overlay — shown on avatar tap or first launch ────────────────
 function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }) {
+  React.useEffect(() => {
+    if (isFirstLaunch) return undefined;
+    const closeOnEscape = event => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [isFirstLaunch, onClose]);
+
   return (
-    <div style={{
+    <div className="player-picker-overlay" role="presentation" style={{
       position: 'fixed', inset: 0, zIndex: 1000,
       background: 'rgba(8,7,20,.88)',
       backdropFilter: 'blur(8px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: 24,
     }} onClick={isFirstLaunch ? undefined : onClose}>
-      <div style={{
+      <div className="player-picker-dialog" role="dialog" aria-modal="true"
+        aria-labelledby="player-picker-title" style={{
         width: '100%', maxWidth: 360,
         background: 'var(--bg-card, #16132e)',
         border: '1px solid rgba(255,255,255,.08)',
@@ -117,12 +127,12 @@ function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 11, color: 'var(--accent)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 }}>
               {isFirstLaunch ? 'Selamat Datang' : 'Ganti Pemain'}
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary, #f0eeff)' }}>
+            <div id="player-picker-title" style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary, #f0eeff)' }}>
               {isFirstLaunch ? 'Pilih karaktermu' : 'Pilih karakter'}
             </div>
           </div>
           {!isFirstLaunch && (
-            <button onClick={onClose} style={{
+            <button aria-label="Tutup pemilih pemain" onClick={onClose} style={{
               background: 'rgba(255,255,255,.07)', border: 'none', borderRadius: 8,
               width: 32, height: 32, cursor: 'pointer', color: 'var(--text-secondary)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -137,7 +147,8 @@ function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }
           {(allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }))).map(s => {
             const isActive = s.slot === activeSlot;
             return (
-              <button key={s.slot} onClick={() => onSelect(s.slot)} style={{
+              <button key={s.slot} aria-label={`Pilih pemain ${s.name}`}
+                onClick={() => onSelect(s.slot)} style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
                 gap: 8, padding: '16px 12px', borderRadius: 14, cursor: 'pointer',
                 border: isActive ? '2px solid var(--accent)' : '2px solid rgba(255,255,255,.07)',
@@ -192,7 +203,8 @@ function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap }) 
       </button>
       <div className="coin-chip"><Icon name="coin" size={15} color="var(--yellow)" /> {coins}</div>
       {/* Avatar button — tap to open player picker */}
-      <button onClick={onAvatarTap} style={{
+      <button aria-label={'Ganti pemain. Pemain aktif: ' + (playerName || 'belum dipilih')}
+        onClick={onAvatarTap} style={{
         background: 'none', border: 'none', padding: 2, cursor: 'pointer',
         borderRadius: '50%', lineHeight: 0,
       }} title={'Pemain: ' + (playerName || 'Pilih karakter')}>

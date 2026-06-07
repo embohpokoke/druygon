@@ -173,7 +173,7 @@
     RARITY,
     POKEBALLS,
     REGION_META,
-    // Live-updated refs -- components read these after ready
+    // Live-updated refs — components read these after ready
     get REGIONS() {
       return REGIONS;
     },
@@ -296,7 +296,15 @@
     ) : /* @__PURE__ */ React.createElement("span", { style: { fontFamily: "var(--font-display)", fontWeight: 700, fontSize: Math.round(size * 0.4), color: bg } }, (name || "?")[0].toUpperCase()));
   }
   function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }) {
-    return /* @__PURE__ */ React.createElement("div", { style: {
+    React.useEffect(() => {
+      if (isFirstLaunch) return void 0;
+      const closeOnEscape = (event) => {
+        if (event.key === "Escape") onClose();
+      };
+      document.addEventListener("keydown", closeOnEscape);
+      return () => document.removeEventListener("keydown", closeOnEscape);
+    }, [isFirstLaunch, onClose]);
+    return /* @__PURE__ */ React.createElement("div", { className: "player-picker-overlay", role: "presentation", style: {
       position: "fixed",
       inset: 0,
       zIndex: 1e3,
@@ -306,62 +314,95 @@
       alignItems: "center",
       justifyContent: "center",
       padding: 24
-    }, onClick: isFirstLaunch ? void 0 : onClose }, /* @__PURE__ */ React.createElement("div", { style: {
-      width: "100%",
-      maxWidth: 360,
-      background: "var(--bg-card, #16132e)",
-      border: "1px solid rgba(255,255,255,.08)",
-      borderRadius: 20,
-      padding: "28px 20px 20px",
-      boxShadow: "0 24px 64px rgba(0,0,0,.6)"
-    }, onClick: (e) => e.stopPropagation() }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", marginBottom: 20 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 11, color: "var(--accent)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 } }, isFirstLaunch ? "Selamat Datang" : "Ganti Pemain"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 700, color: "var(--text-primary, #f0eeff)" } }, isFirstLaunch ? "Pilih karaktermu" : "Pilih karakter")), !isFirstLaunch && /* @__PURE__ */ React.createElement("button", { onClick: onClose, style: {
-      background: "rgba(255,255,255,.07)",
-      border: "none",
-      borderRadius: 8,
-      width: 32,
-      height: 32,
-      cursor: "pointer",
-      color: "var(--text-secondary)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    } }, /* @__PURE__ */ React.createElement(Icon, { name: "x", size: 16 }))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 } }, (allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }))).map((s) => {
-      const isActive = s.slot === activeSlot;
-      return /* @__PURE__ */ React.createElement("button", { key: s.slot, onClick: () => onSelect(s.slot), style: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 8,
-        padding: "16px 12px",
-        borderRadius: 14,
+    }, onClick: isFirstLaunch ? void 0 : onClose }, /* @__PURE__ */ React.createElement(
+      "div",
+      {
+        className: "player-picker-dialog",
+        role: "dialog",
+        "aria-modal": "true",
+        "aria-labelledby": "player-picker-title",
+        style: {
+          width: "100%",
+          maxWidth: 360,
+          background: "var(--bg-card, #16132e)",
+          border: "1px solid rgba(255,255,255,.08)",
+          borderRadius: 20,
+          padding: "28px 20px 20px",
+          boxShadow: "0 24px 64px rgba(0,0,0,.6)"
+        },
+        onClick: (e) => e.stopPropagation()
+      },
+      /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", marginBottom: 20 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 11, color: "var(--accent)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 } }, isFirstLaunch ? "Selamat Datang" : "Ganti Pemain"), /* @__PURE__ */ React.createElement("div", { id: "player-picker-title", style: { fontSize: 18, fontWeight: 700, color: "var(--text-primary, #f0eeff)" } }, isFirstLaunch ? "Pilih karaktermu" : "Pilih karakter")), !isFirstLaunch && /* @__PURE__ */ React.createElement("button", { "aria-label": "Tutup pemilih pemain", onClick: onClose, style: {
+        background: "rgba(255,255,255,.07)",
+        border: "none",
+        borderRadius: 8,
+        width: 32,
+        height: 32,
         cursor: "pointer",
-        border: isActive ? "2px solid var(--accent)" : "2px solid rgba(255,255,255,.07)",
-        background: isActive ? "var(--accent-soft, rgba(139,92,246,.12))" : "rgba(255,255,255,.04)",
-        transition: "all .15s",
-        position: "relative"
-      } }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: s.name, size: 52, active: isActive }), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14, color: isActive ? "var(--accent)" : "var(--text-primary, #f0eeff)" } }, s.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary, #9aa0b5)", marginTop: 2 } }, "Lv ", s.level, " \xB7 ", s.caughtCount, " caught")), isActive && /* @__PURE__ */ React.createElement("div", { style: {
-        position: "absolute",
-        top: 6,
-        right: 6,
-        background: "var(--accent)",
-        borderRadius: 4,
-        fontSize: 8,
-        fontWeight: 700,
-        color: "#fff",
-        padding: "2px 5px",
-        letterSpacing: 0.5
-      } }, "AKTIF"));
-    })), isFirstLaunch && /* @__PURE__ */ React.createElement("p", { style: { textAlign: "center", fontSize: 11, color: "var(--text-tertiary, #4b4680)", marginTop: 16, marginBottom: 0 } }, "Bisa diganti kapan saja lewat ikon di pojok kanan atas")));
+        color: "var(--text-secondary)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      } }, /* @__PURE__ */ React.createElement(Icon, { name: "x", size: 16 }))),
+      /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 } }, (allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }))).map((s) => {
+        const isActive = s.slot === activeSlot;
+        return /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            key: s.slot,
+            "aria-label": `Pilih pemain ${s.name}`,
+            onClick: () => onSelect(s.slot),
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              padding: "16px 12px",
+              borderRadius: 14,
+              cursor: "pointer",
+              border: isActive ? "2px solid var(--accent)" : "2px solid rgba(255,255,255,.07)",
+              background: isActive ? "var(--accent-soft, rgba(139,92,246,.12))" : "rgba(255,255,255,.04)",
+              transition: "all .15s",
+              position: "relative"
+            }
+          },
+          /* @__PURE__ */ React.createElement(SlotAvatar, { name: s.name, size: 52, active: isActive }),
+          /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14, color: isActive ? "var(--accent)" : "var(--text-primary, #f0eeff)" } }, s.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary, #9aa0b5)", marginTop: 2 } }, "Lv ", s.level, " \xB7 ", s.caughtCount, " caught")),
+          isActive && /* @__PURE__ */ React.createElement("div", { style: {
+            position: "absolute",
+            top: 6,
+            right: 6,
+            background: "var(--accent)",
+            borderRadius: 4,
+            fontSize: 8,
+            fontWeight: 700,
+            color: "#fff",
+            padding: "2px 5px",
+            letterSpacing: 0.5
+          } }, "AKTIF")
+        );
+      })),
+      isFirstLaunch && /* @__PURE__ */ React.createElement("p", { style: { textAlign: "center", fontSize: 11, color: "var(--text-tertiary, #4b4680)", marginTop: 16, marginBottom: 0 } }, "Bisa diganti kapan saja lewat ikon di pojok kanan atas")
+    ));
   }
   function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap }) {
-    return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", coins), /* @__PURE__ */ React.createElement("button", { onClick: onAvatarTap, style: {
-      background: "none",
-      border: "none",
-      padding: 2,
-      cursor: "pointer",
-      borderRadius: "50%",
-      lineHeight: 0
-    }, title: "Pemain: " + (playerName || "Pilih karakter") }, /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 32, active: true })));
+    return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", coins), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        "aria-label": "Ganti pemain. Pemain aktif: " + (playerName || "belum dipilih"),
+        onClick: onAvatarTap,
+        style: {
+          background: "none",
+          border: "none",
+          padding: 2,
+          cursor: "pointer",
+          borderRadius: "50%",
+          lineHeight: 0
+        },
+        title: "Pemain: " + (playerName || "Pilih karakter")
+      },
+      /* @__PURE__ */ React.createElement(SlotAvatar, { name: playerName, size: 32, active: true })
+    ));
   }
   function BottomNav({ active, go }) {
     const items = [
