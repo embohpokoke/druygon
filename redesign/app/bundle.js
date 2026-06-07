@@ -173,7 +173,7 @@
     RARITY,
     POKEBALLS,
     REGION_META,
-    // Live-updated refs — components read these after ready
+    // Live-updated refs -- components read these after ready
     get REGIONS() {
       return REGIONS;
     },
