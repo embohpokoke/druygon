@@ -481,4 +481,69 @@ router.post('/:slot/mission/claim', (req, res) => {
   }
 });
 
+// ── POST /api/player/:slot/mathblitz ─────────────────────────────────────
+// Body: { correct: int, total: int, sessionKey: string }
+// Idempotent reward for the "5 Menit Matematika" timed practice.
+// Awards coins = correct * 2, XP = correct * 5 (capped at 200 / 500).
+// Tracks best score in profile_json.mathBlitzBest.
+router.post('/:slot/mathblitz', (req, res) => {
+  const slot = parseSlot(req.params.slot);
+  if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
+
+  const { correct, total, sessionKey } = req.body;
+  if (!Number.isInteger(correct) || correct < 0 || correct > 500) return res.status(400).json({ success: false, error: 'correct must be integer 0–500' });
+  if (!Number.isInteger(total)   || total < 0   || total > 500)   return res.status(400).json({ success: false, error: 'total must be integer 0–500' });
+  if (correct > total) return res.status(400).json({ success: false, error: 'correct cannot exceed total' });
+  if (!sessionKey || typeof sessionKey !== 'string') return res.status(400).json({ success: false, error: 'sessionKey required' });
+
+  const coinsAward = Math.min(correct * 2, 200);
+  const xpAward    = Math.min(correct * 5, 500);
+
+  try {
+    const db = getDb();
+
+    // Ensure log table exists
+    db.prepare(
+      "CREATE TABLE IF NOT EXISTS mathblitz_log(session_key TEXT PRIMARY KEY, slot INTEGER NOT NULL, correct INTEGER NOT NULL, total INTEGER NOT NULL, coins_awarded INTEGER NOT NULL, xp_awarded INTEGER NOT NULL, created_at TEXT DEFAULT (datetime('now')))"
+    ).run();
+
+    // Idempotency: already processed → return current state
+    const prior = db.prepare('SELECT 1 FROM mathblitz_log WHERE session_key=?').get(sessionKey);
+    if (prior) {
+      const player = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
+      let p = {}; try { p = JSON.parse(player.profile_json); } catch {}
+      const pokeballs = pokeballBalances(db, slot);
+      db.close();
+      return res.json({ success: true, idempotent: true, coinsNow: p.coins ?? 0, xpNow: p.xp ?? 0, levelNow: p.level ?? 1, pokeballs, best: p.mathBlitzBest ?? 0 });
+    }
+
+    const player = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
+    if (!player) { db.close(); return res.status(404).json({ success: false, error: `No player at slot ${slot}` }); }
+
+    let p = {};
+    try { p = JSON.parse(player.profile_json); } catch {}
+
+    const prevBest = p.mathBlitzBest ?? 0;
+    const newBest  = correct > prevBest ? correct : prevBest;
+
+    db.transaction(() => {
+      db.prepare('INSERT INTO mathblitz_log(session_key, slot, correct, total, coins_awarded, xp_awarded) VALUES (?,?,?,?,?,?)').run(sessionKey, slot, correct, total, coinsAward, xpAward);
+      p.coins  = (p.coins  ?? 0) + coinsAward;
+      p.xp     = (p.xp     ?? 0) + xpAward;
+      p.mathBlitzBest = newBest;
+      while (p.xp >= xpFor(p.level ?? 1)) { p.level = (p.level ?? 1) + 1; }
+      p.xpToNext = xpFor(p.level ?? 1);
+      db.prepare("UPDATE players SET profile_json=?, updated_at=datetime('now') WHERE slot=?").run(JSON.stringify(p), slot);
+    })();
+
+    const pokeballs = pokeballBalances(db, slot);
+    db.close();
+
+    res.json({ success: true, coinsAward, xpAward, coinsNow: p.coins, xpNow: p.xp, levelNow: p.level, pokeballs, best: newBest, prevBest });
+  } catch (err) {
+    console.error('[player/mathblitz]', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router;

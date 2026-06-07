@@ -272,9 +272,13 @@ function App() {
     content = <Profile caught={caughtDex} region={region} go={go} profile={profile}
                 playerName={playerName} activeSlot={activeSlot} allSlots={allSlots}
                 onSwitchSlot={switchSlot} team={team} badges={badges} dailyMission={dailyMission} progress={progress} onTeamRemove={onTeamRemove} />;
+  } else if (screen === 'mathblitz') {
+    header  = <Header region="curriculum" title="5 Menit Matematika" sub="Timed practice" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
+    content = <MathBlitz activeSlot={activeSlot} onReward={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, xp: data.xpNow ?? prev.xp, level: data.levelNow ?? prev.level }))} go={go} />;
+    showNav = false;
   }
 
-  const navActive = screen === 'catch' ? 'map' : screen;
+  const navActive = screen === 'catch' || screen === 'mathblitz' ? 'map' : screen;
 
   return (
     <React.Fragment>

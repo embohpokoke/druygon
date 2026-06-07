@@ -128,6 +128,13 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
                     </div>
                   </div>
                   <div className="meter"><i style={{ width: (prog[id] / r.zones.length * 100) + '%' }} /></div>
+                  {id === 'curriculum' && (
+                    <div onClick={(e) => { e.stopPropagation(); go('mathblitz', 'curriculum'); }} style={{ marginTop: 10, padding: '8px 12px', borderRadius: 10, background: 'rgba(255,203,5,.08)', border: '1px solid rgba(255,203,5,.2)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'background .15s' }}>
+                      <span style={{ fontSize: 16 }}>⏱️</span>
+                      <div style={{ flex: 1, fontSize: 12, fontWeight: 700, color: '#FFCB05' }}>5 Menit Matematika</div>
+                      <Icon name="arrowR" size={16} color="#FFCB05" />
+                    </div>
+                  )}
                 </div>
                 <div className="region-arrow"><Icon name="arrowR" size={20} color={r.accent} /></div>
               </div>
@@ -392,4 +399,169 @@ function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd }) {
   );
 }
 
-Object.assign(window, { Home, RegionMap, Catch, Celebration, PLAYER, zoneState, rarest, RANK });
+// ───────────────────────── MATH BLITZ (5 Menit Matematika) ─────────────────────────
+function MathBlitz({ activeSlot, onReward, go }) {
+  const [phase, setPhase] = React.useState('loading');
+  const [timeLeft, setTimeLeft] = React.useState(300);
+  const [score, setScore] = React.useState(0);
+  const [total, setTotal] = React.useState(0);
+  const [questions, setQuestions] = React.useState([]);
+  const [qIndex, setQIndex] = React.useState(0);
+  const [feedback, setFeedback] = React.useState(null);
+  const [pickIdx, setPickIdx] = React.useState(null);
+  const [reward, setReward] = React.useState(null);
+  const [retryKey, setRetryKey] = React.useState(0);
+  const postedRef = React.useRef(false);
+
+  // Fetch questions from all 6 math topics (re-fetches on retry)
+  React.useEffect(() => {
+    const topics = ['penjumlahan','pengurangan','perkalian','pembagian','pecahan','desimal'];
+    Promise.all(topics.map(async (t) => {
+      try {
+        const r = await fetch(`/api/content/questions?topic=${encodeURIComponent(t)}`);
+        const d = await r.json();
+        return d.success ? d.questions : [];
+      } catch { return []; }
+    })).then(results => {
+      const all = results.flat();
+      for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
+      setQuestions(all);
+      setPhase('ready');
+    }).catch(() => setPhase('ready'));
+  }, [retryKey]);
+
+  // Timer countdown
+  React.useEffect(() => {
+    if (phase !== 'active') return;
+    const id = setInterval(() => {
+      setTimeLeft(t => { if (t <= 1) { setPhase('end'); return 0; } return t - 1; });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [phase]);
+
+  // Post results (once, idempotent via sessionKey)
+  React.useEffect(() => {
+    if (phase !== 'end' || postedRef.current || !activeSlot) return;
+    postedRef.current = true;
+    const sessionKey = 'mb_' + activeSlot + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    fetch(`/api/player/${activeSlot}/mathblitz`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ correct: score, total, sessionKey }),
+    }).then(r => r.json()).then(data => {
+      if (data.success) { setReward(data); if (onReward) onReward(data); }
+    }).catch(e => console.error('[MathBlitz] post failed:', e));
+  }, [phase]);
+
+  const start = () => { setPhase('active'); setTimeLeft(300); setScore(0); setTotal(0); setQIndex(0); setFeedback(null); postedRef.current = false; setReward(null); };
+  const retry = () => setRetryKey(k => k + 1);
+
+  const answer = (idx) => {
+    if (feedback || phase !== 'active' || qIndex >= questions.length) return;
+    const q = questions[qIndex];
+    const ok = idx === q.a;
+    setPickIdx(idx);
+    setFeedback(ok ? 'correct' : 'wrong');
+    if (ok) setScore(s => s + 1);
+    setTotal(t => t + 1);
+    setTimeout(() => {
+      setFeedback(null); setPickIdx(null);
+      setQIndex(i => {
+        if (i + 1 >= questions.length) {
+          const copy = [...questions];
+          for (let k = copy.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [copy[k], copy[j]] = [copy[j], copy[k]]; }
+          setQuestions(copy);
+          return 0;
+        }
+        return i + 1;
+      });
+    }, 550);
+  };
+
+  const mmss = (s) => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  const pct  = (timeLeft / 300) * 100;
+
+  if (phase === 'loading') return <ContentLoading />;
+
+  if (phase === 'ready') return (
+    <div className="body screen-anim" data-region="curriculum">
+      <div className="pad" style={{ display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:340,gap:16,textAlign:'center' }}>
+        <img src="assets/dru/dru-point.png" alt="Dru" style={{ width:80,height:80,objectFit:'contain' }} />
+        <h2 style={{ fontFamily:'var(--font-display)',fontSize:22,color:'#FFCB05',margin:0 }}>⏱️ 5 Menit Matematika</h2>
+        <p style={{ color:'var(--text-secondary)',fontSize:14,margin:0,maxWidth:260,lineHeight:1.6 }}>
+          Jawab soal matematika sebanyak-banyaknya dalam 5 menit. Dapatkan koin dan XP!
+        </p>
+        <button className="btn btn-primary" onClick={start} style={{ marginTop:8 }}>Mulai ⚡</button>
+      </div>
+    </div>
+  );
+
+  if (phase === 'active') {
+    const q = questions[qIndex];
+    if (!q) return <ContentLoading />;
+    return (
+      <div className="body screen-anim" data-region="curriculum">
+        <div className="pad">
+          <div style={{ display:'flex',alignItems:'center',gap:10,marginBottom:18 }}>
+            <div className="meter" style={{ flex:1 }}>
+              <i style={{ width:pct+'%',background:timeLeft<60?'var(--red)':timeLeft<120?'linear-gradient(90deg,#FFCB05,#FF6B2B)':'linear-gradient(90deg,#4ADE80,#00D9B8)' }} />
+            </div>
+            <span style={{ fontFamily:'var(--font-mono)',fontSize:16,fontWeight:700,color:timeLeft<60?'var(--red)':'var(--text-primary)',minWidth:56,textAlign:'right' }}>{mmss(timeLeft)}</span>
+          </div>
+          <div style={{ display:'flex',justifyContent:'space-between',marginBottom:20 }}>
+            <span style={{ fontSize:12,color:'var(--text-tertiary)' }}>Benar: <b style={{ color:'var(--green)' }}>{score}</b></span>
+            <span style={{ fontSize:12,color:'var(--text-tertiary)' }}>Soal ke-{total + 1}</span>
+          </div>
+          <div className="q-prompt" style={{ marginBottom:16 }}>
+            <div className="eyebrow">Matematika · {q.difficulty || 'easy'}</div>
+            <h3>{q.q}</h3>
+            <div className="expr" style={{ fontSize:22 }}>{q.expr}</div>
+          </div>
+          <div className={'answers' + (q.opts.length <= 2 ? ' one' : ' two')}>
+            {q.opts.map((o, i) => {
+              let cls = 'ans';
+              if (feedback && i === q.a) cls += ' ok';
+              if (feedback && i === pickIdx && i !== q.a) cls += ' no';
+              return (
+                <div key={i} className={cls} onClick={() => answer(i)}>
+                  {q.opts.length <= 2 && <kbd>{i + 1}</kbd>}
+                  <span className="grow">{o}</span>
+                  {feedback && i === q.a && <Icon name="check" size={18} color="var(--green)" sw={2.4} />}
+                </div>
+              );
+            })}
+          </div>
+          <p style={{ fontSize:11,color:'var(--text-tertiary)',textAlign:'center',marginTop:14 }}>
+            Jawab cepat — setiap benar +2 koin, +5 XP
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── End screen ──
+  const acc = total > 0 ? Math.round((score / total) * 100) : 0;
+  const good = acc >= 70 || score >= 10;
+  const coinsEarned = Math.min(score * 2, 200);
+  const xpEarned = Math.min(score * 5, 500);
+  return (
+    <div className="body screen-anim" data-region="curriculum">
+      <div className="pad" style={{ display:'flex',flexDirection:'column',alignItems:'center',textAlign:'center',minHeight:340,gap:12 }}>
+        <img src={good ? 'assets/dru/dru-cheer.png' : 'assets/dru/dru-idle.png'} alt="Dru" style={{ width:80,height:80,objectFit:'contain',marginBottom:4 }} />
+        <div className="eyebrow" style={{ color:good?'var(--green)':'var(--text-tertiary)' }}>{good ? 'Hebat!' : 'Waktu habis!'}</div>
+        <h2 style={{ fontFamily:'var(--font-display)',fontSize:20,color:'var(--text-primary)',margin:0 }}>{score} / {total} benar</h2>
+        <span style={{ fontSize:14,color:'var(--text-secondary)' }}>Akurasi {acc}%</span>
+        <div className="celeb-rewards" style={{ justifyContent:'center' }}>
+          <div className="reward"><b style={{ color:'var(--accent)' }}>+{xpEarned}</b><span>XP</span></div>
+          <div className="reward"><b style={{ color:'var(--yellow)' }}>+{coinsEarned}</b><span>Koin</span></div>
+          {reward && reward.best > 0 && <div className="reward"><b style={{ color:'#FFCB05' }}>{reward.best}</b><span>Rekor</span></div>}
+        </div>
+        <div style={{ display:'flex',gap:10,marginTop:12 }}>
+          <button className="btn btn-primary" onClick={retry} style={{ minWidth:120 }}>Main lagi</button>
+          <button className="btn btn-ghost" onClick={() => go('home')} style={{ minWidth:100 }}>Selesai</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { Home, RegionMap, Catch, Celebration, MathBlitz, PLAYER, zoneState, rarest, RANK });
