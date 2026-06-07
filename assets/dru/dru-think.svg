@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="body" cx="50%" cy="60%"><stop offset="0%" stop-color="#6D5ACD"/><stop offset="100%" stop-color="#3D2A8A"/></radialGradient>
+    <radialGradient id="belly" cx="50%" cy="50%"><stop offset="0%" stop-color="#A78BFA"/><stop offset="100%" stop-color="#7C3AED"/></radialGradient>
+  </defs>
+  <!-- thought bubbles -->
+  <circle cx="340" cy="100" r="8" fill="#A78BFA" opacity="0.5"/>
+  <circle cx="370" cy="74" r="12" fill="#A78BFA" opacity="0.5"/>
+  <circle cx="406" cy="52" r="18" fill="#A78BFA" opacity="0.4"/>
+  <text x="394" y="62" text-anchor="middle" font-size="20" fill="#F0EEFF" opacity="0.8">?</text>
+  <!-- tail -->
+  <path d="M355 385 Q435 435 418 486 Q378 476 368 446 Q358 416 338 402 Z" fill="url(#body)"/>
+  <path d="M418 486 Q398 508 388 503 Q378 498 383 483 Q388 468 398 476 Z" fill="#FFCB05"/>
+  <!-- body -->
+  <ellipse cx="252" cy="338" rx="118" ry="128" fill="url(#body)"/>
+  <ellipse cx="252" cy="352" rx="68" ry="82" fill="url(#belly)" opacity="0.7"/>
+  <!-- left arm down -->
+  <path d="M143 298 Q108 328 112 368 Q122 378 132 358 Q138 338 152 318 Z" fill="url(#body)"/>
+  <!-- right arm up to chin -->
+  <path d="M362 298 Q396 270 390 230 Q378 222 366 250 Q358 272 352 296 Z" fill="url(#body)"/>
+  <ellipse cx="392" cy="220" rx="22" ry="18" fill="url(#body)"/>
+  <!-- neck -->
+  <rect x="224" y="220" width="56" height="46" rx="18" fill="url(#body)"/>
+  <!-- head tilted slightly -->
+  <ellipse cx="254" cy="188" rx="88" ry="80" fill="url(#body)"/>
+  <!-- horns -->
+  <path d="M198 140 L180 88 L216 128 Z" fill="#5B21B6"/>
+  <path d="M310 140 L327 88 L292 128 Z" fill="#5B21B6"/>
+  <!-- thoughtful eyes — one slightly narrowed -->
+  <ellipse cx="222" cy="180" rx="22" ry="22" fill="#F0EEFF"/>
+  <ellipse cx="286" cy="182" rx="22" ry="20" fill="#F0EEFF"/>
+  <ellipse cx="226" cy="182" rx="14" ry="14" fill="#1a0a4e"/>
+  <ellipse cx="290" cy="183" rx="13" ry="12" fill="#1a0a4e"/>
+  <circle cx="230" cy="176" r="5" fill="white" opacity="0.9"/>
+  <circle cx="294" cy="178" r="5" fill="white" opacity="0.9"/>
+  <!-- one eyebrow raised -->
+  <path d="M275 162 Q290 155 306 160" stroke="#3D2A8A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- snout -->
+  <ellipse cx="254" cy="208" rx="27" ry="17" fill="#A78BFA" opacity="0.6"/>
+  <!-- small hmm expression -->
+  <path d="M242 218 Q254 224 266 220" stroke="#3D2A8A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <ellipse cx="198" cy="202" rx="15" ry="9" fill="#F472B6" opacity="0.3"/>
+  <ellipse cx="310" cy="202" rx="15" ry="9" fill="#F472B6" opacity="0.3"/>
+  <!-- feet -->
+  <ellipse cx="208" cy="458" rx="36" ry="20" fill="#5B21B6"/>
+  <ellipse cx="296" cy="458" rx="36" ry="20" fill="#5B21B6"/>
+</svg>

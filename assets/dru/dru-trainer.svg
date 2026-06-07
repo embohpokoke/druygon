@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="body" cx="50%" cy="60%"><stop offset="0%" stop-color="#6D5ACD"/><stop offset="100%" stop-color="#3D2A8A"/></radialGradient>
+    <radialGradient id="vest" cx="50%" cy="40%"><stop offset="0%" stop-color="#EE3D34"/><stop offset="100%" stop-color="#B91C1C"/></radialGradient>
+    <radialGradient id="belly" cx="50%" cy="50%"><stop offset="0%" stop-color="#A78BFA"/><stop offset="100%" stop-color="#7C3AED"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- tail -->
+  <path d="M355 382 Q435 432 418 482 Q378 472 368 442 Q358 412 338 398 Z" fill="url(#body)"/>
+  <path d="M418 482 Q398 504 388 499 Q378 494 383 479 Q388 464 398 472 Z" fill="#FFCB05"/>
+  <!-- body with trainer vest -->
+  <ellipse cx="254" cy="336" rx="118" ry="128" fill="url(#body)"/>
+  <!-- trainer vest -->
+  <path d="M160 310 Q180 280 254 270 Q328 280 348 310 L340 400 Q290 420 218 420 Z" fill="url(#vest)" opacity="0.85"/>
+  <!-- vest collar/open center -->
+  <path d="M220 270 L254 320 L288 270" fill="#1a0a4e" opacity="0.5"/>
+  <!-- vest buttons -->
+  <circle cx="254" cy="350" r="5" fill="#F0EEFF" opacity="0.7"/>
+  <circle cx="254" cy="370" r="5" fill="#F0EEFF" opacity="0.7"/>
+  <circle cx="254" cy="390" r="5" fill="#F0EEFF" opacity="0.7"/>
+  <!-- belly -->
+  <ellipse cx="254" cy="365" rx="50" ry="60" fill="url(#belly)" opacity="0.4"/>
+  <!-- trainer cap -->
+  <ellipse cx="254" cy="148" rx="78" ry="30" fill="#EE3D34"/>
+  <rect x="180" y="140" width="148" height="24" rx="8" fill="#EE3D34"/>
+  <rect x="176" y="152" width="20" height="10" rx="4" fill="#B91C1C"/>
+  <!-- left arm -->
+  <path d="M142 300 Q106 330 110 368 Q120 378 130 356 Q136 336 150 316 Z" fill="url(#body)"/>
+  <!-- right arm holding pokeball -->
+  <path d="M366 288 Q402 262 408 226 Q394 218 376 246 Q362 268 354 290 Z" fill="url(#body)"/>
+  <!-- pokeball in hand -->
+  <circle cx="416" cy="218" r="32" fill="#2D2A50" stroke="#4B4680" stroke-width="2"/>
+  <path d="M384 218 A32 32 0 0 1 448 218 Z" fill="#EE3D34"/>
+  <rect x="384" y="214" width="64" height="8" fill="#1a0a4e"/>
+  <circle cx="416" cy="218" r="10" fill="#1a0a4e"/>
+  <circle cx="416" cy="218" r="6" fill="#F0EEFF"/>
+  <circle cx="413" cy="215" r="2" fill="white" opacity="0.8"/>
+  <!-- neck -->
+  <rect x="226" y="215" width="56" height="46" rx="18" fill="url(#body)"/>
+  <!-- head -->
+  <ellipse cx="254" cy="185" rx="86" ry="78" fill="url(#body)"/>
+  <!-- horns under cap -->
+  <path d="M198 144 L182 98 L214 130 Z" fill="#5B21B6"/>
+  <path d="M310 144 L326 98 L294 130 Z" fill="#5B21B6"/>
+  <!-- eyes — heroic -->
+  <ellipse cx="220" cy="178" rx="22" ry="23" fill="#F0EEFF"/>
+  <ellipse cx="288" cy="178" rx="22" ry="23" fill="#F0EEFF"/>
+  <ellipse cx="224" cy="180" rx="14" ry="15" fill="#1a0a4e"/>
+  <ellipse cx="292" cy="180" rx="14" ry="15" fill="#1a0a4e"/>
+  <circle cx="228" cy="174" r="5" fill="white" opacity="0.9"/>
+  <circle cx="296" cy="174" r="5" fill="white" opacity="0.9"/>
+  <!-- snout -->
+  <ellipse cx="254" cy="205" rx="27" ry="17" fill="#A78BFA" opacity="0.6"/>
+  <!-- determined smile -->
+  <path d="M238 213 Q254 224 270 213" stroke="#3D2A8A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <ellipse cx="196" cy="200" rx="16" ry="10" fill="#F472B6" opacity="0.35"/>
+  <ellipse cx="312" cy="200" rx="16" ry="10" fill="#F472B6" opacity="0.35"/>
+  <!-- feet -->
+  <ellipse cx="210" cy="456" rx="36" ry="20" fill="#5B21B6"/>
+  <ellipse cx="298" cy="456" rx="36" ry="20" fill="#5B21B6"/>
+  <!-- glow aura -->
+  <ellipse cx="254" cy="400" rx="100" ry="20" fill="#8B5CF6" opacity="0.2" filter="url(#glow)"/>
+</svg>

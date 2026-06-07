@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="body" cx="50%" cy="60%"><stop offset="0%" stop-color="#6D5ACD"/><stop offset="100%" stop-color="#3D2A8A"/></radialGradient>
+    <radialGradient id="belly" cx="50%" cy="50%"><stop offset="0%" stop-color="#A78BFA"/><stop offset="100%" stop-color="#7C3AED"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#1a0a4e" flood-opacity="0.5"/></filter>
+  </defs>
+  <!-- tail -->
+  <path d="M360 380 Q440 440 420 490 Q380 480 370 450 Q360 420 340 400 Z" fill="url(#body)" filter="url(#shadow)"/>
+  <path d="M420 490 Q400 510 390 505 Q380 500 385 485 Q390 470 400 478 Z" fill="#FFCB05"/>
+  <!-- body -->
+  <ellipse cx="256" cy="340" rx="120" ry="130" fill="url(#body)" filter="url(#shadow)"/>
+  <!-- belly -->
+  <ellipse cx="256" cy="355" rx="70" ry="85" fill="url(#belly)" opacity="0.7"/>
+  <!-- left arm relaxed -->
+  <path d="M145 300 Q110 330 115 370 Q125 380 135 360 Q140 340 155 320 Z" fill="url(#body)" filter="url(#shadow)"/>
+  <ellipse cx="120" cy="375" rx="20" ry="15" fill="url(#body)"/>
+  <!-- right arm relaxed -->
+  <path d="M367 300 Q402 330 397 370 Q387 380 377 360 Q372 340 357 320 Z" fill="url(#body)" filter="url(#shadow)"/>
+  <ellipse cx="392" cy="375" rx="20" ry="15" fill="url(#body)"/>
+  <!-- neck -->
+  <rect x="226" y="220" width="60" height="50" rx="20" fill="url(#body)"/>
+  <!-- head -->
+  <ellipse cx="256" cy="190" rx="90" ry="82" fill="url(#body)" filter="url(#shadow)"/>
+  <!-- horns -->
+  <path d="M200 140 L184 90 L218 128 Z" fill="#5B21B6"/>
+  <path d="M312 140 L328 90 L294 128 Z" fill="#5B21B6"/>
+  <path d="M200 140 L188 100 L210 132 Z" fill="#8B5CF6" opacity="0.6"/>
+  <path d="M312 140 L324 100 L302 132 Z" fill="#8B5CF6" opacity="0.6"/>
+  <!-- eyes -->
+  <ellipse cx="224" cy="182" rx="22" ry="24" fill="#F0EEFF"/>
+  <ellipse cx="288" cy="182" rx="22" ry="24" fill="#F0EEFF"/>
+  <ellipse cx="228" cy="184" rx="14" ry="16" fill="#1a0a4e"/>
+  <ellipse cx="292" cy="184" rx="14" ry="16" fill="#1a0a4e"/>
+  <circle cx="232" cy="178" r="5" fill="white" opacity="0.9"/>
+  <circle cx="296" cy="178" r="5" fill="white" opacity="0.9"/>
+  <!-- eye shine -->
+  <ellipse cx="220" cy="176" rx="5" ry="4" fill="#8B5CF6" opacity="0.5"/>
+  <ellipse cx="284" cy="176" rx="5" ry="4" fill="#8B5CF6" opacity="0.5"/>
+  <!-- snout -->
+  <ellipse cx="256" cy="210" rx="28" ry="18" fill="#A78BFA" opacity="0.6"/>
+  <circle cx="248" cy="207" r="5" fill="#3D2A8A" opacity="0.7"/>
+  <circle cx="264" cy="207" r="5" fill="#3D2A8A" opacity="0.7"/>
+  <!-- smile -->
+  <path d="M238 222 Q256 234 274 222" stroke="#3D2A8A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- cheek blush -->
+  <ellipse cx="200" cy="206" rx="16" ry="10" fill="#F472B6" opacity="0.35"/>
+  <ellipse cx="312" cy="206" rx="16" ry="10" fill="#F472B6" opacity="0.35"/>
+  <!-- feet -->
+  <ellipse cx="210" cy="462" rx="38" ry="22" fill="#5B21B6"/>
+  <ellipse cx="302" cy="462" rx="38" ry="22" fill="#5B21B6"/>
+  <!-- toe lines -->
+  <line x1="190" y1="468" x2="190" y2="478" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <line x1="210" y1="472" x2="210" y2="482" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <line x1="230" y1="468" x2="230" y2="478" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <line x1="282" y1="468" x2="282" y2="478" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <line x1="302" y1="472" x2="302" y2="482" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <line x1="322" y1="468" x2="322" y2="478" stroke="#4C1D95" stroke-width="3" stroke-linecap="round"/>
+  <!-- wing nubs -->
+  <path d="M148 280 Q100 240 108 190 Q140 210 148 260 Z" fill="#5B21B6" opacity="0.7"/>
+  <path d="M364 280 Q412 240 404 190 Q372 210 364 260 Z" fill="#5B21B6" opacity="0.7"/>
+</svg>

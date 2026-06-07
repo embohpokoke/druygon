@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="body" cx="50%" cy="60%"><stop offset="0%" stop-color="#6D5ACD"/><stop offset="100%" stop-color="#3D2A8A"/></radialGradient>
+    <radialGradient id="belly" cx="50%" cy="50%"><stop offset="0%" stop-color="#A78BFA"/><stop offset="100%" stop-color="#7C3AED"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- sparkles -->
+  <text x="80" y="120" font-size="36" fill="#FFCB05" filter="url(#glow)">✦</text>
+  <text x="380" y="100" font-size="28" fill="#F472B6" filter="url(#glow)">✦</text>
+  <text x="120" y="80" font-size="22" fill="#00D9B8">✦</text>
+  <text x="360" y="160" font-size="20" fill="#FFCB05">★</text>
+  <!-- tail -->
+  <path d="M360 380 Q460 420 450 480 Q410 470 395 440 Q380 410 350 395 Z" fill="url(#body)"/>
+  <path d="M450 480 Q430 510 415 504 Q400 498 408 480 Q416 462 428 472 Z" fill="#FFCB05"/>
+  <!-- body bouncing up -->
+  <ellipse cx="256" cy="330" rx="118" ry="125" fill="url(#body)"/>
+  <ellipse cx="256" cy="345" rx="68" ry="80" fill="url(#belly)" opacity="0.7"/>
+  <!-- arms UP in celebration -->
+  <path d="M148 270 Q80 200 72 140 Q108 138 132 200 Q148 240 158 272 Z" fill="url(#body)"/>
+  <ellipse cx="68" cy="132" rx="22" ry="18" fill="url(#body)"/>
+  <path d="M364 270 Q432 200 440 140 Q404 138 380 200 Q364 240 354 272 Z" fill="url(#body)"/>
+  <ellipse cx="444" cy="132" rx="22" ry="18" fill="url(#body)"/>
+  <!-- neck -->
+  <rect x="228" y="210" width="56" height="48" rx="18" fill="url(#body)"/>
+  <!-- head slightly tilted -->
+  <ellipse cx="260" cy="182" rx="88" ry="80" fill="url(#body)"/>
+  <!-- horns -->
+  <path d="M202 136 L185 84 L220 124 Z" fill="#5B21B6"/>
+  <path d="M318 136 L335 84 L300 124 Z" fill="#5B21B6"/>
+  <!-- BIG happy eyes -->
+  <ellipse cx="226" cy="178" rx="24" ry="20" fill="#F0EEFF"/>
+  <ellipse cx="294" cy="178" rx="24" ry="20" fill="#F0EEFF"/>
+  <!-- crescent happy eyes (squint) -->
+  <path d="M210 178 Q226 162 242 178" fill="#1a0a4e"/>
+  <path d="M278 178 Q294 162 310 178" fill="#1a0a4e"/>
+  <circle cx="218" cy="172" r="4" fill="white" opacity="0.9"/>
+  <circle cx="286" cy="172" r="4" fill="white" opacity="0.9"/>
+  <!-- snout -->
+  <ellipse cx="260" cy="204" rx="28" ry="17" fill="#A78BFA" opacity="0.6"/>
+  <!-- BIG smile -->
+  <path d="M234 212 Q260 236 286 212" stroke="#3D2A8A" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- cheeks bright -->
+  <ellipse cx="200" cy="200" rx="18" ry="12" fill="#F472B6" opacity="0.55"/>
+  <ellipse cx="320" cy="200" rx="18" ry="12" fill="#F472B6" opacity="0.55"/>
+  <!-- feet -->
+  <ellipse cx="214" cy="452" rx="36" ry="20" fill="#5B21B6"/>
+  <ellipse cx="298" cy="452" rx="36" ry="20" fill="#5B21B6"/>
+  <!-- confetti -->
+  <rect x="160" y="60" width="12" height="6" rx="2" fill="#FFCB05" transform="rotate(30 160 60)"/>
+  <rect x="340" y="70" width="10" height="5" rx="2" fill="#00D9B8" transform="rotate(-20 340 70)"/>
+  <rect x="90" y="180" width="8" height="4" rx="2" fill="#F472B6" transform="rotate(45 90 180)"/>
+  <rect x="420" y="200" width="9" height="5" rx="2" fill="#8B5CF6" transform="rotate(-35 420 200)"/>
+  <circle cx="140" cy="150" r="5" fill="#FFCB05" opacity="0.8"/>
+  <circle cx="390" cy="130" r="4" fill="#00D9B8" opacity="0.7"/>
+</svg>

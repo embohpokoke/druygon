@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="body" cx="50%" cy="60%"><stop offset="0%" stop-color="#6D5ACD"/><stop offset="100%" stop-color="#3D2A8A"/></radialGradient>
+    <radialGradient id="belly" cx="50%" cy="50%"><stop offset="0%" stop-color="#A78BFA"/><stop offset="100%" stop-color="#7C3AED"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- pointing direction indicator -->
+  <path d="M390 240 L460 240" stroke="#FFCB05" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round" opacity="0.7" filter="url(#glow)"/>
+  <polygon points="458,230 478,240 458,250" fill="#FFCB05" opacity="0.8"/>
+  <!-- tail -->
+  <path d="M350 388 Q420 440 405 488 Q365 478 355 448 Q345 418 325 402 Z" fill="url(#body)"/>
+  <path d="M405 488 Q385 510 375 505 Q365 500 370 485 Q375 470 385 478 Z" fill="#FFCB05"/>
+  <!-- body confident stance -->
+  <ellipse cx="248" cy="338" rx="116" ry="128" fill="url(#body)"/>
+  <ellipse cx="248" cy="352" rx="66" ry="82" fill="url(#belly)" opacity="0.7"/>
+  <!-- left arm on hip -->
+  <path d="M140 300 Q96 320 100 355 Q114 368 124 345 Q132 325 148 306 Z" fill="url(#body)"/>
+  <!-- right arm extended pointing right -->
+  <path d="M356 288 Q400 262 450 255 Q452 270 432 278 Q408 282 380 298 Z" fill="url(#body)"/>
+  <ellipse cx="456" cy="255" rx="22" ry="16" fill="url(#body)"/>
+  <!-- pointing finger -->
+  <path d="M456 248 L476 244 L478 256 L458 262 Z" fill="url(#body)"/>
+  <!-- neck -->
+  <rect x="220" y="218" width="56" height="46" rx="18" fill="url(#body)"/>
+  <!-- head -->
+  <ellipse cx="250" cy="186" rx="86" ry="80" fill="url(#body)"/>
+  <!-- horns -->
+  <path d="M194 136 L176 84 L212 124 Z" fill="#5B21B6"/>
+  <path d="M306 136 L323 84 L288 124 Z" fill="#5B21B6"/>
+  <!-- confident eyes -->
+  <ellipse cx="218" cy="178" rx="23" ry="23" fill="#F0EEFF"/>
+  <ellipse cx="282" cy="178" rx="23" ry="23" fill="#F0EEFF"/>
+  <ellipse cx="222" cy="180" rx="15" ry="15" fill="#1a0a4e"/>
+  <ellipse cx="286" cy="180" rx="15" ry="15" fill="#1a0a4e"/>
+  <circle cx="226" cy="174" r="5" fill="white" opacity="0.9"/>
+  <circle cx="290" cy="174" r="5" fill="white" opacity="0.9"/>
+  <!-- snout -->
+  <ellipse cx="250" cy="206" rx="27" ry="17" fill="#A78BFA" opacity="0.6"/>
+  <!-- confident smile -->
+  <path d="M234 214 Q250 228 266 214" stroke="#3D2A8A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <ellipse cx="194" cy="200" rx="16" ry="10" fill="#F472B6" opacity="0.35"/>
+  <ellipse cx="306" cy="200" rx="16" ry="10" fill="#F472B6" opacity="0.35"/>
+  <!-- feet -->
+  <ellipse cx="205" cy="456" rx="36" ry="20" fill="#5B21B6"/>
+  <ellipse cx="291" cy="456" rx="36" ry="20" fill="#5B21B6"/>
+</svg>

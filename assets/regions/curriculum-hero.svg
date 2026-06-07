@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1000"/>
+      <stop offset="100%" stop-color="#2a1a00"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+  
+  <!-- golden light rays -->
+  <line x1="480" y1="0" x2="0" y2="540" stroke="#FFCB05" stroke-width="60" opacity="0.04"/>
+  <line x1="480" y1="0" x2="960" y2="540" stroke="#FFCB05" stroke-width="60" opacity="0.04"/>
+  <line x1="480" y1="0" x2="200" y2="540" stroke="#FFCB05" stroke-width="40" opacity="0.03"/>
+  <line x1="480" y1="0" x2="760" y2="540" stroke="#FFCB05" stroke-width="40" opacity="0.03"/>
+  <!-- floating books/stars -->
+  <text x="150" y="200" font-size="48" fill="#FFCB05" opacity="0.2">📚</text>
+  <text x="750" y="180" font-size="40" fill="#FFCB05" opacity="0.15">⭐</text>
+  <text x="440" y="100" font-size="32" fill="#FFCB05" opacity="0.2">✦</text>
+  <!-- horizon glow -->
+  <ellipse cx="480" cy="540" rx="400" ry="120" fill="#FFCB05" opacity="0.08"/>
+  <!-- region label -->
+  <text x="480" y="250" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="56" font-weight="800" fill="#FFCB05" opacity="0.9" filter="url(#glow)">Dataran Ilmu</text>
+  <text x="480" y="300" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" fill="#FFCB05" opacity="0.5">Math & literacy plains</text>
+  <!-- placeholder note -->
+  <text x="480" y="490" text-anchor="middle" font-family="monospace" font-size="12" fill="#FFCB05" opacity="0.3">[ placeholder — replace with: assets/regions/curriculum-hero.jpg ]</text>
+</svg>
