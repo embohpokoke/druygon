@@ -1,0 +1,174 @@
+// data.jsx — content helpers for the Druygon redesign.
+// Phase B: REGIONS and QUESTIONS are loaded from /api/content/* at runtime.
+// Static fallbacks are used until the first fetch resolves.
+
+const SPRITE = (dex) =>
+  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${dex}.png`;
+
+// type → accent color
+const TYPE_COLOR = {
+  Normal: '#A8A878', Fire: '#F08030', Water: '#6890F0', Electric: '#F7D02C',
+  Grass: '#78C850', Ice: '#98D8D8', Fighting: '#C03028', Poison: '#A040A0',
+  Ground: '#E0C068', Flying: '#A890F0', Psychic: '#F85888', Bug: '#A8B820',
+  Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Steel: '#B8B8D0', Fairy: '#EE99AC',
+};
+
+const RARITY = {
+  common:    { label: 'Common',    c: '#9aa0b5' },
+  uncommon:  { label: 'Uncommon',  c: '#4ADE80' },
+  rare:      { label: 'Rare',      c: '#4A9EFF' },
+  legendary: { label: 'Legendary', c: '#FFCB05' },
+};
+
+const POKEBALLS = [
+  { id: 'pokeball',   name: 'Poké Ball',   rate: 0.50, price: 100,  own: 5, top: '#EE3D34', label: 'P' },
+  { id: 'greatball',  name: 'Great Ball',  rate: 0.70, price: 300,  own: 2, top: '#3B6FB5', label: 'G' },
+  { id: 'ultraball',  name: 'Ultra Ball',  rate: 0.88, price: 800,  own: 1, top: '#F0C419', label: 'U' },
+  { id: 'masterball', name: 'Master Ball', rate: 1.00, price: 5000, own: 0, top: '#7C3AED', label: 'M' },
+];
+
+// Static metadata (colours, blurbs, icons) — these never change at runtime.
+const REGION_META = {
+  curriculum: { name: 'Dataran Ilmu',   tag: 'Curriculum', accent: '#FFCB05', accentVar: '--yellow',  blurb: 'Math & literacy plains',  icon: 'sigma' },
+  science:    { name: 'Rimba Sains',    tag: 'Science',    accent: '#00D9B8', accentVar: '--teal',    blurb: 'Living-world wilds',      icon: 'leaf'  },
+  compsci:    { name: 'Sirkuit Digital', tag: 'Compsci',   accent: '#8B5CF6', accentVar: '--purple',  blurb: 'Logic & circuits',        icon: 'cpu'   },
+};
+
+// ── Live state — mutated by loadContent() ────────────────────────────────────
+// REGIONS and QUESTIONS start as null; components should show a loading state
+// until window.__contentReady resolves (or use the useContent() hook below).
+let REGIONS   = null;
+let QUESTIONS = {};
+let _contentReady = false;
+const _callbacks  = [];
+
+function onContentReady(fn) {
+  if (_contentReady) { fn(); return; }
+  _callbacks.push(fn);
+}
+
+function _notifyReady() {
+  _contentReady = true;
+  _callbacks.forEach((fn) => fn());
+  _callbacks.length = 0;
+}
+
+// ── API loaders ───────────────────────────────────────────────────────────────
+
+async function _fetchRegions() {
+  const res = await fetch('/api/content/regions');
+  if (!res.ok) throw new Error(`/api/content/regions → ${res.status}`);
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error);
+
+  // Merge API data with static metadata (accent, icon, blurb, tag)
+  const regions = {};
+  for (const [id, r] of Object.entries(data.regions)) {
+    const meta = REGION_META[id] || {};
+    regions[id] = {
+      id,
+      name:      r.name,
+      accent:    r.accent || meta.accent,
+      accentVar: meta.accentVar || '',
+      blurb:     meta.blurb    || '',
+      tag:       meta.tag      || id,
+      icon:      meta.icon     || 'star',
+      zones:     r.zones.map((z) => ({
+        zone:     z.zone,
+        id:       z.id,
+        name:     z.name,
+        topic:    z.topic,
+        minLevel: z.minLevel,
+        mons:     z.mons,         // already have .sprite from API
+      })),
+    };
+  }
+  return regions;
+}
+
+async function _fetchQuestions(topic) {
+  const res = await fetch(`/api/content/questions?topic=${encodeURIComponent(topic)}`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.success ? data.questions : [];
+}
+
+async function loadContent() {
+  try {
+    REGIONS = await _fetchRegions();
+
+    // Collect all topics from all regions
+    const topics = [];
+    for (const r of Object.values(REGIONS)) {
+      for (const z of r.zones) {
+        if (z.topic && !topics.includes(z.topic)) topics.push(z.topic);
+      }
+    }
+
+    // Fetch all topics in parallel
+    const results = await Promise.all(topics.map((t) => _fetchQuestions(t)));
+    topics.forEach((t, i) => { if (results[i].length) QUESTIONS[t] = results[i]; });
+
+    console.log('[data] content loaded — regions:', Object.keys(REGIONS).length, '| topics:', Object.keys(QUESTIONS).length);
+    _notifyReady();
+  } catch (err) {
+    console.error('[data] loadContent failed:', err);
+    // Fall back to minimal placeholder so the UI doesn't hang
+    REGIONS = REGIONS || _staticFallback();
+    _notifyReady();
+  }
+}
+
+// ── Minimal static fallback (identical to old data.jsx) ─────────────────────
+// Used only if the API is unreachable on first load.
+function _staticFallback() {
+  const mon = (dex, name, type, rarity) => ({ dex, name, type, rarity, sprite: SPRITE(dex) });
+  return {
+    curriculum: {
+      id: 'curriculum', name: 'Dataran Ilmu',   accent: '#FFCB05', accentVar: '--yellow', blurb: 'Math & literacy plains', tag: 'Curriculum', icon: 'sigma',
+      zones: [
+        { zone: 1, name: 'Padang Pemula',   topic: 'operasi_hitung', minLevel: 1,  mons: [mon(19,'Rattata','Normal','common'),mon(16,'Pidgey','Flying','common'),mon(133,'Eevee','Normal','uncommon'),mon(25,'Pikachu','Electric','rare')] },
+        { zone: 2, name: 'Lembah Belajar',  topic: 'pecahan',        minLevel: 6,  mons: [mon(52,'Meowth','Normal','common'),mon(7,'Squirtle','Water','uncommon'),mon(4,'Charmander','Fire','uncommon')] },
+        { zone: 3, name: 'Puncak Cendekia', topic: 'geometri',       minLevel: 11, mons: [mon(1,'Bulbasaur','Grass','common'),mon(65,'Alakazam','Psychic','rare'),mon(150,'Mewtwo','Psychic','legendary')] },
+      ],
+    },
+    science: {
+      id: 'science', name: 'Rimba Sains', accent: '#00D9B8', accentVar: '--teal', blurb: 'Living-world wilds', tag: 'Science', icon: 'leaf',
+      zones: [
+        { zone: 1, name: 'Tunas Hijau',     topic: 'makhluk_hidup',      minLevel: 1,  mons: [mon(43,'Oddish','Grass','common'),mon(548,'Petilil','Grass','uncommon')] },
+        { zone: 2, name: 'Sarang Serangga', topic: 'serangga_ekosistem', minLevel: 6,  mons: [mon(13,'Weedle','Bug','common'),mon(637,'Volcarona','Bug','legendary')] },
+        { zone: 3, name: 'Reaktor Mineral', topic: 'materi_energi',      minLevel: 11, mons: [mon(74,'Geodude','Rock','common'),mon(145,'Zapdos','Electric','legendary')] },
+      ],
+    },
+    compsci: {
+      id: 'compsci', name: 'Sirkuit Digital', accent: '#8B5CF6', accentVar: '--purple', blurb: 'Logic & circuits', tag: 'Compsci', icon: 'cpu',
+      zones: [
+        { zone: 1, name: 'Gerbang Logika', topic: 'urutan_logika',       minLevel: 1,  mons: [mon(81,'Magnemite','Electric','common'),mon(137,'Porygon','Normal','uncommon')] },
+        { zone: 2, name: 'Jaringan',       topic: 'perulangan_jaringan', minLevel: 6,  mons: [mon(233,'Porygon2','Normal','uncommon'),mon(479,'Rotom','Electric','rare')] },
+        { zone: 3, name: 'Inti Prosesor',  topic: 'algoritma_debug',     minLevel: 11, mons: [mon(474,'Porygon-Z','Normal','rare'),mon(1008,'Miraidon','Electric','legendary')] },
+      ],
+    },
+  };
+}
+
+// ── React hook for components ─────────────────────────────────────────────────
+// Usage: const { regions, questions, ready } = useContent();
+function useContent() {
+  const [ready, setReady] = React.useState(_contentReady);
+  React.useEffect(() => {
+    if (_contentReady) { setReady(true); return; }
+    onContentReady(() => setReady(true));
+  }, []);
+  return { regions: REGIONS, questions: QUESTIONS, ready };
+}
+
+// Kick off the load immediately when this script executes
+loadContent();
+
+Object.assign(window, {
+  SPRITE, TYPE_COLOR, RARITY, POKEBALLS, REGION_META,
+  // Live-updated refs — components read these after ready
+  get REGIONS()   { return REGIONS;   },
+  get QUESTIONS() { return QUESTIONS; },
+  useContent, onContentReady, loadContent,
+});

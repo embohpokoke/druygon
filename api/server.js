@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const { Pool } = require('pg');
 const path = require('path');
 const session = require('express-session');
+const connectPgSimple = require('connect-pg-simple');
 
 // Load .env FIRST before any other modules that read env vars
 dotenv.config({ path: path.join(__dirname, '.env') });
@@ -11,12 +13,16 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const providerManager = require('./providers');
 const rateLimiter = require('./middleware/rate-limiter');
 const costTracker = require('./middleware/cost-tracker');
-const questionValidator = require('./validators/question');
 const authManager = require('./auth-manager');
 const oauthRoutes = require('./routes/oauth');
+const legacyAiRouter = require('./routes/legacy-ai');
+const imageRoutes = require('./routes/image');
 const tutorRouter = require('./src/routes/tutor');
+const parentRouter = require('./src/routes/parent');
+const contentRouter = require('./src/routes/content');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3847;
 
 // Middleware
@@ -33,12 +39,28 @@ app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
 
 // Session (for OAuth support)
 if (process.env.OAUTH_ENABLED === 'true') {
+  const PgSession = connectPgSimple(session);
+  const sessionPool = new Pool({
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432'),
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'livininbintaro'
+  });
+
   app.use(session({
+    store: new PgSession({
+      pool: sessionPool,
+      tableName: 'druygon.session_store',
+      createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET || 'druygon-secret-change-in-production',
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     }
@@ -91,6 +113,16 @@ app.use('/api/oauth', oauthRoutes);
 
 // AI Tutor Session routes
 app.use('/api/tutor', tutorRouter);
+app.use('/api/parent', parentRouter);
+
+// Content (Phase B) — read-only gameplay content
+app.use('/api/content', contentRouter);
+
+// Legacy AI generation/chat/assess routes
+app.use('/api/ai', legacyAiRouter);
+
+// Image generation
+app.use('/api/image', imageRoutes);
 
 // Serve tutor UI
 app.get('/tutor', (req, res) => {
@@ -100,159 +132,6 @@ app.get('/tutor', (req, res) => {
 // Serve parent UI
 app.get('/parent', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'parent.html'));
-});
-
-// Generate questions
-app.post('/api/ai/generate', async (req, res) => {
-  try {
-    const { subject = 'matematika', topic, difficulty = 'sedang', count = 5, grade = 5 } = req.body;
-
-    const prompt = require('./prompts/question-gen').buildPrompt({
-      subject,
-      topic,
-      difficulty,
-      count,
-      grade
-    });
-
-    const result = await providerManager.complete(prompt, {
-      maxTokens: 800,
-      temperature: 0.7
-    });
-
-    let questions = questionValidator.parse(result.text);
-    questions = questionValidator.validate(questions, { topic, difficulty });
-
-    if (questions.length === 0) {
-      throw new Error('No valid questions generated');
-    }
-
-    // Track cost
-    costTracker.recordRequest({
-      provider: result.provider,
-      inputTokens: result.inputTokens || 0,
-      outputTokens: result.outputTokens || 0,
-      endpoint: 'generate'
-    });
-
-    res.json({
-      success: true,
-      provider: result.provider,
-      questions: questions.slice(0, count),
-      metadata: {
-        topic,
-        difficulty,
-        generatedAt: new Date().toISOString()
-      }
-    });
-  } catch (error) {
-    console.error('Generate error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-      fallback: 'local'
-    });
-  }
-});
-
-// AI Tutor chat
-app.post('/api/ai/chat', async (req, res) => {
-  try {
-    const { message, context = {}, subject = 'matematika' } = req.body;
-
-    if (!message || message.trim().length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: 'Message is required'
-      });
-    }
-
-    const prompt = require('./prompts/tutor-chat').buildPrompt({
-      message,
-      context,
-      subject
-    });
-
-    const result = await providerManager.complete(prompt, {
-      maxTokens: 300,
-      temperature: 0.8
-    });
-
-    // Track cost
-    costTracker.recordRequest({
-      provider: result.provider,
-      inputTokens: result.inputTokens || 0,
-      outputTokens: result.outputTokens || 0,
-      endpoint: 'chat'
-    });
-
-    res.json({
-      success: true,
-      provider: result.provider,
-      message: result.text,
-      metadata: {
-        respondedAt: new Date().toISOString()
-      }
-    });
-  } catch (error) {
-    console.error('Chat error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-      message: 'Maaf, Draco sedang istirahat. Coba lagi nanti ya! 😴'
-    });
-  }
-});
-
-// Assessment
-app.post('/api/ai/assess', async (req, res) => {
-  try {
-    const { subject = 'matematika', grade = 5, topics = [] } = req.body;
-
-    const prompt = require('./prompts/assessment').buildPrompt({
-      subject,
-      grade,
-      topics
-    });
-
-    const result = await providerManager.complete(prompt, {
-      maxTokens: 1200,
-      temperature: 0.6
-    });
-
-    let questions = questionValidator.parse(result.text);
-    questions = questionValidator.validate(questions, { difficulty: 'mixed' });
-
-    if (questions.length === 0) {
-      throw new Error('No valid assessment questions generated');
-    }
-
-    // Track cost
-    costTracker.recordRequest({
-      provider: result.provider,
-      inputTokens: result.inputTokens || 0,
-      outputTokens: result.outputTokens || 0,
-      endpoint: 'assess'
-    });
-
-    res.json({
-      success: true,
-      provider: result.provider,
-      questions: questions.slice(0, 15),
-      metadata: {
-        subject,
-        grade,
-        generatedAt: new Date().toISOString()
-      }
-    });
-  } catch (error) {
-    console.error('Assessment error:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message,
-      fallback: 'local'
-    });
-  }
 });
 
 // 404 handler
