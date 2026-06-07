@@ -246,7 +246,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp }) {
             <div className="balls">
               {(pokeballsProp || POKEBALLS).map((b) => (
                 <div key={b.id} className={'ball-opt' + (b.own === 0 ? ' dim' : '')} onClick={() => b.own > 0 && throwBall(b)}>
-                  <Pokeball size={30} top={b.top} />
+                  <Pokeball size={34} id={b.id} top={b.top} />
                   <div><b>{b.name}</b><span>×{b.own} · {Math.round(b.rate * 100)}%</span></div>
                 </div>
               ))}

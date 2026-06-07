@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#4A9EFF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#4A9EFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- hexagon frame -->
+  <polygon points="64,8 110,34 110,86 64,112 18,86 18,34" fill="url(#bg)" stroke="#4A9EFF" stroke-width="4" filter="url(#glow)"/>
+  <polygon points="64,16 102,38 102,82 64,104 26,82 26,38" fill="#110F22" stroke="#2D5FA0" stroke-width="1.5"/>
+  <!-- LVL text placeholder (number overlaid at runtime via CSS) -->
+  <text x="64" y="58" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="10" fill="#4A9EFF" opacity="0.7">LVL</text>
+  <text x="64" y="82" text-anchor="middle" font-family="'Press Start 2P', monospace" font-size="22" fill="#F0EEFF" font-weight="bold">--</text>
+  <!-- corner sparkles -->
+  <circle cx="64" cy="8" r="4" fill="#4A9EFF" opacity="0.8"/>
+  <circle cx="110" cy="34" r="3" fill="#4A9EFF" opacity="0.6"/>
+  <circle cx="110" cy="86" r="3" fill="#4A9EFF" opacity="0.6"/>
+</svg>

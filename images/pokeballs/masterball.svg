@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <clipPath id="clip"><circle cx="64" cy="64" r="56"/></clipPath>
+    <radialGradient id="purpleGrad" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="#A78BFA"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </radialGradient>
+  </defs>
+  <!-- top half purple gradient -->
+  <path d="M8 64 A56 56 0 0 1 120 64 Z" fill="url(#purpleGrad)" clip-path="url(#clip)"/>
+  <!-- M letter on top -->
+  <text x="64" y="55" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="32" font-weight="900" fill="white" opacity="0.95">M</text>
+  <!-- pink dot accents -->
+  <circle cx="34" cy="42" r="5" fill="#F472B6" opacity="0.9"/>
+  <circle cx="94" cy="42" r="5" fill="#F472B6" opacity="0.9"/>
+  <!-- bottom half white -->
+  <path d="M8 64 A56 56 0 0 0 120 64 Z" fill="#F0EEFF" clip-path="url(#clip)"/>
+  <!-- outline -->
+  <circle cx="64" cy="64" r="56" fill="none" stroke="#1a1a2e" stroke-width="4"/>
+  <!-- center band -->
+  <rect x="8" y="60" width="112" height="8" fill="#1a1a2e" clip-path="url(#clip)"/>
+  <!-- button outer purple -->
+  <circle cx="64" cy="64" r="14" fill="#7C3AED"/>
+  <circle cx="64" cy="64" r="11" fill="#1a1a2e"/>
+  <!-- button inner -->
+  <circle cx="64" cy="64" r="7" fill="#F0EEFF"/>
+  <circle cx="61" cy="61" r="2.5" fill="white" opacity="0.8"/>
+  <!-- sparkle accents -->
+  <path d="M26 72 L28 76 L32 72 L28 68 Z" fill="#F472B6" opacity="0.7"/>
+  <path d="M96 72 L98 76 L102 72 L98 68 Z" fill="#F472B6" opacity="0.7"/>
+  <ellipse cx="44" cy="38" rx="10" ry="6" fill="white" opacity="0.2" transform="rotate(-20 44 38)"/>
+</svg>

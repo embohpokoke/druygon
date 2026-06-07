@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <clipPath id="clip"><circle cx="64" cy="64" r="56"/></clipPath>
+  </defs>
+  <!-- top half blue -->
+  <path d="M8 64 A56 56 0 0 1 120 64 Z" fill="#3B6FB5" clip-path="url(#clip)"/>
+  <!-- red stripe on top -->
+  <path d="M20 50 Q64 36 108 50 L108 64 L20 64 Z" fill="#EE3D34" clip-path="url(#clip)"/>
+  <!-- bottom half white -->
+  <path d="M8 64 A56 56 0 0 0 120 64 Z" fill="#F0EEFF" clip-path="url(#clip)"/>
+  <!-- outline -->
+  <circle cx="64" cy="64" r="56" fill="none" stroke="#1a1a2e" stroke-width="4"/>
+  <!-- center band -->
+  <rect x="8" y="60" width="112" height="8" fill="#1a1a2e" clip-path="url(#clip)"/>
+  <!-- button outer -->
+  <circle cx="64" cy="64" r="14" fill="#1a1a2e"/>
+  <!-- button inner -->
+  <circle cx="64" cy="64" r="9" fill="#F0EEFF"/>
+  <circle cx="60" cy="60" r="3" fill="white" opacity="0.7"/>
+  <ellipse cx="44" cy="40" rx="10" ry="6" fill="white" opacity="0.25" transform="rotate(-20 44 40)"/>
+</svg>

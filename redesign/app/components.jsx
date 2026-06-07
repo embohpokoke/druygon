@@ -39,8 +39,21 @@ function Icon({ name, size = 22, color = 'currentColor', sw = 1.7, style }) {
   );
 }
 
-// CSS-art pokéball, tinted per tier
-function Pokeball({ size = 30, top = '#EE3D34', style }) {
+// Per-tier pokéball SVG paths (served from /images/pokeballs/<id>.svg)
+// Falls back to CSS-art div if SVG not loaded
+const POKEBALL_SVG = {
+  pokeball:   '/images/pokeballs/pokeball.svg',
+  greatball:  '/images/pokeballs/greatball.svg',
+  ultraball:  '/images/pokeballs/ultraball.svg',
+  masterball: '/images/pokeballs/masterball.svg',
+};
+function getPokeballImg(ballId) { return POKEBALL_SVG[ballId] || POKEBALL_SVG.pokeball; }
+
+function Pokeball({ size = 30, top = '#EE3D34', id, style }) {
+  if (id && POKEBALL_SVG[id]) {
+    return <img src={POKEBALL_SVG[id]} width={size} height={size} alt={id}
+      style={{ objectFit: 'contain', flexShrink: 0, ...style }} />;
+  }
   return <div className="pokeball" style={{ width: size, height: size, '--ball-top': top, ...style }} />;
 }
 

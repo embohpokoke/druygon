@@ -49,21 +49,21 @@ function Collection({ caught, region, go }) {
   );
 }
 
-function Store({ coins, region }) {
+function Store({ coins, region, pokeballs }) {
   return (
     <div className="body screen-anim" data-region={region}>
       <div className="pad">
         <div className="wallet">
-          <Pokeball size={40} top="#EE3D34" />
+          <Pokeball size={40} id="pokeball" top="#EE3D34" />
           <div style={{ flex: 1 }}><span>Your coins</span><b>{coins}</b></div>
           <div className="pill"><Icon name="zap" size={13} /> Earn more</div>
         </div>
         <div className="sec-head"><h2>Poké Balls</h2></div>
-        {POKEBALLS.map((b) => {
+        {(pokeballs || POKEBALLS).map((b) => {
           const afford = coins >= b.price;
           return (
             <div key={b.id} className="store-row" style={{ borderLeft: `4px solid ${b.top}` }}>
-              <Pokeball size={46} top={b.top} />
+              <Pokeball size={46} id={b.id} top={b.top} />
               <div className="info"><b>{b.name}</b><span>Catch rate {Math.round(b.rate * 100)}% · you own {b.own}</span></div>
               <div className={'buy' + (afford ? '' : ' disabled')}><Icon name="coin" size={13} color={afford ? '#0b0a16' : 'var(--text-tertiary)'} /> {b.price}</div>
             </div>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="128" cy="128" r="110" fill="url(#bg)"/>
+  <circle cx="128" cy="128" r="106" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-opacity="0.4"/>
+  <!-- CPU chip body -->
+  <rect x="88" y="88" width="80" height="80" rx="10" fill="none" stroke="#8B5CF6" stroke-width="5" filter="url(#glow)"/>
+  <rect x="100" y="100" width="56" height="56" rx="6" fill="#8B5CF6" opacity="0.2"/>
+  <!-- chip pins left -->
+  <line x1="88" y1="108" x2="72" y2="108" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="88" y1="120" x2="72" y2="120" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="88" y1="132" x2="72" y2="132" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="88" y1="144" x2="72" y2="144" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="88" y1="156" x2="72" y2="156" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <!-- chip pins right -->
+  <line x1="168" y1="108" x2="184" y2="108" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="168" y1="120" x2="184" y2="120" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="168" y1="132" x2="184" y2="132" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="168" y1="144" x2="184" y2="144" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="168" y1="156" x2="184" y2="156" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <!-- chip pins top -->
+  <line x1="108" y1="88" x2="108" y2="72" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="120" y1="88" x2="120" y2="72" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="132" y1="88" x2="132" y2="72" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="144" y1="88" x2="144" y2="72" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="156" y1="88" x2="156" y2="72" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <!-- chip pins bottom -->
+  <line x1="108" y1="168" x2="108" y2="184" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="120" y1="168" x2="120" y2="184" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="132" y1="168" x2="132" y2="184" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="144" y1="168" x2="144" y2="184" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <line x1="156" y1="168" x2="156" y2="184" stroke="#8B5CF6" stroke-width="4" stroke-linecap="round"/>
+  <!-- inner circuit lines -->
+  <path d="M110 128 L120 118 L136 118 L146 128 L136 138 L120 138 Z" fill="#8B5CF6" filter="url(#glow)"/>
+  <circle cx="128" cy="128" r="8" fill="#F0EEFF"/>
+</svg>
