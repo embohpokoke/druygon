@@ -37,7 +37,7 @@ const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = [
   const zoneCaught = caught.filter(c => c.zoneId === z.id);
   if (new Set(zoneCaught.map(c => c.dex)).size >= 3) return 'cleared';
 
-  // Open only if previous zone is cleared (or this is zone 1) AND level >= minLevel
+  // Open if previous zone is cleared (or zone 1) — level is NOT a gate (GAME-RULES)
   const prevZone = (allZones || []).find(x => x.zone === z.zone - 1);
   let prevCleared = !prevZone;
   if (prevZone) {
@@ -49,8 +49,7 @@ const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = [
     }
   }
 
-  const levelOk = (profile?.level ?? PLAYER.level) >= z.minLevel;
-  if (prevCleared && levelOk) return 'open';
+  if (prevCleared) return 'open';
   return 'locked';
 };
 
@@ -263,7 +262,7 @@ function RegionMap({ region, go, caught, profile, progress }) {
               </div>
               <div className="zone-main">
                 <b>{z.name}</b>
-                <code>{z.topic}{locked ? ` · unlocks LVL ${z.minLevel}` : ''}</code>
+                <code>{z.topic}{locked ? ` · selesaikan zona sebelumnya` : ''}</code>
               </div>
               <div className="zone-mons">
                 {z.mons.slice(0, 3).map((m, i) => (locked || (!cleared && i > 0))
@@ -419,7 +418,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
 }
 
 // ───────────────────────── CELEBRATION (variant A) ─────────────────────────
-function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd }) {
+function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd, newLevel, rewardBalls, levelUp }) {
   const { regions } = useContent();
   const r   = (regions && regions[region]) || { accent: '#8B5CF6' };
   const rar = RARITY[mon.rarity] || RARITY.common;
@@ -444,6 +443,18 @@ function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd }) {
           <div key={l} className="reward"><b style={{ color: l === 'Coins' ? 'var(--yellow)' : 'var(--accent)' }}>{v}</b><span>{l}</span></div>
         ))}
       </div>
+      {levelUp && rewardBalls && (
+        <div style={{ background: 'rgba(255,203,5,.1)', border: '1px solid rgba(255,203,5,.3)', borderRadius: 12, padding: '10px 16px', marginTop: 4, textAlign: 'center' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#FFCB05', fontFamily: 'var(--font-display)', marginBottom: 4 }}>
+            🎉 Naik Level {newLevel}!
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+            {rewardBalls.pokeball > 0 && <span>+{rewardBalls.pokeball} Poké Ball{rewardBalls.pokeball > 1 ? 's' : ''} </span>}
+            {rewardBalls.greatball > 0 && <span>+{rewardBalls.greatball} Great Ball{rewardBalls.greatball > 1 ? 's' : ''} </span>}
+            {rewardBalls.ultraball > 0 && <span>+{rewardBalls.ultraball} Ultra Ball{rewardBalls.ultraball > 1 ? 's' : ''} </span>}
+          </div>
+        </div>
+      )}
       <div className="celeb-actions">
         <button className="btn btn-primary btn-block" onClick={() => { if (activeSlot && onTeamAdd) onTeamAdd(mon.dex); onTeam(); }}>
           <Icon name="plus" size={16} color="#0b0a16" /> Add to team

@@ -217,6 +217,10 @@ function App() {
         xp:        data.xpNow       ?? prev.xp,
         pokeballs: data.pokeballs   ?? prev.pokeballs,
       }));
+      // Update celeb with level-up info if applicable
+      if (data.levelUp) {
+        setCeleb(prev => prev ? { ...prev, newLevel: data.levelNow, rewardBalls: data.rewardBalls, levelUp: true } : prev);
+      }
       // Optimistically advance daily mission (will reconcile on next full load)
       setDailyMission(prev => ({
         ...prev,
@@ -300,7 +304,7 @@ function App() {
         {header}
         {content}
         {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
-        {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} />}
+        {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} newLevel={celeb.newLevel} rewardBalls={celeb.rewardBalls} levelUp={celeb.levelUp} />}
       </div>
 
       {/* Player picker — first launch splash + header avatar tap */}

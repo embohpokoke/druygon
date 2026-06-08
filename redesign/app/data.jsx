@@ -22,9 +22,9 @@ const RARITY = {
 
 const POKEBALLS = [
   { id: 'pokeball',   name: 'Poké Ball',   rate: 0.50, price: 100,  own: 5, top: '#EE3D34', label: 'P' },
-  { id: 'greatball',  name: 'Great Ball',  rate: 0.70, price: 300,  own: 2, top: '#3B6FB5', label: 'G' },
-  { id: 'ultraball',  name: 'Ultra Ball',  rate: 0.88, price: 800,  own: 1, top: '#F0C419', label: 'U' },
-  { id: 'masterball', name: 'Master Ball', rate: 1.00, price: 5000, own: 0, top: '#7C3AED', label: 'M' },
+  { id: 'greatball',  name: 'Great Ball',  rate: 0.70, price: 200,  own: 2, top: '#3B6FB5', label: 'G' },
+  { id: 'ultraball',  name: 'Ultra Ball',  rate: 0.88, price: 500,  own: 1, top: '#F0C419', label: 'U' },
+  { id: 'masterball', name: 'Master Ball', rate: 1.00, price: 2000, own: 0, top: '#7C3AED', label: 'M' },
 ];
 
 // Static metadata (colours, blurbs, icons) — these never change at runtime.

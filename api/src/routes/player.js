@@ -27,7 +27,7 @@ const xpFor  = (lvl) => XP_THR[Math.min(lvl, XP_THR.length - 1)] || (4600 + (lvl
 const BALL_TYPES = ['pokeball', 'greatball', 'ultraball', 'masterball'];
 const COIN_AWARD = { pokeball: 50, greatball: 80, ultraball: 120, masterball: 300 };
 const XP_AWARD   = 50;
-const BALL_PRICE = { pokeball: 100, greatball: 300, ultraball: 800, masterball: 5000 };
+const BALL_PRICE = { pokeball: 100, greatball: 200, ultraball: 500, masterball: 2000 };
 
 /** Count consecutive days (back from today) with at least 1 catch. */
 function computeStreak(db, slot, today) {
@@ -79,6 +79,28 @@ function computeDailyMission(db, slot) {
   ).get(slot, today);
   const streak = computeStreak(db, slot, today);
   return { progress, target, completed, claimed, streak };
+}
+
+/** Grant pokéball rewards for level-up. Writes to pokeball_ledger.
+ *  Returns { pokeball, greatball, ultraball } counts awarded. */
+function grantLevelUpBalls(db, slot, oldLevel, newLevel) {
+  const rewards = { pokeball: 0, greatball: 0, ultraball: 0 };
+  for (let lv = oldLevel + 1; lv <= newLevel; lv++) {
+    if (lv >= 2 && lv <= 4) {
+      db.prepare("INSERT INTO pokeball_ledger(slot, ball_type, delta, reason) VALUES (?,?,?,?)").run(slot, 'pokeball', 1, 'level_up');
+      rewards.pokeball += 1;
+    } else if (lv === 5 || lv === 7 || lv === 9) {
+      db.prepare("INSERT INTO pokeball_ledger(slot, ball_type, delta, reason) VALUES (?,?,?,?)").run(slot, 'greatball', 1, 'level_up');
+      rewards.greatball += 1;
+    } else if (lv === 6 || lv === 8 || lv === 10) {
+      db.prepare("INSERT INTO pokeball_ledger(slot, ball_type, delta, reason) VALUES (?,?,?,?)").run(slot, 'pokeball', 2, 'level_up');
+      rewards.pokeball += 2;
+    } else if (lv >= 11 && (lv - 11) % 5 === 0) {
+      db.prepare("INSERT INTO pokeball_ledger(slot, ball_type, delta, reason) VALUES (?,?,?,?)").run(slot, 'ultraball', 1, 'level_up');
+      rewards.ultraball += 1;
+    }
+  }
+  return rewards;
 }
 
 function getDb() { return new Database(PLAYERS_DB); }
@@ -191,15 +213,22 @@ router.post('/:slot/catch', (req, res) => {
         "INSERT INTO pokeball_ledger(slot, ball_type, delta, reason, ref_dex) VALUES (?,?,?,?,?)"
       ).run(slot, ballType, -1, 'use_throw', dex);
 
-      // 3. Award coins + XP for new catches
+      // 3. Award coins + XP for new catches (GAME-RULES §2)
+      let levelUp = false;
+      let rewardBalls = {};
       if (isNew) {
         const coinAward = COIN_AWARD[ballType] ?? 50;
         p.coins  = (p.coins  ?? 0) + coinAward;
         p.xp     = (p.xp     ?? 0) + XP_AWARD;
         p.caughtCount = (p.caughtCount ?? 0) + 1;
-        // Level-up check
+        // Level-up check + reward (GAME-RULES §3)
+        const oldLevel = p.level ?? 1;
         while (p.xp >= xpFor(p.level ?? 1)) {
           p.level = (p.level ?? 1) + 1;
+        }
+        if (p.level > oldLevel) {
+          levelUp = true;
+          rewardBalls = grantLevelUpBalls(db, slot, oldLevel, p.level);
         }
         p.xpToNext = xpFor(p.level ?? 1);
         db.prepare(
@@ -226,6 +255,8 @@ router.post('/:slot/catch', (req, res) => {
       coinsNow: p.coins,
       levelNow: p.level,
       xpNow:    p.xp,
+      levelUp,
+      rewardBalls,
     });
   } catch (err) {
     console.error('[player/catch]', err);
@@ -548,8 +579,9 @@ router.post('/:slot/mathblitz', (req, res) => {
 
 // ── POST /api/player/:slot/answer ───────────────────────────────────────
 // Body: { correct: boolean, zoneId?: string }
-// Awards +1 coin +5 XP per correct answer (server-authoritative).
-// Anti-farming: caps answer-reward coins at 100/day per slot.
+// Awards +5 coins +5 XP per correct answer (GAME-RULES §2).
+// Anti-farming: caps answer-reward coins at 300/day per slot.
+// Includes level-up reward pokéballs when XP crosses a level threshold.
 router.post('/:slot/answer', (req, res) => {
   const slot = parseSlot(req.params.slot);
   if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
@@ -558,7 +590,7 @@ router.post('/:slot/answer', (req, res) => {
   if (typeof correct !== 'boolean') return res.status(400).json({ success: false, error: 'correct (boolean) required' });
 
   const today = new Date().toISOString().slice(0, 10);
-  const DAILY_COIN_CAP = 100;
+  const DAILY_COIN_CAP = 300;
 
   try {
     const db = getDb();
@@ -570,7 +602,7 @@ router.post('/:slot/answer', (req, res) => {
 
     if (!correct) {
       db.close();
-      return res.json({ success: true, coinsNow: p.coins ?? 0, xpNow: p.xp ?? 0, levelNow: p.level ?? 1, capped: false });
+      return res.json({ success: true, coinsNow: p.coins ?? 0, xpNow: p.xp ?? 0, levelNow: p.level ?? 1, capped: false, levelUp: false });
     }
 
     // Daily cap check — reset counter when date rolls over
@@ -578,8 +610,12 @@ router.post('/:slot/answer', (req, res) => {
     let coinsToday = (rewardDate === today) ? (p.answerCoinsToday ?? 0) : 0;
     const capped = coinsToday >= DAILY_COIN_CAP;
 
+    let levelUp = false;
+    let rewardBalls = {};
+
     if (!capped) {
-      const coinsToAdd = Math.min(1, DAILY_COIN_CAP - coinsToday);
+      const coinsToAdd = Math.min(5, DAILY_COIN_CAP - coinsToday);
+      const oldLevel = p.level ?? 1;
       db.transaction(() => {
         p.coins  = (p.coins  ?? 0) + coinsToAdd;
         p.xp     = (p.xp     ?? 0) + 5;
@@ -587,13 +623,19 @@ router.post('/:slot/answer', (req, res) => {
         p.answerCoinsToday  = coinsToday + coinsToAdd;
         while (p.xp >= xpFor(p.level ?? 1)) { p.level = (p.level ?? 1) + 1; }
         p.xpToNext = xpFor(p.level ?? 1);
+        // Level-up rewards (GAME-RULES §3)
+        if (p.level > oldLevel) {
+          levelUp = true;
+          rewardBalls = grantLevelUpBalls(db, slot, oldLevel, p.level);
+        }
         db.prepare("UPDATE players SET profile_json=?, updated_at=datetime('now') WHERE slot=?").run(JSON.stringify(p), slot);
         db.prepare("INSERT INTO profile_history(slot, event, profile_json) VALUES (?,?,?)").run(slot, `answer-correct-zone${zoneId||''}`, JSON.stringify(p));
       })();
     }
 
+    const pokeballs = pokeballBalances(db, slot);
     db.close();
-    res.json({ success: true, coinsNow: p.coins, xpNow: p.xp, levelNow: p.level, capped, coinsAwarded: capped ? 0 : 1, xpAwarded: capped ? 0 : 5 });
+    res.json({ success: true, coinsNow: p.coins, xpNow: p.xp, levelNow: p.level, capped, coinsAwarded: capped ? 0 : 5, xpAwarded: capped ? 0 : 5, levelUp, rewardBalls, pokeballs });
   } catch (err) {
     console.error('[player/answer]', err);
     res.status(500).json({ success: false, error: err.message });
