@@ -1,0 +1,89 @@
+{"region": "compsci", "topic": "urutan_logika", "text": "Sequence adalah urutan langkah-langkah yang harus dikerjakan dalam urutan tertentu untuk mencapai hasil akhir."}
+{"region": "compsci", "topic": "urutan_logika", "text": "A pattern is a sequence where each item follows a rule; here the rule is 'add 2 each time'."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Dalam pattern, jika selisih antar angka selalu sama, itu disebut arithmetic sequence."}
+{"region": "compsci", "topic": "urutan_logika", "text": "The AND logic gate returns true only when ALL its inputs are true; otherwise it returns false."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Gerbang OR (OR gate) menghasilkan true jika minimal satu inputnya true, atau kedua-duanya true."}
+{"region": "compsci", "topic": "urutan_logika", "text": "The NOT logic gate inverts (flips) its input: true becomes false, and false becomes true."}
+{"region": "compsci", "topic": "urutan_logika", "text": "AND gate digunakan ketika SEMUA kondisi harus terpenuhi sebelum sesuatu bisa terjadi."}
+{"region": "compsci", "topic": "urutan_logika", "text": "OR gate is used when at least ONE condition needs to be true for something to happen."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Pattern yang berulang disebut repeating pattern. Kamu bisa memprediksi elemen berikutnya dengan mengetahui aturannya."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Fibonacci sequence adalah pola khusus di mana setiap angka adalah hasil penjumlahan dua angka sebelumnya."}
+{"region": "compsci", "topic": "urutan_logika", "text": "To evaluate AND logic, both conditions must be true for the result to be true."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Dengan OR gate, cukup satu kondisi yang true untuk hasil akhirnya menjadi true."}
+{"region": "compsci", "topic": "urutan_logika", "text": "IF/THEN adalah struktur keputusan: jika kondisi true, kerjakan blok IF."}
+{"region": "compsci", "topic": "urutan_logika", "text": "A repeating or cyclic pattern will always show the same sequence of items over and over."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Urutan langkah dalam algoritma sangat penting; mengubah urutan bisa membuat algoritma tidak berfungsi dengan benar."}
+{"region": "compsci", "topic": "urutan_logika", "text": "When using AND logic, ALL conditions must be satisfied (true) for the overall result to be true."}
+{"region": "compsci", "topic": "urutan_logika", "text": "Alternating pattern adalah pola yang berganti-ganti antara dua atau lebih item secara berulang."}
+{"region": "compsci", "topic": "urutan_logika", "text": "The NOT logic gate inverts its input: NOT(true) = false, NOT(false) = true."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Loop adalah struktur dalam pemrograman yang memungkinkan perintah dijalankan berkali-kali tanpa menulisnya berulang."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Using a loop with repeat makes code cleaner and shorter than writing the same command multiple times."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Variable adalah tempat penyimpanan data dalam program yang dapat menyimpan angka, teks, atau nilai lainnya."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "A network allows computers and devices to communicate and share information with each other."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Algorithm adalah serangkaian langkah logis yang digunakan untuk menyelesaikan masalah, termasuk menemukan rute terpendek."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Loop dengan kondisi (seperti for i = 1 to 100) secara otomatis mengulangi perintah untuk setiap nilai i."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "An infinite loop occurs when a loop's condition is never satisfied, causing the program to repeat forever until stopped manually."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Setiap iterasi loop akan menjalankan perintah di dalamnya. Jika dijalankan 3 kali, score akan bertambah 3."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "A connection atau link dalam jaringan adalah jalan yang menghubungkan dua device sehingga data bisa berpindah antar mereka."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Internet adalah jaringan global yang terdiri dari miliaran device yang saling terhubung melalui infrastruktur fisik (kabel, fiber) dan nirkabel."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "A loop with a counter (like for i = 1 to 10) counts up step-by-step and stops when it reaches the target number."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Repeat loop memungkinkan aksi yang sama dilakukan beberapa kali tanpa menulis perintah yang sama berulang kali."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Variable dapat diperbarui nilainya di setiap iterasi loop, memungkinkan kita melacak perubahan sepanjang proses."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Jaringan minimal terdiri dari 2 device yang saling terhubung sehingga dapat berbagi data atau berkomunikasi."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Email data dikirim melalui serangkaian network connections, melewati berbagai server, sampai akhirnya tiba di perangkat penerima."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Debugging adalah proses menemukan kesalahan (bug) dalam kode loop dan memperbaikinya sehingga loop berfungsi dengan benar."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "Path dalam jaringan adalah urutan connections yang dilalui data untuk berpindah dari device sumber ke device tujuan."}
+{"region": "compsci", "topic": "perulangan_jaringan", "text": "AI training uses loops to repeat a learning process many times, adjusting small values (variables) each iteration until the AI gets better at its task."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Algorithm adalah serangkaian steps terurut untuk menyelesaikan masalah."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Binary search memotong area pencarian setengahnya setiap step untuk menemukan elemen lebih cepat."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Debugging adalah proses menemukan dan memperbaiki bug dalam program dengan menganalisis setiap step."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Conditional (if/else) membiarkan program membuat keputusan berdasarkan kondisi true atau false."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Loop adalah struktur algorithm yang mengulangi serangkaian steps hingga kondisi tertentu terpenuhi."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Bubble sort adalah sorting algorithm yang membandingkan pasangan elemen bersebelahan dan menukar jika diperlukan."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Multiple if/else memungkinkan program membuat lebih dari dua pilihan keputusan berbeda."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Off-by-one error terjadi saat loop berhenti satu langkah terlalu cepat atau terlalu lambat karena salah pakai < vs <=."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Algorithm pencarian elemen maksimum/minimum harus diakhiri dengan output hasil akhir."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Modulo operator (%) mengembalikan sisa pembagian dan sering digunakan untuk cek pola bilangan."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Algorithm UI/UX dirancang dengan urutan logis agar pengguna mudah memahami dan mengikuti setiap step."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Debugging loop memerlukan pemeriksaan kondisi exit (break/return) yang tidak sengaja memotong iterasi sebelum selesai."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Kondisi exit loop harus jelas dan reachable (bisa tercapai), jika tidak program akan infinite loop."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Operator OR (atau) dalam conditional berarti minimal satu kondisi harus true agar blok if dijalankan."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Urutan operasi kritis dalam program: data harus tersimpan, ditampilkan, BARU boleh dihapus atau diubah."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Debugging conditional berarti memeriksa apakah SEMUA kondisi yang diperlukan sudah tercakup dalam if statement."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Operator AND (dan) dalam conditional berarti SEMUA kondisi yang terhubung harus true agar if dijalankan."}
+{"region": "compsci", "topic": "algoritma_debug", "text": "Loop condition (i > 0 vs i >= 0) mengontrol berapa kali loop berulang; perubahan kecil bisa menambah atau mengurangi jumlah iterasi."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Internet adalah sistem jaringan komputer yang saling terhubung secara global menggunakan protokol TCP/IP, memungkinkan pertukaran data dan komunikasi antar pengguna di berbagai belahan dunia."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "A website is a collection of interconnected web pages and digital content hosted on a web server, accessible through the internet via a browser."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "URL (Uniform Resource Locator) adalah alamat unik yang mengidentifikasi lokasi sumber daya di internet, biasanya dimulai dengan http:// atau https://."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Browser adalah aplikasi perangkat lunak yang mengunduh dan menampilkan halaman web dari internet, seperti Chrome, Firefox, Safari, atau Edge."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "A search engine is a web service that indexes web pages and allows users to search for information using keywords or phrases."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Email (electronic mail) adalah sistem untuk mengirim dan menerima pesan teks, gambar, dan file melalui internet ke alamat email orang lain."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Password yang kuat harus memiliki minimal 8 karakter dengan kombinasi huruf besar, huruf kecil, angka, dan simbol khusus untuk mencegah akses tidak sah."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Personal data should never be shared online because criminals can use it for identity theft, cyberstalking, fraud, or other harmful purposes against you or your family."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Pesan dari orang asing online bisa menjadi upaya grooming, phishing, atau penipuan; anak harus segera melaporkannya kepada orang tua atau guru tanpa mengirim balasan atau klik link."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Suspicious links often contain misspelled URLs, unusual formatting, shortened URLs hiding the true destination, or urgent messages asking for login credentials or personal data."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Email attachment dari pengirim yang tidak dikenal atau mencurigakan dapat berisi malware atau virus yang merusak sistem komputer atau mencuri data pribadi."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Menggunakan password yang sama di berbagai akun sangat berbahaya karena jika satu akun diretas, peretas dapat mengakses semua akun lainnya dengan mudah."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "HTTP (HyperText Transfer Protocol) adalah protokol dasar untuk transfer data web, sementara HTTPS (dengan S = Secure) mengenkripsi data untuk keamanan lebih tinggi, ditandai dengan gembok di browser."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Phishing adalah teknik penipuan siber di mana penyerang mengirim email atau membuat website palsu yang meniru yang asli untuk mengelabui pengguna memberikan login credentials atau data pribadi."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Segera laporkan kepada orang tua, guru, atau orang dewasa terpercaya jika menemukan konten mengganggu, ajakan bertemu dari orang asing, cyberbullying, atau perilaku mencurigakan online lainnya."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Orang yang kamu kenal hanya dari internet dapat menjadi predator atau penjahat yang menyembunyikan identitas asli mereka; tidak boleh pernah bertemu mereka tanpa orang tua atau wali hadir."}
+{"region": "compsci", "topic": "jaringan_dunia", "text": "Privacy settings memungkinkan pengguna mengontrol siapa yang dapat melihat profil, postingan, dan informasi pribadi mereka, mencegah exposur ke orang asing dan mengurangi risiko cyberbullying atau penipuan."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Artificial Intelligence adalah software yang dapat belajar dari contoh dan membuat keputusan tanpa diprogram setiap langkah."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Voice assistants use AI to understand speech and give helpful responses."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Recommendation algorithms menggunakan AI untuk mempelajari preferensi pengguna dari data historis."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Machine learning is when AI improves by analyzing patterns in large datasets."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Aplikasi peta menggunakan historical traffic data dan real-time information untuk merekomendasikan rute optimal."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "AI dapat membuat kesalahan karena data training yang bias atau contoh yang tidak mencukup, dan kurang pemahaman konteks manusia."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Wise AI use means verifying answers with trusted sources like teachers or reliable websites."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Chatbot adalah program AI yang dapat memahami dan merespons pertanyaan dalam bahasa manusia."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Facial recognition AI trained dengan jutaan gambar wajah untuk belajar mengidentifikasi fitur unik setiap wajah."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "AI errors occur due to biased training data, insufficient examples, or misunderstanding ambiguous inputs."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Responsible AI use includes transparency—acknowledging when you've used AI and adding your own original work."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Recommendation engines menggunakan AI dan machine learning untuk memprediksi konten yang akan disukai pengguna."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Chatbots may store conversations for training, so users should avoid sharing sensitive personal data."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Garbage in, garbage out—jika training data berkualitas rendah atau bias, AI akan menghasilkan output yang buruk atau bias."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Responsible AI use involves using it as a learning aid while maintaining critical thinking and adding original effort."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Both AI and humans learn through examples, but humans have deeper contextual understanding and can generalize beyond their training."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "Search engines use AI algorithms to understand user intent and rank pages by relevance based on language patterns."}
+{"region": "compsci", "topic": "kecerdasan_buatan", "text": "AI accountability means humans who develop, deploy, and use AI systems are responsible for their decisions and impacts."}

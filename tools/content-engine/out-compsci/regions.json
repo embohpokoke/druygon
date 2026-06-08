@@ -1,0 +1,163 @@
+[
+  {
+    "id": "compsci",
+    "name": "Sirkuit Digital",
+    "accent": "#8B5CF6",
+    "status": "active",
+    "zones": [
+      {
+        "zone": 1,
+        "id": "compsci_1",
+        "name": "Gerbang Logika",
+        "topic": "urutan_logika",
+        "min_level": 1,
+        "mons": [
+          {
+            "dex": 81,
+            "name": "Magnemite",
+            "type": "Electric",
+            "rarity": "common"
+          },
+          {
+            "dex": 100,
+            "name": "Voltorb",
+            "type": "Electric",
+            "rarity": "common"
+          },
+          {
+            "dex": 137,
+            "name": "Porygon",
+            "type": "Normal",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 25,
+            "name": "Pikachu",
+            "type": "Electric",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 2,
+        "id": "compsci_2",
+        "name": "Jaringan",
+        "topic": "perulangan_jaringan",
+        "min_level": 6,
+        "mons": [
+          {
+            "dex": 82,
+            "name": "Magneton",
+            "type": "Electric",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 233,
+            "name": "Porygon2",
+            "type": "Normal",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 135,
+            "name": "Jolteon",
+            "type": "Electric",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 479,
+            "name": "Rotom",
+            "type": "Electric",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 3,
+        "id": "compsci_3",
+        "name": "Inti Prosesor",
+        "topic": "algoritma_debug",
+        "min_level": 11,
+        "mons": [
+          {
+            "dex": 474,
+            "name": "Porygon-Z",
+            "type": "Normal",
+            "rarity": "rare"
+          },
+          {
+            "dex": 243,
+            "name": "Raikou",
+            "type": "Electric",
+            "rarity": "legendary"
+          },
+          {
+            "dex": 801,
+            "name": "Magearna",
+            "type": "Steel",
+            "rarity": "legendary"
+          },
+          {
+            "dex": 1008,
+            "name": "Miraidon",
+            "type": "Electric",
+            "rarity": "legendary"
+          }
+        ]
+      },
+      {
+        "zone": 4,
+        "id": "compsci_4",
+        "name": "Jaringan Dunia",
+        "topic": "jaringan_dunia",
+        "min_level": 16,
+        "mons": [
+          {
+            "dex": 81,
+            "name": "Magnemite",
+            "type": "Electric",
+            "rarity": "common"
+          },
+          {
+            "dex": 82,
+            "name": "Magneton",
+            "type": "Electric",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 479,
+            "name": "Rotom",
+            "type": "Electric",
+            "rarity": "rare"
+          }
+        ]
+      },
+      {
+        "zone": 5,
+        "id": "compsci_5",
+        "name": "Otak Buatan",
+        "topic": "kecerdasan_buatan",
+        "min_level": 21,
+        "mons": [
+          {
+            "dex": 137,
+            "name": "Porygon",
+            "type": "Normal",
+            "rarity": "common"
+          },
+          {
+            "dex": 474,
+            "name": "Porygon-Z",
+            "type": "Normal",
+            "rarity": "rare"
+          },
+          {
+            "dex": 801,
+            "name": "Magearna",
+            "type": "Steel",
+            "rarity": "legendary"
+          }
+        ]
+      }
+    ]
+  }
+]

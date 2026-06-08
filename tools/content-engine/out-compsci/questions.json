@@ -1,0 +1,1153 @@
+{
+  "urutan_logika": [
+    {
+      "q": "Urutan langkah untuk membuat sandwich adalah: 1. Ambil roti 2. Oleskan selai 3. Letakkan isi di roti. Pernyataan mana yang paling benar tentang urutan ini?",
+      "expr": "step 1 → step 2 → step 3",
+      "opts": [
+        "Langkah 1 dan 2 bisa ditukar",
+        "Semua langkah harus berurutan",
+        "Urutan langkah tidak penting selama semua dikerjakan"
+      ],
+      "a": 1,
+      "hint": "Dalam sequence, urutan langkah sering kali sangat penting agar hasilnya benar.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What is the next number in this pattern: 2, 4, 6, 8, __?",
+      "expr": "2 → 4 → 6 → 8 → ?",
+      "opts": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "a": 1,
+      "hint": "Look at how much each number increases from the previous one.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pola ini naik 3 setiap kali: 5, 8, 11, 14, __. Angka berikutnya adalah?",
+      "expr": "5 (+3) 8 (+3) 11 (+3) 14 (+3) ?",
+      "opts": [
+        "16",
+        "17",
+        "18",
+        "19"
+      ],
+      "a": 1,
+      "hint": "Selisih antara setiap angka adalah sama. Hitung dari 14 ditambah selisih tersebut.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What does the AND logic gate do? It outputs 'true' when...",
+      "expr": "AND gate: input1, input2 → output",
+      "opts": [
+        "either input is true",
+        "both inputs are true",
+        "at least one input is false"
+      ],
+      "a": 1,
+      "hint": "AND means you need BOTH conditions to be satisfied, like 'do chores AND finish homework'.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Gerbang OR menghasilkan 'true' ketika...",
+      "expr": "OR gate: input1, input2 → output",
+      "opts": [
+        "salah satu input true atau kedua-duanya true",
+        "kedua input harus true",
+        "kedua input harus false"
+      ],
+      "a": 0,
+      "hint": "OR lebih mudah: cukup SATU saja yang true, hasilnya sudah true.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "What does the NOT logic gate do?",
+      "expr": "NOT: input → output",
+      "opts": [
+        "It turns true to false and false to true",
+        "It keeps the input the same",
+        "It adds a second input"
+      ],
+      "a": 0,
+      "hint": "NOT is like saying 'the opposite': if something is true, NOT makes it false.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Jika Rini ingin main game HANYA jika sudah selesai PR dan sudah tidur siang, gerbang logic apa yang dipakai?",
+      "expr": "condition: PR selesai AND tidur siang = boleh main",
+      "opts": [
+        "OR gate",
+        "AND gate",
+        "NOT gate"
+      ],
+      "a": 1,
+      "hint": "Kedua syarat harus terpenuhi. Itu adalah AND (semua harus benar).",
+      "difficulty": "medium"
+    },
+    {
+      "q": "You can eat dessert if Mom says yes OR Dad says yes. Which logic gate is this?",
+      "expr": "dessert if (Mom=yes) OR (Dad=yes)",
+      "opts": [
+        "AND gate",
+        "OR gate",
+        "NOT gate"
+      ],
+      "a": 1,
+      "hint": "If either parent says yes, you can eat dessert. That's OR logic.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pola warna: merah, biru, merah, biru, merah, biru. Warna ke-7 adalah?",
+      "expr": "red, blue, red, blue, red, blue, ?",
+      "opts": [
+        "merah",
+        "biru",
+        "hijau",
+        "kuning"
+      ],
+      "a": 0,
+      "hint": "Polanya berulang setiap 2 warna. Hitung posisi ke-7 dalam pola berulang.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Sequence ini: 1, 1, 2, 3, 5, 8, __. Angka berikutnya?",
+      "expr": "Fibonacci: 1, 1, 2, 3, 5, 8, ?",
+      "opts": [
+        "10",
+        "11",
+        "13",
+        "15"
+      ],
+      "a": 2,
+      "hint": "Setiap angka adalah jumlah dari dua angka sebelumnya. 5 + 8 = ?",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Which statement is true? (Use AND logic)",
+      "expr": "(2 > 1) AND (3 < 5) = ?",
+      "opts": [
+        "true",
+        "false"
+      ],
+      "a": 0,
+      "hint": "Check each part: '2 > 1' is true, and '3 < 5' is true. With AND, both true = true.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apakah statement ini true atau false? (4 < 2) OR (5 = 5)",
+      "expr": "(4 < 2) OR (5 = 5) = ?",
+      "opts": [
+        "true",
+        "false"
+      ],
+      "a": 0,
+      "hint": "'4 < 2' itu salah (false), tapi '5 = 5' itu benar (true). OR cukup butuh satu yang true.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Aku punya rule: IF cuaca panas THEN minum air. Hari ini cuaca panas. Apa yang harus dilakukan?",
+      "expr": "IF (cuaca = panas) THEN (minum air)",
+      "opts": [
+        "minum air",
+        "tidak minum air",
+        "tunggu perintah lagi"
+      ],
+      "a": 0,
+      "hint": "IF kondisinya terpenuhi (cuaca panas = benar), maka THEN aksinya harus dikerjakan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What comes next in the sequence? A, B, C, A, B, C, A, B, C, __?",
+      "expr": "A, B, C, A, B, C, A, B, C, ?",
+      "opts": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "a": 0,
+      "hint": "This repeating pattern cycles every 3 letters. Count where position 10 falls in the cycle.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Langkah algoritma: 1. Buka pintu 2. Masuk rumah 3. Tutup pintu. Jika langkah 2 dan 3 ditukar, apa akibatnya?",
+      "expr": "sequence: 1 → 2 → 3 vs. 1 → 3 → 2",
+      "opts": [
+        "Hasilnya sama saja",
+        "Kamu tidak bisa masuk, karena pintu sudah tertutup terlebih dahulu",
+        "Tidak ada perbedaan"
+      ],
+      "a": 1,
+      "hint": "Bayangkan: kalau tutup pintu dulu sebelum masuk, kamu masih ada di luar — bagaimana kamu bisa masuk?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "If you are 10 years old AND you have finished homework, you can play video games. Your status: age 10 (true), homework (true). Can you play?",
+      "expr": "IF (age >= 10) AND (homework_done) THEN play_games",
+      "opts": [
+        "Yes",
+        "No"
+      ],
+      "a": 0,
+      "hint": "Both conditions are true. With AND, both must be true for the result to be yes.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pola ini: ◆ ◇ ◆ ◇ ◆ ◇ __. Simbol ke-7 adalah?",
+      "expr": "◆ ◇ ◆ ◇ ◆ ◇ ?",
+      "opts": [
+        "◇",
+        "◆",
+        "□",
+        "○"
+      ],
+      "a": 1,
+      "hint": "Polanya berganti-ganti setiap satu. Posisi ganjil adalah ◆, posisi genap adalah ◇.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "It is raining is TRUE. What does NOT(it is raining) equal?",
+      "expr": "NOT(true) = ?",
+      "opts": [
+        "true",
+        "false"
+      ],
+      "a": 1,
+      "hint": "NOT flips the value. If the input is true, the output is the opposite.",
+      "difficulty": "easy"
+    }
+  ],
+  "perulangan_jaringan": [
+    {
+      "q": "Apa itu loop dalam programming?",
+      "expr": "",
+      "opts": [
+        "Cara komputer mengulangi perintah berkali-kali",
+        "Jenis kabel internet",
+        "Program yang rusak",
+        "Alat untuk membuat lingkaran"
+      ],
+      "a": 0,
+      "hint": "Loop membantu kita tidak perlu menulis kode yang sama berulang kali.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "If you want a robot to move forward 5 steps, which approach uses a loop?",
+      "expr": "repeat 5 times { move() }",
+      "opts": [
+        "move() move() move() move() move()",
+        "repeat 5 times: move()",
+        "print('move')",
+        "if forward then stop"
+      ],
+      "a": 1,
+      "hint": "A loop lets you do the same thing multiple times with less code.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Variable dalam programming paling mirip dengan apa?",
+      "expr": "points = 10",
+      "opts": [
+        "Kotak penyimpanan untuk menyimpan angka atau teks",
+        "Password internet",
+        "Komponen fisik komputer",
+        "Jenis jaringan"
+      ],
+      "a": 0,
+      "hint": "Bayangkan seperti kotak yang bisa menyimpan nilai, dan nilai itu bisa berubah.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "A network connects devices together. What is the MAIN purpose of a network?",
+      "expr": "",
+      "opts": [
+        "To make devices slower",
+        "To allow devices to share information and communicate",
+        "To store files only",
+        "To create passwords"
+      ],
+      "a": 1,
+      "hint": "Think about why your home WiFi connects your phone and computer.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Untuk mencari rute terpendek dari titik A ke titik B di sebuah jaringan, kita perlu apa?",
+      "expr": "",
+      "opts": [
+        "Menebak secara acak",
+        "Algorithm (cara berpikir sistematis)",
+        "Menghapus semua rute",
+        "Menambah lebih banyak titik"
+      ],
+      "a": 1,
+      "hint": "Algorithm adalah langkah-langkah logis untuk menyelesaikan masalah.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berikut ini cara kerja loop yang paling efisien untuk menghitung angka 1 hingga 100:",
+      "expr": "for i = 1 to 100 { print(i) }",
+      "opts": [
+        "Menulis angka 1, 2, 3, ... 100 secara manual",
+        "Menggunakan loop: for i = 1 to 100",
+        "Menghapus program dan mulai lagi",
+        "Tidak bisa dihitung"
+      ],
+      "a": 1,
+      "hint": "Loop memungkinkan komputer melakukan pekerjaan repetitif secara otomatis.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "What happens if a loop condition is NEVER met?",
+      "expr": "while true { print('hello') }",
+      "opts": [
+        "The loop stops immediately",
+        "The loop runs forever (infinite loop)",
+        "The program deletes itself",
+        "Nothing happens"
+      ],
+      "a": 1,
+      "hint": "If the condition to stop the loop is never reached, the loop keeps repeating endlessly.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika variable score = 5, dan kita jalankan loop 'repeat 3 times: score = score + 1', berapa nilai score pada akhirnya?",
+      "expr": "score = 5\nrepeat 3 times { score = score + 1 }",
+      "opts": [
+        "5",
+        "6",
+        "8",
+        "3"
+      ],
+      "a": 2,
+      "hint": "Loop menjalankan score = score + 1 sebanyak 3 kali. Hitung: 5 → 6 → 7 → 8.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "In a network, a 'connection' atau 'link' is like what?",
+      "expr": "",
+      "opts": [
+        "A broken wire",
+        "A road between two cities",
+        "A password",
+        "A mistake in code"
+      ],
+      "a": 1,
+      "hint": "Think of data traveling from one device to another along this path.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pernyataan mana yang BENAR tentang internet?",
+      "expr": "",
+      "opts": [
+        "Internet adalah satu komputer besar",
+        "Internet adalah jaringan global yang menghubungkan miliaran device",
+        "Internet hanya bisa diakses di sekolah",
+        "Internet tidak butuh infrastruktur fisik sama sekali"
+      ],
+      "a": 1,
+      "hint": "Internet menghubungkan komputer, ponsel, dan perangkat lain di seluruh dunia.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "A loop with a counter works like what?",
+      "expr": "for counter = 1 to 5 { print(counter) }",
+      "opts": [
+        "A random number generator",
+        "Counting: 1, 2, 3... until you reach a goal",
+        "A password system",
+        "A way to delete files"
+      ],
+      "a": 1,
+      "hint": "The counter starts at 1 and goes up until it meets the stop condition.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Dalam sebuah game, untuk membuat karakter berjalan melingkar 4 kali, kita gunakan apa?",
+      "expr": "repeat 4 times { walk() }",
+      "opts": [
+        "4 perintah walk() terpisah",
+        "if statement",
+        "repeat 4 times: walk()",
+        "variable score"
+      ],
+      "a": 2,
+      "hint": "Repeat adalah cara singkat untuk mengatakan 'lakukan ini berkali-kali'.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What is TRUE about variables in a loop?",
+      "expr": "total = 0\nrepeat 5 times { total = total + 2 }",
+      "opts": [
+        "Variables cannot change inside a loop",
+        "Variables update their value each time the loop runs",
+        "Variables disappear after the loop ends",
+        "Variables are only used for networks"
+      ],
+      "a": 1,
+      "hint": "Each time through the loop, the variable's value can change.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Sebuah jaringan komputer membutuhkan berapa device MINIMUM untuk disebut 'network'?",
+      "expr": "",
+      "opts": [
+        "1 device",
+        "2 device yang saling terhubung",
+        "10 device",
+        "100 device"
+      ],
+      "a": 1,
+      "hint": "Untuk berkomunikasi, minimal ada 2 pihak yang terhubung.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "When you send an email, data travels through a network. What is the BEST description of this process?",
+      "expr": "",
+      "opts": [
+        "Your email appears instantly everywhere at once",
+        "Your email travels from device to device along network connections until it reaches the recipient",
+        "Your email is stored inside the WiFi router permanently",
+        "Email does not use networks"
+      ],
+      "a": 1,
+      "hint": "Data harus melewati beberapa tahap untuk sampai ke penerima.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Debugging sebuah loop berarti apa?",
+      "expr": "",
+      "opts": [
+        "Menghapus loop dari program",
+        "Mencari dan memperbaiki kesalahan dalam logika loop",
+        "Menambah lebih banyak variable",
+        "Membuat loop berjalan lebih cepat"
+      ],
+      "a": 1,
+      "hint": "Debug berarti mencari bug (kesalahan) dan memperbaikinya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "In the context of networks, what does 'path from A to B' mean?",
+      "expr": "",
+      "opts": [
+        "The physical road between two cities",
+        "The route that data takes from one device to another through network connections",
+        "A variable in a program",
+        "A type of loop"
+      ],
+      "a": 1,
+      "hint": "Think of it as the journey data makes to reach its destination.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "AI like a chatbot learns by repeating a process thousands of times. Which programming concept makes this kind of repetition possible?",
+      "expr": "repeat many_times { adjust_AI_values() }",
+      "opts": [
+        "A single variable",
+        "A loop that keeps running until the AI improves enough",
+        "A network cable",
+        "A password"
+      ],
+      "a": 1,
+      "hint": "Repetition is key — the AI adjusts a little bit each time through the loop.",
+      "difficulty": "medium"
+    }
+  ],
+  "algoritma_debug": [
+    {
+      "q": "Urutan langkah (steps) yang benar untuk membuat sandwich: (1) ambil roti, (2) olesi mayones, (3) letakkan selada, (4) tutup dengan roti kedua. Manakah urutan algorithm yang BENAR?",
+      "expr": "(1) → (2) → (3) → (4)",
+      "opts": [
+        "(1) → (2) → (3) → (4)",
+        "(3) → (1) → (2) → (4)",
+        "(2) → (1) → (4) → (3)",
+        "(4) → (1) → (2) → (3)"
+      ],
+      "a": 0,
+      "hint": "Pikirkan urutan logis (logical order): mulai dari alas, tambah isinya, tutup.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "You want to find a number in a list using binary search. The first step is to check the middle element. What should you do NEXT if the middle element is too small?",
+      "expr": "middle < target",
+      "opts": [
+        "Search the right half of the list",
+        "Search the left half of the list",
+        "Start over from the beginning",
+        "Stop, the number is not there"
+      ],
+      "a": 0,
+      "hint": "Jika middle terlalu kecil, target pasti di sebelah kanan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Program untuk login memiliki steps: (1) minta email, (2) minta password, (3) cek password benar?, (4) buka halaman utama. Tetapi pengguna tidak bisa login padahal password benar. Step mana yang HILANG?",
+      "expr": "(1) (2) (3) (4)",
+      "opts": [
+        "Step untuk cek email terdaftar di database",
+        "Step untuk reset password",
+        "Step untuk kirim notifikasi",
+        "Step untuk pilih bahasa"
+      ],
+      "a": 0,
+      "hint": "Sebelum cek password, apakah email sudah ada di sistem?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "What does this code do? if (age >= 13) { print('Boleh main') } else { print('Terlalu muda') }",
+      "expr": "if...else conditional",
+      "opts": [
+        "Cek apakah umur minimum 13, jika ya boleh main, jika tidak tampilkan pesan terlalu muda",
+        "Selalu tampilkan 'Boleh main' untuk semua umur",
+        "Cek apakah umur tepat 13 tahun saja",
+        "Tidak ada aksi yang jelas"
+      ],
+      "a": 0,
+      "hint": "Tanda >= berarti 'lebih besar dari atau sama dengan' (greater than or equal to).",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Algorithm mencari buah terbaik di pasar: (1) lihat buah pertama, (2) bandingkan kualitasnya dengan pilihan terbaik saat ini (current best), (3) jika lebih baik, ganti pilihan, (4) pindah ke buah berikutnya, (5) ulangi sampai selesai. Ini adalah contoh algorithm apa?",
+      "expr": "repeat...until/loop",
+      "opts": [
+        "Loop dengan kondisi pengulangan",
+        "Conditional if/else saja",
+        "Sorting algorithm",
+        "Binary search algorithm"
+      ],
+      "a": 0,
+      "hint": "Ada kata 'ulangi' dan 'sampai selesai' — itu ciri khas loop.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "You're sorting a list of numbers: 5, 2, 8, 1, 9. First you compare 5 and 2, then swap them to get: 2, 5, 8, 1, 9. What should you do NEXT?",
+      "expr": "[2, 5, 8, 1, 9]",
+      "opts": [
+        "Compare 5 and 8, then decide if swap is needed",
+        "Go back and compare 2 and 5 again",
+        "Stop, the list is sorted",
+        "Compare 1 and 9 first"
+      ],
+      "a": 0,
+      "hint": "Bubble sort membandingkan elemen yang berdekatan (adjacent elements) dari kiri ke kanan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Program game: 'Kalau poin > 100, dapat hadiah. Kalau poin antara 50-100, dapat badge. Kalau poin < 50, game over.' Ini menggunakan apa?",
+      "expr": "poin > 100 OR (50 <= poin <= 100)",
+      "opts": [
+        "Multiple if/else conditionals",
+        "Loop repeat",
+        "Binary search algorithm",
+        "Linear search algorithm"
+      ],
+      "a": 0,
+      "hint": "Ada beberapa kondisi berbeda yang dicek satu per satu — itu multiple if/else.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "A program prints numbers 1 to 5, but the output is only: 1, 2, 3, 4 (number 5 is missing). Code: for (i = 1; i < 5; i++) { print(i) }. What is the bug?",
+      "expr": "for (i = 1; i < 5; i++)",
+      "opts": [
+        "Kondisi i < 5 harus diganti i <= 5 supaya angka 5 ikut tercetak (off-by-one error)",
+        "Kondisi i = 1 harus diganti i = 0",
+        "Loop harus dihapus dan diganti if/else",
+        "Tidak ada bug, output sudah benar"
+      ],
+      "a": 0,
+      "hint": "Cek kapan loop berhenti: i < 5 berhenti SEBELUM i=5. Gunakan <= agar 5 ikut.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Which step is MISSING from this algorithm to find the tallest person in a classroom? (1) Lihat person pertama, catat tingginya. (2) Lihat person berikutnya, bandingkan tingginya. (3) Kalau lebih tinggi, catat person baru. (4) Ulangi untuk semua person.",
+      "expr": "max_height = first_person; for each person...",
+      "opts": [
+        "Step untuk output/tampilkan person tertinggi di akhir",
+        "Step untuk reset tinggi ke 0",
+        "Step untuk sort dari terendah ke tertinggi",
+        "Step untuk hitung rata-rata tinggi"
+      ],
+      "a": 0,
+      "hint": "Algorithm cari maksimum harus memberitahu siapa hasilnya di akhir.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Program cek nomor ganjil atau genap: if (nomor % 2 == 0) { print('genap') } else { print('ganjil') }. Berapa angka yang BENAR kategorinya?",
+      "expr": "nomor % 2 == 0",
+      "opts": [
+        "4 → genap, 7 → ganjil",
+        "4 → ganjil, 7 → genap",
+        "Keduanya selalu ganjil",
+        "Keduanya selalu genap"
+      ],
+      "a": 0,
+      "hint": "Modulo operator (%) memberikan sisa bagi. Sisa 0 = genap, sisa 1 = ganjil.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Urutan steps mengisi form online: (1) scroll ke bawah, (2) isi nama, (3) isi email, (4) centang checkbox 'saya setuju syarat', (5) klik submit. Di posisi mana seharusnya checkbox 'saya setuju' ada?",
+      "expr": "(1) → (2) → (3) → (4) → (5)",
+      "opts": [
+        "Sebelum klik submit, jadi posisi (4) sudah benar",
+        "Setelah klik submit",
+        "Di paling atas, sebelum isi nama",
+        "Tidak ada checkbox, langsung submit"
+      ],
+      "a": 0,
+      "hint": "UX yang baik: syarat & ketentuan (terms) biasanya disetujui SEBELUM submit.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "This debugging challenge: script for a teacher to grade students stops working after grading 25 students, even though there are 50 total. What is the MOST LIKELY cause?",
+      "expr": "loop 0..50; if grade_count == 25 break;",
+      "opts": [
+        "Ada break statement yang keluar dari loop di tengah jalan (bug)",
+        "Compiler error, program tidak bisa jalan sama sekali",
+        "Tidak ada loop, hanya if/else",
+        "Grade hanya bisa sampai 25 maksimal"
+      ],
+      "a": 0,
+      "hint": "Jika 25 siswa berhasil tapi siswa ke-26 tidak, mungkin ada condition yang terminate loop lebih awal.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Algorithm game 'tebak angka': (1) generate angka random 1-100, (2) minta pemain input tebakan, (3) cek apakah sama, (4) kalau tidak, kasih petunjuk 'terlalu besar' atau 'terlalu kecil', (5) ulangi sampai benar. Kondisi KAPAN loop berhenti?",
+      "expr": "while tebakan != angka_rahasia",
+      "opts": [
+        "Ketika pemain berhasil menebak angka yang benar (tebakan == angka)",
+        "Setelah 5 tebakan",
+        "Ketika pemain ketik angka paling besar (100)",
+        "Program tidak bisa berhenti, harus manual close"
+      ],
+      "a": 0,
+      "hint": "Loop berlanjut WHILE (selama) kondisi benar. Berhenti WHEN (ketika) tebakan benar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kode filter konten untuk anak-anak: if (rating == 'G' OR rating == 'PG') { tampilkan } else { blokir }. Rating mana yang TIDAK akan ditampilkan?",
+      "expr": "OR condition",
+      "opts": [
+        "Rating 'PG-13' dan 'R' tidak ditampilkan",
+        "Rating 'G' dan 'PG' tidak ditampilkan",
+        "Semua rating ditampilkan",
+        "Hanya rating 'R' yang diblokir, 'PG-13' tetap tampil"
+      ],
+      "a": 0,
+      "hint": "OR menerima minimal satu kondisi benar. Hanya 'G' dan 'PG' yang lolos, lainnya masuk else → blokir.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Debugging challenge: app chat ada bug — message dari teman A selalu hilang ketika teman B kirim message. Urutan mana yang salah? (1) simpan message di database, (2) tampilkan message baru di layar, (3) check apakah message baru ada, (4) delete message lama.",
+      "expr": "(1) → (3) → (2) → (4)",
+      "opts": [
+        "Langkah (4) DELETE dijalankan SEBELUM (2) TAMPILKAN — message hilang sebelum sempat ditampilkan!",
+        "Langkah (1) SIMPAN harus setelah (2) TAMPILKAN",
+        "Langkah (3) CHECK tidak perlu",
+        "Urutan sudah benar, bug ada di database"
+      ],
+      "a": 0,
+      "hint": "Jangan delete sebelum ditampilkan! Urutan benar: simpan → cek → tampilkan → baru hapus.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "A game checks if a player can open a door. Code: if (hasKey AND atDoor) { openDoor() }. Bug report: a player with a key, standing at the door, but health = 0 (already dead) can still open the door. What is the fix?",
+      "expr": "if (hasKey AND atDoor AND health > 0)",
+      "opts": [
+        "Tambahkan kondisi AND health > 0 ke dalam if statement",
+        "Ganti AND jadi OR supaya lebih fleksibel",
+        "Hapus kondisi atDoor karena tidak perlu",
+        "Tidak ada bug, logika sudah benar"
+      ],
+      "a": 0,
+      "hint": "Bug muncul karena satu kondisi penting (health > 0) belum ada di if statement.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Algorithm validasi password: (1) check panjang >= 8 karakter AND (2) ada huruf besar AND (3) ada angka. Mana password yang LOLOS validasi?",
+      "expr": "AND condition: 8char AND uppercase AND digit",
+      "opts": [
+        "'MyPass123' — 9 huruf, ada 'M' besar, ada '123'",
+        "'mypassword' — 10 huruf tapi tanpa angka",
+        "'Pas1' — ada huruf besar dan angka tapi cuma 4 huruf",
+        "'PASSWORD' — 8 huruf dan ada besar tapi tanpa angka"
+      ],
+      "a": 0,
+      "hint": "AND berarti SEMUA kondisi harus true. Cek satu per satu: panjang? uppercase? angka?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "You're debugging a loop that counts down from 10 to 1. Code: for (i = 10; i > 0; i = i - 1) { print(i) }. This is CORRECT. But if you change i > 0 to i >= 0, what happens?",
+      "expr": "for loop condition",
+      "opts": [
+        "Loop akan print sampai 0 (11 kali total: 10, 9, 8 ... 1, 0) bukan 10 kali",
+        "Loop tidak akan jalan sama sekali",
+        "Loop akan infinite (tidak pernah berhenti)",
+        "Loop tetap sama, print 10-1 seperti biasa"
+      ],
+      "a": 0,
+      "hint": "Ganti > 0 jadi >= 0 menambah satu iterasi (i=0 juga ikut diprint).",
+      "difficulty": "medium"
+    }
+  ],
+  "jaringan_dunia": [
+    {
+      "q": "Apa itu Internet?",
+      "expr": "",
+      "opts": [
+        "Jaringan komputer besar yang menghubungkan jutaan perangkat di seluruh dunia",
+        "Sebuah website yang hanya bisa diakses dari rumah",
+        "Aplikasi yang hanya ada di ponsel",
+        "Mesin pencari yang mencari informasi"
+      ],
+      "a": 0,
+      "hint": "Internet adalah jaringan global yang menghubungkan komputer, ponsel, dan perangkat lain.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What is a website?",
+      "expr": "",
+      "opts": [
+        "A collection of web pages connected by links and displayed in a browser",
+        "A type of email account",
+        "A password used to protect your computer",
+        "A software that blocks bad websites"
+      ],
+      "a": 0,
+      "hint": "A website is made of multiple pages that you visit using a browser.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "URL adalah singkatan dari apa?",
+      "expr": "",
+      "opts": [
+        "Uniform Resource Locator — alamat website di internet",
+        "User Resource Language — bahasa untuk menulis website",
+        "Ultra Resource Link — tautan yang sangat cepat",
+        "Universal Robot Launcher — peluncur robot otomatis"
+      ],
+      "a": 0,
+      "hint": "URL adalah alamat lengkap yang kamu ketik di browser untuk mengunjungi website.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Apa fungsi utama browser?",
+      "expr": "",
+      "opts": [
+        "Menampilkan website dan halaman web dari internet",
+        "Mengunci semua data pribadi di komputer",
+        "Membuat password yang aman",
+        "Mengirim email ke orang lain"
+      ],
+      "a": 0,
+      "hint": "Browser adalah program yang kamu gunakan untuk mengakses dan melihat website.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What is a search engine?",
+      "expr": "",
+      "opts": [
+        "A tool that finds websites and information based on your keywords",
+        "A type of email service",
+        "A program that creates new websites",
+        "A security system that protects passwords"
+      ],
+      "a": 0,
+      "hint": "A search engine like Google helps you find information on the internet by searching for keywords.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Apa itu email?",
+      "expr": "",
+      "opts": [
+        "Surat elektronik yang dapat dikirim melalui internet dengan cepat",
+        "Nama panggilan untuk website",
+        "Jenis password yang sangat kuat",
+        "Program untuk membuat file dokumen"
+      ],
+      "a": 0,
+      "hint": "Email memungkinkan kamu mengirim pesan ke orang lain melalui internet.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Apa yang membuat password menjadi kuat dan aman?",
+      "expr": "",
+      "opts": [
+        "Panjang minimal 8 karakter, campuran huruf besar, huruf kecil, angka, dan simbol",
+        "Menggunakan nama panggilan atau tanggal lahir untuk mudah diingat",
+        "Menggunakan hanya satu jenis karakter (hanya huruf atau hanya angka)",
+        "Membagikan password kepada teman agar mereka bisa membantu"
+      ],
+      "a": 0,
+      "hint": "Password yang aman menggabungkan berbagai jenis karakter dan tidak mudah ditebak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Why should you NEVER share your personal data online?",
+      "expr": "",
+      "opts": [
+        "Because strangers can use it to harm you, steal your identity, or commit fraud",
+        "Because personal data takes up too much storage space",
+        "Because it will slow down your internet connection",
+        "Because websites don't have space to store your information"
+      ],
+      "a": 0,
+      "hint": "Personal data like your address, phone number, and birthday must be kept private to protect your safety.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa yang harus kamu lakukan jika menerima pesan dari orang asing di internet?",
+      "expr": "",
+      "opts": [
+        "Jangan membalas, jangan klik link, dan beri tahu orang tua atau guru",
+        "Langsung klik link untuk melihat apa yang mereka inginkan",
+        "Bagikan informasi pribadi agar mereka percaya kepada kamu",
+        "Abaikan saja tanpa memberi tahu siapa pun"
+      ],
+      "a": 0,
+      "hint": "Orang asing online bisa berniat tidak baik, jadi kamu harus hati-hati dan meminta bantuan orang dewasa.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "What does a 'suspicious link' usually look like?",
+      "expr": "",
+      "opts": [
+        "A URL that is very long, contains strange characters, or asks you to login again",
+        "Any link that appears in a search result",
+        "A link in an email from your friend",
+        "A link that is short and easy to remember"
+      ],
+      "a": 0,
+      "hint": "Suspicious links often try to trick you into giving passwords or personal information.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana pernyataan yang BENAR tentang keamanan online?",
+      "expr": "",
+      "opts": [
+        "Jangan pernah membuka attachment (file) dari email orang yang tidak kamu kenal",
+        "Semua email dari alamat yang terlihat resmi pasti aman untuk dibuka",
+        "Attachment dari teman selalu aman tanpa perlu dicek siapa pengirimnya",
+        "Virus hanya ada di website yang terlihat 'jelek'"
+      ],
+      "a": 0,
+      "hint": "Email attachment dari orang tidak dikenal bisa berisi virus atau malware yang membahayakan komputer kamu.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Is it safe to use the same password for all your online accounts?",
+      "expr": "",
+      "opts": [
+        "No, because if one account is hacked, all your accounts become unsafe",
+        "Yes, because it is easier to remember",
+        "Yes, because hackers only target one account at a time",
+        "No password is ever hacked, so it does not matter"
+      ],
+      "a": 0,
+      "hint": "Using the same password everywhere puts all your accounts at risk.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa kepanjangan dari 'HTTP' dan 'HTTPS'?",
+      "expr": "",
+      "opts": [
+        "HTTP adalah protokol standar; HTTPS adalah versi terenkripsi yang lebih aman",
+        "Keduanya adalah nama browser yang berbeda",
+        "HTTP adalah untuk menerima email; HTTPS adalah untuk mengirim",
+        "Keduanya adalah singkatan untuk password"
+      ],
+      "a": 0,
+      "hint": "HTTPS lebih aman karena enkripsi; cari ikon gembok di browser untuk memastikan website aman.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "What is 'phishing' in online safety?",
+      "expr": "",
+      "opts": [
+        "A scam where criminals pretend to be trustworthy to steal your login info or personal data",
+        "A real fishing game you can play online",
+        "A way to make your password stronger",
+        "A feature in browsers that blocks ads"
+      ],
+      "a": 0,
+      "hint": "Phishing uses fake emails or websites that look real to trick you into giving away your information.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Kapan waktu yang tepat untuk memberi tahu orang tua atau guru tentang masalah online?",
+      "expr": "",
+      "opts": [
+        "Segera, tanpa menunggu, jika kamu melihat konten aneh, tidak nyaman, atau ada yang mengajak bertemu",
+        "Hanya ketika kamu sudah merasa sangat takut atau kesal",
+        "Tidak perlu diberitahu jika masalahnya kecil",
+        "Hanya jika teman-teman kamu juga mengalami hal yang sama"
+      ],
+      "a": 0,
+      "hint": "Orang tua dan guru adalah partner keselamatan online kamu yang harus segera tahu tentang masalah apapun.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "What should you do if someone online asks you to meet them in person?",
+      "expr": "",
+      "opts": [
+        "NEVER agree; tell a trusted adult immediately",
+        "Only agree if they seem nice and friendly",
+        "Meet them in a public place to be safe",
+        "Ask them for more personal information first to check if they are real"
+      ],
+      "a": 0,
+      "hint": "Online strangers can hide who they really are, so never meet them in person without a trusted adult.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Mengapa penting untuk menggunakan privacy settings di media sosial dan aplikasi?",
+      "expr": "",
+      "opts": [
+        "Untuk mengontrol siapa yang bisa melihat data dan postingan kamu, mencegah akses orang asing",
+        "Karena aplikasi yang tidak memiliki privacy settings akan crash",
+        "Untuk membuat profil kamu lebih populer",
+        "Tidak ada alasan, privacy settings tidak berguna"
+      ],
+      "a": 0,
+      "hint": "Privacy settings membantu melindungi data pribadi kamu dari orang yang tidak perlu mengetahuinya.",
+      "difficulty": "medium"
+    }
+  ],
+  "kecerdasan_buatan": [
+    {
+      "q": "Apa itu kecerdasan buatan (Artificial Intelligence)?",
+      "expr": "",
+      "opts": [
+        "Sebuah robot fisik yang bisa bergerak",
+        "Program komputer yang dapat belajar dan membuat keputusan seperti manusia",
+        "Sebuah permainan video yang sangat canggih",
+        "Sebuah mesin untuk menghasilkan listrik"
+      ],
+      "a": 1,
+      "hint": "AI adalah program, bukan robot fisik, dan bisa belajar dari data.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Which of these is an example of AI you use every day?",
+      "expr": "",
+      "opts": [
+        "A pencil sharpener",
+        "Voice assistant like Siri or Google Assistant",
+        "A bicycle",
+        "A paper notebook"
+      ],
+      "a": 1,
+      "hint": "Think about programs that listen to you and answer questions.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ketika kamu mendengarkan musik di aplikasi streaming, lagu yang disarankan datang dari mana?",
+      "expr": "",
+      "opts": [
+        "Dipilih secara acak oleh komputer",
+        "AI mempelajari lagu yang kamu suka dan menyarankan lagu serupa",
+        "Diputuskan oleh pemilik aplikasi setiap hari",
+        "Dari daftar lagu paling populer saja"
+      ],
+      "a": 1,
+      "hint": "AI belajar dari kebiasaan dengarmu dan mencoba menemukan yang sesuai.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "What does it mean that 'AI learns from data'?",
+      "expr": "",
+      "opts": [
+        "AI reads textbooks like humans do",
+        "AI looks at many examples and finds patterns to improve its decisions",
+        "AI copies all information from the internet",
+        "AI automatically becomes smarter without any examples"
+      ],
+      "a": 1,
+      "hint": "Learning from data means looking at patterns in many examples.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Maps application (seperti Google Maps) menggunakan AI untuk apa?",
+      "expr": "",
+      "opts": [
+        "Hanya menampilkan nama-nama jalan",
+        "Belajar dari data lalu lintas untuk menyarankan rute tercepat",
+        "Membaca pikiran pengemudi",
+        "Mengubah cuaca di kota"
+      ],
+      "a": 1,
+      "hint": "AI menganalisis data kendaraan yang melewati jalan untuk prediksi kemacetan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mengapa kita tidak boleh percaya 100% pada AI?",
+      "expr": "",
+      "opts": [
+        "Karena AI selalu berbohong",
+        "Karena AI bisa membuat kesalahan dan tidak mengerti konteks seperti manusia",
+        "Karena AI tidak punya tenaga listrik",
+        "Karena AI tidak bisa berhitung"
+      ],
+      "a": 1,
+      "hint": "Ingat: AI belajar dari data, jadi kalau data salah, AI bisa keliru.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "When you use a chatbot to answer homework questions, what should you do?",
+      "expr": "",
+      "opts": [
+        "Trust everything it says without checking",
+        "Verify the answer by checking other sources or asking a teacher",
+        "Use it only if you are very tired",
+        "Never use chatbot for learning"
+      ],
+      "a": 1,
+      "hint": "Always double-check information from any source, including AI.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Chatbot adalah contoh AI yang melakukan apa?",
+      "expr": "",
+      "opts": [
+        "Menghapus semua email kamu",
+        "Mengobrol dan menjawab pertanyaan berdasarkan teks yang dikirim pengguna",
+        "Menutup akun media sosial",
+        "Menghapus file dari komputer"
+      ],
+      "a": 1,
+      "hint": "Chatbot adalah program yang berdiskusi dengan manusia.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Bagaimana AI bisa mengenal wajah di foto?",
+      "expr": "",
+      "opts": [
+        "Dengan membaca teks di sampingnya",
+        "Dengan belajar dari ribuan contoh foto wajah sampai bisa mengenali pola ciri wajah",
+        "Dengan menanya ke Internet siapa yang ada di foto",
+        "Dengan mengenal suara orang di ruangan"
+      ],
+      "a": 1,
+      "hint": "AI belajar dari banyak contoh untuk mengenali pola dan ciri khas.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "What is a mistake that AI can make?",
+      "expr": "",
+      "opts": [
+        "Forgetting to turn on the monitor",
+        "Misclassifying objects because it learned from limited or biased examples",
+        "Breaking the keyboard",
+        "Deleting the internet"
+      ],
+      "a": 1,
+      "hint": "AI makes mistakes because of incomplete or wrong training data.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ketika menggunakan AI untuk membuat pekerjaan, apa yang harus kamu lakukan agar jujur?",
+      "expr": "",
+      "opts": [
+        "Katakan saja itu hasil kerjamu sendiri tanpa mention AI",
+        "Jelaskan bahwa kamu menggunakan AI dan kemudian mengedit hasilnya sendiri",
+        "Jangan pernah gunakan AI",
+        "Copy-paste hasil AI tanpa dikerjakan ulang"
+      ],
+      "a": 1,
+      "hint": "Kejujuran berarti memberi tahu orang lain kalau kamu pakai AI.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Aplikasi yang menyarankan video untuk ditonton adalah contoh dari:",
+      "expr": "",
+      "opts": [
+        "Internet hacking",
+        "AI recommendation system yang mempelajari preferensi viewer",
+        "Website biasa tanpa AI",
+        "Iklan acak"
+      ],
+      "a": 1,
+      "hint": "Platform seperti YouTube gunakan AI untuk lihat apa yang sering kamu tonton.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Why should you be careful about sharing personal information with a chatbot?",
+      "expr": "",
+      "opts": [
+        "Because chatbots are made of metal",
+        "Because chatbots might remember your information and you don't fully know who uses it",
+        "Because chatbots will steal your toys",
+        "Because chatbots cannot understand text"
+      ],
+      "a": 1,
+      "hint": "Your data could be stored and used—so don't share private info like passwords or home address.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "AI belajar dari data. Kalau data yang diberikan tidak bagus, apa yang terjadi?",
+      "expr": "",
+      "opts": [
+        "AI akan menjadi lebih pintar otomatis",
+        "AI akan membuat keputusan yang buruk atau bias",
+        "AI akan berhenti bekerja selamanya",
+        "Tidak ada yang terjadi"
+      ],
+      "a": 1,
+      "hint": "Masukan buruk = hasil buruk. Ini disebut garbage in, garbage out.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Which is a way to use AI wisely and honestly?",
+      "expr": "",
+      "opts": [
+        "Use AI to completely copy homework answers",
+        "Use AI as a tool to help you understand and learn, then add your own ideas",
+        "Never think about what AI produced",
+        "Pretend AI suggestions are 100% correct"
+      ],
+      "a": 1,
+      "hint": "Wise use means AI helps you learn, not replaces your thinking.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa bedanya antara Artificial Intelligence dan manusia dalam belajar?",
+      "expr": "",
+      "opts": [
+        "Tidak ada perbedaan sama sekali",
+        "AI belajar dari pola dalam data; manusia belajar juga dari pola tapi dengan pemahaman konteks yang lebih dalam",
+        "Hanya manusia yang bisa belajar",
+        "AI bisa belajar tanpa data apapun"
+      ],
+      "a": 1,
+      "hint": "Keduanya belajar, tapi manusia punya pemahaman yang lebih dalam.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Search engines like Google use AI to do what?",
+      "expr": "",
+      "opts": [
+        "Count how many websites exist",
+        "Understand what you're searching for and rank the most relevant pages for you",
+        "Block all advertisements forever",
+        "Translate your search into alien language"
+      ],
+      "a": 1,
+      "hint": "AI learns from trillions of searches to understand what answer you really want.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Jika AI membuat keputusan yang merugikan seseorang (misalnya AI menolak aplikasi pinjaman dengan tidak adil), siapa yang bertanggung jawab?",
+      "expr": "",
+      "opts": [
+        "Hanya AI yang bertanggung jawab",
+        "Manusia yang membuat AI dan orang/perusahaan yang menggunakan AI harus bertanggung jawab",
+        "Tidak ada yang bertanggung jawab",
+        "Hanya si pemohon yang salah"
+      ],
+      "a": 1,
+      "hint": "AI adalah alat yang dibuat dan digunakan manusia—manusia memiliki tanggung jawab akhir.",
+      "difficulty": "hard"
+    }
+  ]
+}
