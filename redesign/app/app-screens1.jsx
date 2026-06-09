@@ -293,15 +293,15 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
   const caughtDex = React.useMemo(() => (caught || []).map(c => c.dex), [caught]);
   const firstFallback = Object.values(questions)[0] || [];
 
-  // P1a — shuffled question bank per catch session
-  const [shuffledBank] = uS1(() => {
-    const raw = questions[z.topic] || firstFallback;
-    if (!raw || raw.length === 0) return [];
-    const copy = [...raw];
+  // Randomized deck: re-shuffles every time it's exhausted so questions never repeat in a fixed order
+  const shuffleDeck = (raw, avoidQ) => {
+    const copy = [...(raw || [])];
     for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
+    if (avoidQ && copy.length > 1 && copy[0].q === avoidQ.q) { [copy[0], copy[1]] = [copy[1], copy[0]]; }
     return copy;
-  });
-  const bank = shuffledBank.length > 0 ? shuffledBank : (questions[z.topic] || firstFallback);
+  };
+  const srcBank = questions[z.topic] || firstFallback;
+  const [bank, setBank] = uS1(() => (srcBank && srcBank.length ? shuffleDeck(srcBank) : []));
 
   const pickWild = (excludeDex) => {
     const uncaught = (z.mons || []).filter(m => !caughtDex.includes(m.dex) && m.dex !== excludeDex);
@@ -314,7 +314,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
   // P1c — flee/skip: re-roll wild without spending a pokéball
   const rerollWild = () => {
     setWild(pickWild(wild ? wild.dex : null));
-    setHp(100); setQi(0); setPhase('quiz'); setFb(null); setBall(null); setAnswerReward(false);
+    setBank(shuffleDeck(srcBank)); setHp(100); setQi(0); setPhase('quiz'); setFb(null); setBall(null); setAnswerReward(false);
   };
 
   const [hp, setHp] = uS1(100);
@@ -324,7 +324,8 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
   const [hit, setHit] = uS1(false);
   const [ball, setBall] = uS1(null);
   const [answerReward, setAnswerReward] = uS1(false);
-  const q = bank[qi % bank.length];
+  const q = bank.length ? bank[qi % bank.length] : (srcBank[0] || {});
+  const nextQ = () => { const nv = qi + 1; if (bank.length > 1 && nv % bank.length === 0) setBank(shuffleDeck(srcBank, q)); setQi(nv); };
 
   const answer = (i) => {
     if (phase !== 'quiz' || fb) return;
@@ -340,8 +341,8 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
       if (ok) {
         const nh = Math.max(0, hp - 34);
         setHp(nh);
-        if (nh <= 8) setPhase('ready'); else setQi((v) => v + 1);
-      } else setQi((v) => v + 1);
+        if (nh <= 8) setPhase('ready'); else nextQ();
+      } else nextQ();
     }, 700);
   };
   const throwBall = (b) => {
@@ -370,7 +371,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
         {phase === 'quiz' && (
           <React.Fragment>
             <div className="q-prompt">
-              <div className="eyebrow">Question {qi + 1} · {z.topic}{answerReward ? <span style={{ color: 'var(--yellow)', marginLeft: 8, fontWeight: 700, fontSize: 11 }}>+1 🪙 +5 XP</span> : null}</div>
+              <div className="eyebrow">Question {qi + 1} · {z.topic}{answerReward ? <span style={{ color: 'var(--yellow)', marginLeft: 8, fontWeight: 700, fontSize: 11 }}>+5 🪙 +5 XP</span> : null}</div>
               <h3>{q.q}</h3>
               <div className="expr">{q.expr}</div>
             </div>

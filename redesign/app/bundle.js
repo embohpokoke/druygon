@@ -553,17 +553,19 @@
     const z = r.zones.find((x) => x.zone === zone) || r.zones[0];
     const caughtDex = React.useMemo(() => (caught || []).map((c) => c.dex), [caught]);
     const firstFallback = Object.values(questions)[0] || [];
-    const [shuffledBank] = uS1(() => {
-      const raw = questions[z.topic] || firstFallback;
-      if (!raw || raw.length === 0) return [];
-      const copy = [...raw];
+    const shuffleDeck = (raw, avoidQ) => {
+      const copy = [...raw || []];
       for (let i = copy.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
+      if (avoidQ && copy.length > 1 && copy[0].q === avoidQ.q) {
+        [copy[0], copy[1]] = [copy[1], copy[0]];
+      }
       return copy;
-    });
-    const bank = shuffledBank.length > 0 ? shuffledBank : questions[z.topic] || firstFallback;
+    };
+    const srcBank = questions[z.topic] || firstFallback;
+    const [bank, setBank] = uS1(() => srcBank && srcBank.length ? shuffleDeck(srcBank) : []);
     const pickWild = (excludeDex) => {
       const uncaught = (z.mons || []).filter((m) => !caughtDex.includes(m.dex) && m.dex !== excludeDex);
       let pool = uncaught.length > 0 ? uncaught : (z.mons || []).filter((m) => m.dex !== excludeDex);
@@ -573,6 +575,7 @@
     const [wild, setWild] = uS1(() => pickWild(null));
     const rerollWild = () => {
       setWild(pickWild(wild ? wild.dex : null));
+      setBank(shuffleDeck(srcBank));
       setHp(100);
       setQi(0);
       setPhase("quiz");
@@ -587,7 +590,12 @@
     const [hit, setHit] = uS1(false);
     const [ball, setBall] = uS1(null);
     const [answerReward, setAnswerReward] = uS1(false);
-    const q = bank[qi % bank.length];
+    const q = bank.length ? bank[qi % bank.length] : srcBank[0] || {};
+    const nextQ = () => {
+      const nv = qi + 1;
+      if (bank.length > 1 && nv % bank.length === 0) setBank(shuffleDeck(srcBank, q));
+      setQi(nv);
+    };
     const answer = (i) => {
       if (phase !== "quiz" || fb) return;
       const ok = i === q.a;
@@ -605,8 +613,8 @@
           const nh = Math.max(0, hp - 34);
           setHp(nh);
           if (nh <= 8) setPhase("ready");
-          else setQi((v) => v + 1);
-        } else setQi((v) => v + 1);
+          else nextQ();
+        } else nextQ();
       }, 700);
     };
     const throwBall = (b) => {
@@ -614,7 +622,7 @@
       setPhase("wobble");
       onCaught(wild, b);
     };
-    return /* @__PURE__ */ React.createElement("div", { className: "catch screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "stage" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(120% 90% at 50% 0%, ${r.accent}3a, transparent 55%), linear-gradient(180deg, #15122b, #0a0818)` } }), /* @__PURE__ */ React.createElement("div", { className: "stage-field" }), /* @__PURE__ */ React.createElement("div", { className: "wild-card" }, /* @__PURE__ */ React.createElement("div", { className: "nm" }, /* @__PURE__ */ React.createElement("b", null, wild.name), /* @__PURE__ */ React.createElement("span", null, "Lv ", 3 + zone * 2)), /* @__PURE__ */ React.createElement("div", { className: "hp" }, /* @__PURE__ */ React.createElement("small", null, "HP"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: hp + "%", background: hp <= 8 ? "var(--red)" : hp < 40 ? "linear-gradient(90deg,#FF6B2B,#FFCB05)" : "linear-gradient(90deg,#4ADE80,#00D9B8)" } }))), /* @__PURE__ */ React.createElement("div", { className: "type-chip", style: { marginTop: 7, background: TYPE_COLOR[wild.type] } }, wild.type)), /* @__PURE__ */ React.createElement("img", { className: "wild-sprite" + (hit ? " hit" : "") + (phase === "wobble" ? " wobble" : ""), src: wild.sprite, alt: wild.name, crossOrigin: "anonymous" }), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { className: "thrown" }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, top: ball == null ? void 0 : ball.top }))), /* @__PURE__ */ React.createElement("div", { className: "cmd" }, phase === "quiz" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "q-prompt" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Question ", qi + 1, " \xB7 ", z.topic, answerReward ? /* @__PURE__ */ React.createElement("span", { style: { color: "var(--yellow)", marginLeft: 8, fontWeight: 700, fontSize: 11 } }, "+1 \u{1FA99} +5 XP") : null), /* @__PURE__ */ React.createElement("h3", null, q.q), /* @__PURE__ */ React.createElement("div", { className: "expr" }, q.expr)), /* @__PURE__ */ React.createElement("div", { className: "answers" + (q.opts.length > 2 ? " two" : "") }, q.opts.map((o, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "ans" + (fb ? i === q.a ? " ok" : i === fb.pick ? " no" : "" : ""), onClick: () => answer(i) }, q.opts.length <= 2 && /* @__PURE__ */ React.createElement("kbd", null, i + 1), /* @__PURE__ */ React.createElement("span", { className: "grow" }, o), fb && i === q.a && /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 })))), /* @__PURE__ */ React.createElement("div", { className: "cmd-foot" }, /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-think.png", alt: "Ask Draco", style: { width: 36, height: 36, objectFit: "contain", marginRight: 4, flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { className: "draco wf-tap", onClick: () => openTutor(z.topic) }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Ask Draco"), /* @__PURE__ */ React.createElement("span", { className: "cmd-hint" }, "Correct answer \u2192 attack \u2193 HP")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "ready" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ball-prompt" }, "It's weak \u2014 choose a Pok\xE9 Ball!"), /* @__PURE__ */ React.createElement("div", { className: "balls" }, (pokeballsProp || POKEBALLS).map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ball-opt" + (b.own === 0 ? " dim" : ""), onClick: () => b.own > 0 && throwBall(b) }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "\xD7", b.own, " \xB7 ", Math.round(b.rate * 100), "%"))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 14 } }, "Higher tiers catch better but are scarcer."), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { style: { margin: "auto", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-display)", fontWeight: 700 } }, "\u2026wobble\u2026 wobble\u2026")));
+    return /* @__PURE__ */ React.createElement("div", { className: "catch screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "stage" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(120% 90% at 50% 0%, ${r.accent}3a, transparent 55%), linear-gradient(180deg, #15122b, #0a0818)` } }), /* @__PURE__ */ React.createElement("div", { className: "stage-field" }), /* @__PURE__ */ React.createElement("div", { className: "wild-card" }, /* @__PURE__ */ React.createElement("div", { className: "nm" }, /* @__PURE__ */ React.createElement("b", null, wild.name), /* @__PURE__ */ React.createElement("span", null, "Lv ", 3 + zone * 2)), /* @__PURE__ */ React.createElement("div", { className: "hp" }, /* @__PURE__ */ React.createElement("small", null, "HP"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: hp + "%", background: hp <= 8 ? "var(--red)" : hp < 40 ? "linear-gradient(90deg,#FF6B2B,#FFCB05)" : "linear-gradient(90deg,#4ADE80,#00D9B8)" } }))), /* @__PURE__ */ React.createElement("div", { className: "type-chip", style: { marginTop: 7, background: TYPE_COLOR[wild.type] } }, wild.type)), /* @__PURE__ */ React.createElement("img", { className: "wild-sprite" + (hit ? " hit" : "") + (phase === "wobble" ? " wobble" : ""), src: wild.sprite, alt: wild.name, crossOrigin: "anonymous" }), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { className: "thrown" }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, top: ball == null ? void 0 : ball.top }))), /* @__PURE__ */ React.createElement("div", { className: "cmd" }, phase === "quiz" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "q-prompt" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Question ", qi + 1, " \xB7 ", z.topic, answerReward ? /* @__PURE__ */ React.createElement("span", { style: { color: "var(--yellow)", marginLeft: 8, fontWeight: 700, fontSize: 11 } }, "+5 \u{1FA99} +5 XP") : null), /* @__PURE__ */ React.createElement("h3", null, q.q), /* @__PURE__ */ React.createElement("div", { className: "expr" }, q.expr)), /* @__PURE__ */ React.createElement("div", { className: "answers" + (q.opts.length > 2 ? " two" : "") }, q.opts.map((o, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "ans" + (fb ? i === q.a ? " ok" : i === fb.pick ? " no" : "" : ""), onClick: () => answer(i) }, q.opts.length <= 2 && /* @__PURE__ */ React.createElement("kbd", null, i + 1), /* @__PURE__ */ React.createElement("span", { className: "grow" }, o), fb && i === q.a && /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 })))), /* @__PURE__ */ React.createElement("div", { className: "cmd-foot" }, /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-think.png", alt: "Ask Draco", style: { width: 36, height: 36, objectFit: "contain", marginRight: 4, flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { className: "draco wf-tap", onClick: () => openTutor(z.topic) }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Ask Draco"), /* @__PURE__ */ React.createElement("span", { className: "cmd-hint" }, "Correct answer \u2192 attack \u2193 HP")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "ready" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ball-prompt" }, "It's weak \u2014 choose a Pok\xE9 Ball!"), /* @__PURE__ */ React.createElement("div", { className: "balls" }, (pokeballsProp || POKEBALLS).map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ball-opt" + (b.own === 0 ? " dim" : ""), onClick: () => b.own > 0 && throwBall(b) }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "\xD7", b.own, " \xB7 ", Math.round(b.rate * 100), "%"))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 14 } }, "Higher tiers catch better but are scarcer."), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { style: { margin: "auto", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-display)", fontWeight: 700 } }, "\u2026wobble\u2026 wobble\u2026")));
   }
   function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd, newLevel, rewardBalls, levelUp }) {
     const { regions } = useContent();
