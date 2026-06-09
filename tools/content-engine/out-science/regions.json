@@ -1,0 +1,199 @@
+[
+  {
+    "id": "science",
+    "name": "Rimba Sains",
+    "accent": "#00D9B8",
+    "status": "active",
+    "zones": [
+      {
+        "zone": 1,
+        "id": "science_1",
+        "name": "Tunas Hijau",
+        "topic": "makhluk_hidup",
+        "min_level": 1,
+        "mons": [
+          {
+            "dex": 43,
+            "name": "Oddish",
+            "type": "Grass",
+            "rarity": "common"
+          },
+          {
+            "dex": 69,
+            "name": "Bellsprout",
+            "type": "Grass",
+            "rarity": "common"
+          },
+          {
+            "dex": 60,
+            "name": "Poliwag",
+            "type": "Water",
+            "rarity": "common"
+          },
+          {
+            "dex": 54,
+            "name": "Psyduck",
+            "type": "Water",
+            "rarity": "common"
+          },
+          {
+            "dex": 548,
+            "name": "Petilil",
+            "type": "Grass",
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      {
+        "zone": 2,
+        "id": "science_2",
+        "name": "Sarang Serangga",
+        "topic": "serangga_ekosistem",
+        "min_level": 6,
+        "mons": [
+          {
+            "dex": 13,
+            "name": "Weedle",
+            "type": "Bug",
+            "rarity": "common"
+          },
+          {
+            "dex": 41,
+            "name": "Zubat",
+            "type": "Poison",
+            "rarity": "common"
+          },
+          {
+            "dex": 49,
+            "name": "Venomoth",
+            "type": "Bug",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 123,
+            "name": "Scyther",
+            "type": "Bug",
+            "rarity": "rare"
+          },
+          {
+            "dex": 637,
+            "name": "Volcarona",
+            "type": "Bug",
+            "rarity": "legendary"
+          }
+        ]
+      },
+      {
+        "zone": 3,
+        "id": "science_3",
+        "name": "Reaktor Mineral",
+        "topic": "materi_energi",
+        "min_level": 11,
+        "mons": [
+          {
+            "dex": 74,
+            "name": "Geodude",
+            "type": "Rock",
+            "rarity": "common"
+          },
+          {
+            "dex": 27,
+            "name": "Sandshrew",
+            "type": "Ground",
+            "rarity": "common"
+          },
+          {
+            "dex": 95,
+            "name": "Onix",
+            "type": "Rock",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 145,
+            "name": "Zapdos",
+            "type": "Electric",
+            "rarity": "legendary"
+          },
+          {
+            "dex": 994,
+            "name": "Iron Moth",
+            "type": "Fire",
+            "rarity": "legendary"
+          }
+        ]
+      },
+      {
+        "zone": 4,
+        "id": "science_4",
+        "name": "Laboratorium Atom",
+        "topic": "atom_dan_unsur",
+        "min_level": 16,
+        "mons": [
+          {
+            "dex": 599,
+            "name": "Klink",
+            "type": "Steel",
+            "rarity": "common"
+          },
+          {
+            "dex": 577,
+            "name": "Solosis",
+            "type": "Psychic",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 82,
+            "name": "Magneton",
+            "type": "Electric",
+            "rarity": "rare"
+          },
+          {
+            "dex": 894,
+            "name": "Regieleki",
+            "type": "Electric",
+            "rarity": "legendary"
+          }
+        ]
+      },
+      {
+        "zone": 5,
+        "id": "science_5",
+        "name": "Observatorium Galaksi",
+        "topic": "galaksi_dan_angkasa",
+        "min_level": 21,
+        "mons": [
+          {
+            "dex": 173,
+            "name": "Cleffa",
+            "type": "Fairy",
+            "rarity": "common"
+          },
+          {
+            "dex": 337,
+            "name": "Lunatone",
+            "type": "Rock",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 338,
+            "name": "Solrock",
+            "type": "Rock",
+            "rarity": "uncommon"
+          },
+          {
+            "dex": 774,
+            "name": "Minior",
+            "type": "Rock",
+            "rarity": "rare"
+          },
+          {
+            "dex": 386,
+            "name": "Deoxys",
+            "type": "Psychic",
+            "rarity": "legendary"
+          }
+        ]
+      }
+    ]
+  }
+]

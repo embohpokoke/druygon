@@ -1,0 +1,1273 @@
+{
+  "makhluk_hidup": [
+    {
+      "q": "Apa ciri utama yang membedakan makhluk hidup dari benda mati?",
+      "expr": "",
+      "opts": [
+        "Hanya bergerak",
+        "Dapat bernapas, tumbuh, dan berkembang biak",
+        "Memiliki warna yang cerah",
+        "Selalu keras dan padat"
+      ],
+      "a": 1,
+      "hint": "Makhluk hidup memiliki tiga ciri paling penting: bernapas, tumbuh, dan berkembang biak.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Burung merpati, elang, dan ayam sama-sama masuk dalam klasifikasi apa?",
+      "expr": "",
+      "opts": [
+        "Mamalia",
+        "Burung",
+        "Serangga",
+        "Reptil"
+      ],
+      "a": 1,
+      "hint": "Ciri burung adalah memiliki bulu, bertelur, dan memiliki sayap.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Hewan apa yang masuk dalam kategori mamalia?",
+      "expr": "",
+      "opts": [
+        "Ular, buaya, tokek",
+        "Kucing, sapi, lumba-lumba",
+        "Katak, salamander, cecak",
+        "Nila, lele, ikan hiu"
+      ],
+      "a": 1,
+      "hint": "Mamalia adalah hewan yang memiliki rambut dan menyusui anaknya.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Apa nama proses yang dilakukan tumbuhan untuk membuat makanannya sendiri menggunakan cahaya matahari?",
+      "expr": "",
+      "opts": [
+        "Respirasi",
+        "Fotosintesis",
+        "Pencernaan",
+        "Transpirasi"
+      ],
+      "a": 1,
+      "hint": "Kata 'foto' berarti cahaya, 'sintesis' berarti menyusun — proses ini butuh cahaya matahari.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Seekor burung elang memiliki paruh yang kuat dan tajam. Adaptasi ini berguna untuk apa?",
+      "expr": "",
+      "opts": [
+        "Untuk bernyanyi lebih nyaring",
+        "Untuk mencengkeram dan mencabik mangsa",
+        "Untuk membantu penerbangan lebih cepat",
+        "Untuk minum air lebih banyak"
+      ],
+      "a": 1,
+      "hint": "Elang adalah burung pemangsa, dan paruhnya dirancang khusus untuk mengambil daging.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ikan hidup di air dan memiliki alat khusus untuk bergerak dan menjaga keseimbangan. Alat apa itu?",
+      "expr": "",
+      "opts": [
+        "Paru-paru",
+        "Sayap",
+        "Sirip",
+        "Kaki"
+      ],
+      "a": 2,
+      "hint": "Ikan berenang menggunakan bagian tubuh yang pipih dan mengepak-ngepak di dalam air.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Tiga kebutuhan dasar apa saja yang harus dipenuhi oleh semua makhluk hidup?",
+      "expr": "",
+      "opts": [
+        "Makanan, air, dan udara",
+        "Rumah, mainan, dan teman",
+        "Cahaya, garam, dan logam",
+        "Listrik, internet, dan buku"
+      ],
+      "a": 0,
+      "hint": "Semua makhluk hidup — dari mikroba hingga gajah — butuh ketiga hal ini untuk hidup.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Bagian tumbuhan apa yang berfungsi menyerap air dan nutrisi dari tanah?",
+      "expr": "",
+      "opts": [
+        "Akar",
+        "Batang",
+        "Daun",
+        "Bunga"
+      ],
+      "a": 0,
+      "hint": "Bagian tumbuhan yang tertanam dalam tanah dan tidak kelihatan dari atas adalah ...",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Daun berfungsi untuk fotosintesis. Selain itu, daun juga mengeluarkan zat apa melalui pori-porinya?",
+      "expr": "",
+      "opts": [
+        "Air dan oksigen (O₂)",
+        "Tanah dan batu",
+        "Cahaya dan panas",
+        "Akar dan benih"
+      ],
+      "a": 0,
+      "hint": "Proses pengeluaran air melalui daun disebut transpirasi; sementara gas yang dilepas dari fotosintesis adalah oksigen.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Katak dimulai hidupnya dari telur kecil, kemudian menjadi berudu dengan ekor, lalu akhirnya menjadi katak dewasa. Fase hidup seperti ini disebut apa?",
+      "expr": "",
+      "opts": [
+        "Adaptasi",
+        "Metamorfosis",
+        "Fotosintesis",
+        "Germinasi"
+      ],
+      "a": 1,
+      "hint": "Kata 'meta' berarti perubahan, 'morph' berarti bentuk — perubahan bentuk yang besar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Manakah dari hewan berikut yang termasuk reptil?",
+      "expr": "",
+      "opts": [
+        "Lumba-lumba",
+        "Buaya",
+        "Burung hantu",
+        "Kelelawar"
+      ],
+      "a": 1,
+      "hint": "Reptil memiliki kulit bersisik, berdarah dingin, dan sebagian besar bertelur.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa perbedaan utama antara amfibi dan reptil?",
+      "expr": "",
+      "opts": [
+        "Amfibi memiliki bulu, reptil tidak",
+        "Amfibi membutuhkan air untuk berkembang biak, reptil bertelur di darat",
+        "Amfibi tidak bertelur, reptil bertelur",
+        "Reptil memiliki sayap, amfibi tidak"
+      ],
+      "a": 1,
+      "hint": "Amfibi berarti 'dua kehidupan' — mereka perlu air untuk bertelur dan masa mudanya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Serangga apa yang mengalami metamorfosis lengkap dengan urutan telur → larva → pupa → dewasa?",
+      "expr": "",
+      "opts": [
+        "Belalang",
+        "Kupu-kupu",
+        "Jangkrik",
+        "Capung"
+      ],
+      "a": 1,
+      "hint": "Hewan ini dimulai dari telur, menjadi ulat, lalu masuk kepompong, dan akhirnya bersayap indah.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Tanaman X memiliki bunga berwarna merah cerah dan aroma yang wangi. Tujuan utama bunga pada tumbuhan adalah untuk ...",
+      "expr": "",
+      "opts": [
+        "Menghiasi pekarangan",
+        "Menarik serangga untuk penyerbukan",
+        "Menyimpan air",
+        "Memproduksi akar baru"
+      ],
+      "a": 1,
+      "hint": "Warna cerah dan aroma wangi adalah 'undangan' untuk serangga agar datang.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Urutan klasifikasi makhluk hidup dari kelompok terbesar ke terkecil yang benar adalah ...",
+      "expr": "",
+      "opts": [
+        "Kingdom → Filum → Kelas → Ordo → Famili → Genus → Spesies",
+        "Spesies → Genus → Famili → Ordo → Kelas → Filum → Kingdom",
+        "Filum → Kingdom → Kelas → Ordo → Famili → Genus → Spesies",
+        "Kingdom → Filum → Genus → Kelas → Ordo → Famili → Spesies"
+      ],
+      "a": 0,
+      "hint": "Kingdom adalah kelompok terbesar (paling umum), Spesies adalah yang terkecil (paling spesifik).",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Tumbuhan A memiliki daun kecil, batang berduri, dan akar yang sangat panjang. Tumbuhan ini paling cocok hidup di mana?",
+      "expr": "",
+      "opts": [
+        "Hutan hujan yang basah",
+        "Gunung yang dingin",
+        "Padang pasir yang kering",
+        "Pantai dengan air asin"
+      ],
+      "a": 2,
+      "hint": "Daun kecil dan akar panjang adalah adaptasi untuk menghemat air di tempat yang sangat kering.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika sebuah tanaman hanya mendapat cahaya matahari 2 jam per hari, apa yang akan terjadi pada fotosintesisnya?",
+      "expr": "",
+      "opts": [
+        "Fotosintesis akan lebih cepat",
+        "Fotosintesis akan berkurang karena cahaya kurang",
+        "Fotosintesis akan sama seperti biasanya",
+        "Tanaman tidak akan melakukan fotosintesis sama sekali"
+      ],
+      "a": 1,
+      "hint": "Fotosintesis membutuhkan cahaya matahari — kurang cahaya berarti berkurang proses ini.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Urutan siklus hidup kupu-kupu yang benar adalah ...",
+      "expr": "",
+      "opts": [
+        "Telur → Ulat → Kepompong → Kupu-kupu",
+        "Ulat → Telur → Kupu-kupu → Kepompong",
+        "Kepompong → Telur → Ulat → Kupu-kupu",
+        "Kupu-kupu → Kepompong → Telur → Ulat"
+      ],
+      "a": 0,
+      "hint": "Kupu-kupu ibu bertelur, telurnya menetas jadi ulat, ulat berubah di kepompong, lalu keluar jadi kupu-kupu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Hewan-hewan ini adalah mamalia, KECUALI ...",
+      "expr": "",
+      "opts": [
+        "Paus dan lumba-lumba",
+        "Tikus dan tupai",
+        "Buaya dan ular",
+        "Orangutan dan gorila"
+      ],
+      "a": 2,
+      "hint": "Buaya dan ular adalah reptil, bukan mamalia — mereka tidak menyusui anaknya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Batang tumbuhan berfungsi mengalirkan air dan nutrisi dari akar ke daun. Pembuluh yang mengangkut air ke atas disebut ...",
+      "expr": "",
+      "opts": [
+        "Floem",
+        "Xilem",
+        "Stomata",
+        "Klorofil"
+      ],
+      "a": 1,
+      "hint": "Pembuluh kayu (xilem) mengangkut air ke atas; pembuluh tapis (floem) mengangkut hasil fotosintesis ke bawah.",
+      "difficulty": "hard"
+    }
+  ],
+  "serangga_ekosistem": [
+    {
+      "q": "Apa perbedaan utama antara metamorfosis sempurna dan metamorfosis tidak sempurna?",
+      "expr": "",
+      "opts": [
+        "Sempurna punya 3 tahap, tidak sempurna punya 4 tahap",
+        "Sempurna punya telur-larva-pupa-dewasa, tidak sempurna punya telur-nimfa-dewasa",
+        "Tidak sempurna terjadi di air, sempurna terjadi di darat",
+        "Sempurna lebih cepat selesai daripada tidak sempurna"
+      ],
+      "a": 1,
+      "hint": "Ingat: tahap pupa (perubahan besar) hanya ada di metamorfosis sempurna.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Contoh serangga yang mengalami metamorfosis sempurna adalah...",
+      "expr": "🦋 vs 🦗",
+      "opts": [
+        "Belalang dan jangkrik",
+        "Kupu-kupu dan lebah",
+        "Walang sangit dan tonggeret",
+        "Kecoa dan kepinding"
+      ],
+      "a": 1,
+      "hint": "Ingat: kupu-kupu pasti melewati tahap kepompong (pupa).",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Di mana posisi produsen dalam rantai makanan ekosistem?",
+      "expr": "",
+      "opts": [
+        "Di awal rantai makanan, berfungsi membuat energi dari matahari",
+        "Di tengah rantai makanan, memakan produsen",
+        "Di akhir rantai makanan, memakan semua konsumen",
+        "Tidak ada posisi tetap dalam rantai makanan"
+      ],
+      "a": 0,
+      "hint": "Produsen adalah yang bisa membuat makanan sendiri dari cahaya matahari.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Peran pengurai dalam ekosistem adalah...",
+      "expr": "🦠🍂",
+      "opts": [
+        "Membuat energi dari matahari seperti tumbuhan",
+        "Memecah sisa-sisa makhluk mati menjadi nutrisi tanah",
+        "Memakan semua konsumen tingkat satu",
+        "Menghasilkan oksigen untuk ekosistem"
+      ],
+      "a": 1,
+      "hint": "Pengurai termasuk bakteri dan jamur yang membuat tanah subur.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Serangga apa yang berperan sebagai predator alami hama dan sangat membantu petani?",
+      "expr": "🐛🌾",
+      "opts": [
+        "Nyamuk",
+        "Lalat buah",
+        "Belalang",
+        "Kepik"
+      ],
+      "a": 3,
+      "hint": "Serangga ini memakan serangga hama yang merusak tanaman padi dan sayuran.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mengapa keseimbangan ekosistem penting dijaga?",
+      "expr": "",
+      "opts": [
+        "Agar semua makhluk hidup bisa bertahan dalam jumlah seimbang",
+        "Agar tanah selalu subur sepanjang tahun",
+        "Agar musim tidak berubah-ubah",
+        "Agar hewan besar tidak punah"
+      ],
+      "a": 0,
+      "hint": "Jika salah satu makhluk berkurang atau bertambah banyak, rantai makanan jadi berantakan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Manakah urutan tahap metamorfosis sempurna pada kupu-kupu yang BENAR?",
+      "expr": "🥚 → ? → ? → 🦋",
+      "opts": [
+        "Telur → Larva → Kepompong → Kupu-kupu dewasa",
+        "Telur → Kepompong → Larva → Kupu-kupu dewasa",
+        "Telur → Kupu-kupu muda → Kepompong → Kupu-kupu dewasa",
+        "Kepompong → Telur → Larva → Kupu-kupu dewasa"
+      ],
+      "a": 0,
+      "hint": "Larva makan daun banyak-banyakan sebelum jadi kepompong.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Dalam jaring makanan, satu serangga herbivora bisa dimakan oleh berapa jenis pemangsa?",
+      "expr": "🦗 ← ? pemangsa",
+      "opts": [
+        "Hanya 1 jenis pemangsa saja",
+        "Paling banyak 2 jenis pemangsa",
+        "Bisa lebih dari 1 jenis pemangsa (bisa 2, 3, atau lebih)",
+        "Tidak ada pemangsa khusus untuk serangga herbivora"
+      ],
+      "a": 2,
+      "hint": "Jaring makanan lebih kompleks daripada rantai makanan lurus, karena ada banyak pilihan makanan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Habitat serangga air seperti larva nyamuk dan larva capung adalah...",
+      "expr": "🪴💧",
+      "opts": [
+        "Sarang serangga yang kering",
+        "Pohon tinggi dengan daun tebal",
+        "Kolam, rawa, atau tanah lembab",
+        "Batu karang di tepi pantai"
+      ],
+      "a": 2,
+      "hint": "Larva nyamuk harus hidup di air atau tanah sangat basah untuk bernapas melalui siphon.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Jika populasi lebah berkurang drastis, apa dampak langsungnya bagi tanaman berbunga?",
+      "expr": "🐝❌ → 🌼?",
+      "opts": [
+        "Lebih banyak bunga mekar di musim semi",
+        "Serbuk sari tidak terpindahkan, banyak bunga tidak jadi buah",
+        "Tanaman akan berevolusi cepat untuk penyerbukan angin",
+        "Tidak ada dampak karena angin juga bisa bawa serbuk sari"
+      ],
+      "a": 1,
+      "hint": "Lebah memindahkan serbuk sari ke putik bunga lain agar terjadi penyerbukan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Serangga mana yang tubuhnya berwarna menyerupai lingkungannya sehingga sulit terlihat (kamuflase)?",
+      "expr": "🦗 🎨",
+      "opts": [
+        "Semut hitam",
+        "Belalang hijau di antara daun-daun",
+        "Kumbang badak",
+        "Kupu-kupu raja (monarch)"
+      ],
+      "a": 1,
+      "hint": "Serangga ini berwarna hampir sama dengan daun atau ranting tempatnya bersembunyi.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa yang dimaksud dengan 'rantai makanan' dalam ekosistem?",
+      "expr": "",
+      "opts": [
+        "Urutan makhluk hidup yang saling memangsa mulai dari produsen hingga pemangsa puncak",
+        "Semua jenis makanan yang dimakan oleh semua hewan",
+        "Tempat di mana makanan disimpan di hutan",
+        "Hubungan antara tumbuhan dan tanah saja"
+      ],
+      "a": 0,
+      "hint": "Rantai makanan menunjukkan 'siapa makan siapa' dengan urutan dari tumbuhan ke hewan pemangsa.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Konsumen tingkat 2 dalam rantai makanan berikut adalah siapa? (Rumput → Belalang → Burung → Ular)",
+      "expr": "🌾 → 🦗 → 🐦 → 🐍",
+      "opts": [
+        "Rumput",
+        "Belalang",
+        "Burung",
+        "Ular"
+      ],
+      "a": 2,
+      "hint": "Konsumen tingkat 2 adalah yang memakan konsumen tingkat 1 (herbivora).",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Habitat ideal serangga kebanyakan adalah tempat yang...",
+      "expr": "🌳🌍",
+      "opts": [
+        "Sangat panas (di atas 50°C) dan kering",
+        "Hangat, lembab, banyak tumbuhan, dan punya tempat persembunyian",
+        "Dingin ekstrem dan bersalju sepanjang tahun",
+        "Terbuka lebar tanpa pohon atau semak belukar"
+      ],
+      "a": 1,
+      "hint": "Serangga butuh suhu sedang, kelembaban, makanan (tumbuhan/hewan lain), dan tempat bersarang.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Kapan waktu terbaik lebah keluar dari sarang untuk menyerbuki bunga?",
+      "expr": "🐝 ☀️",
+      "opts": [
+        "Pagi atau sore hari saat cuaca cerah",
+        "Malam hari saat sejuk",
+        "Saat hujan deras",
+        "Tengah malam saat bunga menutup"
+      ],
+      "a": 0,
+      "hint": "Lebah tidak terbang saat ada angin kuat atau saat gelap.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Jika dibuat daftar makhluk hidup berdasarkan rantai makanan: Rumput, Ulat, Burung, Elang — siapa yang punya energi PALING BANYAK?",
+      "expr": "⚡",
+      "opts": [
+        "Elang",
+        "Burung",
+        "Ulat",
+        "Rumput"
+      ],
+      "a": 3,
+      "hint": "Produsen menyimpan energi terbanyak dari matahari; semakin tinggi tingkat pemangsaan, energi semakin berkurang.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Serangga mana yang disebut sebagai penyerbuk bunga paling efektif di kebun buah?",
+      "expr": "🌼",
+      "opts": [
+        "Semut",
+        "Lalat rumah",
+        "Lebah madu dan tawon",
+        "Belalang hijau"
+      ],
+      "a": 2,
+      "hint": "Serangga dengan rambut halus di tubuhnya yang menempel serbuk sari adalah penyerbuk terbaik.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa jumlah tahap yang HARUS dilalui serangga yang mengalami metamorfosis tidak sempurna?",
+      "expr": "📊",
+      "opts": [
+        "1 tahap saja",
+        "2 tahap (telur dan dewasa)",
+        "3 tahap (telur, nimfa, dewasa)",
+        "4 tahap atau lebih"
+      ],
+      "a": 2,
+      "hint": "Metamorfosis tidak sempurna TIDAK punya tahap pupa.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Peristiwa apa yang akan terjadi jika tumbuhan (produsen) di ekosistem mendadak berkurang 50%?",
+      "expr": "🌾❌",
+      "opts": [
+        "Hanya herbivora yang akan terpengaruh, pemangsa tidak apa-apa",
+        "Seluruh rantai makanan akan terganggu, herbivora kurang makan, pemangsa juga kurang makan",
+        "Pemangsa akan berkembang biak lebih cepat",
+        "Tidak ada dampak karena pemangsa bisa mencari makanan lain"
+      ],
+      "a": 1,
+      "hint": "Gangguan di awal rantai makanan (produsen) akan merambat ke semua tingkat lainnya.",
+      "difficulty": "hard"
+    }
+  ],
+  "materi_energi": [
+    {
+      "q": "Es batu adalah air dalam wujud apa?",
+      "expr": "❄️",
+      "opts": [
+        "Cair",
+        "Padat",
+        "Gas",
+        "Uap"
+      ],
+      "a": 1,
+      "hint": "Es batu keras dan memiliki bentuk tetap.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Proses berubahnya air menjadi uap air disebut...",
+      "expr": "🌡️💨",
+      "opts": [
+        "Membeku",
+        "Menguap",
+        "Mengembun",
+        "Menyublim"
+      ],
+      "a": 1,
+      "hint": "Terjadi saat air dipanaskan, misalnya saat memasak air hingga mengepul.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Saat pagi hari, embun terbentuk di rumput. Perubahan wujud apa yang terjadi?",
+      "expr": "🌅💧",
+      "opts": [
+        "Menguap",
+        "Membeku",
+        "Mengembun",
+        "Menyublim"
+      ],
+      "a": 2,
+      "hint": "Gas air di udara berubah menjadi tetes kecil cair karena suhu dingin.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Besi memiliki sifat keras, berat, dan mengkilap. Sifat-sifat tersebut termasuk sifat...",
+      "expr": "🔩",
+      "opts": [
+        "Kimia",
+        "Fisika",
+        "Biologis",
+        "Magnet"
+      ],
+      "a": 1,
+      "hint": "Sifat ini bisa dilihat dan diukur tanpa mengubah jenis zatnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Manakah dari benda berikut yang merupakan penghantar panas terbaik?",
+      "expr": "🔥",
+      "opts": [
+        "Plastik",
+        "Kayu",
+        "Aluminium",
+        "Kain"
+      ],
+      "a": 2,
+      "hint": "Logam yang sering dipakai untuk wajan dan panci bisa menjadi panas dengan cepat.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Es mencair menjadi air ketika dipanaskan. Proses sebaliknya (air membeku menjadi es) memerlukan...",
+      "expr": "❄️💧",
+      "opts": [
+        "Pemanasan",
+        "Pendinginan",
+        "Penguapan",
+        "Pengadukan"
+      ],
+      "a": 1,
+      "hint": "Kebalikan dari mencair adalah proses yang menghilangkan panas dari air.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Sumber energi yang dapat diperbaharui dari alam adalah...",
+      "expr": "☀️",
+      "opts": [
+        "Minyak bumi",
+        "Batu bara",
+        "Energi matahari",
+        "Gas alam"
+      ],
+      "a": 2,
+      "hint": "Sumber yang tidak akan habis selama matahari masih bersinar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ketika kamu mendorong mainan mobil, gaya apa yang kamu berikan?",
+      "expr": "👉🚗",
+      "opts": [
+        "Gaya tarik",
+        "Gaya dorong",
+        "Gaya gesek",
+        "Gaya gravitasi"
+      ],
+      "a": 1,
+      "hint": "Tanganmu menggerakkan mainan itu menjauh dari dirimu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Magnet memiliki dua kutub. Kutub yang sama akan saling...",
+      "expr": "🧲🧲",
+      "opts": [
+        "Menarik",
+        "Menolak",
+        "Berputar",
+        "Berdekatan"
+      ],
+      "a": 1,
+      "hint": "Dua kutub utara magnet tidak akan bersatu, mereka saling menghindar.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Perubahan wujud dari padat langsung menjadi gas tanpa melalui fase cair disebut...",
+      "expr": "❄️💨",
+      "opts": [
+        "Mengembun",
+        "Menyublim",
+        "Menguap",
+        "Membeku"
+      ],
+      "a": 1,
+      "hint": "Kapur barus (naftalena) lama-kelamaan menghilang tanpa meninggalkan cairan.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Gaya gesekan antara ban mobil dan jalan aspal akan menyebabkan...",
+      "expr": "🚗🛣️",
+      "opts": [
+        "Ban menjadi halus",
+        "Ban menjadi panas",
+        "Ban menjadi lebih keras",
+        "Ban mengembang"
+      ],
+      "a": 1,
+      "hint": "Saat ban bergesekan dengan jalan, energi gerak diubah menjadi panas.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Manakah yang BUKAN sumber energi?",
+      "expr": "❓",
+      "opts": [
+        "Angin",
+        "Air terjun",
+        "Matahari",
+        "Plastik"
+      ],
+      "a": 3,
+      "hint": "Salah satu pilihan adalah benda buatan manusia yang tidak menghasilkan energi sendiri.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ketika lilin menyala, energi apa yang dihasilkan?",
+      "expr": "🕯️",
+      "opts": [
+        "Energi listrik dan gerak",
+        "Energi panas dan cahaya",
+        "Energi angin",
+        "Energi magnet"
+      ],
+      "a": 1,
+      "hint": "Lilin yang menyala memberikan nyala api dan kehangatan di sekitarnya.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Besi yang diletakkan di dekat magnet akan tertarik. Hal ini terjadi karena...",
+      "expr": "🧲⚙️",
+      "opts": [
+        "Besi terbuat dari bahan yang sama dengan magnet",
+        "Besi memiliki sifat magnetik sehingga bisa ditarik magnet",
+        "Besi dan magnet memiliki kutub yang sama",
+        "Besi lebih berat dari magnet"
+      ],
+      "a": 1,
+      "hint": "Besi punya ciri khusus yang berbeda dari kayu atau plastik.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Urutan perubahan wujud es menjadi uap air jika terus dipanaskan adalah...",
+      "expr": "❄️💧💨",
+      "opts": [
+        "Padat → Gas → Cair",
+        "Padat → Cair → Gas",
+        "Gas → Cair → Padat",
+        "Cair → Padat → Gas"
+      ],
+      "a": 1,
+      "hint": "Dimulai dari es yang keras, menjadi air, baru menjadi uap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kayu memiliki sifat keras tetapi mudah terbakar. Sifat mudah terbakar merupakan sifat...",
+      "expr": "🔥🌳",
+      "opts": [
+        "Sifat fisika",
+        "Sifat kimia",
+        "Sifat mekanik",
+        "Sifat biologis"
+      ],
+      "a": 1,
+      "hint": "Sifat ini terlihat saat kayu berubah menjadi zat lain seperti abu dan asap.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Sebuah benda bersifat transparan, mudah pecah, keras, dan tidak dapat ditekuk. Benda ini kemungkinan besar adalah...",
+      "expr": "🪟",
+      "opts": [
+        "Karet",
+        "Plastik",
+        "Gelas",
+        "Aluminium"
+      ],
+      "a": 2,
+      "hint": "Hanya satu bahan yang sekaligus transparan, keras, dan mudah pecah.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Energi gerak yang dimiliki mobil yang melaju akan berubah menjadi energi apa saat mobil mengerem?",
+      "expr": "🚗🛑",
+      "opts": [
+        "Energi cahaya",
+        "Energi panas",
+        "Energi listrik",
+        "Energi magnet"
+      ],
+      "a": 1,
+      "hint": "Gesekan rem dengan roda saat mengerem menghasilkan sesuatu yang bisa dirasakan.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Saat air laut dipanaskan matahari, menguap menjadi uap air, naik ke atmosfer, lalu turun kembali sebagai hujan. Proses ini disebut...",
+      "expr": "🌧️☀️💧",
+      "opts": [
+        "Siklus pembakaran",
+        "Siklus air",
+        "Siklus magnetik",
+        "Siklus energi panas"
+      ],
+      "a": 1,
+      "hint": "Proses alami yang melibatkan penguapan, pembentukan awan, dan hujan secara berulang.",
+      "difficulty": "medium"
+    }
+  ],
+  "atom_dan_unsur": [
+    {
+      "q": "Apa yang dimaksud dengan atom?",
+      "expr": "",
+      "opts": [
+        "Bagian terkecil dari suatu unsur yang masih memiliki sifat kimia unsur tersebut",
+        "Zat yang terbuat dari banyak partikel besar",
+        "Campuran dua unsur yang mudah dipisahkan",
+        "Benda yang bisa dilihat dengan mata telanjang"
+      ],
+      "a": 0,
+      "hint": "Atom adalah satuan dasar terkecil dari suatu unsur yang masih mempertahankan sifat kimia unsur tersebut.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Manakah di antara berikut yang merupakan contoh unsur?",
+      "expr": "Fe, O₂, Au",
+      "opts": [
+        "Besi (Fe), emas (Au), oksigen (O₂)",
+        "Air, garam dapur, gula",
+        "Plastik, kaca, kayu",
+        "Susu, jus jeruk, teh"
+      ],
+      "a": 0,
+      "hint": "Unsur adalah zat murni yang hanya terdiri dari satu jenis atom.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Air memiliki rumus kimia H₂O. Artinya air adalah...",
+      "expr": "H₂O",
+      "opts": [
+        "Senyawa yang terbentuk dari 2 atom hidrogen dan 1 atom oksigen",
+        "Unsur yang paling banyak di bumi",
+        "Campuran unsur besi dan oksigen",
+        "Zat yang selalu berbentuk cair"
+      ],
+      "a": 0,
+      "hint": "H₂O menunjukkan jumlah dan jenis atom yang bergabung dalam satu molekul air.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Perbedaan utama antara unsur dan senyawa adalah...",
+      "expr": "",
+      "opts": [
+        "Unsur terdiri dari satu jenis atom, senyawa terdiri dari dua atau lebih jenis atom yang bergabung",
+        "Unsur selalu berwarna, senyawa tidak berwarna",
+        "Unsur lebih berat daripada senyawa",
+        "Unsur hanya terdapat di alam, senyawa hanya dibuat manusia"
+      ],
+      "a": 0,
+      "hint": "Lihat jenis atom yang menyusun setiap zat.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Oksigen (O₂) dalam udara yang kita hirup adalah bentuk...",
+      "expr": "O₂",
+      "opts": [
+        "Molekul yang terbentuk dari 2 atom oksigen yang bergabung",
+        "Unsur oksigen dalam bentuk atom tunggal",
+        "Senyawa yang mengandung oksigen dan gas lain",
+        "Atom yang terlalu kecil untuk dihitung"
+      ],
+      "a": 0,
+      "hint": "Lambang O₂ menunjukkan berapa banyak atom oksigen yang bergabung dalam satu molekul.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Besi (Fe) yang digunakan untuk membuat pisau dan paku adalah...",
+      "expr": "Fe",
+      "opts": [
+        "Unsur logam yang terbentuk dari atom-atom besi sejenis",
+        "Senyawa yang mengandung beberapa jenis atom",
+        "Campuran besi dengan air",
+        "Hasil perpaduan tiga unsur berbeda"
+      ],
+      "a": 0,
+      "hint": "Besi murni hanya terdiri dari satu jenis atom.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ketika dua atau lebih atom bergabung, mereka membentuk...",
+      "expr": "",
+      "opts": [
+        "Molekul",
+        "Kristal",
+        "Gas",
+        "Cairan"
+      ],
+      "a": 0,
+      "hint": "Istilah untuk hasil penggabungan beberapa atom adalah...",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Garam dapur (NaCl) terbentuk dari penggabungan atom natrium (Na) dan klor (Cl). Artinya garam dapur adalah...",
+      "expr": "NaCl",
+      "opts": [
+        "Senyawa",
+        "Unsur",
+        "Elemen langka",
+        "Campuran unsur yang mudah dipisahkan"
+      ],
+      "a": 0,
+      "hint": "Ketika dua unsur berbeda bergabung secara kimia, hasilnya disebut senyawa.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Manakah pernyataan yang BENAR tentang atom?",
+      "expr": "",
+      "opts": [
+        "Atom sangat kecil dan tidak bisa dilihat dengan mata telanjang",
+        "Atom dapat dilihat jika kita menggunakan lensa pembesar biasa",
+        "Semua atom memiliki ukuran dan bentuk yang sama",
+        "Atom adalah benda paling besar yang ada di alam"
+      ],
+      "a": 0,
+      "hint": "Pikirkan tentang ukuran atom dibandingkan dengan benda yang bisa kita lihat.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Emas murni (Au) yang digunakan untuk membuat perhiasan adalah...",
+      "expr": "Au",
+      "opts": [
+        "Unsur yang terdiri dari atom-atom emas sejenis",
+        "Senyawa yang terbentuk dari emas dan logam lain",
+        "Campuran lima unsur berbeda",
+        "Atom tunggal yang sangat besar"
+      ],
+      "a": 0,
+      "hint": "Emas murni hanya terdiri dari satu jenis atom.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Mengapa atom disebut sebagai 'bagian terkecil' dari suatu unsur?",
+      "expr": "",
+      "opts": [
+        "Karena jika atom dipecah lagi, zat tersebut tidak akan memiliki sifat kimia unsur tersebut lagi",
+        "Karena atom tidak memiliki massa",
+        "Karena atom dapat dilihat dengan mata biasa",
+        "Karena atom hanya ada satu di setiap zat"
+      ],
+      "a": 0,
+      "hint": "Pikirkan apa yang terjadi jika kita terus memecah suatu unsur menjadi bagian yang lebih kecil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Suatu senyawa selalu memiliki rumus kimia tetap. Contohnya, air selalu H₂O. Ini berarti...",
+      "expr": "H₂O",
+      "opts": [
+        "Perbandingan jenis dan jumlah atom dalam air tidak pernah berubah",
+        "Air dapat mengandung 2 atau 3 atom hidrogen tergantung sumbernya",
+        "Rumus air bisa berbeda di setiap negara",
+        "Air tidak memiliki struktur atom yang pasti"
+      ],
+      "a": 0,
+      "hint": "Senyawa memiliki komposisi atom yang konsisten dan tetap.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Karbon (C) adalah unsur yang terdapat dalam berlian, grafit, dan arang. Hal ini menunjukkan bahwa...",
+      "expr": "C",
+      "opts": [
+        "Atom karbon yang sama dapat membentuk benda-benda dengan sifat berbeda",
+        "Berlian, grafit, dan arang adalah tiga unsur yang berbeda",
+        "Atom karbon hanya ada dalam satu bentuk",
+        "Unsur karbon tidak stabil di alam"
+      ],
+      "a": 0,
+      "hint": "Unsur yang sama (atom yang sama) dapat tersusun dengan cara berbeda dan membentuk sifat yang berbeda.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Manakah yang BUKAN contoh unsur sehari-hari?",
+      "expr": "",
+      "opts": [
+        "Air",
+        "Tembaga",
+        "Oksigen",
+        "Perak"
+      ],
+      "a": 0,
+      "hint": "Air adalah senyawa, bukan unsur. Carilah mana yang bukan zat dari satu jenis atom.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika satu molekul air (H₂O) dipecah menjadi atom-atomnya, berapa banyak atom yang akan terbentuk?",
+      "expr": "H₂O → ?",
+      "opts": [
+        "3 atom (2 hidrogen + 1 oksigen)",
+        "2 atom (hanya hidrogen dan oksigen)",
+        "1 atom air yang sangat kecil",
+        "5 atom (kombinasi dari semua partikel)"
+      ],
+      "a": 0,
+      "hint": "H₂O artinya 2 atom hidrogen dan 1 atom oksigen. Jumlahkan semuanya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Manakah urutan yang BENAR dari yang terkecil hingga terbesar?",
+      "expr": "",
+      "opts": [
+        "Atom → Molekul → Zat yang terlihat",
+        "Zat yang terlihat → Molekul → Atom",
+        "Molekul → Atom → Zat yang terlihat",
+        "Atom dan Molekul memiliki ukuran yang sama"
+      ],
+      "a": 0,
+      "hint": "Pikirkan tingkat kecilnya: atom paling kecil, lalu molekul (kumpulan atom), lalu benda yang bisa dilihat.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Nikel (Ni) digunakan sebagai lapisan pada uang logam dan perhiasan. Nikel adalah...",
+      "expr": "Ni",
+      "opts": [
+        "Unsur logam",
+        "Senyawa organik",
+        "Gas mulia",
+        "Hasil pencampuran tiga unsur"
+      ],
+      "a": 0,
+      "hint": "Nikel adalah satu jenis logam di tabel periodik.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Apa perbedaan antara atom hidrogen tunggal (H) dan molekul hidrogen (H₂)?",
+      "expr": "H vs H₂",
+      "opts": [
+        "H adalah satu atom hidrogen, sedangkan H₂ adalah dua atom hidrogen yang bergabung membentuk molekul",
+        "H adalah gas, sedangkan H₂ adalah cairan",
+        "H adalah atom kecil, sedangkan H₂ adalah atom yang lebih besar",
+        "H lebih ringan daripada H₂"
+      ],
+      "a": 0,
+      "hint": "Angka kecil di belakang simbol menunjukkan jumlah atom dalam molekul.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jika kita mencampur bubuk besi dengan bubuk sulfur tanpa memanaskannya, campuran ini adalah...",
+      "expr": "Fe + S",
+      "opts": [
+        "Campuran dua unsur yang masih bisa dipisahkan",
+        "Senyawa besi sulfida yang tidak bisa dipisahkan",
+        "Satu unsur baru yang bereaksi dengan dirinya sendiri",
+        "Atom yang menyatu secara permanen"
+      ],
+      "a": 0,
+      "hint": "Jika dua unsur hanya dicampur tapi tidak bereaksi secara kimia, mereka tetap bisa dipisahkan.",
+      "difficulty": "hard"
+    }
+  ],
+  "galaksi_dan_angkasa": [
+    {
+      "q": "Planet apa yang paling dekat dengan Matahari?",
+      "expr": "",
+      "opts": [
+        "Merkurius",
+        "Venus",
+        "Bumi",
+        "Mars"
+      ],
+      "a": 0,
+      "hint": "Planet pertama dalam urutan tata surya kami.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa jumlah planet yang mengelilingi Matahari di tata surya kita?",
+      "expr": "",
+      "opts": [
+        "6 planet",
+        "8 planet",
+        "10 planet",
+        "12 planet"
+      ],
+      "a": 1,
+      "hint": "Mulai dari Merkurius sampai Neptunus.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Apa penyebab terjadinya siang dan malam di Bumi?",
+      "expr": "",
+      "opts": [
+        "Bumi mengelilingi Matahari",
+        "Bumi berputar pada porosnya",
+        "Matahari bergerak",
+        "Bulan menghalangi Matahari"
+      ],
+      "a": 1,
+      "hint": "Gerak Bumi yang membuat setengah bagian menghadap Matahari dan setengah lagi menjauh.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa lama Bumi memerlukan waktu untuk mengelilingi Matahari sekali?",
+      "expr": "",
+      "opts": [
+        "24 jam",
+        "7 hari",
+        "1 bulan",
+        "1 tahun"
+      ],
+      "a": 3,
+      "hint": "Ini sama dengan waktu pergantian musim.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Matahari adalah apa dalam tata surya kita?",
+      "expr": "",
+      "opts": [
+        "Planet terbesar",
+        "Bintang",
+        "Satelit alami",
+        "Asteroid"
+      ],
+      "a": 1,
+      "hint": "Benda langit yang sangat panas dan memancarkan cahaya sendiri.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Yang manakah BUKAN fungsi Bulan bagi Bumi?",
+      "expr": "",
+      "opts": [
+        "Menerangi malam hari",
+        "Mempengaruhi pasang surut laut",
+        "Menjaga stabilitas rotasi Bumi",
+        "Menghasilkan panas untuk Bumi"
+      ],
+      "a": 3,
+      "hint": "Bulan adalah satelit alami, bukan penghasil panas.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Galaksi tempat Bumi kita berada bernama apa?",
+      "expr": "",
+      "opts": [
+        "Andromeda",
+        "Bima Sakti",
+        "Segitiga",
+        "Centaurus A"
+      ],
+      "a": 1,
+      "hint": "Nama galaksi kami dalam bahasa Indonesia yang indah.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa perbedaan utama antara planet dan bintang?",
+      "expr": "",
+      "opts": [
+        "Planet lebih besar daripada bintang",
+        "Bintang memancarkan cahaya sendiri, planet hanya memantulkan",
+        "Planet bergerak, bintang selalu diam",
+        "Tidak ada perbedaan"
+      ],
+      "a": 1,
+      "hint": "Pikirkan tentang apa yang membuat Matahari berbeda dari Bumi.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Satelit alami Bumi adalah...",
+      "expr": "",
+      "opts": [
+        "Matahari",
+        "Bulan",
+        "Venus",
+        "Mars"
+      ],
+      "a": 1,
+      "hint": "Benda langit yang selalu mengelilingi Bumi dan terlihat di malam hari.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Fase Bulan terjadi karena apa?",
+      "expr": "",
+      "opts": [
+        "Bayangan Bumi yang jatuh ke Bulan",
+        "Posisi Bulan relatif terhadap Bumi dan Matahari",
+        "Bulan bergerak lebih cepat dari Bumi",
+        "Cahaya Matahari berkurang"
+      ],
+      "a": 1,
+      "hint": "Tergantung pada bagian Bulan mana yang mendapat cahaya Matahari dan terlihat dari Bumi.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Urutan planet dari yang terdekat ke terjauh dari Matahari adalah...",
+      "expr": "",
+      "opts": [
+        "Merkurius, Venus, Bumi, Mars, Jupiter, Saturnus, Uranus, Neptunus",
+        "Venus, Merkurius, Bumi, Mars, Jupiter, Saturnus, Neptunus, Uranus",
+        "Bumi, Venus, Merkurius, Mars, Jupiter, Saturnus, Uranus, Neptunus",
+        "Mars, Merkurius, Venus, Bumi, Jupiter, Saturnus, Neptunus, Uranus"
+      ],
+      "a": 0,
+      "hint": "Ingat urutan dengan mnemonik: Merkurius, Venus, Bumi, Mars...",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Apa itu gravitasi dalam konteks angkasa?",
+      "expr": "",
+      "opts": [
+        "Gaya yang menarik benda-benda saling mendekati",
+        "Cahaya yang dipancarkan bintang",
+        "Suara yang terdengar di luar angkasa",
+        "Angin yang bertiup di langit"
+      ],
+      "a": 0,
+      "hint": "Gaya yang membuat Bumi tetap mengelilingi Matahari dan membuat kita tetap berdiri di tanah.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Planet mana yang memiliki cincin yang paling menonjol?",
+      "expr": "",
+      "opts": [
+        "Jupiter",
+        "Uranus",
+        "Saturnus",
+        "Mars"
+      ],
+      "a": 2,
+      "hint": "Planet dengan cincin indah yang terlihat dengan teleskop kecil.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Manakah pernyataan berikut yang SALAH tentang Bumi?",
+      "expr": "",
+      "opts": [
+        "Bumi berputar pada porosnya setiap 24 jam",
+        "Bumi mengelilingi Matahari setahun sekali",
+        "Bumi adalah planet gas raksasa",
+        "Bumi memiliki atmosfer yang melindungi"
+      ],
+      "a": 2,
+      "hint": "Ingat jenisnya; Bumi termasuk planet apa?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mengapa ada musim di Bumi?",
+      "expr": "",
+      "opts": [
+        "Karena Bumi berputar lebih cepat",
+        "Karena kemiringan sumbu Bumi saat mengelilingi Matahari",
+        "Karena Matahari bergerak mendekati dan menjauh",
+        "Karena Bulan mempengaruhi cuaca"
+      ],
+      "a": 1,
+      "hint": "Terkait dengan sudut datangnya cahaya Matahari di berbagai belahan Bumi.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Bintang adalah benda langit yang... (ciri utama)",
+      "expr": "",
+      "opts": [
+        "Selalu diam dan tidak bergerak",
+        "Hanya terlihat di malam hari",
+        "Memancarkan cahaya dan energi sendiri",
+        "Mengelilingi planet-planet"
+      ],
+      "a": 2,
+      "hint": "Ciri yang membedakan bintang dari planet.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Matahari tersusun terutama dari gas apa?",
+      "expr": "",
+      "opts": [
+        "Oksigen dan nitrogen",
+        "Hidrogen dan helium",
+        "Karbon dan uap air",
+        "Besi dan belerang"
+      ],
+      "a": 1,
+      "hint": "Dua gas paling ringan di alam semesta yang menjadi bahan bakar bintang.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Planet manakah yang ukurannya paling besar di tata surya?",
+      "expr": "",
+      "opts": [
+        "Saturnus",
+        "Jupiter",
+        "Venus",
+        "Neptunus"
+      ],
+      "a": 1,
+      "hint": "Planet gas raksasa dengan bintik merah besar yang terkenal.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa lama satu siklus penuh fase Bulan berlangsung?",
+      "expr": "",
+      "opts": [
+        "7 hari",
+        "15 hari",
+        "Sekitar 29–30 hari",
+        "Tepat 365 hari"
+      ],
+      "a": 2,
+      "hint": "Satu siklus dimulai dari Bulan Baru hingga kembali ke Bulan Baru lagi.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Apa yang terjadi ketika Bulan berada di antara Bumi dan Matahari?",
+      "expr": "",
+      "opts": [
+        "Terjadi gerhana Bulan",
+        "Terjadi gerhana Matahari",
+        "Tidak ada yang istimewa terjadi",
+        "Fase Bulan Purnama"
+      ],
+      "a": 1,
+      "hint": "Bayangan apa yang terhalangi?",
+      "difficulty": "medium"
+    }
+  ]
+}
