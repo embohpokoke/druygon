@@ -1,52 +1,52 @@
 {
   "penjumlahan": [
     {
-      "q": "Berapa hasilnya?",
-      "expr": "54 + 15 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "47 + ? = 75",
       "opts": [
-        "68",
-        "79",
-        "70",
-        "69"
+        "27",
+        "28",
+        "75",
+        "29"
+      ],
+      "a": 1,
+      "hint": "Yang hilang = hasil dikurangi angka yang diketahui.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "41 + ? = 61",
+      "opts": [
+        "19",
+        "20",
+        "21",
+        "61"
+      ],
+      "a": 1,
+      "hint": "Yang hilang = hasil dikurangi angka yang diketahui.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 33 kue, lalu ditambah 42 kue lagi. Berapa total kue?",
+      "expr": "",
+      "opts": [
+        "74",
+        "76",
+        "33",
+        "75"
       ],
       "a": 3,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "hint": "Total = jumlah keduanya. Tambahkan.",
       "difficulty": "easy"
     },
     {
       "q": "Berapa hasilnya?",
-      "expr": "68 + 68 = ?",
+      "expr": "33 + 78 = ?",
       "opts": [
-        "146",
-        "136",
-        "135",
-        "137"
-      ],
-      "a": 1,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "56 + 58 = ?",
-      "opts": [
-        "113",
-        "114",
-        "115",
-        "124"
-      ],
-      "a": 1,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "72 + 16 = ?",
-      "opts": [
-        "98",
-        "87",
-        "88",
-        "89"
+        "121",
+        "110",
+        "111",
+        "112"
       ],
       "a": 2,
       "hint": "Jumlahkan satuan dulu, lalu puluhan.",
@@ -54,12 +54,194 @@
     },
     {
       "q": "Berapa hasilnya?",
-      "expr": "61 + 77 = ?",
+      "expr": "18 + 37 = ?",
       "opts": [
-        "138",
-        "137",
-        "148",
-        "139"
+        "54",
+        "56",
+        "55",
+        "65"
+      ],
+      "a": 2,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "47 + ? = 92",
+      "opts": [
+        "44",
+        "92",
+        "46",
+        "45"
+      ],
+      "a": 3,
+      "hint": "Yang hilang = hasil dikurangi angka yang diketahui.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 32 bola, lalu ditambah 30 bola lagi. Berapa total bola?",
+      "expr": "",
+      "opts": [
+        "63",
+        "61",
+        "62",
+        "32"
+      ],
+      "a": 2,
+      "hint": "Total = jumlah keduanya. Tambahkan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "31 + ? = 53",
+      "opts": [
+        "21",
+        "53",
+        "22",
+        "23"
+      ],
+      "a": 2,
+      "hint": "Yang hilang = hasil dikurangi angka yang diketahui.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "23 + 19 = ?",
+      "opts": [
+        "43",
+        "42",
+        "41",
+        "52"
+      ],
+      "a": 1,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ada 18 bola, lalu ditambah 16 bola lagi. Berapa total bola?",
+      "expr": "",
+      "opts": [
+        "35",
+        "34",
+        "18",
+        "33"
+      ],
+      "a": 1,
+      "hint": "Total = jumlah keduanya. Tambahkan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "20 + 12 = ?",
+      "opts": [
+        "32",
+        "33",
+        "31",
+        "42"
+      ],
+      "a": 0,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ada 25 buku, lalu ditambah 9 buku lagi. Berapa total buku?",
+      "expr": "",
+      "opts": [
+        "34",
+        "35",
+        "33",
+        "25"
+      ],
+      "a": 0,
+      "hint": "Total = jumlah keduanya. Tambahkan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "69 + 61 = ?",
+      "opts": [
+        "130",
+        "129",
+        "140",
+        "131"
+      ],
+      "a": 0,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ada 33 permen, lalu ditambah 43 permen lagi. Berapa total permen?",
+      "expr": "",
+      "opts": [
+        "33",
+        "77",
+        "76",
+        "75"
+      ],
+      "a": 2,
+      "hint": "Total = jumlah keduanya. Tambahkan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "74 + 89 = ?",
+      "opts": [
+        "173",
+        "164",
+        "163",
+        "162"
+      ],
+      "a": 2,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "51 + 61 = ?",
+      "opts": [
+        "112",
+        "122",
+        "111",
+        "113"
+      ],
+      "a": 0,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Ada 33 roti, lalu ditambah 39 roti lagi. Berapa total roti?",
+      "expr": "",
+      "opts": [
+        "33",
+        "73",
+        "71",
+        "72"
+      ],
+      "a": 3,
+      "hint": "Total = jumlah keduanya. Tambahkan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "55 + 24 = ?",
+      "opts": [
+        "89",
+        "78",
+        "79",
+        "80"
+      ],
+      "a": 2,
+      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "22 + 88 = ?",
+      "opts": [
+        "110",
+        "109",
+        "111",
+        "120"
       ],
       "a": 0,
       "hint": "Jumlahkan satuan dulu, lalu puluhan.",
@@ -67,90 +249,12 @@
     },
     {
       "q": "Berapa hasilnya?",
-      "expr": "48 + 37 = ?",
+      "expr": "12 + 14 = ?",
       "opts": [
-        "84",
-        "86",
-        "95",
-        "85"
-      ],
-      "a": 3,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "42 + 67 = ?",
-      "opts": [
-        "119",
-        "110",
-        "108",
-        "109"
-      ],
-      "a": 3,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "37 + 26 = ?",
-      "opts": [
-        "64",
-        "63",
-        "73",
-        "62"
-      ],
-      "a": 1,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "50 + 25 = ?",
-      "opts": [
-        "85",
-        "76",
-        "74",
-        "75"
-      ],
-      "a": 3,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "67 + 26 = ?",
-      "opts": [
-        "92",
-        "103",
-        "93",
-        "94"
-      ],
-      "a": 2,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "81 + 33 = ?",
-      "opts": [
-        "113",
-        "124",
-        "114",
-        "115"
-      ],
-      "a": 2,
-      "hint": "Jumlahkan satuan dulu, lalu puluhan.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "21 + 15 = ?",
-      "opts": [
-        "35",
-        "37",
         "36",
-        "46"
+        "27",
+        "26",
+        "25"
       ],
       "a": 2,
       "hint": "Jumlahkan satuan dulu, lalu puluhan.",
@@ -159,607 +263,828 @@
   ],
   "pengurangan": [
     {
-      "q": "Berapa hasilnya?",
-      "expr": "63 − 50 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "80 − ? = 67",
       "opts": [
+        "13",
         "14",
-        "23",
         "12",
+        "67"
+      ],
+      "a": 0,
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Punya 19 bunga, 13 bunga diberikan ke teman. Sisa berapa?",
+      "expr": "",
+      "opts": [
+        "32",
+        "5",
+        "7",
+        "6"
+      ],
+      "a": 3,
+      "hint": "Sisa = punya dikurangi yang diberikan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "64 − ? = 56",
+      "opts": [
+        "9",
+        "56",
+        "8",
+        "7"
+      ],
+      "a": 2,
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "68 − 28 = ?",
+      "opts": [
+        "40",
+        "39",
+        "50",
+        "41"
+      ],
+      "a": 0,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "61 − 47 = ?",
+      "opts": [
+        "24",
+        "15",
+        "14",
         "13"
-      ],
-      "a": 3,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "99 − 56 = ?",
-      "opts": [
-        "53",
-        "44",
-        "42",
-        "43"
-      ],
-      "a": 3,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "95 − 15 = ?",
-      "opts": [
-        "90",
-        "79",
-        "80",
-        "81"
       ],
       "a": 2,
       "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
       "difficulty": "easy"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "47 − 10 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "40 − ? = 7",
       "opts": [
+        "34",
+        "32",
+        "7",
+        "33"
+      ],
+      "a": 3,
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Punya 33 apel, 18 apel diberikan ke teman. Sisa berapa?",
+      "expr": "",
+      "opts": [
+        "15",
+        "16",
+        "51",
+        "14"
+      ],
+      "a": 0,
+      "hint": "Sisa = punya dikurangi yang diberikan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "68 − ? = 52",
+      "opts": [
+        "16",
+        "52",
+        "17",
+        "15"
+      ],
+      "a": 0,
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "72 − 56 = ?",
+      "opts": [
+        "17",
+        "16",
+        "26",
+        "15"
+      ],
+      "a": 1,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "95 − 81 = ?",
+      "opts": [
+        "15",
+        "13",
+        "24",
+        "14"
+      ],
+      "a": 3,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "68 − 45 = ?",
+      "opts": [
+        "23",
+        "33",
+        "24",
+        "22"
+      ],
+      "a": 0,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "73 − 32 = ?",
+      "opts": [
+        "40",
+        "42",
+        "51",
+        "41"
+      ],
+      "a": 3,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "72 − ? = 19",
+      "opts": [
+        "52",
+        "53",
+        "54",
+        "19"
+      ],
+      "a": 1,
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Punya 46 roti, 35 roti diberikan ke teman. Sisa berapa?",
+      "expr": "",
+      "opts": [
+        "12",
+        "81",
+        "11",
+        "10"
+      ],
+      "a": 2,
+      "hint": "Sisa = punya dikurangi yang diberikan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "70 − 38 = ?",
+      "opts": [
+        "42",
+        "31",
+        "33",
+        "32"
+      ],
+      "a": 3,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "56 − ? = 24",
+      "opts": [
+        "24",
+        "31",
+        "33",
+        "32"
+      ],
+      "a": 3,
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "87 − 75 = ?",
+      "opts": [
+        "22",
+        "12",
+        "11",
+        "13"
+      ],
+      "a": 1,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Punya 48 roti, 12 roti diberikan ke teman. Sisa berapa?",
+      "expr": "",
+      "opts": [
+        "60",
         "36",
-        "47",
+        "35",
+        "37"
+      ],
+      "a": 1,
+      "hint": "Sisa = punya dikurangi yang diberikan.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "67 − 35 = ?",
+      "opts": [
+        "33",
+        "32",
+        "31",
+        "42"
+      ],
+      "a": 1,
+      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "42 − ? = 5",
+      "opts": [
+        "5",
+        "36",
         "38",
         "37"
       ],
       "a": 3,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "78 − 65 = ?",
-      "opts": [
-        "14",
-        "13",
-        "12",
-        "23"
-      ],
-      "a": 1,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "44 − 19 = ?",
-      "opts": [
-        "25",
-        "26",
-        "24",
-        "35"
-      ],
-      "a": 0,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "57 − 28 = ?",
-      "opts": [
-        "29",
-        "30",
-        "28",
-        "39"
-      ],
-      "a": 0,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "67 − 52 = ?",
-      "opts": [
-        "16",
-        "14",
-        "25",
-        "15"
-      ],
-      "a": 3,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "97 − 75 = ?",
-      "opts": [
-        "23",
-        "32",
-        "22",
-        "21"
-      ],
-      "a": 2,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "79 − 25 = ?",
-      "opts": [
-        "54",
-        "53",
-        "64",
-        "55"
-      ],
-      "a": 0,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "63 − 14 = ?",
-      "opts": [
-        "48",
-        "49",
-        "50",
-        "59"
-      ],
-      "a": 1,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "40 − 29 = ?",
-      "opts": [
-        "12",
-        "10",
-        "11",
-        "21"
-      ],
-      "a": 2,
-      "hint": "Kurangi satuan dulu; pinjam dari puluhan bila perlu.",
-      "difficulty": "easy"
+      "hint": "Yang dikurangi = angka awal dikurangi hasilnya.",
+      "difficulty": "medium"
     }
   ],
   "perkalian": [
     {
-      "q": "Berapa hasilnya?",
-      "expr": "3 × 12 = ?",
+      "q": "Ada 9 kotak, tiap kotak berisi 5 bola. Berapa total bola?",
+      "expr": "",
       "opts": [
-        "24",
-        "37",
-        "39",
-        "36"
-      ],
-      "a": 3,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "12 × 4 = ?",
-      "opts": [
-        "48",
-        "44",
-        "49",
-        "60"
-      ],
-      "a": 0,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "7 × 12 = ?",
-      "opts": [
-        "85",
-        "84",
-        "91",
-        "72"
-      ],
-      "a": 1,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "12 × 11 = ?",
-      "opts": [
-        "121",
-        "133",
-        "144",
-        "132"
-      ],
-      "a": 3,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "4 × 10 = ?",
-      "opts": [
-        "41",
-        "30",
-        "44",
-        "40"
-      ],
-      "a": 3,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "4 × 9 = ?",
-      "opts": [
-        "37",
-        "40",
+        "45",
         "36",
-        "27"
-      ],
-      "a": 2,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "11 × 9 = ?",
-      "opts": [
-        "110",
-        "90",
-        "99",
-        "100"
-      ],
-      "a": 2,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "6 × 7 = ?",
-      "opts": [
-        "43",
-        "42",
-        "48",
-        "35"
-      ],
-      "a": 1,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "9 × 7 = ?",
-      "opts": [
-        "72",
-        "63",
-        "56",
-        "64"
-      ],
-      "a": 1,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "12 × 9 = ?",
-      "opts": [
-        "99",
-        "120",
-        "109",
-        "108"
-      ],
-      "a": 3,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "4 × 7 = ?",
-      "opts": [
-        "28",
-        "21",
-        "29",
-        "32"
+        "50",
+        "14"
       ],
       "a": 0,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
+      "hint": "Total = banyak kotak × isi tiap kotak.",
       "difficulty": "medium"
     },
     {
+      "q": "Berapa angka yang hilang?",
+      "expr": "8 × ? = 16",
+      "opts": [
+        "1",
+        "3",
+        "8",
+        "2"
+      ],
+      "a": 3,
+      "hint": "Yang hilang = hasil dibagi angka yang diketahui.",
+      "difficulty": "hard"
+    },
+    {
       "q": "Berapa hasilnya?",
-      "expr": "3 × 5 = ?",
+      "expr": "7 × 5 = ?",
+      "opts": [
+        "36",
+        "42",
+        "35",
+        "30"
+      ],
+      "a": 2,
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 3 kotak, tiap kotak berisi 6 pensil. Berapa total pensil?",
+      "expr": "",
       "opts": [
         "18",
-        "10",
-        "16",
-        "15"
+        "9",
+        "15",
+        "24"
+      ],
+      "a": 0,
+      "hint": "Total = banyak kotak × isi tiap kotak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "6 × ? = 72",
+      "opts": [
+        "12",
+        "6",
+        "13",
+        "11"
+      ],
+      "a": 0,
+      "hint": "Yang hilang = hasil dibagi angka yang diketahui.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "6 × 9 = ?",
+      "opts": [
+        "45",
+        "60",
+        "55",
+        "54"
       ],
       "a": 3,
-      "hint": "Ingat tabel perkalian; kali itu penjumlahan berulang.",
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "8 × 9 = ?",
+      "opts": [
+        "80",
+        "63",
+        "73",
+        "72"
+      ],
+      "a": 3,
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 2 kotak, tiap kotak berisi 5 kue. Berapa total kue?",
+      "expr": "",
+      "opts": [
+        "7",
+        "15",
+        "8",
+        "10"
+      ],
+      "a": 3,
+      "hint": "Total = banyak kotak × isi tiap kotak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 6 kotak, tiap kotak berisi 4 pensil. Berapa total pensil?",
+      "expr": "",
+      "opts": [
+        "24",
+        "18",
+        "10",
+        "28"
+      ],
+      "a": 0,
+      "hint": "Total = banyak kotak × isi tiap kotak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "8 × ? = 64",
+      "opts": [
+        "8",
+        "7",
+        "64",
+        "9"
+      ],
+      "a": 0,
+      "hint": "Yang hilang = hasil dibagi angka yang diketahui.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "9 × ? = 90",
+      "opts": [
+        "10",
+        "90",
+        "9",
+        "11"
+      ],
+      "a": 0,
+      "hint": "Yang hilang = hasil dibagi angka yang diketahui.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "3 × 8 = ?",
+      "opts": [
+        "27",
+        "16",
+        "25",
+        "24"
+      ],
+      "a": 3,
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "8 × 12 = ?",
+      "opts": [
+        "96",
+        "84",
+        "104",
+        "97"
+      ],
+      "a": 0,
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "10 × ? = 110",
+      "opts": [
+        "12",
+        "10",
+        "110",
+        "11"
+      ],
+      "a": 3,
+      "hint": "Yang hilang = hasil dibagi angka yang diketahui.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Ada 8 kotak, tiap kotak berisi 9 bola. Berapa total bola?",
+      "expr": "",
+      "opts": [
+        "17",
+        "81",
+        "72",
+        "64"
+      ],
+      "a": 2,
+      "hint": "Total = banyak kotak × isi tiap kotak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 6 kotak, tiap kotak berisi 7 buku. Berapa total buku?",
+      "expr": "",
+      "opts": [
+        "42",
+        "36",
+        "13",
+        "49"
+      ],
+      "a": 0,
+      "hint": "Total = banyak kotak × isi tiap kotak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "11 × 4 = ?",
+      "opts": [
+        "55",
+        "44",
+        "40",
+        "45"
+      ],
+      "a": 1,
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "4 × ? = 32",
+      "opts": [
+        "9",
+        "4",
+        "7",
+        "8"
+      ],
+      "a": 3,
+      "hint": "Yang hilang = hasil dibagi angka yang diketahui.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "10 × 8 = ?",
+      "opts": [
+        "80",
+        "72",
+        "90",
+        "81"
+      ],
+      "a": 0,
+      "hint": "Kali = penjumlahan berulang. Ingat tabel perkalian.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Ada 7 kotak, tiap kotak berisi 6 roti. Berapa total roti?",
+      "expr": "",
+      "opts": [
+        "48",
+        "42",
+        "35",
+        "13"
+      ],
+      "a": 1,
+      "hint": "Total = banyak kotak × isi tiap kotak.",
       "difficulty": "medium"
     }
   ],
   "pembagian": [
     {
       "q": "Berapa hasilnya?",
-      "expr": "30 ÷ 5 = ?",
+      "expr": "77 ÷ 7 = ?",
       "opts": [
-        "6",
+        "11",
         "7",
-        "5",
-        "8"
+        "12",
+        "10"
       ],
       "a": 0,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
+      "hint": "Tanya: dikali berapa supaya dapat angka itu?",
       "difficulty": "medium"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "36 ÷ 3 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 4 = 6",
       "opts": [
-        "3",
-        "12",
-        "11",
-        "13"
-      ],
-      "a": 1,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "84 ÷ 12 = ?",
-      "opts": [
-        "12",
-        "7",
+        "24",
         "6",
-        "8"
+        "20",
+        "28"
       ],
-      "a": 1,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
-      "difficulty": "medium"
+      "a": 0,
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "144 ÷ 12 = ?",
+      "q": "32 koin dibagi rata ke 4 anak. Tiap anak dapat berapa?",
+      "expr": "",
       "opts": [
-        "14",
-        "12",
-        "13",
-        "11"
-      ],
-      "a": 1,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "44 ÷ 4 = ?",
-      "opts": [
-        "12",
-        "10",
+        "9",
+        "7",
         "4",
-        "11"
+        "8"
       ],
       "a": 3,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
+      "hint": "Bagi rata = total dibagi banyak anak.",
       "difficulty": "medium"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "49 ÷ 7 = ?",
+      "q": "48 bola dibagi rata ke 8 anak. Tiap anak dapat berapa?",
+      "expr": "",
       "opts": [
+        "6",
         "7",
-        "8",
-        "9",
-        "6"
+        "5",
+        "8"
       ],
       "a": 0,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
+      "hint": "Bagi rata = total dibagi banyak anak.",
       "difficulty": "medium"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "48 ÷ 6 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 6 = 6",
       "opts": [
-        "7",
-        "9",
-        "8",
+        "42",
+        "36",
+        "30",
         "6"
       ],
-      "a": 2,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Berapa hasilnya?",
-      "expr": "16 ÷ 2 = ?",
-      "opts": [
-        "7",
-        "8",
-        "9",
-        "2"
-      ],
       "a": 1,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "54 kelereng dibagi rata ke 6 anak. Tiap anak dapat berapa?",
+      "expr": "",
+      "opts": [
+        "8",
+        "6",
+        "9",
+        "10"
+      ],
+      "a": 2,
+      "hint": "Bagi rata = total dibagi banyak anak.",
       "difficulty": "medium"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "20 ÷ 4 = ?",
+      "q": "24 buku dibagi rata ke 8 anak. Tiap anak dapat berapa?",
+      "expr": "",
       "opts": [
-        "6",
-        "5",
-        "7",
+        "3",
+        "2",
+        "8",
         "4"
       ],
-      "a": 1,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
+      "a": 0,
+      "hint": "Bagi rata = total dibagi banyak anak.",
       "difficulty": "medium"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "66 ÷ 11 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 5 = 7",
       "opts": [
-        "6",
-        "5",
-        "11",
+        "35",
+        "40",
+        "30",
         "7"
       ],
       "a": 0,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
-      "difficulty": "medium"
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
     },
     {
-      "q": "Berapa hasilnya?",
-      "expr": "120 ÷ 10 = ?",
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 4 = 4",
       "opts": [
-        "10",
-        "11",
-        "13",
-        "12"
+        "4",
+        "20",
+        "12",
+        "16"
       ],
       "a": 3,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
-      "difficulty": "medium"
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 3 = 3",
+      "opts": [
+        "9",
+        "12",
+        "3",
+        "6"
+      ],
+      "a": 0,
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 7 = 3",
+      "opts": [
+        "14",
+        "3",
+        "21",
+        "28"
+      ],
+      "a": 2,
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
     },
     {
       "q": "Berapa hasilnya?",
-      "expr": "22 ÷ 2 = ?",
+      "expr": "81 ÷ 9 = ?",
+      "opts": [
+        "9",
+        "8",
+        "10",
+        "11"
+      ],
+      "a": 0,
+      "hint": "Tanya: dikali berapa supaya dapat angka itu?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "36 bunga dibagi rata ke 4 anak. Tiap anak dapat berapa?",
+      "expr": "",
+      "opts": [
+        "9",
+        "10",
+        "4",
+        "8"
+      ],
+      "a": 0,
+      "hint": "Bagi rata = total dibagi banyak anak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 9 = 5",
+      "opts": [
+        "36",
+        "54",
+        "45",
+        "5"
+      ],
+      "a": 2,
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "4 mainan dibagi rata ke 2 anak. Tiap anak dapat berapa?",
+      "expr": "",
       "opts": [
         "2",
-        "11",
-        "10",
-        "12"
+        "1",
+        "3",
+        "4"
+      ],
+      "a": 0,
+      "hint": "Bagi rata = total dibagi banyak anak.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 9 = 9",
+      "opts": [
+        "81",
+        "9",
+        "72",
+        "90"
+      ],
+      "a": 0,
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "30 ÷ 5 = ?",
+      "opts": [
+        "5",
+        "8",
+        "7",
+        "6"
+      ],
+      "a": 3,
+      "hint": "Tanya: dikali berapa supaya dapat angka itu?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Berapa angka yang hilang?",
+      "expr": "? ÷ 4 = 7",
+      "opts": [
+        "7",
+        "28",
+        "24",
+        "32"
       ],
       "a": 1,
-      "hint": "Tanya: dikali berapa biar dapat angka itu?",
+      "hint": "Yang hilang = pembagi × hasil.",
+      "difficulty": "hard"
+    },
+    {
+      "q": "Berapa hasilnya?",
+      "expr": "40 ÷ 5 = ?",
+      "opts": [
+        "8",
+        "9",
+        "7",
+        "5"
+      ],
+      "a": 0,
+      "hint": "Tanya: dikali berapa supaya dapat angka itu?",
+      "difficulty": "medium"
+    },
+    {
+      "q": "21 mainan dibagi rata ke 3 anak. Tiap anak dapat berapa?",
+      "expr": "",
+      "opts": [
+        "8",
+        "6",
+        "7",
+        "3"
+      ],
+      "a": 2,
+      "hint": "Bagi rata = total dibagi banyak anak.",
       "difficulty": "medium"
     }
   ],
   "pecahan": [
     {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "4/8 − 2/8 = ?",
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "1/4 + 2/4 = ?",
       "opts": [
-        "2/8",
-        "6/8",
-        "2/16",
+        "4/4",
+        "3/4",
+        "1/4",
         "3/8"
       ],
-      "a": 0,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "a": 1,
+      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
       "difficulty": "medium"
     },
     {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "6/8 − 1/8 = ?",
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "3/6 + 2/6 = ?",
       "opts": [
-        "7/8",
+        "5/6",
+        "5/12",
+        "3/6",
+        "6/6"
+      ],
+      "a": 0,
+      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "1/8 + 5/8 = ?",
+      "opts": [
+        "6/16",
         "6/8",
-        "5/16",
-        "5/8"
-      ],
-      "a": 3,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "3/5 − 2/5 = ?",
-      "opts": [
-        "2/5",
-        "5/5",
-        "1/5",
-        "1/10"
-      ],
-      "a": 2,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "3/4 − 1/4 = ?",
-      "opts": [
-        "3/4",
-        "4/4",
-        "2/4",
-        "2/8"
-      ],
-      "a": 2,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "4/10 − 2/10 = ?",
-      "opts": [
-        "3/10",
-        "2/10",
-        "6/10",
-        "2/20"
-      ],
-      "a": 1,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — jumlahkan.",
-      "expr": "6/10 + 2/10 = ?",
-      "opts": [
-        "9/10",
-        "8/10",
-        "8/20",
-        "6/10"
+        "1/8",
+        "7/8"
       ],
       "a": 1,
       "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — jumlahkan.",
-      "expr": "6/8 + 1/8 = ?",
-      "opts": [
-        "7/8",
-        "7/16",
-        "8/8",
-        "6/8"
-      ],
-      "a": 0,
-      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "4/8 − 1/8 = ?",
-      "opts": [
-        "3/16",
-        "4/8",
-        "3/8",
-        "5/8"
-      ],
-      "a": 2,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — jumlahkan.",
-      "expr": "5/8 + 2/8 = ?",
-      "opts": [
-        "7/8",
-        "5/8",
-        "7/16",
-        "8/8"
-      ],
-      "a": 0,
-      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
-      "difficulty": "medium"
-    },
-    {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "2/10 − 1/10 = ?",
-      "opts": [
-        "3/10",
-        "2/10",
-        "1/20",
-        "1/10"
-      ],
-      "a": 3,
-      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
       "difficulty": "medium"
     },
     {
@@ -767,8 +1092,8 @@
       "expr": "2/4 + 1/4 = ?",
       "opts": [
         "3/8",
-        "4/4",
         "2/4",
+        "4/4",
         "3/4"
       ],
       "a": 3,
@@ -776,175 +1101,456 @@
       "difficulty": "medium"
     },
     {
-      "q": "Pecahan berpenyebut sama — kurangkan.",
-      "expr": "2/4 − 1/4 = ?",
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "1/5 + 2/5 = ?",
       "opts": [
-        "1/8",
-        "1/4",
-        "2/4",
-        "3/4"
+        "3/5",
+        "3/10",
+        "1/5",
+        "4/5"
+      ],
+      "a": 0,
+      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "2/8 − 1/8 = ?",
+      "opts": [
+        "1/16",
+        "3/8",
+        "2/8",
+        "1/8"
+      ],
+      "a": 3,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "7/10 + 2/10 = ?",
+      "opts": [
+        "9/10",
+        "7/10",
+        "9/20",
+        "10/10"
+      ],
+      "a": 0,
+      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana pecahan yang lebih besar?",
+      "expr": "3/6   vs   4/6",
+      "opts": [
+        "3/6",
+        "4/6"
+      ],
+      "a": 1,
+      "hint": "Penyebut sama → pembilang lebih besar = pecahan lebih besar.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "3/5 − 1/5 = ?",
+      "opts": [
+        "2/10",
+        "2/5",
+        "3/5",
+        "4/5"
       ],
       "a": 1,
       "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
       "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "4/6 − 3/6 = ?",
+      "opts": [
+        "2/6",
+        "7/6",
+        "1/12",
+        "1/6"
+      ],
+      "a": 3,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "4/5 − 1/5 = ?",
+      "opts": [
+        "5/5",
+        "3/5",
+        "4/5",
+        "3/10"
+      ],
+      "a": 1,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "6/8 + 1/8 = ?",
+      "opts": [
+        "7/8",
+        "6/8",
+        "8/8",
+        "7/16"
+      ],
+      "a": 0,
+      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "4/10 − 1/10 = ?",
+      "opts": [
+        "5/10",
+        "4/10",
+        "3/10",
+        "3/20"
+      ],
+      "a": 2,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana pecahan yang lebih besar?",
+      "expr": "2/4   vs   3/4",
+      "opts": [
+        "2/4",
+        "3/4"
+      ],
+      "a": 1,
+      "hint": "Penyebut sama → pembilang lebih besar = pecahan lebih besar.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "3/5 − 2/5 = ?",
+      "opts": [
+        "1/10",
+        "5/5",
+        "2/5",
+        "1/5"
+      ],
+      "a": 3,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana pecahan yang lebih besar?",
+      "expr": "5/8   vs   3/8",
+      "opts": [
+        "3/8",
+        "5/8"
+      ],
+      "a": 1,
+      "hint": "Penyebut sama → pembilang lebih besar = pecahan lebih besar.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "2/4 − 1/4 = ?",
+      "opts": [
+        "3/4",
+        "1/8",
+        "1/4",
+        "2/4"
+      ],
+      "a": 2,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — kurangkan.",
+      "expr": "2/6 − 1/6 = ?",
+      "opts": [
+        "1/6",
+        "2/6",
+        "1/12",
+        "3/6"
+      ],
+      "a": 0,
+      "hint": "Penyebut sama → pembilang dikurang, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Pecahan berpenyebut sama — jumlahkan.",
+      "expr": "5/8 + 2/8 = ?",
+      "opts": [
+        "8/8",
+        "5/8",
+        "7/8",
+        "7/16"
+      ],
+      "a": 2,
+      "hint": "Penyebut sama → pembilang dijumlah, penyebut tetap.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana pecahan yang lebih besar?",
+      "expr": "2/4   vs   1/4",
+      "opts": [
+        "1/4",
+        "2/4"
+      ],
+      "a": 1,
+      "hint": "Penyebut sama → pembilang lebih besar = pecahan lebih besar.",
+      "difficulty": "easy"
     }
   ],
   "desimal": [
     {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.2 + 0.8 = ?",
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.9 − 0.8 = ?",
       "opts": [
-        "1.0",
-        "1.1",
-        "0.9",
-        "2.0"
+        "1.7",
+        "0.0",
+        "0.1",
+        "0.2"
       ],
-      "a": 0,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
+      "a": 2,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
     },
     {
       "q": "Jumlahkan desimal berikut.",
-      "expr": "0.2 + 0.1 = ?",
+      "expr": "0.2 + 0.6 = ?",
       "opts": [
-        "0.2",
-        "0.3",
-        "0.4",
-        "1.3"
+        "1.8",
+        "0.8",
+        "0.7",
+        "0.9"
       ],
       "a": 1,
       "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
+      "difficulty": "medium"
     },
     {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.7 + 0.2 = ?",
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.3 − 0.1 = ?",
       "opts": [
-        "1.0",
-        "1.9",
+        "0.1",
+        "0.2",
+        "0.3",
+        "0.4"
+      ],
+      "a": 1,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.8 − 0.1 = ?",
+      "opts": [
+        "0.7",
         "0.9",
+        "0.8",
+        "0.6"
+      ],
+      "a": 0,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.6 − 0.5 = ?",
+      "opts": [
+        "0.0",
+        "0.1",
+        "1.1",
+        "0.2"
+      ],
+      "a": 1,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.4 − 0.1 = ?",
+      "opts": [
+        "0.5",
+        "0.4",
+        "0.2",
+        "0.3"
+      ],
+      "a": 3,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana desimal yang lebih besar?",
+      "expr": "0.5   vs   0.8",
+      "opts": [
+        "0.5",
         "0.8"
       ],
-      "a": 2,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
+      "a": 1,
+      "hint": "Bandingkan angka di belakang koma.",
+      "difficulty": "easy"
     },
     {
       "q": "Jumlahkan desimal berikut.",
-      "expr": "0.2 + 0.2 = ?",
+      "expr": "0.6 + 0.3 = ?",
       "opts": [
-        "0.4",
-        "0.5",
-        "0.3",
-        "1.4"
+        "0.9",
+        "1.9",
+        "1.0",
+        "0.8"
       ],
       "a": 0,
       "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.9 − 0.3 = ?",
+      "opts": [
+        "1.2",
+        "0.7",
+        "0.6",
+        "0.5"
+      ],
+      "a": 2,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana desimal yang lebih besar?",
+      "expr": "0.6   vs   0.1",
+      "opts": [
+        "0.6",
+        "0.1"
+      ],
+      "a": 0,
+      "hint": "Bandingkan angka di belakang koma.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.7 − 0.2 = ?",
+      "opts": [
+        "0.9",
+        "0.6",
+        "0.5",
+        "0.4"
+      ],
+      "a": 2,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana desimal yang lebih besar?",
+      "expr": "0.7   vs   0.2",
+      "opts": [
+        "0.2",
+        "0.7"
+      ],
+      "a": 1,
+      "hint": "Bandingkan angka di belakang koma.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.9 − 0.2 = ?",
+      "opts": [
+        "0.6",
+        "0.7",
+        "0.8",
+        "1.1"
+      ],
+      "a": 1,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.5 − 0.3 = ?",
+      "opts": [
+        "0.2",
+        "0.8",
+        "0.1",
+        "0.3"
+      ],
+      "a": 0,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
     },
     {
       "q": "Jumlahkan desimal berikut.",
       "expr": "0.5 + 0.7 = ?",
       "opts": [
         "1.3",
+        "1.1",
         "2.2",
-        "1.2",
-        "1.1"
-      ],
-      "a": 2,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
-    },
-    {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.5 + 0.8 = ?",
-      "opts": [
-        "2.3",
-        "1.4",
-        "1.3",
         "1.2"
-      ],
-      "a": 2,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
-    },
-    {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.9 + 0.5 = ?",
-      "opts": [
-        "1.4",
-        "1.5",
-        "1.3",
-        "2.4"
-      ],
-      "a": 0,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
-    },
-    {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.1 + 0.2 = ?",
-      "opts": [
-        "0.3",
-        "1.3",
-        "0.2",
-        "0.4"
-      ],
-      "a": 0,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
-    },
-    {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.7 + 0.1 = ?",
-      "opts": [
-        "0.8",
-        "0.9",
-        "0.7",
-        "1.8"
-      ],
-      "a": 0,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
-    },
-    {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.7 + 0.9 = ?",
-      "opts": [
-        "2.6",
-        "1.7",
-        "1.6",
-        "1.5"
-      ],
-      "a": 2,
-      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
-    },
-    {
-      "q": "Jumlahkan desimal berikut.",
-      "expr": "0.2 + 0.4 = ?",
-      "opts": [
-        "1.6",
-        "0.5",
-        "0.7",
-        "0.6"
       ],
       "a": 3,
       "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
+      "difficulty": "medium"
     },
     {
       "q": "Jumlahkan desimal berikut.",
-      "expr": "0.3 + 0.2 = ?",
+      "expr": "0.2 + 0.9 = ?",
       "opts": [
-        "1.5",
-        "0.6",
-        "0.5",
-        "0.4"
+        "1.0",
+        "1.1",
+        "1.2",
+        "2.1"
       ],
-      "a": 2,
+      "a": 1,
       "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
-      "difficulty": "hard"
+      "difficulty": "medium"
+    },
+    {
+      "q": "Jumlahkan desimal berikut.",
+      "expr": "0.2 + 0.7 = ?",
+      "opts": [
+        "0.9",
+        "1.0",
+        "0.8",
+        "1.9"
+      ],
+      "a": 0,
+      "hint": "Sejajarkan koma; jumlahkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana desimal yang lebih besar?",
+      "expr": "0.6   vs   0.8",
+      "opts": [
+        "0.6",
+        "0.8"
+      ],
+      "a": 1,
+      "hint": "Bandingkan angka di belakang koma.",
+      "difficulty": "easy"
+    },
+    {
+      "q": "Kurangkan desimal berikut.",
+      "expr": "0.2 − 0.1 = ?",
+      "opts": [
+        "0.1",
+        "0.3",
+        "0.0",
+        "0.2"
+      ],
+      "a": 0,
+      "hint": "Sejajarkan koma; kurangkan per tempat desimal.",
+      "difficulty": "medium"
+    },
+    {
+      "q": "Mana desimal yang lebih besar?",
+      "expr": "0.8   vs   0.3",
+      "opts": [
+        "0.8",
+        "0.3"
+      ],
+      "a": 0,
+      "hint": "Bandingkan angka di belakang koma.",
+      "difficulty": "easy"
     }
   ]
 }
