@@ -33,9 +33,9 @@ const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = [
   const prog = progress.find(p => p.zoneId === z.id);
   if (prog?.status === 'cleared') return 'cleared';
 
-  // Zone cleared when 3 distinct Pokémon caught in that zone
+  // Zone cleared when 2 distinct Pokémon caught in that zone
   const zoneCaught = caught.filter(c => c.zoneId === z.id);
-  if (new Set(zoneCaught.map(c => c.dex)).size >= 3) return 'cleared';
+  if (new Set(zoneCaught.map(c => c.dex)).size >= 2) return 'cleared';
 
   // Open if previous zone is cleared (or zone 1) — level is NOT a gate (GAME-RULES)
   const prevZone = (allZones || []).find(x => x.zone === z.zone - 1);
@@ -45,7 +45,7 @@ const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = [
     if (prevProg?.status === 'cleared') prevCleared = true;
     else {
       const prevCaught = caught.filter(c => c.zoneId === prevZone.id);
-      if (new Set(prevCaught.map(c => c.dex)).size >= 3) prevCleared = true;
+      if (new Set(prevCaught.map(c => c.dex)).size >= 2) prevCleared = true;
     }
   }
 
@@ -348,7 +348,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
   const throwBall = (b) => {
     setBall(b);
     setPhase('wobble');
-    onCaught(wild, b);
+    onCaught(wild, { ...b, _zoneId: z.id });
   };
 
   return (
