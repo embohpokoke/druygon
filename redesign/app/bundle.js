@@ -1241,10 +1241,10 @@
     const hProps = { playerName, onAvatarTap: openPicker };
     if (screen === "home") {
       header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, ...hProps });
-      content = /* @__PURE__ */ React.createElement(Home, { go, caught: caughtDex, coins: profile.coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission });
+      content = /* @__PURE__ */ React.createElement(Home, { go, caught, coins: profile.coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission });
     } else if (screen === "map") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home"), ...hProps });
-      content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught: caughtDex });
+      content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught, profile, progress });
     } else if (screen === "catch") {
       const z = r && r.zones.find((x) => x.zone === zone);
       header = /* @__PURE__ */ React.createElement(Header, { region, title: z ? z.name : "\u2026", sub: r ? r.name : "\u2026", coins: profile.coins, onBack: () => go("map", region), ...hProps });

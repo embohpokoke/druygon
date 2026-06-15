@@ -270,10 +270,10 @@ function App() {
 
   if (screen === 'home') {
     header  = <Header region={region} coins={profile.coins} {...hProps} />;
-    content = <Home go={go} caught={caughtDex} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} />;
+    content = <Home go={go} caught={caught} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} />;
   } else if (screen === 'map') {
     header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
-    content = <RegionMap region={region} go={go} caught={caughtDex} />;
+    content = <RegionMap region={region} go={go} caught={caught} profile={profile} progress={progress} />;
   } else if (screen === 'catch') {
     const z = r && r.zones.find(x => x.zone === zone);
     header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} {...hProps} />;
