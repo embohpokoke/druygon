@@ -15,6 +15,64 @@ function getAnthropic() {
   return anthropicClient;
 }
 
+// ── Draco LLM provider: Ollama cloud (primary) → Claude Haiku (fallback) ──────
+const OLLAMA_HOST        = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const TUTOR_OLLAMA_MODEL = process.env.TUTOR_OLLAMA_MODEL || 'qwen3.5:cloud';
+const TUTOR_PROVIDER     = (process.env.TUTOR_PROVIDER || 'ollama').toLowerCase();
+const OLLAMA_TIMEOUT_MS  = parseInt(process.env.TUTOR_OLLAMA_TIMEOUT_MS || '25000', 10);
+
+async function callOllama(system, messages, { temperature = 0.7, max_tokens = 300 } = {}) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), OLLAMA_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${OLLAMA_HOST}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        model: TUTOR_OLLAMA_MODEL,
+        stream: false,
+        think: false,                 // hybrid/reasoning models: skip thinking → faster, cleaner reply
+        options: { temperature, num_predict: max_tokens },
+        messages: [{ role: 'system', content: system }, ...messages],
+      }),
+    });
+    if (!res.ok) throw new Error(`ollama ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    const data = await res.json();
+    const text = ((data.message && data.message.content) || '').trim();
+    if (!text) throw new Error('ollama returned empty reply');
+    return text;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function callAnthropic(system, messages, { temperature = 0.7, max_tokens = 300 } = {}) {
+  const anthropic = getAnthropic();
+  if (!anthropic) throw new Error('Anthropic API Key not configured.');
+  const message = await anthropic.messages.create({
+    model: 'claude-haiku-4-5', max_tokens, temperature, system, messages,
+  });
+  return message.content[0].text.trim();
+}
+
+// Draco talks through Ollama cloud first; on any failure it falls back to Haiku
+// so the tutor never goes dark. Set TUTOR_PROVIDER=anthropic to use Haiku only.
+async function callTutorLLM(system, messages, opts = {}) {
+  if (TUTOR_PROVIDER === 'ollama') {
+    try {
+      const text = await callOllama(system, messages, opts);
+      return { text, model: TUTOR_OLLAMA_MODEL };
+    } catch (err) {
+      console.error('[tutor] Ollama failed, falling back to Haiku:', err.message);
+      const text = await callAnthropic(system, messages, opts);
+      return { text, model: 'claude-haiku-4-5 (fallback)' };
+    }
+  }
+  const text = await callAnthropic(system, messages, opts);
+  return { text, model: 'claude-haiku-4-5' };
+}
+
 const RUBRIK_TOPICS = ['sains_sda', 'pancasila_sda', 'sbdp_diorama'];
 const XP_TABLE = { belajar: 10, latihan: 25, ujian: 50 };
 
@@ -137,18 +195,10 @@ async function chatTurn(sessionId, learnerId, userMessage, activeTopic, conversa
 
   const messages = [...conversationHistory, { role: 'user', content: userMessage }];
 
-  const anthropic = getAnthropic();
-  if (!anthropic) throw new Error('Anthropic API Key not configured.');
-
-  const message = await anthropic.messages.create({
-    model: 'claude-haiku-4-5',
-    max_tokens: 300,
+  const { text: rawReply, model: usedModel } = await callTutorLLM(soulPrompt, messages, {
     temperature: 0.7,
-    system: soulPrompt,
-    messages
+    max_tokens: 300,
   });
-
-  const rawReply = message.content[0].text.trim();
 
   // Parse markers
   const isCorrect  = rawReply.includes('[BENAR]');
@@ -174,7 +224,7 @@ async function chatTurn(sessionId, learnerId, userMessage, activeTopic, conversa
   // Log turn
   await pool.query(
     'INSERT INTO druygon.session_events (session_id, event_type, event_payload) VALUES ($1,$2,$3)',
-    [sessionId, 'chat_turn', JSON.stringify({ user: userMessage, assistant: cleanReply, topic: activeTopic, phase, isCorrect, rubricScore, xpEarned, model: 'claude-haiku-4-5' })]
+    [sessionId, 'chat_turn', JSON.stringify({ user: userMessage, assistant: cleanReply, topic: activeTopic, phase, isCorrect, rubricScore, xpEarned, model: usedModel })]
   );
 
   // Store rubric score
