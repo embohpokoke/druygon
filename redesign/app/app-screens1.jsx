@@ -66,7 +66,7 @@ function ContentLoading() {
 }
 
 // ───────────────────────── HOME (variant A) ─────────────────────────
-function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission }) {
+function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission, onOpenDraco }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
@@ -75,6 +75,7 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
     ? Math.round((profile.xp / profile.xpToNext) * 100)
     : PLAYER.xpPct;
   const name   = playerName || 'Trainer';
+  const idn    = playerIdentity(playerName);
   // Real cleared zone count per region
   const prog   = Object.fromEntries(order.map(id => {
     const r = regions[id];
@@ -84,24 +85,46 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
   return (
     <div className="body screen-anim">
       <div className="pad">
-        {/* player hero */}
+        {/* player hero — tinted with the trainer's personal colour */}
         <div className="hero" data-region="compsci">
-          <div className="hero-bg" style={{ background: 'radial-gradient(130% 130% at 88% -20%, rgba(139,92,246,.5), transparent 55%), radial-gradient(90% 120% at 0% 120%, rgba(74,158,255,.28), transparent 60%), linear-gradient(160deg, #1b1540, #0c0a1e 72%)' }} />
-          <div className="hero-glow" />
+          <div className="hero-bg" style={{ background: `radial-gradient(130% 130% at 88% -20%, ${idn.color}55, transparent 55%), radial-gradient(90% 120% at 0% 120%, rgba(74,158,255,.28), transparent 60%), linear-gradient(160deg, #1b1540, #0c0a1e 72%)` }} />
+          <div className="hero-glow" style={{ background: `radial-gradient(circle, ${idn.color}66, transparent 65%)` }} />
+          <img src={SPRITE(idn.dex)} alt={idn.mon} width={92} height={92} crossOrigin="anonymous"
+            style={{ position: 'absolute', right: 6, top: 4, objectFit: 'contain', opacity: .9, zIndex: -1, animation: 'floaty 3.5s ease-in-out infinite', filter: 'drop-shadow(0 8px 14px rgba(0,0,0,.5))' }} />
           <div className="hero-top">
             <div>
-              <div className="hero-greet">Hi, <b>{name}</b> 👋</div>
-              <div className="hero-sub">Trainer · {caught.length} caught · keep the streak!</div>
+              <div className="hero-greet">Hi, <b style={{ color: idn.color }}>{name}</b> 👋</div>
+              <div className="hero-sub">{idn.title} · {caught.length} caught · jaga streak!</div>
             </div>
-            <div className="hero-lvl">LVL {level}</div>
+            <div className="hero-lvl" style={{ background: idn.color }}>LVL {level}</div>
           </div>
           <div className="hero-xp">
-            <small>XP</small><div className="meter" style={{ flex: 1 }}><i style={{ width: xpPct + '%' }} /></div>
+            <small>XP</small><div className="meter" style={{ flex: 1 }}><i style={{ width: xpPct + '%', background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` }} /></div>
           </div>
           <div className="hero-stats">
-            <div className="hero-stat"><b>{level}</b><span>Level</span></div>
-            <div className="hero-stat"><b>{coins}</b><span>Coins</span></div>
-            <div className="hero-stat"><b>{caught.length}</b><span>Caught</span></div>
+            <div className="hero-stat"><b style={{ color: idn.color }}>{level}</b><span>Level</span></div>
+            <div className="hero-stat"><b style={{ color: idn.color }}>{(coins ?? 0).toLocaleString()}</b><span>Coins</span></div>
+            <div className="hero-stat"><b style={{ color: idn.color }}>{caught.length}</b><span>Caught</span></div>
+          </div>
+        </div>
+
+        {/* Draco tutor card */}
+        <div onClick={() => onOpenDraco && onOpenDraco(null)} style={{ position: 'relative', marginTop: 14, borderRadius: 20, overflow: 'hidden', padding: 16, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', isolation: 'isolate', background: 'linear-gradient(120deg, #241a4d 0%, #16123a 55%, #101030 100%)', border: '1px solid rgba(139,92,246,.35)', boxShadow: 'var(--card-shadow)' }}>
+          <div style={{ position: 'absolute', width: 150, height: 150, borderRadius: '50%', right: -40, top: -50, background: 'radial-gradient(circle, rgba(139,92,246,.4), transparent 68%)', zIndex: -1 }} />
+          <div style={{ width: 56, height: 56, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #8B5CF6, #4A9EFF)', boxShadow: '0 0 20px rgba(139,92,246,.45)', animation: 'floaty 3.5s ease-in-out infinite' }}>
+            <Icon name="sparkles" size={28} color="#fff" />
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <b style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 16 }}>Draco</b>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, fontWeight: 700, letterSpacing: '.08em', color: 'var(--green)', background: 'rgba(74,222,128,.12)', padding: '2px 7px', borderRadius: 999 }}>
+                <i style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)', display: 'inline-block' }} />AI TUTOR
+              </span>
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(240,238,255,.65)', marginTop: 3, lineHeight: 1.4 }}>Bingung sama soal? Tanya aku — sains, koding, atau PR sekolah.</div>
+          </div>
+          <div style={{ width: 34, height: 34, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(139,92,246,.2)', border: '1px solid rgba(139,92,246,.5)', color: '#B79BFF' }}>
+            <Icon name="arrowR" size={17} />
           </div>
         </div>
 
@@ -201,15 +224,18 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
                 .sort((a, b) => (b.coins - a.coins) || (b.caughtCount - a.caughtCount))
                 .map((s, i) => {
                   const isMe = s.slot === activeSlot;
+                  const sIdn = playerIdentity(s.name);
                   return (
-                    <div key={s.slot} className={'lb-row' + (isMe ? ' me' : '')}>
-                      <div className="lb-rank">{i + 1}</div>
-                      <div className="lb-av">{isMe ? <img src={AVATAR} alt="" /> : '🧑'}</div>
+                    <div key={s.slot} className={'lb-row' + (isMe ? ' me' : '')} style={isMe ? { background: sIdn.color + '1c' } : undefined}>
+                      <div className="lb-rank">{i === 0 ? '🏆' : i + 1}</div>
+                      <div className="lb-av" style={{ border: `1.5px solid ${sIdn.color}66`, background: 'var(--bg-elevated)' }}>
+                        <img src={SPRITE(sIdn.dex)} alt="" crossOrigin="anonymous" style={{ objectFit: 'contain', padding: 3 }} />
+                      </div>
                       <div className="lb-name">
                         <b>{s.name}</b>
                         <span>{isMe ? 'kamu · ' : ''}{s.caughtCount} caught</span>
                       </div>
-                      <div className="lb-score"><b>{s.coins.toLocaleString()}</b></div>
+                      <div className="lb-score"><b style={{ color: '#FFCB05' }}>{s.coins.toLocaleString()}</b></div>
                     </div>
                   );
                 })
@@ -282,7 +308,16 @@ function RegionMap({ region, go, caught, profile, progress }) {
 }
 
 // ───────────────────────── CATCH / BATTLE (variant B) ─────────────────────────
-function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer }) {
+// Motivational lines on a wrong answer (no facts — just encouragement)
+const CHEER_WRONG = [
+  'Hampir! Coba baca soalnya sekali lagi 👀',
+  'Nggak apa-apa, trainer hebat juga pernah salah 💪',
+  'Coba lagi — kamu pasti bisa! 🔥',
+  'Hmm, hampir kena! Pikirkan pelan-pelan ya 🧠',
+  'Tanya Draco kalau butuh petunjuk 🐉',
+];
+
+function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer, onOpenDraco }) {
   const { regions, questions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
   const r = regions[region];
@@ -324,6 +359,8 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
   const [hit, setHit] = uS1(false);
   const [ball, setBall] = uS1(null);
   const [answerReward, setAnswerReward] = uS1(false);
+  const [combo, setCombo] = uS1(0);        // consecutive correct answers
+  const [cheer, setCheer] = uS1(null);     // encouragement line after a wrong answer
   const q = bank.length ? bank[qi % bank.length] : (srcBank[0] || {});
   const nextQ = () => { const nv = qi + 1; if (bank.length > 1 && nv % bank.length === 0) setBank(shuffleDeck(srcBank, q)); setQi(nv); };
 
@@ -332,23 +369,38 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
     const ok = i === q.a;
     setFb({ ok, pick: i });
     if (ok) {
+      const nc = combo + 1;
+      setCombo(nc); setCheer(null);
+      SFX.play(nc >= 2 ? 'combo' : 'correct');
       setHit(true); setTimeout(() => setHit(false), 400);
       if (onAnswer) onAnswer(true, z.id);
       setAnswerReward(true); setTimeout(() => setAnswerReward(false), 1600);
+    } else {
+      setCombo(0);
+      SFX.play('wrong');
+      setCheer(CHEER_WRONG[Math.floor(Math.random() * CHEER_WRONG.length)]);
+      setTimeout(() => setCheer(null), 2000);
     }
     setTimeout(() => {
       setFb(null);
       if (ok) {
-        const nh = Math.max(0, hp - 34);
+        // Combo hits harder: 34 base + up to +18 bonus
+        const dmg = 34 + Math.min(combo, 3) * 6;
+        const nh = Math.max(0, hp - dmg);
         setHp(nh);
         if (nh <= 8) setPhase('ready'); else nextQ();
       } else nextQ();
     }, 700);
   };
+  // Suspense: ball flies + wobbles ~1.7s BEFORE the celebration fires
   const throwBall = (b) => {
     setBall(b);
     setPhase('wobble');
-    onCaught(wild, { ...b, _zoneId: z.id });
+    SFX.play('throw');
+    setTimeout(() => {
+      SFX.play('catch');
+      onCaught(wild, { ...b, _zoneId: z.id, _topic: z.topic });
+    }, 1700);
   };
 
   return (
@@ -363,7 +415,11 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
           <div className="type-chip" style={{ marginTop: 7, background: TYPE_COLOR[wild.type] }}>{wild.type}</div>
         </div>
         <img className={'wild-sprite' + (hit ? ' hit' : '') + (phase === 'wobble' ? ' wobble' : '')} src={wild.sprite} alt={wild.name} crossOrigin="anonymous" />
-        {phase === 'wobble' && <div className="thrown"><Pokeball size={34} top={ball?.top} /></div>}
+        {phase === 'wobble' && <div className="thrown"><Pokeball size={34} id={ball?.id} top={ball?.top} /></div>}
+        {combo >= 2 && phase === 'quiz' && (
+          <div key={combo} className="combo-badge">Combo ×{combo} 🔥</div>
+        )}
+        {answerReward && <div className="float-reward">+5 🪙 +5 XP</div>}
       </div>
 
       {/* command panel */}
@@ -371,9 +427,10 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
         {phase === 'quiz' && (
           <React.Fragment>
             <div className="q-prompt">
-              <div className="eyebrow">Question {qi + 1} · {z.topic}{answerReward ? <span style={{ color: 'var(--yellow)', marginLeft: 8, fontWeight: 700, fontSize: 11 }}>+5 🪙 +5 XP</span> : null}</div>
+              <div className="eyebrow">Soal {qi + 1} · {z.name}</div>
               <h3>{q.q}</h3>
               <div className="expr">{q.expr}</div>
+              {cheer && <div style={{ fontSize: 12, color: 'var(--yellow)', marginTop: 6, animation: 'riseIn .3s both' }}>{cheer}</div>}
             </div>
             <div className={'answers' + (q.opts.length > 2 ? ' two' : '')}>
               {q.opts.map((o, i) => (
@@ -385,8 +442,11 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
             </div>
             <div className="cmd-foot">
               <img src="assets/dru/dru-think.png" alt="Ask Draco" style={{ width: 36, height: 36, objectFit: 'contain', marginRight: 4, flexShrink: 0 }} />
-              <div className="draco wf-tap" onClick={() => openTutor(z.topic)}><Icon name="hint" size={15} /> Ask Draco</div>
-              <span className="cmd-hint">Correct answer → attack ↓ HP</span>
+              <div className="draco wf-tap" style={{ borderColor: 'rgba(139,92,246,.5)', color: '#B79BFF' }}
+                onClick={() => (onOpenDraco ? onOpenDraco({ zoneName: z.name, question: q.q, hint: q.hint, topic: z.topic }) : openTutor(z.topic))}>
+                <Icon name="hint" size={15} /> Tanya Draco
+              </div>
+              <span className="cmd-hint">Jawab benar → serang ↓ HP</span>
             </div>
             <div style={{ textAlign: 'center', marginTop: 8 }}>
               <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Cari Pokémon lain</span>
@@ -395,7 +455,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
         )}
         {phase === 'ready' && (
           <React.Fragment>
-            <div className="ball-prompt">It's weak — choose a Poké Ball!</div>
+            <div className="ball-prompt">Dia sudah lemah — pilih Poké Ball! 🎯</div>
             <div className="balls">
               {(pokeballsProp || POKEBALLS).map((b) => (
                 <div key={b.id} className={'ball-opt' + (b.own === 0 ? ' dim' : '')} onClick={() => b.own > 0 && throwBall(b)}>
@@ -411,7 +471,10 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
           </React.Fragment>
         )}
         {phase === 'wobble' && (
-          <div style={{ margin: 'auto', textAlign: 'center', color: 'var(--text-secondary)', fontFamily: 'var(--font-display)', fontWeight: 700 }}>…wobble… wobble…</div>
+          <div style={{ margin: 'auto', textAlign: 'center', color: 'var(--text-secondary)', fontFamily: 'var(--font-display)', fontWeight: 700 }}>
+            <div style={{ fontSize: 15 }}>…goyang… goyang…</div>
+            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 6, animation: 'fadeIn .4s .8s both' }}>Kena nggak ya? 🤞</div>
+          </div>
         )}
       </div>
     </div>
@@ -419,12 +482,26 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
 }
 
 // ───────────────────────── CELEBRATION (variant A) ─────────────────────────
-function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd, newLevel, rewardBalls, levelUp }) {
+function Celebration({ mon, region, coins, fact, onDone, onTeam, activeSlot, onTeamAdd, newLevel, rewardBalls, levelUp }) {
   const { regions } = useContent();
   const r   = (regions && regions[region]) || { accent: '#8B5CF6' };
   const rar = RARITY[mon.rarity] || RARITY.common;
+  // Confetti burst (one-time per mount) + level-up fanfare
+  const confetti = React.useMemo(() => Array.from({ length: 26 }).map((_, i) => ({
+    left: Math.random() * 100,
+    delay: Math.random() * .7,
+    dur: 2 + Math.random() * 1.6,
+    size: 6 + Math.random() * 6,
+    color: [r.accent, '#FFCB05', '#4ADE80', '#4A9EFF', '#F472B6'][i % 5],
+    rot: Math.random() * 360,
+  })), []);  // eslint-disable-line
+  React.useEffect(() => { if (levelUp) SFX.play('levelup'); }, [levelUp]);
   return (
     <div className="celeb" data-region={region}>
+      {confetti.map((c, i) => (
+        <i key={i} className="confetti" style={{ left: c.left + '%', width: c.size, height: c.size * .45,
+          background: c.color, animationDelay: c.delay + 's', animationDuration: c.dur + 's', transform: `rotate(${c.rot}deg)` }} />
+      ))}
       <svg className="celeb-rays" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
         {Array.from({ length: 22 }).map((_, i) => {
           const a = (i / 22) * Math.PI * 2;
@@ -440,10 +517,16 @@ function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd, newLe
         <span style={{ color: rar.c, marginLeft: 8, fontWeight: 700 }}>{rar.label}</span> · added to Koleksi
       </div>
       <div className="celeb-rewards">
-        {[['+50', 'XP'], ['+50', 'Coins'], ['New', 'Pokédex']].map(([v, l]) => (
+        {[['+50', 'XP'], ['+' + (coins ?? 50), 'Coins'], ['New', 'Pokédex']].map(([v, l]) => (
           <div key={l} className="reward"><b style={{ color: l === 'Coins' ? 'var(--yellow)' : 'var(--accent)' }}>{v}</b><span>{l}</span></div>
         ))}
       </div>
+      {fact && (
+        <div style={{ background: 'rgba(139,92,246,.1)', border: '1px solid rgba(139,92,246,.3)', borderRadius: 12, padding: '10px 14px', margin: '2px 0 4px', maxWidth: 300, position: 'relative', display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+          <span style={{ fontSize: 16, lineHeight: 1.2 }}>💡</span>
+          <span style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5, textAlign: 'left' }}>{fact}</span>
+        </div>
+      )}
       {levelUp && rewardBalls && (
         <div style={{ background: 'rgba(255,203,5,.1)', border: '1px solid rgba(255,203,5,.3)', borderRadius: 12, padding: '10px 16px', marginTop: 4, textAlign: 'center' }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: '#FFCB05', fontFamily: 'var(--font-display)', marginBottom: 4 }}>
@@ -528,6 +611,7 @@ function MathBlitz({ activeSlot, onReward, go }) {
     const ok = idx === q.a;
     setPickIdx(idx);
     setFeedback(ok ? 'correct' : 'wrong');
+    SFX.play(ok ? 'correct' : 'wrong');
     if (ok) setScore(s => s + 1);
     setTotal(t => t + 1);
     setTimeout(() => {

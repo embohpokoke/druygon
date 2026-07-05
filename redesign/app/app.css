@@ -268,6 +268,36 @@ body { background: radial-gradient(120% 90% at 50% -10%, #15122a 0%, #0a0818 55%
 .screen-anim { animation: fadeUp var(--dur-slow) var(--ease-out); }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
+/* ── portal-design motion set (picker, splash, Draco sheet, juice) ── */
+@keyframes riseIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+@keyframes cardIn { from{opacity:0;transform:translateY(22px) scale(.94)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes twinkle { 0%,100%{opacity:.15} 50%{opacity:.7} }
+@keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.55;transform:scale(.82)} }
+@keyframes ringPulse { 0%{box-shadow:0 0 0 0 rgba(255,255,255,.35)} 100%{box-shadow:0 0 0 18px rgba(255,255,255,0)} }
+@keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+@keyframes dotHop { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-4px);opacity:1} }
+
+/* combo badge on the catch stage */
+.combo-badge { position:absolute; top:14px; right:14px; z-index:3; padding:6px 12px; border-radius:999px;
+  font-family:var(--font-display); font-weight:800; font-size:13px; color:#0b0a16;
+  background:linear-gradient(135deg, #FFCB05, #FF6B2B); box-shadow:0 4px 14px rgba(255,107,43,.5);
+  animation: comboPop .4s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes comboPop { 0%{transform:scale(.4) rotate(-8deg);opacity:0} 70%{transform:scale(1.12) rotate(2deg)} 100%{transform:scale(1) rotate(0)} }
+
+/* floating +reward chip above the stage */
+.float-reward { position:absolute; left:50%; top:52%; transform:translateX(-50%); z-index:5; padding:5px 12px;
+  border-radius:999px; font-family:var(--font-display); font-weight:800; font-size:13px; color:#0b0a16;
+  background:var(--yellow); box-shadow:0 4px 14px rgba(255,203,5,.5); pointer-events:none;
+  animation: floatUp 1.5s ease-out both; }
+@keyframes floatUp { 0%{opacity:0; transform:translateX(-50%) translateY(10px) scale(.6)} 15%{opacity:1; transform:translateX(-50%) translateY(0) scale(1.05)} 30%{transform:translateX(-50%) translateY(-6px) scale(1)} 100%{opacity:0; transform:translateX(-50%) translateY(-58px) scale(.9)} }
+
+/* celebration confetti */
+.confetti { position:absolute; top:-12px; border-radius:2px; z-index:0; pointer-events:none; opacity:0;
+  animation-name: confettiFall; animation-timing-function: linear; animation-iteration-count: 1; animation-fill-mode: both; }
+@keyframes confettiFall { 0%{opacity:0; transform:translateY(0) rotate(0)} 8%{opacity:1} 100%{opacity:.15; transform:translateY(105vh) rotate(540deg)} }
+
 /* ── tweakable card surfaces: soft shadow + thin, gradual outline ── */
 :root { --card-shadow: 0 6px 18px rgba(0,0,0,.38), 0 2px 5px rgba(0,0,0,.28); --card-line: rgba(255,255,255,.05); --card-line-w: 1px; --card-rad: 16px; }
 .region-card, .mission, .lb, .zone, .store-row, .col-stat, .prof-card, .link-row, .ball-opt, .ans, .wild-card, .slot, .wallet, .hero, .dex { box-shadow: var(--card-shadow); }

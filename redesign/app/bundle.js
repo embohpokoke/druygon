@@ -155,6 +155,53 @@
       }
     };
   }
+  const FUNFACTS = {
+    makhluk_hidup: [
+      "Tahukah kamu? Pohon tertua di dunia umurnya lebih dari 4.800 tahun \u2014 lebih tua dari piramida!",
+      "Tahukah kamu? Tubuhmu punya sekitar 37 triliun sel, semuanya bekerja sama tiap detik."
+    ],
+    serangga_ekosistem: [
+      "Tahukah kamu? Semut bisa mengangkat beban sampai 50 kali berat tubuhnya sendiri!",
+      "Tahukah kamu? Tanpa lebah, banyak buah dan sayur tidak akan tumbuh \u2014 mereka membantu penyerbukan."
+    ],
+    materi_energi: [
+      "Tahukah kamu? Air bisa jadi padat (es), cair, dan gas (uap) \u2014 zatnya sama, wujudnya beda.",
+      "Tahukah kamu? Cahaya matahari butuh sekitar 8 menit untuk sampai ke Bumi."
+    ],
+    atom_dan_unsur: [
+      "Tahukah kamu? Semua benda tersusun dari atom \u2014 sangat kecil sampai tak terlihat mata.",
+      "Tahukah kamu? Emas dan besi sama-sama unsur, tapi atomnya berbeda jenis."
+    ],
+    galaksi_dan_angkasa: [
+      "Tahukah kamu? Galaksi kita, Bima Sakti, punya lebih dari 100 miliar bintang.",
+      "Tahukah kamu? Satu hari di planet Venus lebih lama daripada satu tahunnya!"
+    ],
+    urutan_logika: [
+      "Tahukah kamu? Komputer hanya paham dua angka: 0 dan 1 \u2014 disebut biner.",
+      "Tahukah kamu? Algoritma itu cuma daftar langkah berurutan, seperti resep masakan."
+    ],
+    perulangan_jaringan: [
+      "Tahukah kamu? Loop membuat komputer mengulang tugas ribuan kali tanpa lelah.",
+      "Tahukah kamu? Internet adalah jutaan komputer yang saling terhubung di seluruh dunia."
+    ],
+    algoritma_debug: [
+      'Tahukah kamu? "Bug" pertama dalam komputer benar-benar seekor ngengat yang nyangkut di mesin!',
+      "Tahukah kamu? Debugging artinya mencari dan memperbaiki kesalahan dalam kode."
+    ],
+    jaringan_dunia: [
+      "Tahukah kamu? Wi-Fi mengirim data lewat gelombang radio, mirip cara radio bekerja.",
+      "Tahukah kamu? Selalu jaga rahasia password-mu \u2014 jangan dibagikan ke siapa pun."
+    ],
+    kecerdasan_buatan: [
+      "Tahukah kamu? AI belajar dari banyak contoh, mirip cara kamu belajar dari latihan.",
+      "Tahukah kamu? AI bisa salah juga \u2014 jadi selalu periksa ulang jawabannya."
+    ]
+  };
+  function funFactForTopic(topic) {
+    const list = FUNFACTS[topic];
+    if (!list || !list.length) return null;
+    return list[Math.floor(Math.random() * list.length)];
+  }
   function useContent() {
     const [ready, setReady] = React.useState(_contentReady);
     React.useEffect(() => {
@@ -173,6 +220,8 @@
     RARITY,
     POKEBALLS,
     REGION_META,
+    FUNFACTS,
+    funFactForTopic,
     // Live-updated refs — components read these after ready
     get REGIONS() {
       return REGIONS;
@@ -210,7 +259,10 @@
     archive: "M4 7h16v3H4zM5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9M9.5 14h5M4 7l1.5-3h13L20 7",
     chart: "M5 21V9M12 21V4M19 21v-7M3 21h18",
     target: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z",
-    clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2"
+    clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2",
+    send: "M5 12h14M13 6l6 6-6 6",
+    volume: "M4 9v6h4l5 4V5L8 9H4ZM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12",
+    volumeOff: "M4 9v6h4l5 4V5L8 9H4ZM17 9l4 6M21 9l-4 6"
   };
   const FILLED = /* @__PURE__ */ new Set(["star"]);
   function Icon({ name, size = 22, color = "currentColor", sw = 1.7, style }) {
@@ -259,43 +311,127 @@
     } catch (e) {
     }
   }
-  const SLOT_COLORS = ["#8B5CF6", "#00D9B8", "#FFCB05", "#EE3D34"];
-  const SLOT_NAMES = ["Dru", "Oming", "Reymar", "Ilyas"];
-  const TRAINER_IMGS = {
-    "Dru": "/assets/trainers/trainer-dru.svg",
-    "Oming": "/assets/trainers/trainer-oming.svg",
-    "Reymar": "/assets/trainers/trainer-reymar.svg",
-    "Ilyas": "/assets/trainers/trainer-ilyas.svg"
+  const PARTNERS = {
+    Dru: { dex: 25, mon: "Pikachu", color: "#FFCB05", title: "Trainer Listrik" },
+    Oming: { dex: 4, mon: "Charmander", color: "#FF6B2B", title: "Trainer Api" },
+    Reymar: { dex: 7, mon: "Squirtle", color: "#4A9EFF", title: "Trainer Air" },
+    Ilyas: { dex: 1, mon: "Bulbasaur", color: "#4ADE80", title: "Trainer Rumput" },
+    Kai: { dex: 133, mon: "Eevee", color: "#F472B6", title: "Trainer Pemula" }
   };
+  function playerIdentity(name) {
+    return PARTNERS[name] || { dex: 133, mon: "Eevee", color: "#8B5CF6", title: "Trainer" };
+  }
+  const SLOT_COLORS = ["#FFCB05", "#FF6B2B", "#4A9EFF", "#4ADE80"];
+  const SLOT_NAMES = ["Dru", "Oming", "Reymar", "Ilyas"];
+  const SFX = (() => {
+    const LS = "druygon-sfx";
+    let ctx = null;
+    let on = true;
+    try {
+      on = localStorage.getItem(LS) !== "off";
+    } catch (e) {
+    }
+    function ac() {
+      if (!ctx) {
+        try {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+        }
+      }
+      if (ctx && ctx.state === "suspended") {
+        try {
+          ctx.resume();
+        } catch (e) {
+        }
+      }
+      return ctx;
+    }
+    function tone(freq, t0, dur, type, vol, slide) {
+      const c = ac();
+      if (!c) return;
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || "square";
+      o.frequency.setValueAtTime(freq, c.currentTime + t0);
+      if (slide) o.frequency.exponentialRampToValueAtTime(slide, c.currentTime + t0 + dur);
+      g.gain.setValueAtTime(vol || 0.1, c.currentTime + t0);
+      g.gain.exponentialRampToValueAtTime(1e-4, c.currentTime + t0 + dur);
+      o.connect(g);
+      g.connect(c.destination);
+      o.start(c.currentTime + t0);
+      o.stop(c.currentTime + t0 + dur + 0.02);
+    }
+    const bank = {
+      correct() {
+        tone(660, 0, 0.09, "square", 0.1);
+        tone(880, 0.09, 0.14, "square", 0.1);
+      },
+      wrong() {
+        tone(180, 0, 0.2, "sawtooth", 0.07);
+      },
+      throw() {
+        tone(280, 0, 0.3, "sine", 0.09, 900);
+      },
+      catch() {
+        [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.11, 0.14, "square", 0.1));
+      },
+      levelup() {
+        [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.09, 0.12, "triangle", 0.11));
+      },
+      combo() {
+        tone(740, 0, 0.07, "square", 0.09);
+        tone(988, 0.07, 0.1, "square", 0.09);
+      },
+      click() {
+        tone(520, 0, 0.05, "sine", 0.05);
+      }
+    };
+    return {
+      isOn: () => on,
+      setOn(v) {
+        on = !!v;
+        try {
+          localStorage.setItem(LS, on ? "on" : "off");
+        } catch (e) {
+        }
+      },
+      play(name) {
+        if (!on) return;
+        try {
+          (bank[name] || bank.click)();
+        } catch (e) {
+        }
+      }
+    };
+  })();
   function SlotAvatar({ name, size = 36, active = false }) {
-    const idx = Math.max(0, SLOT_NAMES.indexOf(name));
-    const bg = SLOT_COLORS[idx % SLOT_COLORS.length];
-    const img = TRAINER_IMGS[name];
+    const idn = playerIdentity(name);
     return /* @__PURE__ */ React.createElement("div", { style: {
       width: size,
       height: size,
       borderRadius: "50%",
       flexShrink: 0,
-      background: bg + "22",
-      border: active ? `2.5px solid ${bg}` : "2.5px solid rgba(255,255,255,.1)",
-      boxShadow: active ? `0 0 0 2px #0b0a16, 0 0 10px ${bg}88` : "none",
+      background: idn.color + "1e",
+      border: active ? `2.5px solid ${idn.color}` : "2.5px solid rgba(255,255,255,.1)",
+      boxShadow: active ? `0 0 0 2px #0b0a16, 0 0 10px ${idn.color}88` : "none",
       overflow: "hidden",
       transition: "box-shadow .15s",
       display: "flex",
       alignItems: "center",
       justifyContent: "center"
-    } }, img ? /* @__PURE__ */ React.createElement(
+    } }, /* @__PURE__ */ React.createElement(
       "img",
       {
-        src: img,
-        width: size - 4,
-        height: size - 4,
+        src: SPRITE(idn.dex),
+        width: size - 6,
+        height: size - 6,
         alt: name || "?",
+        crossOrigin: "anonymous",
         style: { objectFit: "contain", display: "block" }
       }
-    ) : /* @__PURE__ */ React.createElement("span", { style: { fontFamily: "var(--font-display)", fontWeight: 700, fontSize: Math.round(size * 0.4), color: bg } }, (name || "?")[0].toUpperCase()));
+    ));
   }
   function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }) {
+    const [picked, setPicked] = React.useState(null);
     React.useEffect(() => {
       if (isFirstLaunch) return void 0;
       const closeOnEscape = (event) => {
@@ -304,112 +440,225 @@
       document.addEventListener("keydown", closeOnEscape);
       return () => document.removeEventListener("keydown", closeOnEscape);
     }, [isFirstLaunch, onClose]);
+    const slots = allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }));
+    const pick = (s) => {
+      if (picked != null) return;
+      SFX.play("click");
+      setPicked(s.slot);
+      setTimeout(() => onSelect(s.slot), 420);
+    };
+    const stars = [
+      { top: 70, left: 36, s: 4, d: "2.6s", dl: "0s" },
+      { top: 130, right: 52, s: 3, d: "3.4s", dl: ".6s" },
+      { top: 44, right: 120, s: 2, d: "2.2s", dl: "1.1s" },
+      { bottom: 150, left: 24, s: 3, d: "3s", dl: ".3s" },
+      { top: 220, left: 60, s: 2, d: "2.8s", dl: ".9s" }
+    ];
     return /* @__PURE__ */ React.createElement("div", { className: "player-picker-overlay", role: "presentation", style: {
       position: "fixed",
       inset: 0,
       zIndex: 1e3,
-      background: "rgba(8,7,20,.88)",
-      backdropFilter: "blur(8px)",
+      background: "radial-gradient(130% 100% at 50% -12%, #1b1540 0%, #0d0b20 55%, #080714 100%)",
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 24
-    }, onClick: isFirstLaunch ? void 0 : onClose }, /* @__PURE__ */ React.createElement(
+      flexDirection: "column",
+      overflow: "hidden"
+    }, onClick: isFirstLaunch ? void 0 : onClose }, stars.map((st, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: {
+      position: "absolute",
+      top: st.top,
+      left: st.left,
+      right: st.right,
+      bottom: st.bottom,
+      width: st.s,
+      height: st.s,
+      borderRadius: "50%",
+      background: "#F0EEFF",
+      animation: `twinkle ${st.d} ease-in-out ${st.dl} infinite`
+    } })), /* @__PURE__ */ React.createElement("div", { className: "pokeball", style: { position: "absolute", top: 96, right: -26, width: 120, height: 120, opacity: 0.09, animation: "floaty 5s ease-in-out infinite", "--ball-top": "#EE3D34" } }), /* @__PURE__ */ React.createElement("div", { className: "pokeball", style: { position: "absolute", bottom: 60, left: -34, width: 150, height: 150, opacity: 0.07, animation: "floaty 6.5s ease-in-out 1s infinite", "--ball-top": "#7C3AED" } }), /* @__PURE__ */ React.createElement(
       "div",
       {
         className: "player-picker-dialog",
         role: "dialog",
         "aria-modal": "true",
         "aria-labelledby": "player-picker-title",
-        style: {
-          width: "100%",
-          maxWidth: 360,
-          background: "var(--bg-card, #16132e)",
-          border: "1px solid rgba(255,255,255,.08)",
-          borderRadius: 20,
-          padding: "28px 20px 20px",
-          boxShadow: "0 24px 64px rgba(0,0,0,.6)"
-        },
+        style: { flex: 1, display: "flex", flexDirection: "column", padding: "52px 20px 20px", overflowY: "auto", position: "relative", zIndex: 1, width: "100%", maxWidth: 480, margin: "0 auto" },
         onClick: (e) => e.stopPropagation()
       },
-      /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", marginBottom: 20 } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 11, color: "var(--accent)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 } }, isFirstLaunch ? "Selamat Datang" : "Ganti Pemain"), /* @__PURE__ */ React.createElement("div", { id: "player-picker-title", style: { fontSize: 18, fontWeight: 700, color: "var(--text-primary, #f0eeff)" } }, isFirstLaunch ? "Pilih karaktermu" : "Pilih karakter")), !isFirstLaunch && /* @__PURE__ */ React.createElement("button", { "aria-label": "Tutup pemilih pemain", onClick: onClose, style: {
-        background: "rgba(255,255,255,.07)",
-        border: "none",
-        borderRadius: 8,
-        width: 32,
-        height: 32,
+      /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: 9, animation: "riseIn .5s cubic-bezier(0.16,1,0.3,1) both" } }, /* @__PURE__ */ React.createElement("div", { style: { width: 8, height: 8, borderRadius: "50%", background: "#FFCB05", boxShadow: "0 0 24px rgba(255,203,5,.4)", animation: "pulseDot 2s ease-in-out infinite" } }), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-game)", fontSize: 15, color: "#FFCB05", letterSpacing: ".08em", textShadow: "0 0 14px rgba(255,203,5,.5)" } }, "DRUYGON")),
+      /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", fontSize: 10, fontWeight: 700, letterSpacing: ".22em", color: "var(--text-tertiary)", marginTop: 10, animation: "riseIn .5s cubic-bezier(0.16,1,0.3,1) .08s both" } }, "LEARNING \xB7 GAME PORTAL"),
+      /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "flex-start", marginTop: 30, animation: "riseIn .55s cubic-bezier(0.16,1,0.3,1) .15s both" } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("div", { id: "player-picker-title", style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 27, letterSpacing: "-.02em", lineHeight: 1.15 } }, isFirstLaunch ? "Pilih karaktermu" : "Pilih karakter"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: "var(--text-secondary)", marginTop: 7 } }, "Siapa yang main hari ini?")), !isFirstLaunch && /* @__PURE__ */ React.createElement("button", { "aria-label": "Tutup pemilih pemain", onClick: onClose, style: {
+        width: 36,
+        height: 36,
+        borderRadius: "50%",
+        flexShrink: 0,
+        background: "var(--bg-elevated)",
+        border: "1px solid var(--border-medium)",
         cursor: "pointer",
         color: "var(--text-secondary)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
       } }, /* @__PURE__ */ React.createElement(Icon, { name: "x", size: 16 }))),
-      /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 } }, (allSlots && allSlots.length > 0 ? allSlots : SLOT_NAMES.map((n, i) => ({ slot: i + 1, name: n, level: 1, caughtCount: 0, coins: 0 }))).map((s) => {
-        const isActive = s.slot === activeSlot;
+      /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 13, marginTop: 22 } }, slots.map((s, i) => {
+        const idn = playerIdentity(s.name);
+        const isPicked = picked === s.slot;
+        const dimmed = picked != null && !isPicked;
         return /* @__PURE__ */ React.createElement(
           "button",
           {
             key: s.slot,
             "aria-label": `Pilih pemain ${s.name}`,
-            onClick: () => onSelect(s.slot),
+            onClick: () => pick(s),
             style: {
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 8,
-              padding: "16px 12px",
-              borderRadius: 14,
+              position: "relative",
+              borderRadius: 20,
+              overflow: "hidden",
+              padding: "18px 12px 16px",
               cursor: "pointer",
-              border: isActive ? "2px solid var(--accent)" : "2px solid rgba(255,255,255,.07)",
-              background: isActive ? "var(--accent-soft, rgba(139,92,246,.12))" : "rgba(255,255,255,.04)",
-              transition: "all .15s",
-              position: "relative"
+              isolation: "isolate",
+              textAlign: "center",
+              background: `linear-gradient(160deg, ${idn.color}22, var(--bg-card) 65%)`,
+              border: isPicked ? `2px solid ${idn.color}` : "1px solid rgba(255,255,255,.08)",
+              boxShadow: isPicked ? `0 0 30px ${idn.color}55, var(--card-shadow)` : "var(--card-shadow)",
+              opacity: dimmed ? 0.25 : 1,
+              transform: isPicked ? "scale(1.04)" : dimmed ? "scale(.95)" : "none",
+              transition: "transform .35s cubic-bezier(0.16,1,0.3,1), opacity .35s, border-color .2s, box-shadow .35s",
+              animation: `cardIn .55s cubic-bezier(0.16,1,0.3,1) ${0.25 + i * 0.09}s both`,
+              color: "var(--text-primary)"
             }
           },
-          /* @__PURE__ */ React.createElement(SlotAvatar, { name: s.name, size: 52, active: isActive }),
-          /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 700, fontSize: 14, color: isActive ? "var(--accent)" : "var(--text-primary, #f0eeff)" } }, s.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--text-secondary, #9aa0b5)", marginTop: 2 } }, "Lv ", s.level, " \xB7 ", s.caughtCount, " caught")),
-          isActive && /* @__PURE__ */ React.createElement("div", { style: {
-            position: "absolute",
-            top: 6,
-            right: 6,
-            background: "var(--accent)",
-            borderRadius: 4,
-            fontSize: 8,
-            fontWeight: 700,
-            color: "#fff",
-            padding: "2px 5px",
-            letterSpacing: 0.5
-          } }, "AKTIF")
+          /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", width: 120, height: 120, borderRadius: "50%", top: -38, right: -30, background: `radial-gradient(circle, ${idn.color}, transparent 68%)`, opacity: 0.25, zIndex: -1 } }),
+          /* @__PURE__ */ React.createElement("div", { style: { position: "relative", display: "flex", justifyContent: "center" } }, /* @__PURE__ */ React.createElement(
+            "img",
+            {
+              src: SPRITE(idn.dex),
+              alt: idn.mon,
+              width: 84,
+              height: 84,
+              crossOrigin: "anonymous",
+              style: { objectFit: "contain", animation: `floaty ${3 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }
+            }
+          )),
+          /* @__PURE__ */ React.createElement("div", { style: { position: "relative", marginTop: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 17, letterSpacing: "-.01em" } }, s.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, fontWeight: 600, color: idn.color, marginTop: 2 } }, idn.title), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "center", gap: 6, marginTop: 9 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 999, background: idn.color, color: "#0b0a16" } }, "Lv ", s.level), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, fontWeight: 600, padding: "3px 9px", borderRadius: 999, border: "1px solid rgba(255,255,255,.14)", color: "var(--text-secondary)" } }, s.caughtCount, " caught"))),
+          s.slot === activeSlot && !isFirstLaunch && /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", top: 8, right: 8, background: idn.color, borderRadius: 6, fontSize: 8, fontWeight: 700, color: "#0b0a16", padding: "2px 6px", letterSpacing: 0.5 } }, "AKTIF")
         );
       })),
-      isFirstLaunch && /* @__PURE__ */ React.createElement("p", { style: { textAlign: "center", fontSize: 11, color: "var(--text-tertiary, #4b4680)", marginTop: 16, marginBottom: 0 } }, "Bisa diganti kapan saja lewat ikon di pojok kanan atas")
+      /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", fontSize: 11, color: "var(--text-tertiary)", marginTop: "auto", paddingTop: 18, animation: "fadeIn .8s .9s both" } }, "Progres tersimpan terpisah untuk tiap trainer.")
     ));
   }
-  function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap }) {
-    return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", coins), /* @__PURE__ */ React.createElement(
+  function PickSplash({ name }) {
+    const idn = playerIdentity(name);
+    return /* @__PURE__ */ React.createElement("div", { style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 1100,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      animation: "fadeIn .3s",
+      background: `radial-gradient(110% 90% at 50% 40%, ${idn.color}33, #0a0818 70%)`
+    } }, /* @__PURE__ */ React.createElement("div", { style: { position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { width: 190, height: 190, borderRadius: "50%", position: "absolute", top: -20, animation: "ringPulse 1.1s ease-out infinite" } }), /* @__PURE__ */ React.createElement(
+      "img",
+      {
+        src: SPRITE(idn.dex),
+        alt: idn.mon,
+        width: 150,
+        height: 150,
+        crossOrigin: "anonymous",
+        style: { objectFit: "contain", animation: "pop .55s cubic-bezier(0.34,1.56,0.64,1) both" }
+      }
+    ), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 26, letterSpacing: "-.01em", marginTop: 16, animation: "riseIn .4s .15s both" } }, "Ayo main, ", name, "!"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--text-secondary)", animation: "riseIn .4s .3s both" } }, "Menyiapkan duniamu\u2026")));
+  }
+  function DracoSheet({ open, onClose, ctx, playerName }) {
+    const [msgs, setMsgs] = React.useState([]);
+    const [typing, setTyping] = React.useState(false);
+    const timers = React.useRef([]);
+    const later = (fn, ms) => {
+      timers.current.push(setTimeout(fn, ms));
+    };
+    React.useEffect(() => {
+      if (!open) return void 0;
+      const name = playerName || "Trainer";
+      setMsgs([{ who: "draco", text: ctx ? `Hai ${name}! Lagi mikirin soal di ${ctx.zoneName}? Tenang, aku bantu. \u{1F409}` : `Hai ${name}! Aku Draco, tutor AI-mu. Aku kasih petunjuk, bukan jawaban langsung \u2014 biar kamu yang jadi jagonya. \u{1F409}` }]);
+      setTyping(false);
+      return () => {
+        timers.current.forEach(clearTimeout);
+        timers.current = [];
+      };
+    }, [open]);
+    React.useEffect(() => {
+      if (!open) return void 0;
+      const closeOnEscape = (e) => {
+        if (e.key === "Escape") onClose();
+      };
+      document.addEventListener("keydown", closeOnEscape);
+      return () => document.removeEventListener("keydown", closeOnEscape);
+    }, [open, onClose]);
+    if (!open) return null;
+    const pushDraco = (text) => {
+      setTyping(true);
+      later(() => {
+        setTyping(false);
+        setMsgs((m) => [...m, { who: "draco", text }]);
+      }, 750);
+    };
+    const giveHint = () => {
+      SFX.play("click");
+      setMsgs((m) => [...m, { who: "me", text: "Kasih petunjuk dong \u{1F4A1}" }]);
+      pushDraco(ctx && ctx.hint ? ctx.hint : "Buka satu zona dulu, terus tanya aku pas lagi ngerjain soal \u2014 aku selalu tahu soal yang kamu hadapi!");
+    };
+    const openFullTutor = () => {
+      SFX.play("click");
+      openTutor(ctx ? ctx.topic : void 0);
+    };
+    return /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", inset: 0, zIndex: 900, display: "flex", flexDirection: "column", justifyContent: "flex-end" } }, /* @__PURE__ */ React.createElement("div", { onClick: onClose, style: { position: "absolute", inset: 0, background: "rgba(8,7,20,.7)", animation: "fadeIn .25s" } }), /* @__PURE__ */ React.createElement("div", { role: "dialog", "aria-modal": "true", "aria-label": "Draco AI tutor", style: {
+      position: "relative",
+      maxHeight: "76%",
+      background: "var(--bg-surface)",
+      borderRadius: "24px 24px 0 0",
+      borderTop: "1px solid rgba(139,92,246,.4)",
+      display: "flex",
+      flexDirection: "column",
+      animation: "sheetUp .35s cubic-bezier(0.16,1,0.3,1)",
+      overflow: "hidden",
+      width: "100%",
+      maxWidth: 480,
+      margin: "0 auto"
+    } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "center", padding: "10px 0 4px" } }, /* @__PURE__ */ React.createElement("div", { style: { width: 38, height: 4, borderRadius: 999, background: "rgba(255,255,255,.18)" } })), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 11, padding: "6px 16px 12px", borderBottom: "1px solid var(--border-subtle)" } }, /* @__PURE__ */ React.createElement("div", { style: { width: 42, height: 42, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #8B5CF6, #4A9EFF)", boxShadow: "0 0 16px rgba(139,92,246,.4)" } }, /* @__PURE__ */ React.createElement(Icon, { name: "sparkles", size: 22, color: "#fff" })), /* @__PURE__ */ React.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ React.createElement("b", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 16, display: "block" } }, "Draco"), /* @__PURE__ */ React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11, color: "var(--green)" } }, /* @__PURE__ */ React.createElement("i", { style: { width: 6, height: 6, borderRadius: "50%", background: "var(--green)", display: "inline-block" } }), "AI Tutor \xB7 online")), /* @__PURE__ */ React.createElement("button", { "aria-label": "Tutup Draco", onClick: onClose, style: { width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-elevated)", border: "1px solid var(--border-medium)", color: "var(--text-secondary)", cursor: "pointer" } }, /* @__PURE__ */ React.createElement(Icon, { name: "x", size: 15 }))), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, overflowY: "auto", padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10, minHeight: 120 } }, ctx && ctx.question && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", padding: "2px 12px" } }, "Soal: \u201C", ctx.question, "\u201D"), msgs.map((m, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { display: "flex", justifyContent: m.who === "me" ? "flex-end" : "flex-start" } }, /* @__PURE__ */ React.createElement("div", { style: m.who === "me" ? { maxWidth: "80%", background: "rgba(139,92,246,.16)", border: "1px solid rgba(139,92,246,.4)", borderRadius: "16px 16px 4px 16px", padding: "10px 14px", fontSize: 13, lineHeight: 1.5 } : { maxWidth: "85%", background: "var(--bg-card)", border: "1px solid rgba(139,92,246,.3)", borderRadius: "16px 16px 16px 4px", padding: "10px 14px", fontSize: 13, lineHeight: 1.5 } }, m.text))), typing && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "flex-start" } }, /* @__PURE__ */ React.createElement("div", { style: { background: "var(--bg-card)", border: "1px solid rgba(139,92,246,.3)", borderRadius: "16px 16px 16px 4px", padding: "12px 16px", display: "flex", gap: 5 } }, /* @__PURE__ */ React.createElement("i", { style: { width: 6, height: 6, borderRadius: "50%", background: "#8B5CF6", animation: "dotHop 1.2s infinite" } }), /* @__PURE__ */ React.createElement("i", { style: { width: 6, height: 6, borderRadius: "50%", background: "#8B5CF6", animation: "dotHop 1.2s .15s infinite" } }), /* @__PURE__ */ React.createElement("i", { style: { width: 6, height: 6, borderRadius: "50%", background: "#8B5CF6", animation: "dotHop 1.2s .3s infinite" } })))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, padding: "10px 16px calc(16px + env(safe-area-inset-bottom))", borderTop: "1px solid var(--border-subtle)", flexWrap: "wrap" } }, ctx && ctx.hint && /* @__PURE__ */ React.createElement("button", { onClick: giveHint, style: { padding: "9px 14px", borderRadius: 999, fontSize: 12, fontWeight: 600, border: "1px solid rgba(139,92,246,.45)", background: "transparent", color: "#B79BFF", cursor: "pointer" } }, "\u{1F4A1} Kasih petunjuk"), /* @__PURE__ */ React.createElement("button", { onClick: openFullTutor, style: { padding: "9px 14px", borderRadius: 999, fontSize: 12, fontWeight: 700, border: "none", background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", color: "#fff", cursor: "pointer", marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6 } }, "Chat lengkap dengan Draco ", /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 14 })))));
+  }
+  function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap, onOpenDraco }) {
+    const idn = playerIdentity(playerName);
+    return /* @__PURE__ */ React.createElement("div", { className: "appbar" }, onBack && /* @__PURE__ */ React.createElement("button", { className: "appbar-back", onClick: onBack }, /* @__PURE__ */ React.createElement(Icon, { name: "back", size: 20 })), title ? /* @__PURE__ */ React.createElement("div", { className: "appbar-title" }, title, sub && /* @__PURE__ */ React.createElement("small", null, sub)) : /* @__PURE__ */ React.createElement("div", { className: "appbar-logo" }, "DRUYGON"), /* @__PURE__ */ React.createElement("button", { className: "appbar-draco", onClick: () => onOpenDraco ? onOpenDraco(null) : openTutor(), title: "Tanya Draco \u2014 AI tutor" }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Draco"), /* @__PURE__ */ React.createElement("div", { className: "coin-chip" }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 15, color: "var(--yellow)" }), " ", (coins != null ? coins : 0).toLocaleString()), /* @__PURE__ */ React.createElement(
       "button",
       {
         "aria-label": "Ganti pemain. Pemain aktif: " + (playerName || "belum dipilih"),
         onClick: onAvatarTap,
         style: {
-          background: "none",
-          border: "none",
+          background: idn.color + "1e",
+          border: `2px solid ${idn.color}`,
           padding: 0,
           cursor: "pointer",
           borderRadius: "50%",
           lineHeight: 0,
-          overflow: "hidden"
+          overflow: "hidden",
+          width: 38,
+          height: 38,
+          flexShrink: 0,
+          boxShadow: `0 0 0 2px rgba(255,255,255,.05), 0 0 14px ${idn.color}66`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
         },
         title: "Pemain: " + (playerName || "Pilih karakter")
       },
       /* @__PURE__ */ React.createElement(
         "img",
         {
-          src: "/assets/dru/dru-idle.png",
-          width: 32,
-          height: 32,
-          alt: playerName || "Dru",
-          style: { objectFit: "cover", display: "block" }
+          src: SPRITE(idn.dex),
+          width: 30,
+          height: 30,
+          crossOrigin: "anonymous",
+          alt: playerName || "Trainer",
+          style: { objectFit: "contain", display: "block" }
         }
       )
     ));
@@ -422,7 +671,10 @@
       ["store", "bag", "Toko"],
       ["profile", "user", "Profil"]
     ];
-    return /* @__PURE__ */ React.createElement("div", { className: "nav" }, items.map(([id, ic, label]) => /* @__PURE__ */ React.createElement("button", { key: id, className: "nav-slot" + (active === id ? " on" : ""), onClick: () => go(id) }, /* @__PURE__ */ React.createElement("span", { className: "nav-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: ic, size: 22 })), /* @__PURE__ */ React.createElement("span", null, label))));
+    return /* @__PURE__ */ React.createElement("div", { className: "nav" }, items.map(([id, ic, label]) => /* @__PURE__ */ React.createElement("button", { key: id, className: "nav-slot" + (active === id ? " on" : ""), onClick: () => {
+      SFX.play("click");
+      go(id);
+    } }, /* @__PURE__ */ React.createElement("span", { className: "nav-ico" }, /* @__PURE__ */ React.createElement(Icon, { name: ic, size: 22 })), /* @__PURE__ */ React.createElement("span", null, label))));
   }
   Object.assign(window, {
     Icon,
@@ -431,11 +683,16 @@
     BottomNav,
     SlotAvatar,
     PlayerPicker,
+    PickSplash,
+    DracoSheet,
     AVATAR,
     openTutor,
     TUTOR_URL,
     SLOT_COLORS,
-    SLOT_NAMES
+    SLOT_NAMES,
+    PARTNERS,
+    playerIdentity,
+    SFX
   });
   const { useState: uS1, useRef: uR1, useEffect: uE1 } = React;
   const PLAYER = { name: "Dru", level: 7, xpPct: 62 };
@@ -485,7 +742,7 @@
   function ContentLoading() {
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad", style: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 16, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 14 } }, "Loading world data\u2026")));
   }
-  function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission }) {
+  function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission, onOpenDraco }) {
     var _a;
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
@@ -493,12 +750,23 @@
     const level = (_a = profile == null ? void 0 : profile.level) != null ? _a : PLAYER.level;
     const xpPct = profile && profile.xpToNext > 0 ? Math.round(profile.xp / profile.xpToNext * 100) : PLAYER.xpPct;
     const name = playerName || "Trainer";
+    const idn = playerIdentity(playerName);
     const prog = Object.fromEntries(order.map((id) => {
       const r = regions[id];
       const cleared = r.zones.filter((z) => zoneState(z, profile, caught, progress, r.zones) === "cleared").length;
       return [id, cleared];
     }));
-    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "hero", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: "radial-gradient(130% 130% at 88% -20%, rgba(139,92,246,.5), transparent 55%), radial-gradient(90% 120% at 0% 120%, rgba(74,158,255,.28), transparent 60%), linear-gradient(160deg, #1b1540, #0c0a1e 72%)" } }), /* @__PURE__ */ React.createElement("div", { className: "hero-glow" }), /* @__PURE__ */ React.createElement("div", { className: "hero-top" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "hero-greet" }, "Hi, ", /* @__PURE__ */ React.createElement("b", null, name), " \u{1F44B}"), /* @__PURE__ */ React.createElement("div", { className: "hero-sub" }, "Trainer \xB7 ", caught.length, " caught \xB7 keep the streak!")), /* @__PURE__ */ React.createElement("div", { className: "hero-lvl" }, "LVL ", level)), /* @__PURE__ */ React.createElement("div", { className: "hero-xp" }, /* @__PURE__ */ React.createElement("small", null, "XP"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } }))), /* @__PURE__ */ React.createElement("div", { className: "hero-stats" }, /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, level), /* @__PURE__ */ React.createElement("span", null, "Level")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, coins), /* @__PURE__ */ React.createElement("span", null, "Coins")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", null, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Choose a world")), /* @__PURE__ */ React.createElement("div", { className: "regions" }, order.map((id) => {
+    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "hero", "data-region": "compsci" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(130% 130% at 88% -20%, ${idn.color}55, transparent 55%), radial-gradient(90% 120% at 0% 120%, rgba(74,158,255,.28), transparent 60%), linear-gradient(160deg, #1b1540, #0c0a1e 72%)` } }), /* @__PURE__ */ React.createElement("div", { className: "hero-glow", style: { background: `radial-gradient(circle, ${idn.color}66, transparent 65%)` } }), /* @__PURE__ */ React.createElement(
+      "img",
+      {
+        src: SPRITE(idn.dex),
+        alt: idn.mon,
+        width: 92,
+        height: 92,
+        crossOrigin: "anonymous",
+        style: { position: "absolute", right: 6, top: 4, objectFit: "contain", opacity: 0.9, zIndex: -1, animation: "floaty 3.5s ease-in-out infinite", filter: "drop-shadow(0 8px 14px rgba(0,0,0,.5))" }
+      }
+    ), /* @__PURE__ */ React.createElement("div", { className: "hero-top" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "hero-greet" }, "Hi, ", /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, name), " \u{1F44B}"), /* @__PURE__ */ React.createElement("div", { className: "hero-sub" }, idn.title, " \xB7 ", caught.length, " caught \xB7 jaga streak!")), /* @__PURE__ */ React.createElement("div", { className: "hero-lvl", style: { background: idn.color } }, "LVL ", level)), /* @__PURE__ */ React.createElement("div", { className: "hero-xp" }, /* @__PURE__ */ React.createElement("small", null, "XP"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%", background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` } }))), /* @__PURE__ */ React.createElement("div", { className: "hero-stats" }, /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, level), /* @__PURE__ */ React.createElement("span", null, "Level")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, (coins != null ? coins : 0).toLocaleString()), /* @__PURE__ */ React.createElement("span", null, "Coins")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")))), /* @__PURE__ */ React.createElement("div", { onClick: () => onOpenDraco && onOpenDraco(null), style: { position: "relative", marginTop: 14, borderRadius: 20, overflow: "hidden", padding: 16, display: "flex", alignItems: "center", gap: 14, cursor: "pointer", isolation: "isolate", background: "linear-gradient(120deg, #241a4d 0%, #16123a 55%, #101030 100%)", border: "1px solid rgba(139,92,246,.35)", boxShadow: "var(--card-shadow)" } }, /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", width: 150, height: 150, borderRadius: "50%", right: -40, top: -50, background: "radial-gradient(circle, rgba(139,92,246,.4), transparent 68%)", zIndex: -1 } }), /* @__PURE__ */ React.createElement("div", { style: { width: 56, height: 56, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #8B5CF6, #4A9EFF)", boxShadow: "0 0 20px rgba(139,92,246,.45)", animation: "floaty 3.5s ease-in-out infinite" } }, /* @__PURE__ */ React.createElement(Icon, { name: "sparkles", size: 28, color: "#fff" })), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 7 } }, /* @__PURE__ */ React.createElement("b", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 16 } }, "Draco"), /* @__PURE__ */ React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9, fontWeight: 700, letterSpacing: ".08em", color: "var(--green)", background: "rgba(74,222,128,.12)", padding: "2px 7px", borderRadius: 999 } }, /* @__PURE__ */ React.createElement("i", { style: { width: 5, height: 5, borderRadius: "50%", background: "var(--green)", display: "inline-block" } }), "AI TUTOR")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "rgba(240,238,255,.65)", marginTop: 3, lineHeight: 1.4 } }, "Bingung sama soal? Tanya aku \u2014 sains, koding, atau PR sekolah.")), /* @__PURE__ */ React.createElement("div", { style: { width: 34, height: 34, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(139,92,246,.2)", border: "1px solid rgba(139,92,246,.5)", color: "#B79BFF" } }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 17 }))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Choose a world")), /* @__PURE__ */ React.createElement("div", { className: "regions" }, order.map((id) => {
       const r = regions[id];
       const next = r.zones.find((z) => zoneState(z, profile, caught, progress, r.zones) !== "cleared") || r.zones[r.zones.length - 1];
       return /* @__PURE__ */ React.createElement("div", { key: id, className: "region-card", "data-region": id, style: { "--rc": r.accent, "--rc-soft": "var(--accent-soft)" }, onClick: () => go("map", id) }, /* @__PURE__ */ React.createElement("div", { className: "region-glow" }), /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", inset: 0, zIndex: -1, background: `linear-gradient(90deg, rgba(10,8,24,.88) 0%, rgba(10,8,24,.35) 60%, rgba(10,8,24,.12) 100%), url(assets/regions/${id}-hero.jpg)`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } }), /* @__PURE__ */ React.createElement("div", { className: "region-emblem", style: { position: "relative", display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ React.createElement(Icon, { name: r.icon, size: 30 }), /* @__PURE__ */ React.createElement(
@@ -525,7 +793,8 @@
       return /* @__PURE__ */ React.createElement("div", { key: id, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, opacity: earned ? 1 : 0.35, filter: earned ? "none" : "grayscale(1)" } }, /* @__PURE__ */ React.createElement("img", { src: `assets/ui/medal-${id}.svg`, alt: ((_b = regions[id]) == null ? void 0 : _b.name) || id, width: 52, height: 52, style: { objectFit: "contain" } }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, color: "var(--text-tertiary)", fontWeight: 700 } }, c, "/", t));
     })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Leaderboard")), /* @__PURE__ */ React.createElement("div", { className: "lb", "data-region": "compsci" }, allSlots && allSlots.length > 0 ? [...allSlots].sort((a, b) => b.coins - a.coins || b.caughtCount - a.caughtCount).map((s, i) => {
       const isMe = s.slot === activeSlot;
-      return /* @__PURE__ */ React.createElement("div", { key: s.slot, className: "lb-row" + (isMe ? " me" : "") }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i + 1), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, isMe ? /* @__PURE__ */ React.createElement("img", { src: AVATAR, alt: "" }) : "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, s.name), /* @__PURE__ */ React.createElement("span", null, isMe ? "kamu \xB7 " : "", s.caughtCount, " caught")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, s.coins.toLocaleString())));
+      const sIdn = playerIdentity(s.name);
+      return /* @__PURE__ */ React.createElement("div", { key: s.slot, className: "lb-row" + (isMe ? " me" : ""), style: isMe ? { background: sIdn.color + "1c" } : void 0 }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i === 0 ? "\u{1F3C6}" : i + 1), /* @__PURE__ */ React.createElement("div", { className: "lb-av", style: { border: `1.5px solid ${sIdn.color}66`, background: "var(--bg-elevated)" } }, /* @__PURE__ */ React.createElement("img", { src: SPRITE(sIdn.dex), alt: "", crossOrigin: "anonymous", style: { objectFit: "contain", padding: 3 } })), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, s.name), /* @__PURE__ */ React.createElement("span", null, isMe ? "kamu \xB7 " : "", s.caughtCount, " caught")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", { style: { color: "#FFCB05" } }, s.coins.toLocaleString())));
     }) : (
       /* loading skeleton */
       [1, 2, 3].map((i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "lb-row", style: { opacity: 0.3 } }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"), /* @__PURE__ */ React.createElement("span", null, "loading\u2026")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"))))
@@ -545,7 +814,14 @@
       return /* @__PURE__ */ React.createElement("div", { key: z.zone, className: "zone " + st, onClick: () => !locked && go("catch", region, z.zone) }, /* @__PURE__ */ React.createElement("div", { className: "zone-no", style: { border: "none", background: "transparent", borderRadius: 0, width: 52, height: 52 } }, /* @__PURE__ */ React.createElement("img", { src: `assets/maps/node-${st}.svg`, alt: st, width: 52, height: 52, style: { objectFit: "contain" } })), /* @__PURE__ */ React.createElement("div", { className: "zone-main" }, /* @__PURE__ */ React.createElement("b", null, z.name), /* @__PURE__ */ React.createElement("code", null, z.topic, locked ? ` \xB7 selesaikan zona sebelumnya` : "")), /* @__PURE__ */ React.createElement("div", { className: "zone-mons" }, z.mons.slice(0, 3).map((m, i) => locked || !cleared && i > 0 ? /* @__PURE__ */ React.createElement("div", { key: i, className: "silh" }, "?") : /* @__PURE__ */ React.createElement("img", { key: i, src: m.sprite, alt: "", crossOrigin: "anonymous" }))), locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 16, color: "var(--text-tertiary)" }) : /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: r.accent }));
     }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 6 } }, "Tap an open zone to enter the catch loop.")));
   }
-  function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer }) {
+  const CHEER_WRONG = [
+    "Hampir! Coba baca soalnya sekali lagi \u{1F440}",
+    "Nggak apa-apa, trainer hebat juga pernah salah \u{1F4AA}",
+    "Coba lagi \u2014 kamu pasti bisa! \u{1F525}",
+    "Hmm, hampir kena! Pikirkan pelan-pelan ya \u{1F9E0}",
+    "Tanya Draco kalau butuh petunjuk \u{1F409}"
+  ];
+  function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer, onOpenDraco }) {
     const { regions, questions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
     const r = regions[region];
@@ -590,6 +866,8 @@
     const [hit, setHit] = uS1(false);
     const [ball, setBall] = uS1(null);
     const [answerReward, setAnswerReward] = uS1(false);
+    const [combo, setCombo] = uS1(0);
+    const [cheer, setCheer] = uS1(null);
     const q = bank.length ? bank[qi % bank.length] : srcBank[0] || {};
     const nextQ = () => {
       const nv = qi + 1;
@@ -601,16 +879,26 @@
       const ok = i === q.a;
       setFb({ ok, pick: i });
       if (ok) {
+        const nc = combo + 1;
+        setCombo(nc);
+        setCheer(null);
+        SFX.play(nc >= 2 ? "combo" : "correct");
         setHit(true);
         setTimeout(() => setHit(false), 400);
         if (onAnswer) onAnswer(true, z.id);
         setAnswerReward(true);
         setTimeout(() => setAnswerReward(false), 1600);
+      } else {
+        setCombo(0);
+        SFX.play("wrong");
+        setCheer(CHEER_WRONG[Math.floor(Math.random() * CHEER_WRONG.length)]);
+        setTimeout(() => setCheer(null), 2e3);
       }
       setTimeout(() => {
         setFb(null);
         if (ok) {
-          const nh = Math.max(0, hp - 34);
+          const dmg = 34 + Math.min(combo, 3) * 6;
+          const nh = Math.max(0, hp - dmg);
           setHp(nh);
           if (nh <= 8) setPhase("ready");
           else nextQ();
@@ -620,18 +908,50 @@
     const throwBall = (b) => {
       setBall(b);
       setPhase("wobble");
-      onCaught(wild, { ...b, _zoneId: z.id });
+      SFX.play("throw");
+      setTimeout(() => {
+        SFX.play("catch");
+        onCaught(wild, { ...b, _zoneId: z.id, _topic: z.topic });
+      }, 1700);
     };
-    return /* @__PURE__ */ React.createElement("div", { className: "catch screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "stage" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(120% 90% at 50% 0%, ${r.accent}3a, transparent 55%), linear-gradient(180deg, #15122b, #0a0818)` } }), /* @__PURE__ */ React.createElement("div", { className: "stage-field" }), /* @__PURE__ */ React.createElement("div", { className: "wild-card" }, /* @__PURE__ */ React.createElement("div", { className: "nm" }, /* @__PURE__ */ React.createElement("b", null, wild.name), /* @__PURE__ */ React.createElement("span", null, "Lv ", 3 + zone * 2)), /* @__PURE__ */ React.createElement("div", { className: "hp" }, /* @__PURE__ */ React.createElement("small", null, "HP"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: hp + "%", background: hp <= 8 ? "var(--red)" : hp < 40 ? "linear-gradient(90deg,#FF6B2B,#FFCB05)" : "linear-gradient(90deg,#4ADE80,#00D9B8)" } }))), /* @__PURE__ */ React.createElement("div", { className: "type-chip", style: { marginTop: 7, background: TYPE_COLOR[wild.type] } }, wild.type)), /* @__PURE__ */ React.createElement("img", { className: "wild-sprite" + (hit ? " hit" : "") + (phase === "wobble" ? " wobble" : ""), src: wild.sprite, alt: wild.name, crossOrigin: "anonymous" }), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { className: "thrown" }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, top: ball == null ? void 0 : ball.top }))), /* @__PURE__ */ React.createElement("div", { className: "cmd" }, phase === "quiz" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "q-prompt" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Question ", qi + 1, " \xB7 ", z.topic, answerReward ? /* @__PURE__ */ React.createElement("span", { style: { color: "var(--yellow)", marginLeft: 8, fontWeight: 700, fontSize: 11 } }, "+5 \u{1FA99} +5 XP") : null), /* @__PURE__ */ React.createElement("h3", null, q.q), /* @__PURE__ */ React.createElement("div", { className: "expr" }, q.expr)), /* @__PURE__ */ React.createElement("div", { className: "answers" + (q.opts.length > 2 ? " two" : "") }, q.opts.map((o, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "ans" + (fb ? i === q.a ? " ok" : i === fb.pick ? " no" : "" : ""), onClick: () => answer(i) }, q.opts.length <= 2 && /* @__PURE__ */ React.createElement("kbd", null, i + 1), /* @__PURE__ */ React.createElement("span", { className: "grow" }, o), fb && i === q.a && /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 })))), /* @__PURE__ */ React.createElement("div", { className: "cmd-foot" }, /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-think.png", alt: "Ask Draco", style: { width: 36, height: 36, objectFit: "contain", marginRight: 4, flexShrink: 0 } }), /* @__PURE__ */ React.createElement("div", { className: "draco wf-tap", onClick: () => openTutor(z.topic) }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }), " Ask Draco"), /* @__PURE__ */ React.createElement("span", { className: "cmd-hint" }, "Correct answer \u2192 attack \u2193 HP")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "ready" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ball-prompt" }, "It's weak \u2014 choose a Pok\xE9 Ball!"), /* @__PURE__ */ React.createElement("div", { className: "balls" }, (pokeballsProp || POKEBALLS).map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ball-opt" + (b.own === 0 ? " dim" : ""), onClick: () => b.own > 0 && throwBall(b) }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "\xD7", b.own, " \xB7 ", Math.round(b.rate * 100), "%"))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 14 } }, "Higher tiers catch better but are scarcer."), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { style: { margin: "auto", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-display)", fontWeight: 700 } }, "\u2026wobble\u2026 wobble\u2026")));
+    return /* @__PURE__ */ React.createElement("div", { className: "catch screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "stage" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `radial-gradient(120% 90% at 50% 0%, ${r.accent}3a, transparent 55%), linear-gradient(180deg, #15122b, #0a0818)` } }), /* @__PURE__ */ React.createElement("div", { className: "stage-field" }), /* @__PURE__ */ React.createElement("div", { className: "wild-card" }, /* @__PURE__ */ React.createElement("div", { className: "nm" }, /* @__PURE__ */ React.createElement("b", null, wild.name), /* @__PURE__ */ React.createElement("span", null, "Lv ", 3 + zone * 2)), /* @__PURE__ */ React.createElement("div", { className: "hp" }, /* @__PURE__ */ React.createElement("small", null, "HP"), /* @__PURE__ */ React.createElement("div", { className: "meter" }, /* @__PURE__ */ React.createElement("i", { style: { width: hp + "%", background: hp <= 8 ? "var(--red)" : hp < 40 ? "linear-gradient(90deg,#FF6B2B,#FFCB05)" : "linear-gradient(90deg,#4ADE80,#00D9B8)" } }))), /* @__PURE__ */ React.createElement("div", { className: "type-chip", style: { marginTop: 7, background: TYPE_COLOR[wild.type] } }, wild.type)), /* @__PURE__ */ React.createElement("img", { className: "wild-sprite" + (hit ? " hit" : "") + (phase === "wobble" ? " wobble" : ""), src: wild.sprite, alt: wild.name, crossOrigin: "anonymous" }), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { className: "thrown" }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: ball == null ? void 0 : ball.id, top: ball == null ? void 0 : ball.top })), combo >= 2 && phase === "quiz" && /* @__PURE__ */ React.createElement("div", { key: combo, className: "combo-badge" }, "Combo \xD7", combo, " \u{1F525}"), answerReward && /* @__PURE__ */ React.createElement("div", { className: "float-reward" }, "+5 \u{1FA99} +5 XP")), /* @__PURE__ */ React.createElement("div", { className: "cmd" }, phase === "quiz" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "q-prompt" }, /* @__PURE__ */ React.createElement("div", { className: "eyebrow" }, "Soal ", qi + 1, " \xB7 ", z.name), /* @__PURE__ */ React.createElement("h3", null, q.q), /* @__PURE__ */ React.createElement("div", { className: "expr" }, q.expr), cheer && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--yellow)", marginTop: 6, animation: "riseIn .3s both" } }, cheer)), /* @__PURE__ */ React.createElement("div", { className: "answers" + (q.opts.length > 2 ? " two" : "") }, q.opts.map((o, i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "ans" + (fb ? i === q.a ? " ok" : i === fb.pick ? " no" : "" : ""), onClick: () => answer(i) }, q.opts.length <= 2 && /* @__PURE__ */ React.createElement("kbd", null, i + 1), /* @__PURE__ */ React.createElement("span", { className: "grow" }, o), fb && i === q.a && /* @__PURE__ */ React.createElement(Icon, { name: "check", size: 18, color: "var(--green)", sw: 2.4 })))), /* @__PURE__ */ React.createElement("div", { className: "cmd-foot" }, /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-think.png", alt: "Ask Draco", style: { width: 36, height: 36, objectFit: "contain", marginRight: 4, flexShrink: 0 } }), /* @__PURE__ */ React.createElement(
+      "div",
+      {
+        className: "draco wf-tap",
+        style: { borderColor: "rgba(139,92,246,.5)", color: "#B79BFF" },
+        onClick: () => onOpenDraco ? onOpenDraco({ zoneName: z.name, question: q.q, hint: q.hint, topic: z.topic }) : openTutor(z.topic)
+      },
+      /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 15 }),
+      " Tanya Draco"
+    ), /* @__PURE__ */ React.createElement("span", { className: "cmd-hint" }, "Jawab benar \u2192 serang \u2193 HP")), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 8 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "ready" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "ball-prompt" }, "Dia sudah lemah \u2014 pilih Pok\xE9 Ball! \u{1F3AF}"), /* @__PURE__ */ React.createElement("div", { className: "balls" }, (pokeballsProp || POKEBALLS).map((b) => /* @__PURE__ */ React.createElement("div", { key: b.id, className: "ball-opt" + (b.own === 0 ? " dim" : ""), onClick: () => b.own > 0 && throwBall(b) }, /* @__PURE__ */ React.createElement(Pokeball, { size: 34, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "\xD7", b.own, " \xB7 ", Math.round(b.rate * 100), "%"))))), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 14 } }, "Higher tiers catch better but are scarcer."), /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", marginTop: 6 } }, /* @__PURE__ */ React.createElement("span", { onClick: rerollWild, style: { fontSize: 11, color: "var(--text-tertiary)", cursor: "pointer", userSelect: "none" } }, "\u{1F504} Cari Pok\xE9mon lain"))), phase === "wobble" && /* @__PURE__ */ React.createElement("div", { style: { margin: "auto", textAlign: "center", color: "var(--text-secondary)", fontFamily: "var(--font-display)", fontWeight: 700 } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 15 } }, "\u2026goyang\u2026 goyang\u2026"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: "var(--text-tertiary)", marginTop: 6, animation: "fadeIn .4s .8s both" } }, "Kena nggak ya? \u{1F91E}"))));
   }
-  function Celebration({ mon, region, onDone, onTeam, activeSlot, onTeamAdd, newLevel, rewardBalls, levelUp }) {
+  function Celebration({ mon, region, coins, fact, onDone, onTeam, activeSlot, onTeamAdd, newLevel, rewardBalls, levelUp }) {
     const { regions } = useContent();
     const r = regions && regions[region] || { accent: "#8B5CF6" };
     const rar = RARITY[mon.rarity] || RARITY.common;
-    return /* @__PURE__ */ React.createElement("div", { className: "celeb", "data-region": region }, /* @__PURE__ */ React.createElement("svg", { className: "celeb-rays", viewBox: "0 0 400 400", preserveAspectRatio: "xMidYMid slice" }, Array.from({ length: 22 }).map((_, i) => {
+    const confetti = React.useMemo(() => Array.from({ length: 26 }).map((_, i) => ({
+      left: Math.random() * 100,
+      delay: Math.random() * 0.7,
+      dur: 2 + Math.random() * 1.6,
+      size: 6 + Math.random() * 6,
+      color: [r.accent, "#FFCB05", "#4ADE80", "#4A9EFF", "#F472B6"][i % 5],
+      rot: Math.random() * 360
+    })), []);
+    React.useEffect(() => {
+      if (levelUp) SFX.play("levelup");
+    }, [levelUp]);
+    return /* @__PURE__ */ React.createElement("div", { className: "celeb", "data-region": region }, confetti.map((c, i) => /* @__PURE__ */ React.createElement("i", { key: i, className: "confetti", style: {
+      left: c.left + "%",
+      width: c.size,
+      height: c.size * 0.45,
+      background: c.color,
+      animationDelay: c.delay + "s",
+      animationDuration: c.dur + "s",
+      transform: `rotate(${c.rot}deg)`
+    } })), /* @__PURE__ */ React.createElement("svg", { className: "celeb-rays", viewBox: "0 0 400 400", preserveAspectRatio: "xMidYMid slice" }, Array.from({ length: 22 }).map((_, i) => {
       const a = i / 22 * Math.PI * 2;
       return /* @__PURE__ */ React.createElement("line", { key: i, x1: "200", y1: "200", x2: 200 + 360 * Math.cos(a), y2: 200 + 360 * Math.sin(a), stroke: r.accent, strokeWidth: i % 2 ? 6 : 14, opacity: i % 2 ? 0.25 : 0.12 });
-    })), /* @__PURE__ */ React.createElement("div", { className: "celeb-eyebrow", style: { color: rar.c } }, mon.rarity === "legendary" ? "\u2605 LEGENDARY CATCH \u2605" : "GOTCHA!"), /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-cheer.png", alt: "Dru cheering", style: { width: 80, height: 80, objectFit: "contain", marginBottom: -18, zIndex: 1, position: "relative", filter: "drop-shadow(0 0 12px rgba(255,203,5,.25))" } }), /* @__PURE__ */ React.createElement("img", { className: "celeb-sprite", src: mon.sprite, alt: mon.name, crossOrigin: "anonymous" }), /* @__PURE__ */ React.createElement("h2", null, mon.name), /* @__PURE__ */ React.createElement("div", { className: "meta" }, /* @__PURE__ */ React.createElement("span", { className: "type-chip", style: { background: TYPE_COLOR[mon.type], verticalAlign: "middle" } }, mon.type), /* @__PURE__ */ React.createElement("span", { style: { color: rar.c, marginLeft: 8, fontWeight: 700 } }, rar.label), " \xB7 added to Koleksi"), /* @__PURE__ */ React.createElement("div", { className: "celeb-rewards" }, [["+50", "XP"], ["+50", "Coins"], ["New", "Pok\xE9dex"]].map(([v, l]) => /* @__PURE__ */ React.createElement("div", { key: l, className: "reward" }, /* @__PURE__ */ React.createElement("b", { style: { color: l === "Coins" ? "var(--yellow)" : "var(--accent)" } }, v), /* @__PURE__ */ React.createElement("span", null, l)))), levelUp && rewardBalls && /* @__PURE__ */ React.createElement("div", { style: { background: "rgba(255,203,5,.1)", border: "1px solid rgba(255,203,5,.3)", borderRadius: 12, padding: "10px 16px", marginTop: 4, textAlign: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 15, fontWeight: 700, color: "#FFCB05", fontFamily: "var(--font-display)", marginBottom: 4 } }, "\u{1F389} Naik Level ", newLevel, "!"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--text-secondary)" } }, rewardBalls.pokeball > 0 && /* @__PURE__ */ React.createElement("span", null, "+", rewardBalls.pokeball, " Pok\xE9 Ball", rewardBalls.pokeball > 1 ? "s" : "", " "), rewardBalls.greatball > 0 && /* @__PURE__ */ React.createElement("span", null, "+", rewardBalls.greatball, " Great Ball", rewardBalls.greatball > 1 ? "s" : "", " "), rewardBalls.ultraball > 0 && /* @__PURE__ */ React.createElement("span", null, "+", rewardBalls.ultraball, " Ultra Ball", rewardBalls.ultraball > 1 ? "s" : "", " "))), /* @__PURE__ */ React.createElement("div", { className: "celeb-actions" }, /* @__PURE__ */ React.createElement("button", { className: "btn btn-primary btn-block", onClick: () => {
+    })), /* @__PURE__ */ React.createElement("div", { className: "celeb-eyebrow", style: { color: rar.c } }, mon.rarity === "legendary" ? "\u2605 LEGENDARY CATCH \u2605" : "GOTCHA!"), /* @__PURE__ */ React.createElement("img", { src: "assets/dru/dru-cheer.png", alt: "Dru cheering", style: { width: 80, height: 80, objectFit: "contain", marginBottom: -18, zIndex: 1, position: "relative", filter: "drop-shadow(0 0 12px rgba(255,203,5,.25))" } }), /* @__PURE__ */ React.createElement("img", { className: "celeb-sprite", src: mon.sprite, alt: mon.name, crossOrigin: "anonymous" }), /* @__PURE__ */ React.createElement("h2", null, mon.name), /* @__PURE__ */ React.createElement("div", { className: "meta" }, /* @__PURE__ */ React.createElement("span", { className: "type-chip", style: { background: TYPE_COLOR[mon.type], verticalAlign: "middle" } }, mon.type), /* @__PURE__ */ React.createElement("span", { style: { color: rar.c, marginLeft: 8, fontWeight: 700 } }, rar.label), " \xB7 added to Koleksi"), /* @__PURE__ */ React.createElement("div", { className: "celeb-rewards" }, [["+50", "XP"], ["+" + (coins != null ? coins : 50), "Coins"], ["New", "Pok\xE9dex"]].map(([v, l]) => /* @__PURE__ */ React.createElement("div", { key: l, className: "reward" }, /* @__PURE__ */ React.createElement("b", { style: { color: l === "Coins" ? "var(--yellow)" : "var(--accent)" } }, v), /* @__PURE__ */ React.createElement("span", null, l)))), fact && /* @__PURE__ */ React.createElement("div", { style: { background: "rgba(139,92,246,.1)", border: "1px solid rgba(139,92,246,.3)", borderRadius: 12, padding: "10px 14px", margin: "2px 0 4px", maxWidth: 300, position: "relative", display: "flex", gap: 8, alignItems: "flex-start" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 16, lineHeight: 1.2 } }, "\u{1F4A1}"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5, textAlign: "left" } }, fact)), levelUp && rewardBalls && /* @__PURE__ */ React.createElement("div", { style: { background: "rgba(255,203,5,.1)", border: "1px solid rgba(255,203,5,.3)", borderRadius: 12, padding: "10px 16px", marginTop: 4, textAlign: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 15, fontWeight: 700, color: "#FFCB05", fontFamily: "var(--font-display)", marginBottom: 4 } }, "\u{1F389} Naik Level ", newLevel, "!"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--text-secondary)" } }, rewardBalls.pokeball > 0 && /* @__PURE__ */ React.createElement("span", null, "+", rewardBalls.pokeball, " Pok\xE9 Ball", rewardBalls.pokeball > 1 ? "s" : "", " "), rewardBalls.greatball > 0 && /* @__PURE__ */ React.createElement("span", null, "+", rewardBalls.greatball, " Great Ball", rewardBalls.greatball > 1 ? "s" : "", " "), rewardBalls.ultraball > 0 && /* @__PURE__ */ React.createElement("span", null, "+", rewardBalls.ultraball, " Ultra Ball", rewardBalls.ultraball > 1 ? "s" : "", " "))), /* @__PURE__ */ React.createElement("div", { className: "celeb-actions" }, /* @__PURE__ */ React.createElement("button", { className: "btn btn-primary btn-block", onClick: () => {
       if (activeSlot && onTeamAdd) onTeamAdd(mon.dex);
       onTeam();
     } }, /* @__PURE__ */ React.createElement(Icon, { name: "plus", size: 16, color: "#0b0a16" }), " Add to team"), /* @__PURE__ */ React.createElement("div", { className: "celeb-skip", onClick: onDone }, "Continue \u2192")));
@@ -713,6 +1033,7 @@
       const ok = idx === q.a;
       setPickIdx(idx);
       setFeedback(ok ? "correct" : "wrong");
+      SFX.play(ok ? "correct" : "wrong");
       if (ok) setScore((s) => s + 1);
       setTotal((t) => t + 1);
       setTimeout(() => {
@@ -842,6 +1163,7 @@
       try {
         const idem = "purchase_" + activeSlot + "_" + b.id + "_" + Date.now();
         const data = await apiPost("/api/player/" + activeSlot + "/purchase", { item: b.id, idempotencyKey: idem });
+        SFX.play("correct");
         if (onPurchase) onPurchase(data);
       } catch (e) {
         setErr(e.message || "Purchase failed");
@@ -854,28 +1176,6 @@
       const busy = buying === b.id;
       return /* @__PURE__ */ React.createElement("div", { key: b.id, className: "store-row", style: { borderLeft: "4px solid " + b.top, opacity: busy ? 0.6 : 1 } }, /* @__PURE__ */ React.createElement(Pokeball, { size: 46, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("b", null, b.name), /* @__PURE__ */ React.createElement("span", null, "Catch rate ", Math.round(b.rate * 100), "% \xB7 you own ", b.own)), /* @__PURE__ */ React.createElement("div", { className: "buy" + (afford && !busy ? "" : " disabled"), onClick: () => afford && !busy && buy(b), style: { cursor: afford && !busy ? "pointer" : "not-allowed" } }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 13, color: afford && !busy ? "#0b0a16" : "var(--text-tertiary)" }), " ", busy ? "..." : b.price));
     }), err && /* @__PURE__ */ React.createElement("div", { style: { color: "var(--red)", fontSize: 12, textAlign: "center", marginTop: 8 } }, err), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Items")), /* @__PURE__ */ React.createElement("div", { className: "store-row" }, /* @__PURE__ */ React.createElement("div", { className: "mission-ico", style: { width: 46, height: 46 } }, /* @__PURE__ */ React.createElement(Icon, { name: "hint", size: 22 })), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("b", null, "Draco Hint \xD73"), /* @__PURE__ */ React.createElement("span", null, "Reveal a clue during any zone")), /* @__PURE__ */ React.createElement("div", { className: "buy disabled", style: { cursor: "not-allowed" } }, /* @__PURE__ */ React.createElement(Icon, { name: "coin", size: 13, color: "var(--text-tertiary)" }), " 150 (soon)"))));
-  }
-  function SlotAvatar({ name, size = 44, active }) {
-    const initial = (name || "?")[0].toUpperCase();
-    const colors = ["#8B5CF6", "#00D9B8", "#FFCB05", "#EE3D34"];
-    const idx = Math.max(0, ["Dru", "Oming", "Reymar", "Ilyas"].indexOf(name));
-    const bg = colors[idx % colors.length];
-    return /* @__PURE__ */ React.createElement("div", { style: {
-      width: size,
-      height: size,
-      borderRadius: "50%",
-      background: bg,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontFamily: "var(--font-display)",
-      fontWeight: 700,
-      fontSize: size * 0.4,
-      color: "#fff",
-      border: active ? `2px solid ${bg}` : "2px solid transparent",
-      boxShadow: active ? `0 0 12px ${bg}66` : "none",
-      flexShrink: 0
-    } }, initial);
   }
   function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove }) {
     const { regions } = useContent();
@@ -892,16 +1192,21 @@
       }
       return out;
     }, [regions, progress]);
-    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "prof-card" }, /* @__PURE__ */ React.createElement(
-      "img",
-      {
-        src: "/assets/dru/dru-trainer.png",
-        alt: "Dru",
-        width: 56,
-        height: 56,
-        style: { objectFit: "contain", flexShrink: 0 }
-      }
-    ), /* @__PURE__ */ React.createElement("div", { className: "who" }, /* @__PURE__ */ React.createElement("b", null, playerName), /* @__PURE__ */ React.createElement("span", null, "Level ", profile.level, " \xB7 ", caught.length, " caught \xB7 ", profile.coins, " koin"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%" } })), /* @__PURE__ */ React.createElement("small", { style: { color: "var(--text-tertiary)", fontSize: 10 } }, profile.xp, " / ", profile.xpToNext, " XP"))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Ganti pemain")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, allSlots.length > 0 ? allSlots.map((s) => /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim", "data-region": region }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, (() => {
+      var _a;
+      const idn = playerIdentity(playerName);
+      return /* @__PURE__ */ React.createElement("div", { className: "prof-card", style: { background: `linear-gradient(135deg, ${idn.color}22, var(--bg-card))` } }, /* @__PURE__ */ React.createElement("div", { style: { width: 62, height: 62, borderRadius: "50%", overflow: "hidden", border: `2.5px solid ${idn.color}`, flexShrink: 0, background: "var(--bg-elevated)", display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ React.createElement(
+        "img",
+        {
+          src: SPRITE(idn.dex),
+          alt: idn.mon,
+          width: 52,
+          height: 52,
+          crossOrigin: "anonymous",
+          style: { objectFit: "contain" }
+        }
+      )), /* @__PURE__ */ React.createElement("div", { className: "who", style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("b", null, playerName), /* @__PURE__ */ React.createElement("span", null, idn.title, " \xB7 Level ", profile.level, " \xB7 ", caught.length, " caught \xB7 ", ((_a = profile.coins) != null ? _a : 0).toLocaleString(), " koin"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { marginTop: 8 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%", background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` } })), /* @__PURE__ */ React.createElement("small", { style: { color: "var(--text-tertiary)", fontSize: 10 } }, profile.xp, " / ", profile.xpToNext, " XP")));
+    })(), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Ganti pemain")), /* @__PURE__ */ React.createElement("div", { className: "slots" }, allSlots.length > 0 ? allSlots.map((s) => /* @__PURE__ */ React.createElement(
       "div",
       {
         key: s.slot,
@@ -982,9 +1287,28 @@
         padding: "6px 12px",
         fontSize: 13
       } }, /* @__PURE__ */ React.createElement(Pokeball, { size: 24, id: b.id, top: b.top }), /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 700 } }, "\xD7", (_b = (_a = profile.pokeballs) == null ? void 0 : _a[b.id]) != null ? _b : 0));
-    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Untuk orang tua")), /* @__PURE__ */ React.createElement("div", { className: "link-row", onClick: () => window.open("/parent", "_blank") }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "chart", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Parent dashboard"), /* @__PURE__ */ React.createElement("span", null, "Waktu main \xB7 topik \xB7 akurasi")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" })), /* @__PURE__ */ React.createElement("div", { className: "link-row archive" }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "archive", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Modul Lama"), /* @__PURE__ */ React.createElement("span", null, "Math Arena, Word Search, Ramadhan\u2026")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" }))));
+    })), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Pengaturan")), /* @__PURE__ */ React.createElement(SoundRow, null), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Untuk orang tua")), /* @__PURE__ */ React.createElement("div", { className: "link-row", onClick: () => window.open("/parent", "_blank") }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "chart", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Parent dashboard"), /* @__PURE__ */ React.createElement("span", null, "Waktu main \xB7 topik \xB7 akurasi")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" })), /* @__PURE__ */ React.createElement("div", { className: "link-row archive" }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: "archive", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Modul Lama"), /* @__PURE__ */ React.createElement("span", null, "Math Arena, Word Search, Ramadhan\u2026")), /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "var(--text-tertiary)" }))));
   }
-  Object.assign(window, { Collection, Store, Profile, regionMons });
+  function SoundRow() {
+    const [on, setOn] = React.useState(SFX.isOn());
+    const toggle = () => {
+      const v = !on;
+      SFX.setOn(v);
+      setOn(v);
+      if (v) SFX.play("click");
+    };
+    return /* @__PURE__ */ React.createElement("div", { className: "link-row", onClick: toggle, style: { cursor: "pointer" } }, /* @__PURE__ */ React.createElement("div", { className: "ic" }, /* @__PURE__ */ React.createElement(Icon, { name: on ? "volume" : "volumeOff", size: 20 })), /* @__PURE__ */ React.createElement("div", { className: "tx" }, /* @__PURE__ */ React.createElement("b", null, "Efek suara"), /* @__PURE__ */ React.createElement("span", null, on ? "Nyala \u2014 bunyi saat jawab & nangkap" : "Mati")), /* @__PURE__ */ React.createElement("div", { style: {
+      width: 40,
+      height: 22,
+      borderRadius: 999,
+      flexShrink: 0,
+      position: "relative",
+      transition: "background .2s",
+      background: on ? "var(--accent)" : "var(--bg-elevated)",
+      border: "1px solid " + (on ? "var(--accent)" : "var(--border-medium)")
+    } }, /* @__PURE__ */ React.createElement("i", { style: { position: "absolute", top: 2, left: on ? 20 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left .2s" } })));
+  }
+  Object.assign(window, { Collection, Store, Profile, regionMons, SoundRow });
   const NAV_LS = "druygon-nav-v2";
   const SLOT_LS = "druygon-slot-v1";
   const VALID_SLOTS = [1, 2, 3, 4];
@@ -1059,6 +1383,13 @@
     const [allSlots, setAllSlots] = React.useState([]);
     const [pickerOpen, setPickerOpen] = React.useState(false);
     const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);
+    const [splashName, setSplashName] = React.useState(null);
+    const [draco, setDraco] = React.useState(null);
+    const openDraco = React.useCallback((ctx) => {
+      SFX.play("click");
+      setDraco({ ctx: ctx || null });
+    }, []);
+    const closeDraco = React.useCallback(() => setDraco(null), []);
     const [celeb, setCeleb] = React.useState(null);
     const loadActivePlayer = React.useCallback((slot) => {
       setPlayerReady(false);
@@ -1094,6 +1425,11 @@
       setPickerOpen(false);
       setIsFirstLaunch(false);
       saveSlot(slot);
+      const picked = allSlots.find((s) => s.slot === slot);
+      if (picked) {
+        setSplashName(picked.name);
+        setTimeout(() => setSplashName(null), 1500);
+      }
       if (slot === activeSlot) return;
       setActiveSlot(slot);
       const newNav = { screen: "home", region: "science", zone: 1 };
@@ -1169,18 +1505,19 @@
       });
     };
     const onCaught = async (mon, ball) => {
+      var _a;
       setCaught(
         (prev) => prev.some((c) => c.dex === mon.dex) ? prev : [...prev, { dex: mon.dex, zoneId: ball._zoneId || "", caughtAt: (/* @__PURE__ */ new Date()).toISOString() }]
       );
       setProfile((prev) => {
-        var _a, _b;
+        var _a2, _b;
         return {
           ...prev,
-          coins: prev.coins + ((_a = ball._coinAward) != null ? _a : 50),
+          coins: prev.coins + ((_a2 = ball._coinAward) != null ? _a2 : 50),
           pokeballs: { ...prev.pokeballs, [ball.id]: Math.max(0, ((_b = prev.pokeballs[ball.id]) != null ? _b : 0) - 1) }
         };
       });
-      setCeleb({ mon, region });
+      setCeleb({ mon, region, coins: (_a = ball._coinAward) != null ? _a : 50, fact: funFactForTopic(ball._topic) });
       try {
         const data = await apiPost(`/api/player/${activeSlot}/catch`, {
           dex: mon.dex,
@@ -1188,10 +1525,10 @@
           ballType: ball.id
         });
         setProfile((prev) => {
-          var _a, _b, _c, _d;
+          var _a2, _b, _c, _d;
           return {
             ...prev,
-            coins: (_a = data.coinsNow) != null ? _a : prev.coins,
+            coins: (_a2 = data.coinsNow) != null ? _a2 : prev.coins,
             level: (_b = data.levelNow) != null ? _b : prev.level,
             xp: (_c = data.xpNow) != null ? _c : prev.xp,
             pokeballs: (_d = data.pokeballs) != null ? _d : prev.pokeballs
@@ -1238,17 +1575,17 @@
       setPickerOpen(false);
       setIsFirstLaunch(false);
     };
-    const hProps = { playerName, onAvatarTap: openPicker };
+    const hProps = { playerName, onAvatarTap: openPicker, onOpenDraco: openDraco };
     if (screen === "home") {
       header = /* @__PURE__ */ React.createElement(Header, { region, coins: profile.coins, ...hProps });
-      content = /* @__PURE__ */ React.createElement(Home, { go, caught, coins: profile.coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission });
+      content = /* @__PURE__ */ React.createElement(Home, { go, caught, coins: profile.coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission, onOpenDraco: openDraco });
     } else if (screen === "map") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: r ? r.name : "\u2026", sub: "Region map", coins: profile.coins, onBack: () => go("home"), ...hProps });
       content = /* @__PURE__ */ React.createElement(RegionMap, { region, go, caught, profile, progress });
     } else if (screen === "catch") {
       const z = r && r.zones.find((x) => x.zone === zone);
       header = /* @__PURE__ */ React.createElement(Header, { region, title: z ? z.name : "\u2026", sub: r ? r.name : "\u2026", coins: profile.coins, onBack: () => go("map", region), ...hProps });
-      content = /* @__PURE__ */ React.createElement(Catch, { region, zone, go, onCaught, pokeballs, caught, onAnswer });
+      content = /* @__PURE__ */ React.createElement(Catch, { region, zone, go, onCaught, pokeballs, caught, onAnswer, onOpenDraco: openDraco });
       showNav = false;
     } else if (screen === "collection") {
       header = /* @__PURE__ */ React.createElement(Header, { region, title: "Koleksi", sub: "Your Pok\xE9dex", coins: profile.coins, ...hProps });
@@ -1288,7 +1625,7 @@
       showNav = false;
     }
     const navActive = screen === "catch" || screen === "mathblitz" ? "map" : screen;
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, onDone: closeCeleb, onTeam: closeCeleb, activeSlot, onTeamAdd, newLevel: celeb.newLevel, rewardBalls: celeb.rewardBalls, levelUp: celeb.levelUp })), pickerOpen && /* @__PURE__ */ React.createElement(
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { className: "device", "data-region": region }, header, content, showNav && /* @__PURE__ */ React.createElement(BottomNav, { active: navActive, go: (s) => go(s) }), celeb && /* @__PURE__ */ React.createElement(Celebration, { mon: celeb.mon, region: celeb.region, coins: celeb.coins, fact: celeb.fact, onDone: closeCeleb, onTeam: closeCeleb, activeSlot, onTeamAdd, newLevel: celeb.newLevel, rewardBalls: celeb.rewardBalls, levelUp: celeb.levelUp })), pickerOpen && /* @__PURE__ */ React.createElement(
       PlayerPicker,
       {
         allSlots,
@@ -1297,7 +1634,7 @@
         onClose: closePicker,
         isFirstLaunch
       }
-    ), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
+    ), splashName && /* @__PURE__ */ React.createElement(PickSplash, { name: splashName }), /* @__PURE__ */ React.createElement(DracoSheet, { open: !!draco, onClose: closeDraco, ctx: draco ? draco.ctx : null, playerName }), playerErr && /* @__PURE__ */ React.createElement("div", { style: { position: "fixed", bottom: 8, left: "50%", transform: "translateX(-50%)", background: "#2a1a1a", color: "#f87171", padding: "6px 14px", borderRadius: 8, fontSize: 11, zIndex: 9999, maxWidth: 300, textAlign: "center" } }, "Offline mode \u2014 progress may not save."));
   }
   ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();

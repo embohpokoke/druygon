@@ -151,6 +151,56 @@ function _staticFallback() {
   };
 }
 
+// ── "Tahukah kamu?" — curated, kid-safe facts shown after a catch ────────────
+// Keyed by zone topic. Facts are deliberately simple & verifiable (QA-gated).
+const FUNFACTS = {
+  makhluk_hidup: [
+    'Tahukah kamu? Pohon tertua di dunia umurnya lebih dari 4.800 tahun — lebih tua dari piramida!',
+    'Tahukah kamu? Tubuhmu punya sekitar 37 triliun sel, semuanya bekerja sama tiap detik.',
+  ],
+  serangga_ekosistem: [
+    'Tahukah kamu? Semut bisa mengangkat beban sampai 50 kali berat tubuhnya sendiri!',
+    'Tahukah kamu? Tanpa lebah, banyak buah dan sayur tidak akan tumbuh — mereka membantu penyerbukan.',
+  ],
+  materi_energi: [
+    'Tahukah kamu? Air bisa jadi padat (es), cair, dan gas (uap) — zatnya sama, wujudnya beda.',
+    'Tahukah kamu? Cahaya matahari butuh sekitar 8 menit untuk sampai ke Bumi.',
+  ],
+  atom_dan_unsur: [
+    'Tahukah kamu? Semua benda tersusun dari atom — sangat kecil sampai tak terlihat mata.',
+    'Tahukah kamu? Emas dan besi sama-sama unsur, tapi atomnya berbeda jenis.',
+  ],
+  galaksi_dan_angkasa: [
+    'Tahukah kamu? Galaksi kita, Bima Sakti, punya lebih dari 100 miliar bintang.',
+    'Tahukah kamu? Satu hari di planet Venus lebih lama daripada satu tahunnya!',
+  ],
+  urutan_logika: [
+    'Tahukah kamu? Komputer hanya paham dua angka: 0 dan 1 — disebut biner.',
+    'Tahukah kamu? Algoritma itu cuma daftar langkah berurutan, seperti resep masakan.',
+  ],
+  perulangan_jaringan: [
+    'Tahukah kamu? Loop membuat komputer mengulang tugas ribuan kali tanpa lelah.',
+    'Tahukah kamu? Internet adalah jutaan komputer yang saling terhubung di seluruh dunia.',
+  ],
+  algoritma_debug: [
+    'Tahukah kamu? "Bug" pertama dalam komputer benar-benar seekor ngengat yang nyangkut di mesin!',
+    'Tahukah kamu? Debugging artinya mencari dan memperbaiki kesalahan dalam kode.',
+  ],
+  jaringan_dunia: [
+    'Tahukah kamu? Wi-Fi mengirim data lewat gelombang radio, mirip cara radio bekerja.',
+    'Tahukah kamu? Selalu jaga rahasia password-mu — jangan dibagikan ke siapa pun.',
+  ],
+  kecerdasan_buatan: [
+    'Tahukah kamu? AI belajar dari banyak contoh, mirip cara kamu belajar dari latihan.',
+    'Tahukah kamu? AI bisa salah juga — jadi selalu periksa ulang jawabannya.',
+  ],
+};
+function funFactForTopic(topic) {
+  const list = FUNFACTS[topic];
+  if (!list || !list.length) return null;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
 // ── React hook for components ─────────────────────────────────────────────────
 // Usage: const { regions, questions, ready } = useContent();
 function useContent() {
@@ -166,7 +216,7 @@ function useContent() {
 loadContent();
 
 Object.assign(window, {
-  SPRITE, TYPE_COLOR, RARITY, POKEBALLS, REGION_META,
+  SPRITE, TYPE_COLOR, RARITY, POKEBALLS, REGION_META, FUNFACTS, funFactForTopic,
   // Live-updated refs — components read these after ready
   get REGIONS()   { return REGIONS;   },
   get QUESTIONS() { return QUESTIONS; },

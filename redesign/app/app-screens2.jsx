@@ -114,6 +114,7 @@ function Store({ coins, region, pokeballs, activeSlot, onPurchase }) {
     try {
       const idem = 'purchase_' + activeSlot + '_' + b.id + '_' + Date.now();
       const data = await apiPost('/api/player/' + activeSlot + '/purchase', { item: b.id, idempotencyKey: idem });
+      SFX.play('correct');
       if (onPurchase) onPurchase(data);
     } catch (e) {
       setErr(e.message || 'Purchase failed');
@@ -159,24 +160,7 @@ function Store({ coins, region, pokeballs, activeSlot, onPurchase }) {
   );
 }
 
-// Slot avatar initials (no raster avatar per-player yet)
-function SlotAvatar({ name, size = 44, active }) {
-  const initial = (name || '?')[0].toUpperCase();
-  const colors  = ['#8B5CF6','#00D9B8','#FFCB05','#EE3D34'];
-  const idx     = Math.max(0, ['Dru','Oming','Reymar','Ilyas'].indexOf(name));
-  const bg      = colors[idx % colors.length];
-  return (
-    <div style={{
-      width: size, height: size, borderRadius: '50%',
-      background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: size * 0.4,
-      color: '#fff', border: active ? `2px solid ${bg}` : '2px solid transparent',
-      boxShadow: active ? `0 0 12px ${bg}66` : 'none', flexShrink: 0,
-    }}>
-      {initial}
-    </div>
-  );
-}
+// SlotAvatar comes from components.jsx (partner Pokémon + colour ring)
 
 function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove }) {
   const { regions } = useContent();
@@ -206,21 +190,25 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
     <div className="body screen-anim" data-region={region}>
       <div className="pad">
 
-        {/* ── Active player card ── */}
-        <div className="prof-card">
-          <img src="/assets/dru/dru-trainer.png" alt="Dru" width={56} height={56}
-            style={{ objectFit: 'contain', flexShrink: 0 }} />
-          <div className="who">
+        {/* ── Active player card — trainer identity colours ── */}
+        {(() => { const idn = playerIdentity(playerName); return (
+        <div className="prof-card" style={{ background: `linear-gradient(135deg, ${idn.color}22, var(--bg-card))` }}>
+          <div style={{ width: 62, height: 62, borderRadius: '50%', overflow: 'hidden', border: `2.5px solid ${idn.color}`, flexShrink: 0, background: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={SPRITE(idn.dex)} alt={idn.mon} width={52} height={52} crossOrigin="anonymous"
+              style={{ objectFit: 'contain' }} />
+          </div>
+          <div className="who" style={{ flex: 1, minWidth: 0 }}>
             <b>{playerName}</b>
-            <span>Level {profile.level} · {caught.length} caught · {profile.coins} koin</span>
+            <span>{idn.title} · Level {profile.level} · {caught.length} caught · {(profile.coins ?? 0).toLocaleString()} koin</span>
             <div className="meter" style={{ marginTop: 8 }}>
-              <i style={{ width: xpPct + '%' }} />
+              <i style={{ width: xpPct + '%', background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` }} />
             </div>
             <small style={{ color: 'var(--text-tertiary)', fontSize: 10 }}>
               {profile.xp} / {profile.xpToNext} XP
             </small>
           </div>
         </div>
+        ); })()}
 
         {/* ── Slot selector ── */}
         <div className="sec-head"><h2>Ganti pemain</h2></div>
@@ -361,6 +349,10 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
           ))}
         </div>
 
+        {/* ── Sound toggle ── */}
+        <div className="sec-head"><h2>Pengaturan</h2></div>
+        <SoundRow />
+
         {/* ── Links ── */}
         <div className="sec-head"><h2>Untuk orang tua</h2></div>
         <div className="link-row" onClick={() => window.open('/parent','_blank')}>
@@ -379,4 +371,20 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
   );
 }
 
-Object.assign(window, { Collection, Store, Profile, regionMons });
+// Sound effects on/off row (persisted via SFX)
+function SoundRow() {
+  const [on, setOn] = React.useState(SFX.isOn());
+  const toggle = () => { const v = !on; SFX.setOn(v); setOn(v); if (v) SFX.play('click'); };
+  return (
+    <div className="link-row" onClick={toggle} style={{ cursor: 'pointer' }}>
+      <div className="ic"><Icon name={on ? 'volume' : 'volumeOff'} size={20} /></div>
+      <div className="tx"><b>Efek suara</b><span>{on ? 'Nyala — bunyi saat jawab & nangkap' : 'Mati'}</span></div>
+      <div style={{ width: 40, height: 22, borderRadius: 999, flexShrink: 0, position: 'relative', transition: 'background .2s',
+        background: on ? 'var(--accent)' : 'var(--bg-elevated)', border: '1px solid ' + (on ? 'var(--accent)' : 'var(--border-medium)') }}>
+        <i style={{ position: 'absolute', top: 2, left: on ? 20 : 2, width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'left .2s' }} />
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { Collection, Store, Profile, regionMons, SoundRow });

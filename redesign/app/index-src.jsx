@@ -82,6 +82,12 @@ function App() {
   const [pickerOpen,    setPickerOpen]    = React.useState(false);
   const [isFirstLaunch, setIsFirstLaunch] = React.useState(false); // set true after slots load if never chosen
 
+  // Splash after picking a trainer + Draco hint sheet
+  const [splashName, setSplashName] = React.useState(null);
+  const [draco, setDraco] = React.useState(null);          // null | { ctx }
+  const openDraco  = React.useCallback((ctx) => { SFX.play('click'); setDraco({ ctx: ctx || null }); }, []);
+  const closeDraco = React.useCallback(() => setDraco(null), []);
+
   // Celebration overlay
   const [celeb, setCeleb] = React.useState(null);
 
@@ -130,6 +136,12 @@ function App() {
     setPickerOpen(false);
     setIsFirstLaunch(false);
     saveSlot(slot);
+    // Splash with the picked trainer (also on re-pick of the same slot)
+    const picked = allSlots.find(s => s.slot === slot);
+    if (picked) {
+      setSplashName(picked.name);
+      setTimeout(() => setSplashName(null), 1500);
+    }
     if (slot === activeSlot) return;
     setActiveSlot(slot);
     const newNav = { screen: 'home', region: 'science', zone: 1 };
@@ -204,7 +216,7 @@ function App() {
       coins: prev.coins + (ball._coinAward ?? 50),
       pokeballs: { ...prev.pokeballs, [ball.id]: Math.max(0, (prev.pokeballs[ball.id] ?? 0) - 1) },
     }));
-    setCeleb({ mon, region });
+    setCeleb({ mon, region, coins: ball._coinAward ?? 50, fact: funFactForTopic(ball._topic) });
 
     try {
       const data = await apiPost(`/api/player/${activeSlot}/catch`, {
@@ -265,19 +277,19 @@ function App() {
   const openPicker = () => setPickerOpen(true);
   const closePicker = () => { setPickerOpen(false); setIsFirstLaunch(false); };
 
-  // All headers share the same avatar tap handler
-  const hProps = { playerName, onAvatarTap: openPicker };
+  // All headers share the same avatar tap handler + Draco sheet opener
+  const hProps = { playerName, onAvatarTap: openPicker, onOpenDraco: openDraco };
 
   if (screen === 'home') {
     header  = <Header region={region} coins={profile.coins} {...hProps} />;
-    content = <Home go={go} caught={caught} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} />;
+    content = <Home go={go} caught={caught} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} onOpenDraco={openDraco} />;
   } else if (screen === 'map') {
     header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
     content = <RegionMap region={region} go={go} caught={caught} profile={profile} progress={progress} />;
   } else if (screen === 'catch') {
     const z = r && r.zones.find(x => x.zone === zone);
     header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} {...hProps} />;
-    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} onAnswer={onAnswer} />;
+    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} onAnswer={onAnswer} onOpenDraco={openDraco} />;
     showNav = false;
   } else if (screen === 'collection') {
     header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
@@ -304,7 +316,7 @@ function App() {
         {header}
         {content}
         {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
-        {celeb && <Celebration mon={celeb.mon} region={celeb.region} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} newLevel={celeb.newLevel} rewardBalls={celeb.rewardBalls} levelUp={celeb.levelUp} />}
+        {celeb && <Celebration mon={celeb.mon} region={celeb.region} coins={celeb.coins} fact={celeb.fact} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} newLevel={celeb.newLevel} rewardBalls={celeb.rewardBalls} levelUp={celeb.levelUp} />}
       </div>
 
       {/* Player picker — first launch splash + header avatar tap */}
@@ -317,6 +329,12 @@ function App() {
           isFirstLaunch={isFirstLaunch}
         />
       )}
+
+      {/* Trainer splash after pick */}
+      {splashName && <PickSplash name={splashName} />}
+
+      {/* Draco hint sheet */}
+      <DracoSheet open={!!draco} onClose={closeDraco} ctx={draco ? draco.ctx : null} playerName={playerName} />
 
       {playerErr && (
         <div style={{ position:'fixed', bottom:8, left:'50%', transform:'translateX(-50%)', background:'#2a1a1a', color:'#f87171', padding:'6px 14px', borderRadius:8, fontSize:11, zIndex:9999, maxWidth:300, textAlign:'center' }}>
