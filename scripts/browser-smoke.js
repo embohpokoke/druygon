@@ -35,9 +35,9 @@ async function inspect(browserName, browserType) {
   if (deviceCount !== 1) errors.push(`expected one .device, found ${deviceCount}`);
   if (fallbackCount !== 0) errors.push('bootstrap fallback remained visible');
 
-  const picker = page.getByRole('dialog', { name: /Pilih karakter/ });
+  const picker = page.getByRole('dialog', { name: /Choose.*character/i });
   if (await picker.count() === 1) {
-    const playerButton = picker.getByRole('button', { name: /^Pilih pemain / }).first();
+    const playerButton = picker.getByRole('button', { name: /^Choose player / }).first();
     if (await playerButton.count() !== 1) {
       errors.push('first-launch player picker has no selectable player');
     } else {
@@ -46,7 +46,7 @@ async function inspect(browserName, browserType) {
     }
   }
 
-  for (const label of ['Peta', 'Koleksi', 'Toko', 'Profil', 'Home']) {
+  for (const label of ['Map', 'Collection', 'Shop', 'Profile', 'Home']) {
     const button = page.getByRole('button', { name: label, exact: true });
     if (await button.count() !== 1) {
       errors.push(`navigation button missing: ${label}`);
@@ -59,16 +59,16 @@ async function inspect(browserName, browserType) {
     }
   }
 
-  const avatarButton = page.getByRole('button', { name: /^Ganti pemain\./ });
+  const avatarButton = page.getByRole('button', { name: /^Switch player\./ });
   if (await avatarButton.count() !== 1) {
     errors.push('player picker trigger missing');
   } else {
     await avatarButton.click();
-    const reopenedPicker = page.getByRole('dialog', { name: 'Pilih karakter', exact: true });
+    const reopenedPicker = page.getByRole('dialog', { name: "Choose character", exact: true });
     if (await reopenedPicker.count() !== 1) {
       errors.push('player picker did not open from avatar');
     } else {
-      await reopenedPicker.getByRole('button', { name: 'Tutup pemilih pemain', exact: true }).click();
+      await reopenedPicker.getByRole('button', { name: "Close player picker", exact: true }).click();
       await reopenedPicker.waitFor({ state: 'detached' });
     }
   }

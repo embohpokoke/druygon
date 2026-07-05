@@ -94,7 +94,7 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
           <div className="hero-top">
             <div>
               <div className="hero-greet">Hi, <b style={{ color: idn.color }}>{name}</b> 👋</div>
-              <div className="hero-sub">{idn.title} · {caught.length} caught · jaga streak!</div>
+              <div className="hero-sub">{idn.title} · {caught.length} caught · keep the streak!</div>
             </div>
             <div className="hero-lvl" style={{ background: idn.color }}>LVL {level}</div>
           </div>
@@ -121,7 +121,7 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
                 <i style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)', display: 'inline-block' }} />AI TUTOR
               </span>
             </div>
-            <div style={{ fontSize: 12, color: 'rgba(240,238,255,.65)', marginTop: 3, lineHeight: 1.4 }}>Bingung sama soal? Tanya aku — sains, koding, atau PR sekolah.</div>
+            <div style={{ fontSize: 12, color: 'rgba(240,238,255,.65)', marginTop: 3, lineHeight: 1.4 }}>Stuck on a question? Ask me — science, code, or homework.</div>
           </div>
           <div style={{ width: 34, height: 34, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(139,92,246,.2)', border: '1px solid rgba(139,92,246,.5)', color: '#B79BFF' }}>
             <Icon name="arrowR" size={17} />
@@ -159,7 +159,7 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
                   {id === 'curriculum' && (
                     <div onClick={(e) => { e.stopPropagation(); go('mathblitz', 'curriculum'); }} style={{ marginTop: 10, padding: '8px 12px', borderRadius: 10, background: 'rgba(255,203,5,.08)', border: '1px solid rgba(255,203,5,.2)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'background .15s' }}>
                       <span style={{ fontSize: 16 }}>⏱️</span>
-                      <div style={{ flex: 1, fontSize: 12, fontWeight: 700, color: '#FFCB05' }}>5 Menit Matematika</div>
+                      <div style={{ flex: 1, fontSize: 12, fontWeight: 700, color: '#FFCB05' }}>5-Minute Math</div>
                       <Icon name="arrowR" size={16} color="#FFCB05" />
                     </div>
                   )}
@@ -233,7 +233,7 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
                       </div>
                       <div className="lb-name">
                         <b>{s.name}</b>
-                        <span>{isMe ? 'kamu · ' : ''}{s.caughtCount} caught</span>
+                        <span>{isMe ? 'you · ' : ''}{s.caughtCount} caught</span>
                       </div>
                       <div className="lb-score"><b style={{ color: '#FFCB05' }}>{s.coins.toLocaleString()}</b></div>
                     </div>
@@ -310,11 +310,11 @@ function RegionMap({ region, go, caught, profile, progress }) {
 // ───────────────────────── CATCH / BATTLE (variant B) ─────────────────────────
 // Motivational lines on a wrong answer (no facts — just encouragement)
 const CHEER_WRONG = [
-  'Hampir! Coba baca soalnya sekali lagi 👀',
-  'Nggak apa-apa, trainer hebat juga pernah salah 💪',
-  'Coba lagi — kamu pasti bisa! 🔥',
-  'Hmm, hampir kena! Pikirkan pelan-pelan ya 🧠',
-  'Tanya Draco kalau butuh petunjuk 🐉',
+  'So close! Read the question one more time 👀',
+  "It's okay — even great trainers get some wrong 💪",
+  'Try again — you can totally do this! 🔥',
+  'Hmm, almost there! Take it slow and think it through 🧠',
+  'Ask Draco if you need a hint 🐉',
 ];
 
 function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, onAnswer, onOpenDraco }) {
@@ -427,7 +427,7 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
         {phase === 'quiz' && (
           <React.Fragment>
             <div className="q-prompt">
-              <div className="eyebrow">Soal {qi + 1} · {z.name}</div>
+              <div className="eyebrow">Question {qi + 1} · {z.name}</div>
               <h3>{q.q}</h3>
               <div className="expr">{q.expr}</div>
               {cheer && <div style={{ fontSize: 12, color: 'var(--yellow)', marginTop: 6, animation: 'riseIn .3s both' }}>{cheer}</div>}
@@ -444,18 +444,18 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
               <img src="assets/dru/dru-think.png" alt="Ask Draco" style={{ width: 36, height: 36, objectFit: 'contain', marginRight: 4, flexShrink: 0 }} />
               <div className="draco wf-tap" style={{ borderColor: 'rgba(139,92,246,.5)', color: '#B79BFF' }}
                 onClick={() => (onOpenDraco ? onOpenDraco({ zoneName: z.name, question: q.q, hint: q.hint, topic: z.topic }) : openTutor(z.topic))}>
-                <Icon name="hint" size={15} /> Tanya Draco
+                <Icon name="hint" size={15} /> Ask Draco
               </div>
-              <span className="cmd-hint">Jawab benar → serang ↓ HP</span>
+              <span className="cmd-hint">Correct answer → attack, HP drops</span>
             </div>
             <div style={{ textAlign: 'center', marginTop: 8 }}>
-              <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Cari Pokémon lain</span>
+              <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Find another Pokémon</span>
             </div>
           </React.Fragment>
         )}
         {phase === 'ready' && (
           <React.Fragment>
-            <div className="ball-prompt">Dia sudah lemah — pilih Poké Ball! 🎯</div>
+            <div className="ball-prompt">It is weak now — pick a Poké Ball! 🎯</div>
             <div className="balls">
               {(pokeballsProp || POKEBALLS).map((b) => (
                 <div key={b.id} className={'ball-opt' + (b.own === 0 ? ' dim' : '')} onClick={() => b.own > 0 && throwBall(b)}>
@@ -466,14 +466,14 @@ function Catch({ region, zone, go, onCaught, pokeballs: pokeballsProp, caught, o
             </div>
             <p style={{ fontSize: 11, color: 'var(--text-tertiary)', textAlign: 'center', marginTop: 14 }}>Higher tiers catch better but are scarcer.</p>
             <div style={{ textAlign: 'center', marginTop: 6 }}>
-              <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Cari Pokémon lain</span>
+              <span onClick={rerollWild} style={{ fontSize: 11, color: 'var(--text-tertiary)', cursor: 'pointer', userSelect: 'none' }}>🔄 Find another Pokémon</span>
             </div>
           </React.Fragment>
         )}
         {phase === 'wobble' && (
           <div style={{ margin: 'auto', textAlign: 'center', color: 'var(--text-secondary)', fontFamily: 'var(--font-display)', fontWeight: 700 }}>
-            <div style={{ fontSize: 15 }}>…goyang… goyang…</div>
-            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 6, animation: 'fadeIn .4s .8s both' }}>Kena nggak ya? 🤞</div>
+            <div style={{ fontSize: 15 }}>…wobble… wobble…</div>
+            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 6, animation: 'fadeIn .4s .8s both' }}>Will it catch? 🤞</div>
           </div>
         )}
       </div>
@@ -514,7 +514,7 @@ function Celebration({ mon, region, coins, fact, onDone, onTeam, activeSlot, onT
       <h2>{mon.name}</h2>
       <div className="meta">
         <span className="type-chip" style={{ background: TYPE_COLOR[mon.type], verticalAlign: 'middle' }}>{mon.type}</span>
-        <span style={{ color: rar.c, marginLeft: 8, fontWeight: 700 }}>{rar.label}</span> · added to Koleksi
+        <span style={{ color: rar.c, marginLeft: 8, fontWeight: 700 }}>{rar.label}</span> · added to Collection
       </div>
       <div className="celeb-rewards">
         {[['+50', 'XP'], ['+' + (coins ?? 50), 'Coins'], ['New', 'Pokédex']].map(([v, l]) => (
@@ -530,7 +530,7 @@ function Celebration({ mon, region, coins, fact, onDone, onTeam, activeSlot, onT
       {levelUp && rewardBalls && (
         <div style={{ background: 'rgba(255,203,5,.1)', border: '1px solid rgba(255,203,5,.3)', borderRadius: 12, padding: '10px 16px', marginTop: 4, textAlign: 'center' }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: '#FFCB05', fontFamily: 'var(--font-display)', marginBottom: 4 }}>
-            🎉 Naik Level {newLevel}!
+            🎉 Level Up! Level {newLevel}!
           </div>
           <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
             {rewardBalls.pokeball > 0 && <span>+{rewardBalls.pokeball} Poké Ball{rewardBalls.pokeball > 1 ? 's' : ''} </span>}
@@ -637,11 +637,11 @@ function MathBlitz({ activeSlot, onReward, go }) {
     <div className="body screen-anim" data-region="curriculum">
       <div className="pad" style={{ display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',minHeight:340,gap:16,textAlign:'center' }}>
         <img src="assets/dru/dru-point.png" alt="Dru" style={{ width:80,height:80,objectFit:'contain' }} />
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:22,color:'#FFCB05',margin:0 }}>⏱️ 5 Menit Matematika</h2>
+        <h2 style={{ fontFamily:'var(--font-display)',fontSize:22,color:'#FFCB05',margin:0 }}>⏱️ 5-Minute Math</h2>
         <p style={{ color:'var(--text-secondary)',fontSize:14,margin:0,maxWidth:260,lineHeight:1.6 }}>
-          Jawab soal matematika sebanyak-banyaknya dalam 5 menit. Dapatkan koin dan XP!
+          Answer as many math questions as you can in 5 minutes. Earn coins and XP!
         </p>
-        <button className="btn btn-primary" onClick={start} style={{ marginTop:8 }}>Mulai ⚡</button>
+        <button className="btn btn-primary" onClick={start} style={{ marginTop:8 }}>Start ⚡</button>
       </div>
     </div>
   );
@@ -659,11 +659,11 @@ function MathBlitz({ activeSlot, onReward, go }) {
             <span style={{ fontFamily:'var(--font-mono)',fontSize:16,fontWeight:700,color:timeLeft<60?'var(--red)':'var(--text-primary)',minWidth:56,textAlign:'right' }}>{mmss(timeLeft)}</span>
           </div>
           <div style={{ display:'flex',justifyContent:'space-between',marginBottom:20 }}>
-            <span style={{ fontSize:12,color:'var(--text-tertiary)' }}>Benar: <b style={{ color:'var(--green)' }}>{score}</b></span>
-            <span style={{ fontSize:12,color:'var(--text-tertiary)' }}>Soal ke-{total + 1}</span>
+            <span style={{ fontSize:12,color:'var(--text-tertiary)' }}>Correct: <b style={{ color:'var(--green)' }}>{score}</b></span>
+            <span style={{ fontSize:12,color:'var(--text-tertiary)' }}>Question {total + 1}</span>
           </div>
           <div className="q-prompt" style={{ marginBottom:16 }}>
-            <div className="eyebrow">Matematika · {q.difficulty || 'easy'}</div>
+            <div className="eyebrow">Math · {q.difficulty || 'easy'}</div>
             <h3>{q.q}</h3>
             <div className="expr" style={{ fontSize:22 }}>{q.expr}</div>
           </div>
@@ -682,7 +682,7 @@ function MathBlitz({ activeSlot, onReward, go }) {
             })}
           </div>
           <p style={{ fontSize:11,color:'var(--text-tertiary)',textAlign:'center',marginTop:14 }}>
-            Jawab cepat — setiap benar +2 koin, +5 XP
+            Answer fast — each correct +2 coins, +5 XP
           </p>
         </div>
       </div>
@@ -698,17 +698,17 @@ function MathBlitz({ activeSlot, onReward, go }) {
     <div className="body screen-anim" data-region="curriculum">
       <div className="pad" style={{ display:'flex',flexDirection:'column',alignItems:'center',textAlign:'center',minHeight:340,gap:12 }}>
         <img src={good ? 'assets/dru/dru-cheer.png' : 'assets/dru/dru-idle.png'} alt="Dru" style={{ width:80,height:80,objectFit:'contain',marginBottom:4 }} />
-        <div className="eyebrow" style={{ color:good?'var(--green)':'var(--text-tertiary)' }}>{good ? 'Hebat!' : 'Waktu habis!'}</div>
-        <h2 style={{ fontFamily:'var(--font-display)',fontSize:20,color:'var(--text-primary)',margin:0 }}>{score} / {total} benar</h2>
-        <span style={{ fontSize:14,color:'var(--text-secondary)' }}>Akurasi {acc}%</span>
+        <div className="eyebrow" style={{ color:good?'var(--green)':'var(--text-tertiary)' }}>{good ? 'Awesome!' : "Time's up!"}</div>
+        <h2 style={{ fontFamily:'var(--font-display)',fontSize:20,color:'var(--text-primary)',margin:0 }}>{score} / {total} correct</h2>
+        <span style={{ fontSize:14,color:'var(--text-secondary)' }}>Accuracy {acc}%</span>
         <div className="celeb-rewards" style={{ justifyContent:'center' }}>
           <div className="reward"><b style={{ color:'var(--accent)' }}>+{xpEarned}</b><span>XP</span></div>
-          <div className="reward"><b style={{ color:'var(--yellow)' }}>+{coinsEarned}</b><span>Koin</span></div>
-          {reward && reward.best > 0 && <div className="reward"><b style={{ color:'#FFCB05' }}>{reward.best}</b><span>Rekor</span></div>}
+          <div className="reward"><b style={{ color:'var(--yellow)' }}>+{coinsEarned}</b><span>Coins</span></div>
+          {reward && reward.best > 0 && <div className="reward"><b style={{ color:'#FFCB05' }}>{reward.best}</b><span>Best</span></div>}
         </div>
         <div style={{ display:'flex',gap:10,marginTop:12 }}>
-          <button className="btn btn-primary" onClick={retry} style={{ minWidth:120 }}>Main lagi</button>
-          <button className="btn btn-ghost" onClick={() => go('home')} style={{ minWidth:100 }}>Selesai</button>
+          <button className="btn btn-primary" onClick={retry} style={{ minWidth:120 }}>Play again</button>
+          <button className="btn btn-ghost" onClick={() => go('home')} style={{ minWidth:100 }}>Done</button>
         </div>
       </div>
     </div>

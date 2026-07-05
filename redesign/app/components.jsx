@@ -64,11 +64,11 @@ function openTutor(topic) { try { window.open(TUTOR_URL + (topic ? ('?topic=' + 
 
 // ── Player identity — partner Pokémon + personal colour per trainer ──────────
 const PARTNERS = {
-  Dru:    { dex: 25,  mon: 'Pikachu',    color: '#FFCB05', title: 'Trainer Listrik' },
-  Oming:  { dex: 4,   mon: 'Charmander', color: '#FF6B2B', title: 'Trainer Api' },
-  Reymar: { dex: 7,   mon: 'Squirtle',   color: '#4A9EFF', title: 'Trainer Air' },
-  Ilyas:  { dex: 1,   mon: 'Bulbasaur',  color: '#4ADE80', title: 'Trainer Rumput' },
-  Kai:    { dex: 133, mon: 'Eevee',      color: '#F472B6', title: 'Trainer Pemula' },
+  Dru:    { dex: 25,  mon: 'Pikachu',    color: '#FFCB05', title: 'Electric Trainer' },
+  Oming:  { dex: 4,   mon: 'Charmander', color: '#FF6B2B', title: 'Fire Trainer' },
+  Reymar: { dex: 7,   mon: 'Squirtle',   color: '#4A9EFF', title: 'Water Trainer' },
+  Ilyas:  { dex: 1,   mon: 'Bulbasaur',  color: '#4ADE80', title: 'Grass Trainer' },
+  Kai:    { dex: 133, mon: 'Eevee',      color: '#F472B6', title: 'Rookie Trainer' },
 };
 function playerIdentity(name) {
   return PARTNERS[name] || { dex: 133, mon: 'Eevee', color: '#8B5CF6', title: 'Trainer' };
@@ -196,12 +196,12 @@ function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }
         <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: 30, animation: 'riseIn .55s cubic-bezier(0.16,1,0.3,1) .15s both' }}>
           <div style={{ flex: 1 }}>
             <div id="player-picker-title" style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 27, letterSpacing: '-.02em', lineHeight: 1.15 }}>
-              {isFirstLaunch ? 'Pilih karaktermu' : 'Pilih karakter'}
+              {isFirstLaunch ? 'Choose your character' : 'Choose character'}
             </div>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 7 }}>Siapa yang main hari ini?</div>
+            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 7 }}>Who's playing today?</div>
           </div>
           {!isFirstLaunch && (
-            <button aria-label="Tutup pemilih pemain" onClick={onClose} style={{
+            <button aria-label="Close player picker" onClick={onClose} style={{
               width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
               background: 'var(--bg-elevated)', border: '1px solid var(--border-medium)',
               cursor: 'pointer', color: 'var(--text-secondary)',
@@ -219,7 +219,7 @@ function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }
             const isPicked = picked === s.slot;
             const dimmed = picked != null && !isPicked;
             return (
-              <button key={s.slot} aria-label={`Pilih pemain ${s.name}`}
+              <button key={s.slot} aria-label={`Choose player ${s.name}`}
                 onClick={() => pick(s)} style={{
                 position: 'relative', borderRadius: 20, overflow: 'hidden', padding: '18px 12px 16px',
                 cursor: 'pointer', isolation: 'isolate', textAlign: 'center',
@@ -254,7 +254,7 @@ function PlayerPicker({ allSlots, activeSlot, onSelect, onClose, isFirstLaunch }
         </div>
 
         <div style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-tertiary)', marginTop: 'auto', paddingTop: 18, animation: 'fadeIn .8s .9s both' }}>
-          Progres tersimpan terpisah untuk tiap trainer.
+          Progress is saved separately for each trainer.
         </div>
       </div>
     </div>
@@ -273,8 +273,8 @@ function PickSplash({ name }) {
         <div style={{ width: 190, height: 190, borderRadius: '50%', position: 'absolute', top: -20, animation: 'ringPulse 1.1s ease-out infinite' }} />
         <img src={SPRITE(idn.dex)} alt={idn.mon} width={150} height={150} crossOrigin="anonymous"
           style={{ objectFit: 'contain', animation: 'pop .55s cubic-bezier(0.34,1.56,0.64,1) both' }} />
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 26, letterSpacing: '-.01em', marginTop: 16, animation: 'riseIn .4s .15s both' }}>Ayo main, {name}!</div>
-        <div style={{ fontSize: 12, color: 'var(--text-secondary)', animation: 'riseIn .4s .3s both' }}>Menyiapkan duniamu…</div>
+        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 26, letterSpacing: '-.01em', marginTop: 16, animation: 'riseIn .4s .15s both' }}>Let's go, {name}!</div>
+        <div style={{ fontSize: 12, color: 'var(--text-secondary)', animation: 'riseIn .4s .3s both' }}>Loading your world…</div>
       </div>
     </div>
   );
@@ -293,8 +293,8 @@ function DracoSheet({ open, onClose, ctx, playerName }) {
     if (!open) return undefined;
     const name = playerName || 'Trainer';
     setMsgs([{ who: 'draco', text: ctx
-      ? `Hai ${name}! Lagi mikirin soal di ${ctx.zoneName}? Tenang, aku bantu. 🐉`
-      : `Hai ${name}! Aku Draco, tutor AI-mu. Aku kasih petunjuk, bukan jawaban langsung — biar kamu yang jadi jagonya. 🐉` }]);
+      ? `Hi ${name}! Stuck on a question in ${ctx.zoneName}? Don't worry, I've got you. 🐉`
+      : `Hi ${name}! I'm Draco, your AI tutor. I give hints, not straight answers — so YOU become the champ. 🐉` }]);
     setTyping(false);
     return () => { timers.current.forEach(clearTimeout); timers.current = []; };
   }, [open]);  // eslint-disable-line
@@ -315,8 +315,8 @@ function DracoSheet({ open, onClose, ctx, playerName }) {
 
   const giveHint = () => {
     SFX.play('click');
-    setMsgs(m => [...m, { who: 'me', text: 'Kasih petunjuk dong 💡' }]);
-    pushDraco(ctx && ctx.hint ? ctx.hint : 'Buka satu zona dulu, terus tanya aku pas lagi ngerjain soal — aku selalu tahu soal yang kamu hadapi!');
+    setMsgs(m => [...m, { who: 'me', text: 'Give me a hint 💡' }]);
+    pushDraco(ctx && ctx.hint ? ctx.hint : "Open a zone first, then ask me while you're on a question — I always know which one you're facing!");
   };
 
   const openFullTutor = () => {
@@ -346,7 +346,7 @@ function DracoSheet({ open, onClose, ctx, playerName }) {
               <i style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--green)', display: 'inline-block' }} />AI Tutor · online
             </span>
           </div>
-          <button aria-label="Tutup Draco" onClick={onClose} style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-elevated)', border: '1px solid var(--border-medium)', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+          <button aria-label="Close Draco" onClick={onClose} style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-elevated)', border: '1px solid var(--border-medium)', color: 'var(--text-secondary)', cursor: 'pointer' }}>
             <Icon name="x" size={15} />
           </button>
         </div>
@@ -401,18 +401,18 @@ function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap, on
       {title
         ? <div className="appbar-title">{title}{sub && <small>{sub}</small>}</div>
         : <div className="appbar-logo">DRUYGON</div>}
-      <button className="appbar-draco" onClick={() => (onOpenDraco ? onOpenDraco(null) : openTutor())} title="Tanya Draco — AI tutor">
+      <button className="appbar-draco" onClick={() => (onOpenDraco ? onOpenDraco(null) : openTutor())} title="Ask Draco — AI tutor">
         <Icon name="hint" size={15} /> Draco
       </button>
       <div className="coin-chip"><Icon name="coin" size={15} color="var(--yellow)" /> {(coins ?? 0).toLocaleString()}</div>
       {/* Avatar button — tap to open player picker */}
-      <button aria-label={'Ganti pemain. Pemain aktif: ' + (playerName || 'belum dipilih')}
+      <button aria-label={'Switch player. Active player: ' + (playerName || 'none')}
         onClick={onAvatarTap} style={{
         background: idn.color + '1e', border: `2px solid ${idn.color}`, padding: 0, cursor: 'pointer',
         borderRadius: '50%', lineHeight: 0, overflow: 'hidden', width: 38, height: 38, flexShrink: 0,
         boxShadow: `0 0 0 2px rgba(255,255,255,.05), 0 0 14px ${idn.color}66`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }} title={'Pemain: ' + (playerName || 'Pilih karakter')}>
+      }} title={'Player: ' + (playerName || 'Choose character')}>
         <img src={SPRITE(idn.dex)} width={30} height={30} crossOrigin="anonymous"
           alt={playerName || 'Trainer'} style={{ objectFit: 'contain', display: 'block' }} />
       </button>
@@ -422,8 +422,8 @@ function Header({ region, title, sub, onBack, coins, playerName, onAvatarTap, on
 
 function BottomNav({ active, go }) {
   const items = [
-    ['home', 'home', 'Home'], ['map', 'map', 'Peta'], ['collection', 'grid', 'Koleksi'],
-    ['store', 'bag', 'Toko'], ['profile', 'user', 'Profil'],
+    ['home', 'home', 'Home'], ['map', 'map', 'Map'], ['collection', 'grid', 'Collection'],
+    ['store', 'bag', 'Shop'], ['profile', 'user', 'Profile'],
   ];
   return (
     <div className="nav">

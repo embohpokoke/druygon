@@ -292,18 +292,18 @@ function App() {
     content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} onAnswer={onAnswer} onOpenDraco={openDraco} />;
     showNav = false;
   } else if (screen === 'collection') {
-    header  = <Header region={region} title="Koleksi" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
+    header  = <Header region={region} title="Collection" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
     content = <Collection caught={caughtDex} region={region} go={go} team={team} onTeamAdd={onTeamAdd} onTeamRemove={onTeamRemove} />;
   } else if (screen === 'store') {
-    header  = <Header region={region} title="Toko" sub="Balls & items" coins={profile.coins} {...hProps} />;
+    header  = <Header region={region} title="Shop" sub="Balls & items" coins={profile.coins} {...hProps} />;
     content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} activeSlot={activeSlot} onPurchase={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, pokeballs: data.pokeballs ?? prev.pokeballs }))} />;
   } else if (screen === 'profile') {
-    header  = <Header region={region} title="Profil" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
+    header  = <Header region={region} title="Profile" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
     content = <Profile caught={caughtDex} region={region} go={go} profile={profile}
                 playerName={playerName} activeSlot={activeSlot} allSlots={allSlots}
                 onSwitchSlot={switchSlot} team={team} badges={badges} dailyMission={dailyMission} progress={progress} onTeamRemove={onTeamRemove} />;
   } else if (screen === 'mathblitz') {
-    header  = <Header region="curriculum" title="5 Menit Matematika" sub="Timed practice" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
+    header  = <Header region="curriculum" title="5-Minute Math" sub="Timed practice" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
     content = <MathBlitz activeSlot={activeSlot} onReward={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, xp: data.xpNow ?? prev.xp, level: data.levelNow ?? prev.level }))} go={go} />;
     showNav = false;
   }

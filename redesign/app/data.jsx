@@ -29,9 +29,9 @@ const POKEBALLS = [
 
 // Static metadata (colours, blurbs, icons) — these never change at runtime.
 const REGION_META = {
-  curriculum: { name: 'Dataran Ilmu',   tag: 'Curriculum', accent: '#FFCB05', accentVar: '--yellow',  blurb: 'Math & literacy plains',  icon: 'sigma' },
-  science:    { name: 'Rimba Sains',    tag: 'Science',    accent: '#00D9B8', accentVar: '--teal',    blurb: 'Living-world wilds',      icon: 'leaf'  },
-  compsci:    { name: 'Sirkuit Digital', tag: 'Compsci',   accent: '#8B5CF6', accentVar: '--purple',  blurb: 'Logic & circuits',        icon: 'cpu'   },
+  curriculum: { name: 'Math Plains',      tag: 'Math',     accent: '#FFCB05', accentVar: '--yellow',  blurb: 'Numbers & problem solving', icon: 'sigma' },
+  science:    { name: 'Science Wilds',    tag: 'Science',  accent: '#00D9B8', accentVar: '--teal',    blurb: 'Living-world wilds',        icon: 'leaf'  },
+  compsci:    { name: 'Digital Circuit',  tag: 'Compsci',  accent: '#8B5CF6', accentVar: '--purple',  blurb: 'Logic & circuits',          icon: 'cpu'   },
 };
 
 // ── Live state — mutated by loadContent() ────────────────────────────────────
@@ -155,44 +155,44 @@ function _staticFallback() {
 // Keyed by zone topic. Facts are deliberately simple & verifiable (QA-gated).
 const FUNFACTS = {
   makhluk_hidup: [
-    'Tahukah kamu? Pohon tertua di dunia umurnya lebih dari 4.800 tahun — lebih tua dari piramida!',
-    'Tahukah kamu? Tubuhmu punya sekitar 37 triliun sel, semuanya bekerja sama tiap detik.',
+    'Did you know? The oldest tree on Earth is over 4,800 years old — older than the pyramids!',
+    'Did you know? Your body has about 37 trillion cells, all working together every second.',
   ],
   serangga_ekosistem: [
-    'Tahukah kamu? Semut bisa mengangkat beban sampai 50 kali berat tubuhnya sendiri!',
-    'Tahukah kamu? Tanpa lebah, banyak buah dan sayur tidak akan tumbuh — mereka membantu penyerbukan.',
+    'Did you know? An ant can lift up to 50 times its own body weight!',
+    'Did you know? Without bees, many fruits and vegetables would not grow — they help pollinate.',
   ],
   materi_energi: [
-    'Tahukah kamu? Air bisa jadi padat (es), cair, dan gas (uap) — zatnya sama, wujudnya beda.',
-    'Tahukah kamu? Cahaya matahari butuh sekitar 8 menit untuk sampai ke Bumi.',
+    'Did you know? Water can be solid (ice), liquid, and gas (steam) — same stuff, different states.',
+    'Did you know? Sunlight takes about 8 minutes to travel all the way to Earth.',
   ],
   atom_dan_unsur: [
-    'Tahukah kamu? Semua benda tersusun dari atom — sangat kecil sampai tak terlihat mata.',
-    'Tahukah kamu? Emas dan besi sama-sama unsur, tapi atomnya berbeda jenis.',
+    'Did you know? Everything is made of atoms — so tiny you can never see one with your eyes.',
+    'Did you know? Gold and iron are both elements, but their atoms are different kinds.',
   ],
   galaksi_dan_angkasa: [
-    'Tahukah kamu? Galaksi kita, Bima Sakti, punya lebih dari 100 miliar bintang.',
-    'Tahukah kamu? Satu hari di planet Venus lebih lama daripada satu tahunnya!',
+    'Did you know? Our galaxy, the Milky Way, has more than 100 billion stars.',
+    'Did you know? One day on Venus is longer than one whole year on Venus!',
   ],
   urutan_logika: [
-    'Tahukah kamu? Komputer hanya paham dua angka: 0 dan 1 — disebut biner.',
-    'Tahukah kamu? Algoritma itu cuma daftar langkah berurutan, seperti resep masakan.',
+    'Did you know? Computers understand only two numbers: 0 and 1 — that is called binary.',
+    'Did you know? An algorithm is just a list of steps in order, like a cooking recipe.',
   ],
   perulangan_jaringan: [
-    'Tahukah kamu? Loop membuat komputer mengulang tugas ribuan kali tanpa lelah.',
-    'Tahukah kamu? Internet adalah jutaan komputer yang saling terhubung di seluruh dunia.',
+    'Did you know? A loop lets a computer repeat a task thousands of times without getting tired.',
+    'Did you know? The internet is millions of computers all connected around the world.',
   ],
   algoritma_debug: [
-    'Tahukah kamu? "Bug" pertama dalam komputer benar-benar seekor ngengat yang nyangkut di mesin!',
-    'Tahukah kamu? Debugging artinya mencari dan memperbaiki kesalahan dalam kode.',
+    'Did you know? The first computer "bug" was a real moth stuck inside the machine!',
+    'Did you know? Debugging means finding and fixing mistakes in code.',
   ],
   jaringan_dunia: [
-    'Tahukah kamu? Wi-Fi mengirim data lewat gelombang radio, mirip cara radio bekerja.',
-    'Tahukah kamu? Selalu jaga rahasia password-mu — jangan dibagikan ke siapa pun.',
+    'Did you know? Wi-Fi sends data using radio waves, a lot like how a radio works.',
+    'Did you know? Always keep your password secret — never share it with anyone.',
   ],
   kecerdasan_buatan: [
-    'Tahukah kamu? AI belajar dari banyak contoh, mirip cara kamu belajar dari latihan.',
-    'Tahukah kamu? AI bisa salah juga — jadi selalu periksa ulang jawabannya.',
+    'Did you know? AI learns from lots of examples, kind of like how you learn from practice.',
+    'Did you know? AI can make mistakes too — so always double-check its answers.',
   ],
 };
 function funFactForTopic(topic) {

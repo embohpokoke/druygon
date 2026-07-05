@@ -41,9 +41,9 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center' }}>
             <img src="/assets/dru/dru-idle.png" alt="Dru" width={96} height={96}
               style={{ objectFit: 'contain', marginBottom: 16 }} />
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 6px', color: 'var(--text-primary, #f0eeff)' }}>Belum ada Pokémon</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 6px', color: 'var(--text-primary, #f0eeff)' }}>No Pokémon yet</h3>
             <p style={{ fontSize: 13, color: 'var(--text-secondary, #9aa0b5)', margin: 0, maxWidth: 280 }}>
-              Ayo tangkap! Kembali ke Peta dan jawab soal untuk bertemu Pokémon liar.
+              Go catch some! Head to the Map and answer questions to meet wild Pokémon.
             </p>
           </div>
         ) : (
@@ -199,7 +199,7 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
           </div>
           <div className="who" style={{ flex: 1, minWidth: 0 }}>
             <b>{playerName}</b>
-            <span>{idn.title} · Level {profile.level} · {caught.length} caught · {(profile.coins ?? 0).toLocaleString()} koin</span>
+            <span>{idn.title} · Level {profile.level} · {caught.length} caught · {(profile.coins ?? 0).toLocaleString()} coins</span>
             <div className="meter" style={{ marginTop: 8 }}>
               <i style={{ width: xpPct + '%', background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` }} />
             </div>
@@ -211,7 +211,7 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
         ); })()}
 
         {/* ── Slot selector ── */}
-        <div className="sec-head"><h2>Ganti pemain</h2></div>
+        <div className="sec-head"><h2>Switch player</h2></div>
         <div className="slots">
           {allSlots.length > 0
             ? allSlots.map(s => (
@@ -229,7 +229,7 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
                     </span>
                   </div>
                   {s.slot === activeSlot && (
-                    <span style={{ marginLeft:'auto', fontSize:10, color:'var(--accent)', fontWeight:700 }}>AKTIF</span>
+                    <span style={{ marginLeft:'auto', fontSize:10, color:'var(--accent)', fontWeight:700 }}>ACTIVE</span>
                   )}
                 </div>
               ))
@@ -247,7 +247,7 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
         {/* ── Progress by world ── */}
         {regions && (
           <React.Fragment>
-            <div className="sec-head"><h2>Progress per dunia</h2></div>
+            <div className="sec-head"><h2>Progress by world</h2></div>
             {Object.entries(regions).map(([id, r]) => (
               <div key={id} className="prog-row" data-region={id}>
                 <img src={'/assets/regions/' + id + '-icon.png'} alt={r.name} width={24} height={24}
@@ -304,7 +304,7 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
         {/* ── Region medals ── */}
         {regions && (
           <React.Fragment>
-            <div className="sec-head"><h2>Medali Region</h2></div>
+            <div className="sec-head"><h2>Region Medals</h2></div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginBottom: 16, flexWrap: 'wrap' }}>
               {Object.entries(regions).map(([id, r]) => {
                 const pct = clearedByRegion[id] ?? 0;
@@ -350,19 +350,19 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
         </div>
 
         {/* ── Sound toggle ── */}
-        <div className="sec-head"><h2>Pengaturan</h2></div>
+        <div className="sec-head"><h2>Settings</h2></div>
         <SoundRow />
 
         {/* ── Links ── */}
-        <div className="sec-head"><h2>Untuk orang tua</h2></div>
+        <div className="sec-head"><h2>For parents</h2></div>
         <div className="link-row" onClick={() => window.open('/parent','_blank')}>
           <div className="ic"><Icon name="chart" size={20} /></div>
-          <div className="tx"><b>Parent dashboard</b><span>Waktu main · topik · akurasi</span></div>
+          <div className="tx"><b>Parent dashboard</b><span>Play time · topics · accuracy</span></div>
           <Icon name="arrowR" size={18} color="var(--text-tertiary)" />
         </div>
         <div className="link-row archive">
           <div className="ic"><Icon name="archive" size={20} /></div>
-          <div className="tx"><b>Modul Lama</b><span>Math Arena, Word Search, Ramadhan…</span></div>
+          <div className="tx"><b>Legacy Modules</b><span>Math Arena, Word Search, Ramadhan…</span></div>
           <Icon name="arrowR" size={18} color="var(--text-tertiary)" />
         </div>
 
@@ -378,7 +378,7 @@ function SoundRow() {
   return (
     <div className="link-row" onClick={toggle} style={{ cursor: 'pointer' }}>
       <div className="ic"><Icon name={on ? 'volume' : 'volumeOff'} size={20} /></div>
-      <div className="tx"><b>Efek suara</b><span>{on ? 'Nyala — bunyi saat jawab & nangkap' : 'Mati'}</span></div>
+      <div className="tx"><b>Sound effects</b><span>{on ? 'On — sounds when you answer & catch' : 'Off'}</span></div>
       <div style={{ width: 40, height: 22, borderRadius: 999, flexShrink: 0, position: 'relative', transition: 'background .2s',
         background: on ? 'var(--accent)' : 'var(--bg-elevated)', border: '1px solid ' + (on ? 'var(--accent)' : 'var(--border-medium)') }}>
         <i style={{ position: 'absolute', top: 2, left: on ? 20 : 2, width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'left .2s' }} />
