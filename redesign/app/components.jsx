@@ -59,7 +59,7 @@ function Pokeball({ size = 30, top = '#EE3D34', id, style }) {
 }
 
 const AVATAR = '/assets/druygon-avatar.png';
-const TUTOR_URL = '/tutor';
+const TUTOR_URL = 'https://draco.druygon.my.id/';
 function openTutor(topic) { try { window.open(TUTOR_URL + (topic ? ('?topic=' + encodeURIComponent(topic)) : ''), '_blank'); } catch (e) {} }
 
 // ── Player identity — partner Pokémon + personal colour per trainer ──────────

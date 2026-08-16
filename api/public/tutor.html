@@ -82,6 +82,28 @@
     }
     .header-back:active { background: rgba(255,255,255,0.35); }
 
+    .suite-links {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .suite-links a {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: #FFF9F0;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .suite-links a:hover, .suite-links a:focus-visible { color: var(--chip-purple); outline: 2px solid rgba(123,31,162,.22); }
+
     /* Pokeball deco circles in header */
     .header::before {
       content: '';
@@ -422,7 +444,7 @@
 
   <!-- HEADER -->
   <header class="header">
-    <a href="/" class="header-back" title="Kembali ke game" aria-label="Kembali ke game">←</a>
+    <a href="https://druygon.my.id/" class="header-back" title="Kembali ke hub Druygon" aria-label="Kembali ke hub Druygon">←</a>
     <div class="header-avatar">🐉</div>
     <div class="header-info">
       <h1 class="header-title">Belajar Bareng Draco</h1>
@@ -430,6 +452,11 @@
     </div>
     <div class="xp-badge" id="xp-badge">LVL 1 ⚡</div>
   </header>
+
+  <nav class="suite-links" aria-label="Modul Druygon lainnya">
+    <a href="https://cody.druygon.my.id/">Cody · Coding</a>
+    <a href="https://study.druygon.my.id/">Study · Game</a>
+  </nav>
 
   <!-- TOPIC CHIPS -->
   <div class="topic-bar" id="topic-bar">

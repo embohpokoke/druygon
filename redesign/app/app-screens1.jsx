@@ -108,6 +108,34 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
           </div>
         </div>
 
+        {/* DruCode module — carries the active Druygon player slot into the coding experience */}
+        <button
+          type="button"
+          onClick={() => { window.location.href = 'https://cody.druygon.my.id/?slot=' + activeSlot; }}
+          style={{
+            width: '100%', marginTop: 14, borderRadius: 20, overflow: 'hidden', padding: 0,
+            display: 'grid', gridTemplateColumns: '78px 1fr 34px', alignItems: 'center', gap: 14,
+            cursor: 'pointer', textAlign: 'left', color: '#F7F5FF', position: 'relative',
+            background: 'linear-gradient(120deg, #23204F 0%, #34266E 58%, #4A35A8 100%)',
+            border: '1px solid rgba(46,201,192,.34)', boxShadow: 'var(--card-shadow)',
+          }}
+          aria-label="Buka DruCode, modul belajar coding"
+        >
+          <div style={{ height: 92, display: 'grid', placeItems: 'center', background: 'rgba(46,201,192,.12)' }}>
+            <Icon name="cpu" size={34} color="#64E0D8" />
+          </div>
+          <div style={{ padding: '14px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <b style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 17 }}>DruCode</b>
+              <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '.08em', color: '#1A4744', background: '#65E4DC', padding: '3px 8px', borderRadius: 999 }}>MODUL BARU</span>
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(247,245,255,.7)', marginTop: 5, lineHeight: 1.45 }}>
+              Belajar blok visual, Python, dan web bersama Robo.
+            </div>
+          </div>
+          <Icon name="arrowR" size={18} color="#F7F5FF" />
+        </button>
+
         {/* Draco tutor card */}
         <div onClick={() => onOpenDraco && onOpenDraco(null)} style={{ position: 'relative', marginTop: 14, borderRadius: 20, overflow: 'hidden', padding: 16, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', isolation: 'isolate', background: 'linear-gradient(120deg, #241a4d 0%, #16123a 55%, #101030 100%)', border: '1px solid rgba(139,92,246,.35)', boxShadow: 'var(--card-shadow)' }}>
           <div style={{ position: 'absolute', width: 150, height: 150, borderRadius: '50%', right: -40, top: -50, background: 'radial-gradient(circle, rgba(139,92,246,.4), transparent 68%)', zIndex: -1 }} />
