@@ -39,6 +39,8 @@ Mission-specific checkers may recognize a tiny fixed grammar such as `move(integ
 
 Visual Blocks World 1 currently contains six complete missions: command, order, repeated steps, loop, condition, and a combined boss mission. Completed missions remain available for review. Progress survives reloads per Druygon player slot.
 
+Each mission shows an animated world stage above the editor: Nara stands on the route's launch pad and the goal star pulses ahead. A correct run walks Nara along the route before the completion card appears; a wrong attempt shakes her gently. Celebrations use confetti and mutable WebAudio sound effects, and all motion and audio degrade safely under reduced motion or unavailable audio.
+
 ## Design Principles
 
 1. Show one clear next mission.
