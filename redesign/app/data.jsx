@@ -31,7 +31,7 @@ const POKEBALLS = [
 const REGION_META = {
   curriculum: { name: 'Math Plains',      tag: 'Math',     accent: '#FFCB05', accentVar: '--yellow',  blurb: 'Numbers & problem solving', icon: 'sigma' },
   science:    { name: 'Science Wilds',    tag: 'Science',  accent: '#00D9B8', accentVar: '--teal',    blurb: 'Living-world wilds',        icon: 'leaf'  },
-  compsci:    { name: 'Digital Circuit',  tag: 'Compsci',  accent: '#8B5CF6', accentVar: '--purple',  blurb: 'Logic & circuits',          icon: 'cpu'   },
+  matpel:     { name: 'MATPEL Sekolah',   tag: 'School',   accent: '#F97316', accentVar: '--orange',  blurb: 'Pelajaran sekolah kelas 5', icon: 'book'  },
 };
 
 // ── Live state — mutated by loadContent() ────────────────────────────────────
@@ -140,12 +140,12 @@ function _staticFallback() {
         { zone: 3, name: 'Reaktor Mineral', topic: 'materi_energi',      minLevel: 11, mons: [mon(74,'Geodude','Rock','common'),mon(145,'Zapdos','Electric','legendary')] },
       ],
     },
-    compsci: {
-      id: 'compsci', name: 'Sirkuit Digital', accent: '#8B5CF6', accentVar: '--purple', blurb: 'Logic & circuits', tag: 'Compsci', icon: 'cpu',
+    matpel: {
+      id: 'matpel', name: 'MATPEL Sekolah', accent: '#F97316', accentVar: '--orange', blurb: 'Pelajaran sekolah kelas 5', tag: 'School', icon: 'book',
       zones: [
-        { zone: 1, name: 'Gerbang Logika', topic: 'urutan_logika',       minLevel: 1,  mons: [mon(81,'Magnemite','Electric','common'),mon(137,'Porygon','Normal','uncommon')] },
-        { zone: 2, name: 'Jaringan',       topic: 'perulangan_jaringan', minLevel: 6,  mons: [mon(233,'Porygon2','Normal','uncommon'),mon(479,'Rotom','Electric','rare')] },
-        { zone: 3, name: 'Inti Prosesor',  topic: 'algoritma_debug',     minLevel: 11, mons: [mon(474,'Porygon-Z','Normal','rare'),mon(1008,'Miraidon','Electric','legendary')] },
+        { zone: 1, name: 'Pulau Puisi',      topic: 'puisi',             minLevel: 1,  mons: [mon(39,'Jigglypuff','Normal','common'),mon(441,'Chatot','Flying','common'),mon(648,'Meloetta','Psychic','rare')] },
+        { zone: 4, name: 'Cahaya At-Tiin',   topic: 'qs_at_tiin',        minLevel: 1,  mons: [mon(928,'Smoliv','Grass','common'),mon(173,'Cleffa','Fairy','common'),mon(929,'Dolliv','Grass','rare')] },
+        { zone: 2, name: 'Benteng Perjuangan', topic: 'perjuangan_bangsa', minLevel: 1, mons: [mon(140,'Kabuto','Rock','common'),mon(138,'Omanyte','Rock','common'),mon(142,'Aerodactyl','Flying','rare')] },
       ],
     },
   };
@@ -174,25 +174,33 @@ const FUNFACTS = {
     'Did you know? Our galaxy, the Milky Way, has more than 100 billion stars.',
     'Did you know? One day on Venus is longer than one whole year on Venus!',
   ],
-  urutan_logika: [
-    'Did you know? Computers understand only two numbers: 0 and 1 — that is called binary.',
-    'Did you know? An algorithm is just a list of steps in order, like a cooking recipe.',
+  puisi: [
+    'Tahukah kamu? Puisi sudah ada sejak ribuan tahun lalu — jauh sebelum orang menulis buku cerita.',
+    'Tahukah kamu? Chairil Anwar adalah penyair Indonesia yang terkenal dengan puisi "Aku".',
   ],
-  perulangan_jaringan: [
-    'Did you know? A loop lets a computer repeat a task thousands of times without getting tired.',
-    'Did you know? The internet is millions of computers all connected around the world.',
+  perjuangan_bangsa: [
+    'Tahukah kamu? Rempah-rempah Indonesia seperti pala dan cengkeh dulu lebih berharga daripada emas.',
+    'Tahukah kamu? Sumpah Pemuda 1928 diikrarkan 17 tahun sebelum Proklamasi Kemerdekaan.',
   ],
-  algoritma_debug: [
-    'Did you know? The first computer "bug" was a real moth stuck inside the machine!',
-    'Did you know? Debugging means finding and fixing mistakes in code.',
+  toleransi_bela_negara: [
+    'Tahukah kamu? Indonesia punya lebih dari 1.300 suku bangsa — semuanya bisa hidup rukun.',
+    'Tahukah kamu? Bhineka Tunggal Ika artinya berbeda-beda tetapi tetap satu.',
   ],
-  jaringan_dunia: [
-    'Did you know? Wi-Fi sends data using radio waves, a lot like how a radio works.',
-    'Did you know? Always keep your password secret — never share it with anyone.',
+  qs_at_tiin: [
+    'Tahukah kamu? Buah Tin (ara) disebut dalam Al-Qur\'an dan sudah dimakan manusia sejak ribuan tahun lalu.',
+    'Tahukah kamu? Surat At-Tiin ada di juz 30 — juz yang berisi surat-surat pendek.',
   ],
-  kecerdasan_buatan: [
-    'Did you know? AI learns from lots of examples, kind of like how you learn from practice.',
-    'Did you know? AI can make mistakes too — so always double-check its answers.',
+  kisah_teladan: [
+    'Tahukah kamu? Asmaul Husna berjumlah 99 nama Allah yang baik.',
+    'Tahukah kamu? Bersedekah tidak membuat harta berkurang — justru membawa keberkahan.',
+  ],
+  english_past_inventors: [
+    'Did you know? Thomas Edison tried thousands of materials before his light bulb worked.',
+    'Did you know? The first airplane flight by the Wright brothers lasted only 12 seconds!',
+  ],
+  seni_karya: [
+    'Tahukah kamu? Origami berasal dari Jepang — "oru" artinya melipat dan "kami" artinya kertas.',
+    'Tahukah kamu? Botol plastik bekas bisa menjadi pot tanaman, celengan, atau hiasan dinding.',
   ],
 };
 function funFactForTopic(topic) {

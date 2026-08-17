@@ -69,7 +69,7 @@ function ContentLoading() {
 function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission, onOpenDraco }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
-  const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
+  const order = ['curriculum', 'science', 'matpel'].filter((id) => regions[id]);
   const level  = profile?.level  ?? PLAYER.level;
   const xpPct  = profile && profile.xpToNext > 0
     ? Math.round((profile.xp / profile.xpToNext) * 100)

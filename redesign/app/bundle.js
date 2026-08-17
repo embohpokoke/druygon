@@ -34,7 +34,7 @@
   const REGION_META = {
     curriculum: { name: "Math Plains", tag: "Math", accent: "#FFCB05", accentVar: "--yellow", blurb: "Numbers & problem solving", icon: "sigma" },
     science: { name: "Science Wilds", tag: "Science", accent: "#00D9B8", accentVar: "--teal", blurb: "Living-world wilds", icon: "leaf" },
-    compsci: { name: "Digital Circuit", tag: "Compsci", accent: "#8B5CF6", accentVar: "--purple", blurb: "Logic & circuits", icon: "cpu" }
+    matpel: { name: "MATPEL Sekolah", tag: "School", accent: "#F97316", accentVar: "--orange", blurb: "Pelajaran sekolah kelas 5", icon: "book" }
   };
   let REGIONS = null;
   let QUESTIONS = {};
@@ -139,18 +139,18 @@
           { zone: 3, name: "Reaktor Mineral", topic: "materi_energi", minLevel: 11, mons: [mon(74, "Geodude", "Rock", "common"), mon(145, "Zapdos", "Electric", "legendary")] }
         ]
       },
-      compsci: {
-        id: "compsci",
-        name: "Sirkuit Digital",
-        accent: "#8B5CF6",
-        accentVar: "--purple",
-        blurb: "Logic & circuits",
-        tag: "Compsci",
-        icon: "cpu",
+      matpel: {
+        id: "matpel",
+        name: "MATPEL Sekolah",
+        accent: "#F97316",
+        accentVar: "--orange",
+        blurb: "Pelajaran sekolah kelas 5",
+        tag: "School",
+        icon: "book",
         zones: [
-          { zone: 1, name: "Gerbang Logika", topic: "urutan_logika", minLevel: 1, mons: [mon(81, "Magnemite", "Electric", "common"), mon(137, "Porygon", "Normal", "uncommon")] },
-          { zone: 2, name: "Jaringan", topic: "perulangan_jaringan", minLevel: 6, mons: [mon(233, "Porygon2", "Normal", "uncommon"), mon(479, "Rotom", "Electric", "rare")] },
-          { zone: 3, name: "Inti Prosesor", topic: "algoritma_debug", minLevel: 11, mons: [mon(474, "Porygon-Z", "Normal", "rare"), mon(1008, "Miraidon", "Electric", "legendary")] }
+          { zone: 1, name: "Pulau Puisi", topic: "puisi", minLevel: 1, mons: [mon(39, "Jigglypuff", "Normal", "common"), mon(441, "Chatot", "Flying", "common"), mon(648, "Meloetta", "Psychic", "rare")] },
+          { zone: 4, name: "Cahaya At-Tiin", topic: "qs_at_tiin", minLevel: 1, mons: [mon(928, "Smoliv", "Grass", "common"), mon(173, "Cleffa", "Fairy", "common"), mon(929, "Dolliv", "Grass", "rare")] },
+          { zone: 2, name: "Benteng Perjuangan", topic: "perjuangan_bangsa", minLevel: 1, mons: [mon(140, "Kabuto", "Rock", "common"), mon(138, "Omanyte", "Rock", "common"), mon(142, "Aerodactyl", "Flying", "rare")] }
         ]
       }
     };
@@ -176,25 +176,33 @@
       "Did you know? Our galaxy, the Milky Way, has more than 100 billion stars.",
       "Did you know? One day on Venus is longer than one whole year on Venus!"
     ],
-    urutan_logika: [
-      "Did you know? Computers understand only two numbers: 0 and 1 \u2014 that is called binary.",
-      "Did you know? An algorithm is just a list of steps in order, like a cooking recipe."
+    puisi: [
+      "Tahukah kamu? Puisi sudah ada sejak ribuan tahun lalu \u2014 jauh sebelum orang menulis buku cerita.",
+      'Tahukah kamu? Chairil Anwar adalah penyair Indonesia yang terkenal dengan puisi "Aku".'
     ],
-    perulangan_jaringan: [
-      "Did you know? A loop lets a computer repeat a task thousands of times without getting tired.",
-      "Did you know? The internet is millions of computers all connected around the world."
+    perjuangan_bangsa: [
+      "Tahukah kamu? Rempah-rempah Indonesia seperti pala dan cengkeh dulu lebih berharga daripada emas.",
+      "Tahukah kamu? Sumpah Pemuda 1928 diikrarkan 17 tahun sebelum Proklamasi Kemerdekaan."
     ],
-    algoritma_debug: [
-      'Did you know? The first computer "bug" was a real moth stuck inside the machine!',
-      "Did you know? Debugging means finding and fixing mistakes in code."
+    toleransi_bela_negara: [
+      "Tahukah kamu? Indonesia punya lebih dari 1.300 suku bangsa \u2014 semuanya bisa hidup rukun.",
+      "Tahukah kamu? Bhineka Tunggal Ika artinya berbeda-beda tetapi tetap satu."
     ],
-    jaringan_dunia: [
-      "Did you know? Wi-Fi sends data using radio waves, a lot like how a radio works.",
-      "Did you know? Always keep your password secret \u2014 never share it with anyone."
+    qs_at_tiin: [
+      "Tahukah kamu? Buah Tin (ara) disebut dalam Al-Qur'an dan sudah dimakan manusia sejak ribuan tahun lalu.",
+      "Tahukah kamu? Surat At-Tiin ada di juz 30 \u2014 juz yang berisi surat-surat pendek."
     ],
-    kecerdasan_buatan: [
-      "Did you know? AI learns from lots of examples, kind of like how you learn from practice.",
-      "Did you know? AI can make mistakes too \u2014 so always double-check its answers."
+    kisah_teladan: [
+      "Tahukah kamu? Asmaul Husna berjumlah 99 nama Allah yang baik.",
+      "Tahukah kamu? Bersedekah tidak membuat harta berkurang \u2014 justru membawa keberkahan."
+    ],
+    english_past_inventors: [
+      "Did you know? Thomas Edison tried thousands of materials before his light bulb worked.",
+      "Did you know? The first airplane flight by the Wright brothers lasted only 12 seconds!"
+    ],
+    seni_karya: [
+      'Tahukah kamu? Origami berasal dari Jepang \u2014 "oru" artinya melipat dan "kami" artinya kertas.',
+      "Tahukah kamu? Botol plastik bekas bisa menjadi pot tanaman, celengan, atau hiasan dinding."
     ]
   };
   function funFactForTopic(topic) {
@@ -255,6 +263,7 @@
     sigma: "M6 4h12M6 4l7 8-7 8h12v-3",
     leaf: "M5 19c0-8 6-13 14-13 0 9-5 14-13 14M5 19c2-4 5-6 9-7",
     cpu: "M7 7h10v10H7zM10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3",
+    book: "M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2Zm20 0h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7Z",
     users: "M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3.5 3.5 0 0 0 0-7M21 20v-1.5a4 4 0 0 0-3-3.8",
     archive: "M4 7h16v3H4zM5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9M9.5 14h5M4 7l1.5-3h13L20 7",
     chart: "M5 21V9M12 21V4M19 21v-7M3 21h18",
@@ -746,7 +755,7 @@
     var _a;
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
-    const order = ["curriculum", "science", "compsci"].filter((id) => regions[id]);
+    const order = ["curriculum", "science", "matpel"].filter((id) => regions[id]);
     const level = (_a = profile == null ? void 0 : profile.level) != null ? _a : PLAYER.level;
     const xpPct = profile && profile.xpToNext > 0 ? Math.round(profile.xp / profile.xpToNext * 100) : PLAYER.xpPct;
     const name = playerName || "Trainer";
@@ -1129,7 +1138,7 @@
   function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
-    const order = ["curriculum", "science", "compsci"].filter((id) => regions[id]);
+    const order = ["curriculum", "science", "matpel"].filter((id) => regions[id]);
     const [filter, setFilter] = React.useState("all");
     const has = (dex) => caught.includes(dex);
     const all = order.flatMap((id) => regionMons(regions, id));

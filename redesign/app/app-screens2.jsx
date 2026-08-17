@@ -26,7 +26,7 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
 
-  const order = ['curriculum', 'science', 'compsci'].filter(id => regions[id]);
+  const order = ['curriculum', 'science', 'matpel'].filter(id => regions[id]);
   const [filter, setFilter] = React.useState('all');
   const has = (dex) => caught.includes(dex);
   const all = order.flatMap(id => regionMons(regions, id));
