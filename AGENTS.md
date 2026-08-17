@@ -13,6 +13,8 @@ Read these in order before editing:
 
 Before adding or changing a Cody lesson, also read `modules/drucode/CURRICULUM.md`. Learn First is a required lesson contract for beginner learners ages 10–13 across Visual Blocks, Python, and Web.
 
+Cody completion is also part of the lesson contract: success must persist, celebrate, mark the map node complete, unlock exactly the next mission, and expose one clear Continue action. Preserve the contiguous per-slot progress rule; never unlock from a sparse stored list.
+
 The matching product/operations knowledge base is `~/obsidian/erikmah/projects/druygon/` on Erik's MacBook Pro. Its canonical current-state note is `02. DRUYGON-SUITE-CANONICAL.md`.
 
 ## Product model
@@ -63,6 +65,8 @@ npm ci
 npm run check
 npm run build
 ```
+
+For Cody journey changes, run `python3 modules/drucode/scripts/qa-journey.py` on the Mac. It gates all six missions in Chromium and WebKit at 1440px and 390px, including EN/ID switching, Save pointing to Run, celebration, direct Continue, map node states, and reload persistence.
 
 Run a real WebKit/Safari check from the Mac for frontend releases. VPS Chromium alone is not the complete browser gate.
 

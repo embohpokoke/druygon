@@ -42,11 +42,25 @@ type Lesson = {
   starterCode: string;
   validation: unknown;
   hints: [string, string, string];
+  skill: string;
   xpReward: number;
 };
 ```
 
 The UI's `LearnFirst` component requires this teaching content before the task and editor. When lessons move to API-backed content, validate this shape at the content boundary and keep incomplete lessons locked.
+
+## Completion and progression
+
+Every successful mission must produce an obvious transition, not only an output line:
+
+1. Show an inline completion celebration and name the skill learned.
+2. Persist the completed mission before presenting the next action.
+3. Unlock exactly the next sequential mission. Later missions remain locked.
+4. Provide one primary Continue action that opens the newly unlocked mission.
+5. On the map, mark the completed node with a check and mark the next node as available.
+6. Keep completed missions open for review and show a world-complete state after the final mission.
+
+The current Visual Blocks journey stores a contiguous list of completed mission IDs in `drucode-progress-${slot}-visual-blocks-v1`. Never trust a sparse or out-of-order stored list to skip lessons. Drafts remain separate per player slot and lesson.
 
 ## Ages 10–13 writing rules
 
@@ -83,3 +97,5 @@ Hints are staged:
 3. Reveal the exact answer only as the final hint.
 
 Mission-specific checkers may parse a tiny fixed grammar. They must not use `eval`, `Function`, subprocesses, or arbitrary learner-code execution. General Python and JavaScript execution stays unavailable until the isolated sandbox contract is implemented.
+
+For journey changes, run `python3 modules/drucode/scripts/qa-journey.py`. It tests all six Visual Blocks missions in sequence, EN/ID switching, direct Continue transitions, map unlock states, completion reload persistence, Chromium, WebKit, desktop, and 390px mobile.

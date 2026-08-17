@@ -29,12 +29,15 @@ Each mission follows one visible sequence: Learn, Type, Run.
 3. Start with an unsolved editor so Dru must apply the idea.
 4. Check the mission with a fixed declarative parser and give specific corrective feedback.
 5. Reveal hints gradually, with the exact answer only in the final hint.
+6. On success, name the learned skill, celebrate visibly, save completion, unlock exactly one next mission, and provide one clear Continue action.
 
 This sequence is required for every lesson in all three Cody tracks: Visual Blocks, Python, and Web. The complete authoring contract is in `CURRICULUM.md`.
 
 For ages 10–13, each lesson must introduce only one main concept, define new vocabulary where it appears, use short concrete sentences, and avoid assuming prior syntax knowledge. The worked example must model the thinking without copying the challenge answer. A learner should be able to understand what to try before opening a hint.
 
 Mission-specific checkers may recognize a tiny fixed grammar such as `move(integer)` in the browser. They must parse text without `eval`, `Function`, subprocesses, or arbitrary JavaScript/Python execution. General-purpose learner code remains disabled until the isolated sandbox exists.
+
+Visual Blocks World 1 currently contains six complete missions: command, order, repeated steps, loop, condition, and a combined boss mission. Completed missions remain available for review. Progress survives reloads per Druygon player slot.
 
 ## Design Principles
 

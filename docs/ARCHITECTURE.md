@@ -1,6 +1,6 @@
 # Druygon Suite Architecture
 
-Last verified: 2026-08-16.
+Last verified: 2026-08-17.
 
 ## System map
 
@@ -33,10 +33,11 @@ All public hostnames currently resolve to the same Hostinger VPS. Nginx terminat
 - Each module links to the hub and the other learning modes.
 - English is Cody's default UI language. EN/ID preference is stored client-side without rewriting the learner's draft.
 - Every Cody lesson in Visual Blocks, Python, and Web must satisfy `modules/drucode/CURRICULUM.md`: a beginner-friendly Learn First section for ages 10–13 must precede the challenge.
+- Visual Blocks World 1 derives completed/current/locked map states from the contiguous local progress key `drucode-progress-${slot}-visual-blocks-v1`. First success persists completion, shows an inline celebration, and unlocks exactly the next mission.
 
 ## Code execution boundary
 
-Cody ships the learning-map/workspace frontend, draft persistence, staged hints, and a Mission 1 browser checker for the fixed `move(integer)` grammar. The checker parses one declarative command and compares it with the mission target. It does not evaluate JavaScript or Python. Arbitrary learner code is not executed by the browser or public VPS.
+Cody ships the learning-map/workspace frontend, per-lesson draft persistence, staged hints, sequential progress, and six fixed Visual Blocks mission validators. They recognize only the small command vocabulary taught in the journey (`move`, `turnRight`, `repeat`, `ifStar`, and `collect`) and compare normalized text with a mission target. They do not evaluate JavaScript or Python. Arbitrary learner code is not executed by the browser or public VPS.
 
 Before enabling general-purpose Python or JavaScript execution, implement an isolated sandbox outside the VPS with no network, read-only filesystem, strict CPU/memory/time/output/process limits, private connectivity, and service-to-service authentication. The frontend must degrade safely when that sandbox is unavailable.
 

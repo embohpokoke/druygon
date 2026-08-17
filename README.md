@@ -25,6 +25,8 @@ di [`modules/README.md`](modules/README.md).
 4. [`modules/drucode/CURRICULUM.md`](modules/drucode/CURRICULUM.md) — kontrak Learn First untuk semua lesson Cody, ditulis untuk beginner usia 10–13 tahun.
 5. [`modules/drucode/PRODUCT.md`](modules/drucode/PRODUCT.md) dan [`DESIGN.md`](modules/drucode/DESIGN.md) — kontrak produk/visual Cody.
 
+Cody Visual Blocks World 1 memiliki enam misi lengkap. Setiap sukses menampilkan perayaan, menyimpan progress per player slot, menandai node selesai, dan membuka tepat satu misi berikutnya.
+
 Dokumentasi produk, operasi, keputusan, dan handoff lengkap ada di vault Obsidian MacBook:
 `~/obsidian/erikmah/projects/druygon/`. Kode di GitHub adalah source of truth implementasi; state live
 harus selalu diverifikasi di VPS sebelum perubahan.
