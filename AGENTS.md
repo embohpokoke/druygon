@@ -13,6 +13,8 @@ Read these in order before editing:
 
 Before adding or changing a Cody lesson, also read `modules/drucode/CURRICULUM.md`. Learn First is a required lesson contract for beginner learners ages 10–13 across Visual Blocks, Python, and Web.
 
+On Erik's Mac, the original extended build specification is `/Users/erikmah/projects/druygon-cody/Spec-Aplikasi-Belajar-Coding-Dru.md`. Repository `CURRICULUM.md`, `PRODUCT.md`, and deployed code remain the self-contained code-adjacent contract when that local file is unavailable.
+
 Cody completion is also part of the lesson contract: success must persist, celebrate, mark the map node complete, unlock exactly the next mission, and expose one clear Continue action. Preserve the contiguous per-slot progress rule; never unlock from a sparse stored list.
 
 The matching product/operations knowledge base is `~/obsidian/erikmah/projects/druygon/` on Erik's MacBook Pro. Its canonical current-state note is `02. DRUYGON-SUITE-CANONICAL.md`.

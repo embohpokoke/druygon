@@ -27,6 +27,8 @@ di [`modules/README.md`](modules/README.md).
 
 Cody Visual Blocks World 1 memiliki enam misi lengkap. Setiap sukses menampilkan perayaan, menyimpan progress per player slot, menandai node selesai, dan membuka tepat satu misi berikutnya.
 
+Extended source specification di Mac Erik: `/Users/erikmah/projects/druygon-cody/Spec-Aplikasi-Belajar-Coding-Dru.md`.
+
 Dokumentasi produk, operasi, keputusan, dan handoff lengkap ada di vault Obsidian MacBook:
 `~/obsidian/erikmah/projects/druygon/`. Kode di GitHub adalah source of truth implementasi; state live
 harus selalu diverifikasi di VPS sebelum perubahan.
