@@ -497,9 +497,15 @@ function draftKeyFor(slot: number, lessonId: number) {
 
 function activeSlot() {
   const fromQuery = Number(new URLSearchParams(window.location.search).get('slot'));
-  if ([1, 2, 3, 4].includes(fromQuery)) return fromQuery;
+  if ([1, 2, 3, 4, 5].includes(fromQuery)) return fromQuery;
   const fromDruygon = Number(safeLocalGet('druygon-slot-v1'));
-  return [1, 2, 3, 4].includes(fromDruygon) ? fromDruygon : 1;
+  return [1, 2, 3, 4, 5].includes(fromDruygon) ? fromDruygon : 1;
+}
+
+// ?fresh=1 starts a session with no saved progress (used by qa-journey.py so
+// repeated test runs always begin from a clean map, even with server-side saves).
+function freshStart() {
+  return new URLSearchParams(window.location.search).has('fresh');
 }
 
 function usePlayer(slot: number) {
@@ -521,7 +527,8 @@ function App() {
   const [language, setLanguage] = React.useState<Language>(preferredLanguage);
   const t = COPY[language];
   const progressKey = `drucode-progress-${slot}-visual-blocks-v1`;
-  const initialCompleted = React.useMemo(() => readCompletedLessons(progressKey), [progressKey]);
+  const isFresh = React.useMemo(freshStart, []);
+  const initialCompleted = React.useMemo(() => isFresh ? [] : readCompletedLessons(progressKey), [progressKey, isFresh]);
   const [completedLessons, setCompletedLessons] = React.useState<number[]>(initialCompleted);
   const [screen, setScreen] = React.useState<Screen>('map');
   const [activeLessonId, setActiveLessonId] = React.useState(Math.min(initialCompleted.length + 1, TOTAL_MISSIONS));
@@ -539,6 +546,26 @@ function App() {
 
   React.useEffect(() => { document.documentElement.lang = language; safeLocalSet('drucode-language', language); }, [language]);
   React.useEffect(() => { safeLocalSet('drucode-sfx', soundOn ? 'on' : 'off'); }, [soundOn]);
+
+  // Merge server-side progress (cross-device) with the local copy. Offline or
+  // unknown slot → localStorage only, exactly as before.
+  React.useEffect(() => {
+    if (isFresh) return undefined;
+    const controller = new AbortController();
+    fetch(`/api/cody/progress/${slot}`, { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : Promise.reject(new Error('cody progress unavailable'))))
+      .then((data: { completed?: number[] }) => {
+        if (!Array.isArray(data.completed)) return;
+        setCompletedLessons((current) => {
+          const merged = Array.from(new Set([...current, ...data.completed ?? []])).sort((a, b) => a - b);
+          const prefix: number[] = [];
+          for (let id = 1; id <= TOTAL_MISSIONS && merged.includes(id); id += 1) prefix.push(id);
+          return prefix.length > current.length ? prefix : current;
+        });
+      })
+      .catch((error: Error) => { if (error.name !== 'AbortError') { /* local copy is the fallback */ } });
+    return () => controller.abort();
+  }, [slot, isFresh]);
   React.useEffect(() => { safeLocalSet(progressKey, JSON.stringify(completedLessons)); }, [completedLessons, progressKey]);
   React.useEffect(() => { safeLocalSet(draftKey, code); }, [code, draftKey]);
 
@@ -575,7 +602,13 @@ function App() {
     setCelebrating(true);
     window.setTimeout(() => setCelebrating(false), 2700);
     setCompletedLessons((current) => current.includes(activeLessonId) || activeLessonId !== current.length + 1 ? current : [...current, activeLessonId]);
-  }, [activeLessonId, sfx]);
+    // Persist to the shared server profile; localStorage copy above remains the fallback.
+    fetch(`/api/cody/progress/${slot}/complete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lessonId: activeLessonId }),
+    }).catch(() => { /* offline: local copy already saved */ });
+  }, [activeLessonId, sfx, slot]);
   const updateCode = React.useCallback((value: string) => { setCode(value); setOutput({ kind: 'initial' }); setPhase('idle'); }, []);
   const resetCode = React.useCallback(() => { setCode(lesson.starterCode); setOutput({ kind: 'reset' }); setPhase('idle'); }, [lesson.starterCode]);
 

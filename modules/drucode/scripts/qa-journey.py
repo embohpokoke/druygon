@@ -11,7 +11,7 @@ from tempfile import mkdtemp
 from playwright.sync_api import sync_playwright
 
 
-URL = os.environ.get("DRUCODE_URL", "https://cody.druygon.my.id/?qa=journey-v1")
+URL = os.environ.get("DRUCODE_URL", "https://cody.druygon.my.id/?qa=journey-v1&slot=5&fresh=1")
 OUTPUT_DIR = Path(os.environ.get("DRUCODE_QA_OUTPUT", mkdtemp(prefix="drucode-journey-")))
 
 EN_TITLES = ["First Command", "The Right Order", "Repeat Steps", "Helpful Loop", "Smart Condition", "Boss: Move Nara"]
@@ -79,7 +79,8 @@ def run_case(browser_type, browser_name: str, viewport: dict[str, int]) -> None:
     for mission_id, title in enumerate(ID_TITLES, start=1):
         page.get_by_role("button", name=f"Misi {mission_id}: {title}, selesai").wait_for()
 
-    page.reload(wait_until="networkidle")
+    # Reload without ?fresh=1: saved progress (localStorage + server) must restore.
+    page.goto(URL.replace("&fresh=1", ""), wait_until="networkidle")
     page.get_by_text("Dunia selesai!", exact=True).wait_for()
     page.locator('[aria-label="Progress Blok Visual, 6 dari 6 misi selesai"]').wait_for()
 
