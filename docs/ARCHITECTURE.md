@@ -35,9 +35,9 @@ All public hostnames currently resolve to the same Hostinger VPS. Nginx terminat
 
 ## Code execution boundary
 
-Cody currently ships the learning-map/workspace frontend, draft persistence, staged hints, and an offline runner state. Arbitrary learner code is not executed by the browser or public VPS.
+Cody ships the learning-map/workspace frontend, draft persistence, staged hints, and a Mission 1 browser checker for the fixed `move(integer)` grammar. The checker parses one declarative command and compares it with the mission target. It does not evaluate JavaScript or Python. Arbitrary learner code is not executed by the browser or public VPS.
 
-Before enabling Run, implement an isolated sandbox outside the VPS with no network, read-only filesystem, strict CPU/memory/time/output/process limits, private connectivity, and service-to-service authentication. The frontend must degrade safely when that sandbox is unavailable.
+Before enabling general-purpose Python or JavaScript execution, implement an isolated sandbox outside the VPS with no network, read-only filesystem, strict CPU/memory/time/output/process limits, private connectivity, and service-to-service authentication. The frontend must degrade safely when that sandbox is unavailable.
 
 ## Source of truth
 
@@ -54,6 +54,6 @@ When these disagree, verify production, then update both GitHub and Obsidian in 
 ## Current risks and pending decisions
 
 1. `api/druygon_content.db` is not tracked in Git and needs an external backup procedure.
-2. Cody code execution remains intentionally offline until the sandbox boundary exists.
+2. Cody's fixed mission checker is active, but arbitrary code execution remains intentionally offline until the sandbox boundary exists.
 3. Decide whether Cody's persistent backend should adapt to the shared Express/SQLite runtime or use the specification's isolated Hono/tRPC/Drizzle/MySQL service. Do not silently mix both designs.
 4. Safari/WebKit remains a required release gate for frontend changes.

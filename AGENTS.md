@@ -36,7 +36,7 @@ Do not move stable Study or Draco code merely to make folder names symmetrical. 
 ## Safety boundaries
 
 - Never execute learner code on the public VPS. No `eval`, `Function`, or `child_process` for user code.
-- Cody's runner must remain offline until an isolated home-lab sandbox is implemented and authenticated over a private network.
+- Cody's general-purpose runner must remain offline until an isolated home-lab sandbox is implemented and authenticated over a private network. Mission-specific browser checkers may parse a tiny fixed command grammar, but must never use `eval`, `Function`, subprocesses, or arbitrary JavaScript/Python execution.
 - Preserve `/api/*`, `/parent`, `/tutor`, `/manifest.json`, `/sw.js`, and visible blank-screen recovery.
 - Treat `/opt/druygon` as a mixed/dirty worktree. Inspect status first and stage explicit paths only. Never use `git add -A`.
 - Do not commit secrets, databases, `.env` files, certificate material, or live nginx configuration.

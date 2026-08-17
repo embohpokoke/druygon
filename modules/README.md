@@ -13,5 +13,5 @@ Druygon is one learning suite with three linked modules. The production hostname
 - `druygon.my.id` serves `hub/` and links all three modules.
 - Study and Cody use the shared Druygon player API.
 - Draco remains available through the legacy `/tutor` route as well as its dedicated hostname.
-- Arbitrary learner code must never run on the public VPS. Cody's runner stays offline until an isolated sandbox service is available.
+- Arbitrary learner code must never run on the public VPS. Fixed mission checkers may parse a tiny declarative grammar in the browser; general Python/JavaScript execution stays offline until an isolated sandbox service is available.
 - Cross-module navigation should use the production hostnames above instead of duplicating module UIs.
