@@ -32,6 +32,7 @@ All public hostnames currently resolve to the same Hostinger VPS. Nginx terminat
 - Legacy `/tutor` and `/parent` routes remain supported even though Draco has a dedicated hostname.
 - Each module links to the hub and the other learning modes.
 - English is Cody's default UI language. EN/ID preference is stored client-side without rewriting the learner's draft.
+- Every Cody lesson in Visual Blocks, Python, and Web must satisfy `modules/drucode/CURRICULUM.md`: a beginner-friendly Learn First section for ages 10–13 must precede the challenge.
 
 ## Code execution boundary
 

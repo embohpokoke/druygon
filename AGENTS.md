@@ -11,6 +11,8 @@ Read these in order before editing:
 3. `modules/README.md`
 4. The module-specific source and docs you will change
 
+Before adding or changing a Cody lesson, also read `modules/drucode/CURRICULUM.md`. Learn First is a required lesson contract for beginner learners ages 10–13 across Visual Blocks, Python, and Web.
+
 The matching product/operations knowledge base is `~/obsidian/erikmah/projects/druygon/` on Erik's MacBook Pro. Its canonical current-state note is `02. DRUYGON-SUITE-CANONICAL.md`.
 
 ## Product model

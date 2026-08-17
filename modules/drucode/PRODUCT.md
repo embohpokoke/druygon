@@ -6,7 +6,7 @@ product
 
 ## Users
 
-Dru, a 10-year-old first-time coder using a laptop or tablet, is the primary user. A parent manages access, time limits, progress, and AI safety.
+Dru is the primary learner. Cody is designed for beginner coders ages 10–13 using a laptop or tablet. A parent manages access, time limits, progress, and AI safety.
 
 ## Product Purpose
 
@@ -29,6 +29,10 @@ Each mission follows one visible sequence: Learn, Type, Run.
 3. Start with an unsolved editor so Dru must apply the idea.
 4. Check the mission with a fixed declarative parser and give specific corrective feedback.
 5. Reveal hints gradually, with the exact answer only in the final hint.
+
+This sequence is required for every lesson in all three Cody tracks: Visual Blocks, Python, and Web. The complete authoring contract is in `CURRICULUM.md`.
+
+For ages 10–13, each lesson must introduce only one main concept, define new vocabulary where it appears, use short concrete sentences, and avoid assuming prior syntax knowledge. The worked example must model the thinking without copying the challenge answer. A learner should be able to understand what to try before opening a hint.
 
 Mission-specific checkers may recognize a tiny fixed grammar such as `move(integer)` in the browser. They must parse text without `eval`, `Function`, subprocesses, or arbitrary JavaScript/Python execution. General-purpose learner code remains disabled until the isolated sandbox exists.
 

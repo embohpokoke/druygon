@@ -50,7 +50,7 @@ const COPY = {
     roboAlt: 'Robo, the DruCode robot tutor', ready: 'READY TO LEARN', hello: (name: string) => `Hi, ${name}!`,
     intro: 'Robo has prepared your first coding mission.', level: (value: number) => `Druygon Level ${value}`, track: 'Track 1',
     progress: 'Visual Blocks Track progress, 0 percent', minutes: '0 / 45 min', safeMode: 'Safe mode', parentPanel: 'Parent panel', switchModules: 'Switch module',
-    trackEyebrow: 'TRACK 1 · VISUAL BLOCKS', worldTitle: 'World 1 · Nara’s Commands', mapSubtitle: 'Help Nara explore by arranging commands in the right order.',
+    trackEyebrow: 'TRACK 1 · VISUAL BLOCKS', worldTitle: 'World 1 · Nara’s Commands', mapSubtitle: 'Every mission starts with a short lesson, then a guided challenge.',
     learningTracks: 'Learning tracks', visualBlocks: 'Visual Blocks', mission: 'Mission', available: 'available', completed: 'completed', locked: 'locked',
     lessons: ['First Command', 'The Right Order', 'Repeat Steps', 'Helpful Loop', 'Smart Condition', 'Boss: Move Nara'],
     startHere: 'Start here!', startHereBody: 'One small mission, one new skill.',
@@ -80,7 +80,7 @@ const COPY = {
     roboAlt: 'Robo, robot tutor DruCode', ready: 'SIAP BELAJAR', hello: (name: string) => `Halo, ${name}!`,
     intro: 'Robo sudah menyiapkan misi coding pertamamu.', level: (value: number) => `Level Druygon ${value}`, track: 'Track 1',
     progress: 'Progress Track Blok Visual, 0 persen', minutes: '0 / 45 mnt', safeMode: 'Mode aman', parentPanel: 'Panel orang tua', switchModules: 'Pindah modul',
-    trackEyebrow: 'TRACK 1 · BLOK VISUAL', worldTitle: 'Dunia 1 · Perintah Nara', mapSubtitle: 'Bantu Nara menjelajah dengan urutan perintah yang tepat.',
+    trackEyebrow: 'TRACK 1 · BLOK VISUAL', worldTitle: 'Dunia 1 · Perintah Nara', mapSubtitle: 'Setiap misi dimulai dengan pelajaran singkat, lalu tantangan terpandu.',
     learningTracks: 'Track belajar', visualBlocks: 'Blok Visual', mission: 'Misi', available: 'tersedia', completed: 'selesai', locked: 'terkunci',
     lessons: ['Perintah Pertama', 'Urutan yang Tepat', 'Langkah Berulang', 'Loop Penolong', 'Kondisi Cerdas', 'Boss: Nara Bergerak'],
     startHere: 'Mulai dari sini!', startHereBody: 'Satu misi kecil, satu skill baru.',
@@ -345,8 +345,66 @@ type WorkspaceProps = {
   onSave: () => void;
 };
 
+type LearnFirstContent = {
+  label: string;
+  title: string;
+  explanation: string;
+  syntax: {
+    action: string;
+    actionMeaning: string;
+    value: string;
+    valueMeaning: string;
+  };
+  workedExample: {
+    label: string;
+    code: string;
+    result: string;
+  };
+};
+
+function LearnFirst({ content }: { content: LearnFirstContent }) {
+  return (
+    <div className="lesson-theory">
+      <div className="theory-heading">
+        <BookOpen size={18} aria-hidden="true" />
+        <div><small>{content.label}</small><strong>{content.title}</strong></div>
+      </div>
+      <p>{content.explanation}</p>
+      <div className="syntax-example" aria-label={`${content.workedExample.code}: ${content.workedExample.result}`}>
+        <code><b>{content.syntax.action}</b>(<b>{content.syntax.value}</b>)</code>
+        <dl>
+          <div><dt>{content.syntax.action}</dt><dd>{content.syntax.actionMeaning}</dd></div>
+          <div><dt>{content.syntax.value}</dt><dd>{content.syntax.valueMeaning}</dd></div>
+        </dl>
+      </div>
+      <p className="worked-example">
+        <small>{content.workedExample.label}</small>
+        <code>{content.workedExample.code}</code>
+        <span>→ {content.workedExample.result}</span>
+      </p>
+    </div>
+  );
+}
+
 function Workspace({ code, language, hintLevel, output, onBack, onCodeChange, onHint, onReset, onRun, onSave }: WorkspaceProps) {
   const t = COPY[language];
+  const learnFirst: LearnFirstContent = {
+    label: t.learnLabel,
+    title: t.learnTitle,
+    explanation: t.learnBody,
+    syntax: {
+      action: t.actionWord,
+      actionMeaning: t.actionMeaning,
+      value: t.numberWord,
+      valueMeaning: t.numberMeaning,
+    },
+    workedExample: {
+      label: t.exampleLabel,
+      code: t.exampleCode,
+      result: t.exampleResult,
+    },
+  };
+
   return (
     <div className="workspace">
       <div className="workspace-heading">
@@ -365,21 +423,7 @@ function Workspace({ code, language, hintLevel, output, onBack, onCodeChange, on
           <p className="eyebrow">{t.storyLabel}</p>
           <h2 id="brief-title">{t.storyTitle}</h2>
           <p>{t.story}</p>
-          <div className="lesson-theory">
-            <div className="theory-heading">
-              <BookOpen size={18} aria-hidden="true" />
-              <div><small>{t.learnLabel}</small><strong>{t.learnTitle}</strong></div>
-            </div>
-            <p>{t.learnBody}</p>
-            <div className="syntax-example" aria-label={`${t.exampleCode}: ${t.exampleResult}`}>
-              <code><b>{t.actionWord}</b>(<b>{t.numberWord}</b>)</code>
-              <dl>
-                <div><dt>{t.actionWord}</dt><dd>{t.actionMeaning}</dd></div>
-                <div><dt>{t.numberWord}</dt><dd>{t.numberMeaning}</dd></div>
-              </dl>
-            </div>
-            <p className="worked-example"><small>{t.exampleLabel}</small><code>{t.exampleCode}</code><span>→ {t.exampleResult}</span></p>
-          </div>
+          <LearnFirst content={learnFirst} />
           <div className="task-box"><strong>{t.yourTask}</strong><p>{t.task}</p></div>
           <div className="target-output"><small>{t.target}</small><strong>{t.targetValue}</strong></div>
           <div className="hint-panel">
