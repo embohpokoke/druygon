@@ -22,7 +22,8 @@ di [`modules/README.md`](modules/README.md).
 1. [`AGENTS.md`](AGENTS.md) — aturan kerja, batas aman, dan perintah verifikasi.
 2. [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — arsitektur live tiga modul dan source of truth.
 3. [`modules/README.md`](modules/README.md) — kepemilikan source/route tiap modul.
-4. [`modules/drucode/PRODUCT.md`](modules/drucode/PRODUCT.md) dan [`DESIGN.md`](modules/drucode/DESIGN.md) — kontrak produk/visual Cody.
+4. [`modules/drucode/CURRICULUM.md`](modules/drucode/CURRICULUM.md) — kontrak Learn First untuk semua lesson Cody, ditulis untuk beginner usia 10–13 tahun.
+5. [`modules/drucode/PRODUCT.md`](modules/drucode/PRODUCT.md) dan [`DESIGN.md`](modules/drucode/DESIGN.md) — kontrak produk/visual Cody.
 
 Dokumentasi produk, operasi, keputusan, dan handoff lengkap ada di vault Obsidian MacBook:
 `~/obsidian/erikmah/projects/druygon/`. Kode di GitHub adalah source of truth implementasi; state live
