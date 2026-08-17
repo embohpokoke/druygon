@@ -36,23 +36,28 @@ harus selalu diverifikasi di VPS sebelum perubahan.
 ## Region di modul Study
 | Region | Warna | Status |
 |---|---|---|
-| Kurikulum sekolah | kuning `#FFCB05` | 🔒 di-lock dulu (zona ada di DB, belum di-expose) |
-| Sains | teal `#00D9B8` | ✅ aktif |
-| Computer Science (pemula) | ungu `#8B5CF6` | ✅ aktif |
+| Math Plains (matematika) | kuning `#FFCB05` | ✅ aktif |
+| Science Wilds (sains) | teal `#00D9B8` | ✅ aktif |
+| MATPEL Sekolah (mapel kelas 5) | oranye `#F97316` | ✅ aktif |
+
+MATPEL Sekolah mengikuti materi sekolah Dru (SD Tara Salvia kelas 5, Kurikulum Merdeka): Bahasa Indonesia, IPAS, PPKn, Pendidikan Agama Islam, Bahasa Inggris, dan Seni Budaya non-musik. Semua mapel terbuka sejak awal; journey basic→advanced berlaku di dalam tiap mapel (zone id berformat `matpel_<mapel>_<n>`), bukan lintas mapel. Materi baru ditambah mengikuti program mingguan sekolah — lihat `tools/content-engine/out-matpel/` untuk pola seed-nya.
 
 ## Arsitektur (ringkas)
 | Layer | Teknologi |
 |---|---|
 | Frontend (redesign) | React 18 (di `redesign/`), mobile-first; produksi via esbuild bundle |
 | Backend | Node.js + Express, systemd `druygon.service` :3847, di belakang nginx |
-| **AI Tutor "Draco"** (dipertahankan) | Ollama `qwen3.5:cloud` + Claude Haiku fallback + RAG ChromaDB, route `/tutor` + `/parent` |
+| **AI Tutor "Draco"** (dipertahankan) | DeepSeek `deepseek-v4-flash` (primary) → Ollama `qwen3.5:cloud` → Claude Haiku fallback + RAG ChromaDB, route `/tutor` + `/parent` |
 | Content store | SQLite `api/druygon_content.db` (subject/zone/item/zone_pokemon/content_version) |
-| Player store | SQLite `druygon_players.db` |
+| Player store | SQLite `druygon_players.db` (players, caught, progress, `cody_progress`) |
+| Backup | `scripts/backup-db.sh` — harian via cron, retensi 14 hari di `/root/backups/druygon` |
 | Sprite Pokémon | PokéAPI official artwork (by national dex) |
 
 ## Content API
 - `GET /api/content/regions` — regions + zones + zone_pokemon (subjek `locked` disembunyikan)
 - `GET /api/content/questions?topic=<topic>` — `[{q,expr,opts,a,hint,difficulty}]`
+- `GET /api/cody/progress/:slot` — completion Cody per player slot
+- `POST /api/cody/progress/:slot/complete` — idempotent; sukses pertama memberi XP+koin ke profil bersama
 
 ## Menambah / refresh konten
 Pakai **content engine** di [`tools/content-engine/`](tools/content-engine/) — generate (Haiku) + QA

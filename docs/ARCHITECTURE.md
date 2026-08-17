@@ -20,20 +20,23 @@ All public hostnames currently resolve to the same Hostinger VPS. Nginx terminat
 - Public proxy: nginx
 - Study frontend: React 18, JSX sources compiled with esbuild to an ES2019 bundle
 - Cody frontend: React 19 + TypeScript + Vite + Tailwind 4, built to `modules/drucode/dist/`
-- Study content/player state: SQLite
+- Study content/player state: SQLite (`api/druygon_content.db`, `druygon_players.db`)
 - Draco memory: PostgreSQL
 - Draco retrieval: ChromaDB + Ollama embeddings
-- Draco model: Ollama `qwen3.5:cloud`, with Claude Haiku fallback
+- Draco model: DeepSeek `deepseek-v4-flash` (primary) → Ollama `qwen3.5:cloud` → Claude Haiku fallback (`TUTOR_PROVIDER` selects the chain)
+- Backup: `scripts/backup-db.sh` daily cron, 14-day retention under `/root/backups/druygon`
 
 ## Shared contracts
 
-- Player slots are 1 through 4. Cody reads the active player through `/api/player/:slot`.
+- Player slots are 1 through 5 (slot 5 is reserved for QA). Cody reads the active player through `/api/player/:slot`.
 - Study remains server-authoritative for rewards and player state.
+- Cody lesson completion is server-side in `cody_progress` via `/api/cody/progress/:slot` (idempotent, awards shared-profile XP on first completion). The frontend merges it with the localStorage copy and still works fully offline.
+- Study's MATPEL Sekolah region groups zones per school subject (`matpel_<mapel>_<n>`): every subject is open from the start and the basic→advanced journey applies within a subject, never across subjects.
 - Legacy `/tutor` and `/parent` routes remain supported even though Draco has a dedicated hostname.
 - Each module links to the hub and the other learning modes.
 - English is Cody's default UI language. EN/ID preference is stored client-side without rewriting the learner's draft.
 - Every Cody lesson in Visual Blocks, Python, and Web must satisfy `modules/drucode/CURRICULUM.md`: a beginner-friendly Learn First section for ages 10–13 must precede the challenge.
-- Visual Blocks World 1 derives completed/current/locked map states from the contiguous local progress key `drucode-progress-${slot}-visual-blocks-v1`. First success persists completion, shows an inline celebration, and unlocks exactly the next mission.
+- Visual Blocks World 1 derives completed/current/locked map states from the contiguous progress key `drucode-progress-${slot}-visual-blocks-v1` merged with server progress. First success persists completion, shows an inline celebration, and unlocks exactly the next mission. `?fresh=1` starts a clean session for QA.
 
 ## Code execution boundary
 
@@ -55,7 +58,8 @@ When these disagree, verify production, then update both GitHub and Obsidian in 
 
 ## Current risks and pending decisions
 
-1. `api/druygon_content.db` is not tracked in Git and needs an external backup procedure.
-2. Cody's fixed mission checker is active, but arbitrary code execution remains intentionally offline until the sandbox boundary exists.
-3. Decide whether Cody's persistent backend should adapt to the shared Express/SQLite runtime or use the specification's isolated Hono/tRPC/Drizzle/MySQL service. Do not silently mix both designs.
-4. Safari/WebKit remains a required release gate for frontend changes.
+1. Cody's fixed mission checker is active, but arbitrary code execution remains intentionally offline until the sandbox boundary exists.
+2. Safari/WebKit remains a required release gate for frontend changes.
+3. Draco's RAG collections predate the MATPEL Sekolah region; seed `druygon_matpel` knowledge when weekly content grows.
+
+Resolved 2026-08-17: content/player DBs have daily backups with a tested restore (`scripts/backup-db.sh`), and Cody persistence uses the shared Express/SQLite runtime (decided against a separate Hono/tRPC/MySQL service).
