@@ -729,13 +729,14 @@
     return mons[mons.length - 1];
   }
   const rarest = (mons) => mons.reduce((a, b) => RANK[b.rarity] > RANK[a.rarity] ? b : a, mons[0]);
+  const zoneGroup = (id) => String(id).replace(/_\d+$/, "");
   const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = []) => {
     if (!z) return "locked";
     const prog = progress.find((p) => p.zoneId === z.id);
     if ((prog == null ? void 0 : prog.status) === "cleared") return "cleared";
     const zoneCaught = caught.filter((c) => c.zoneId === z.id);
     if (new Set(zoneCaught.map((c) => c.dex)).size >= 2) return "cleared";
-    const prevZone = (allZones || []).find((x) => x.zone === z.zone - 1);
+    const prevZone = (allZones || []).filter((x) => zoneGroup(x.id) === zoneGroup(z.id) && x.zone < z.zone).sort((a, b) => b.zone - a.zone)[0];
     let prevCleared = !prevZone;
     if (prevZone) {
       const prevProg = progress.find((p) => p.zoneId === prevZone.id);
@@ -839,6 +840,14 @@
       [1, 2, 3].map((i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "lb-row", style: { opacity: 0.3 } }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"), /* @__PURE__ */ React.createElement("span", null, "loading\u2026")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"))))
     ))));
   }
+  const MAPEL_LABELS = {
+    matpel_bindo: "Bahasa Indonesia",
+    matpel_ipas: "IPAS",
+    matpel_ppkn: "PPKn",
+    matpel_pai: "Pendidikan Agama Islam",
+    matpel_eng: "Bahasa Inggris",
+    matpel_seni: "Seni Budaya"
+  };
   function RegionMap({ region, go, caught, profile, progress }) {
     var _a;
     const { regions, ready } = useContent();
@@ -850,7 +859,9 @@
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "map-banner" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `url(assets/maps/${region}-bg.jpg) center/cover no-repeat, radial-gradient(120% 120% at 80% 10%, ${r.accent}44, transparent 60%), linear-gradient(135deg, #16122c, #0b0a18)` } }), /* @__PURE__ */ React.createElement("img", { className: "map-banner-mon", src: feat.sprite, alt: "", crossOrigin: "anonymous" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "eyebrow", style: { color: r.accent } }, "Region \xB7 ", r.tag), /* @__PURE__ */ React.createElement("div", { className: "region-name", style: { fontSize: 22, color: r.accent } }, r.name))), /* @__PURE__ */ React.createElement("div", { className: "map-meta" }, /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: r.accent, borderColor: r.accent } }, "LVL ", (_a = profile == null ? void 0 : profile.level) != null ? _a : PLAYER.level), /* @__PURE__ */ React.createElement("span", { className: "eyebrow" }, clearedCount, " / ", r.zones.length, " zones cleared")), r.zones.map((z) => {
       const st = zoneState(z, profile, caught, progress, r.zones);
       const locked = st === "locked", cleared = st === "cleared";
-      return /* @__PURE__ */ React.createElement("div", { key: z.zone, className: "zone " + st, onClick: () => !locked && go("catch", region, z.zone) }, /* @__PURE__ */ React.createElement("div", { className: "zone-no", style: { border: "none", background: "transparent", borderRadius: 0, width: 52, height: 52 } }, /* @__PURE__ */ React.createElement("img", { src: `assets/maps/node-${st}.svg`, alt: st, width: 52, height: 52, style: { objectFit: "contain" } })), /* @__PURE__ */ React.createElement("div", { className: "zone-main" }, /* @__PURE__ */ React.createElement("b", null, z.name), /* @__PURE__ */ React.createElement("code", null, z.topic, locked ? ` \xB7 selesaikan zona sebelumnya` : "")), /* @__PURE__ */ React.createElement("div", { className: "zone-mons" }, z.mons.slice(0, 3).map((m, i) => locked || !cleared && i > 0 ? /* @__PURE__ */ React.createElement("div", { key: i, className: "silh" }, "?") : /* @__PURE__ */ React.createElement("img", { key: i, src: m.sprite, alt: "", crossOrigin: "anonymous" }))), locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 16, color: "var(--text-tertiary)" }) : /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: r.accent }));
+      const groupLabel = MAPEL_LABELS[zoneGroup(z.id)];
+      const showHeader = groupLabel && zoneGroup(z.id) !== zoneGroup((r.zones[r.zones.indexOf(z) - 1] || {}).id || "");
+      return /* @__PURE__ */ React.createElement(React.Fragment, { key: z.zone }, showHeader && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, margin: "14px 2px 8px" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, fontWeight: 800, letterSpacing: ".1em", color: r.accent, textTransform: "uppercase" } }, groupLabel), /* @__PURE__ */ React.createElement("span", { style: { flex: 1, height: 1, background: `${r.accent}33` } })), /* @__PURE__ */ React.createElement("div", { className: "zone " + st, onClick: () => !locked && go("catch", region, z.zone) }, /* @__PURE__ */ React.createElement("div", { className: "zone-no", style: { border: "none", background: "transparent", borderRadius: 0, width: 52, height: 52 } }, /* @__PURE__ */ React.createElement("img", { src: `assets/maps/node-${st}.svg`, alt: st, width: 52, height: 52, style: { objectFit: "contain" } })), /* @__PURE__ */ React.createElement("div", { className: "zone-main" }, /* @__PURE__ */ React.createElement("b", null, z.name), /* @__PURE__ */ React.createElement("code", null, z.topic, locked ? ` \xB7 selesaikan zona sebelumnya` : "")), /* @__PURE__ */ React.createElement("div", { className: "zone-mons" }, z.mons.slice(0, 3).map((m, i) => locked || !cleared && i > 0 ? /* @__PURE__ */ React.createElement("div", { key: i, className: "silh" }, "?") : /* @__PURE__ */ React.createElement("img", { key: i, src: m.sprite, alt: "", crossOrigin: "anonymous" }))), locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 16, color: "var(--text-tertiary)" }) : /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: r.accent })));
     }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 6 } }, "Tap an open zone to enter the catch loop.")));
   }
   const CHEER_WRONG = [

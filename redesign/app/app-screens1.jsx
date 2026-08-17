@@ -26,6 +26,11 @@ function weightedPick(mons) {
 
 const rarest = (mons) => mons.reduce((a, b) => (RANK[b.rarity] > RANK[a.rarity] ? b : a), mons[0]);
 
+// Mapel group key: 'matpel_pai_2' → 'matpel_pai'. Zones in the same group form
+// one basic→advanced journey; different groups (school subjects) never gate
+// each other. Single-group regions (science, curriculum) behave exactly as before.
+const zoneGroup = (id) => String(id).replace(/_\d+$/, '');
+
 // Pure zone state based on real player state
 const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = []) => {
   if (!z) return 'locked';
@@ -37,8 +42,11 @@ const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = [
   const zoneCaught = caught.filter(c => c.zoneId === z.id);
   if (new Set(zoneCaught.map(c => c.dex)).size >= 2) return 'cleared';
 
-  // Open if previous zone is cleared (or zone 1) — level is NOT a gate (GAME-RULES)
-  const prevZone = (allZones || []).find(x => x.zone === z.zone - 1);
+  // Open if the previous zone IN THE SAME GROUP is cleared (or first in group).
+  // Level is NOT a gate (GAME-RULES).
+  const prevZone = (allZones || [])
+    .filter(x => zoneGroup(x.id) === zoneGroup(z.id) && x.zone < z.zone)
+    .sort((a, b) => b.zone - a.zone)[0];
   let prevCleared = !prevZone;
   if (prevZone) {
     const prevProg = progress.find(p => p.zoneId === prevZone.id);
@@ -284,6 +292,17 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
 }
 
 // ───────────────────────── REGION MAP (variant B) ─────────────────────────
+// School-subject group labels (MATPEL): zones are grouped per mata pelajaran;
+// every subject is open from the start, progression journeys within a subject.
+const MAPEL_LABELS = {
+  matpel_bindo: 'Bahasa Indonesia',
+  matpel_ipas: 'IPAS',
+  matpel_ppkn: 'PPKn',
+  matpel_pai: 'Pendidikan Agama Islam',
+  matpel_eng: 'Bahasa Inggris',
+  matpel_seni: 'Seni Budaya',
+};
+
 function RegionMap({ region, go, caught, profile, progress }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
@@ -309,8 +328,17 @@ function RegionMap({ region, go, caught, profile, progress }) {
         {r.zones.map((z) => {
           const st = zoneState(z, profile, caught, progress, r.zones);
           const locked = st === 'locked', cleared = st === 'cleared';
+          const groupLabel = MAPEL_LABELS[zoneGroup(z.id)];
+          const showHeader = groupLabel && zoneGroup(z.id) !== zoneGroup((r.zones[r.zones.indexOf(z) - 1] || {}).id || '');
           return (
-            <div key={z.zone} className={'zone ' + st} onClick={() => !locked && go('catch', region, z.zone)}>
+            <React.Fragment key={z.zone}>
+            {showHeader && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '14px 2px 8px' }}>
+                <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '.1em', color: r.accent, textTransform: 'uppercase' }}>{groupLabel}</span>
+                <span style={{ flex: 1, height: 1, background: `${r.accent}33` }} />
+              </div>
+            )}
+            <div className={'zone ' + st} onClick={() => !locked && go('catch', region, z.zone)}>
               <div className="zone-no" style={{ border: 'none', background: 'transparent', borderRadius: 0, width: 52, height: 52 }}>
                 <img src={`assets/maps/node-${st}.svg`} alt={st} width={52} height={52} style={{ objectFit: 'contain' }} />
               </div>
@@ -325,6 +353,7 @@ function RegionMap({ region, go, caught, profile, progress }) {
               </div>
               {locked ? <Icon name="lock" size={16} color="var(--text-tertiary)" /> : <Icon name="arrowR" size={18} color={r.accent} />}
             </div>
+            </React.Fragment>
           );
         })}
         <p style={{ fontSize: 11, color: 'var(--text-tertiary)', textAlign: 'center', marginTop: 6 }}>
