@@ -17,6 +17,8 @@ import {
   Sparkles,
   Star,
   UserRound,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 import './styles.css';
 
@@ -78,6 +80,7 @@ const COPY = {
     nextUnlocked: (title: string) => `${title} is now unlocked.`, completeWorldBody: 'Every mission in this world is complete. Your progress is saved.',
     continueTo: (title: string) => `Continue to ${title}`, viewJourney: 'View completed journey',
     errorTitle: 'DruCode needs a quick pause', errorBody: 'Your draft is still safe. Reload to continue your adventure.', retry: 'Try again', backDruygon: 'Back to Druygon',
+    soundOn: 'Sound on', soundOff: 'Sound off',
   },
   id: {
     moduleSubtitle: 'modul Druygon', backHub: 'Kembali ke hub Druygon', otherModules: 'Modul Druygon lainnya',
@@ -100,6 +103,7 @@ const COPY = {
     nextUnlocked: (title: string) => `${title} sekarang terbuka.`, completeWorldBody: 'Semua misi di dunia ini selesai. Progress-mu sudah tersimpan.',
     continueTo: (title: string) => `Lanjut ke ${title}`, viewJourney: 'Lihat perjalanan selesai',
     errorTitle: 'DruCode berhenti sebentar', errorBody: 'Draft-mu tetap aman. Muat ulang untuk melanjutkan petualangan.', retry: 'Coba lagi', backDruygon: 'Kembali ke Druygon',
+    soundOn: 'Suara aktif', soundOff: 'Suara mati',
   },
 } as const;
 
@@ -381,6 +385,26 @@ const MISSIONS: MissionDefinition[] = [
 
 const TOTAL_MISSIONS = MISSIONS.length;
 
+type StagePhase = 'idle' | 'running' | 'success' | 'error';
+
+type SceneSpec = {
+  pads: Array<[number, number]>;
+  stones?: Array<[number, number]>;
+  star: [number, number];
+  waypoints: Array<[number, number]>;
+};
+
+// Coordinates live in a 420x170 viewBox. Pads/stones are ground tiles,
+// waypoints are Nara's feet positions, star floats above the goal pad.
+const SCENES: Record<number, SceneSpec> = {
+  1: { pads: [[60, 128], [132, 128]], star: [132, 84], waypoints: [[60, 128], [132, 128]] },
+  2: { pads: [[60, 128], [132, 128], [132, 68]], star: [132, 24], waypoints: [[60, 128], [132, 128], [132, 68]] },
+  3: { pads: [[60, 128]], stones: [[140, 128], [220, 128], [300, 128]], star: [300, 84], waypoints: [[60, 128], [140, 126], [220, 126], [300, 126]] },
+  4: { pads: [[50, 128], [120, 128], [190, 128], [260, 128], [330, 128]], star: [330, 84], waypoints: [[50, 128], [120, 128], [190, 128], [260, 128], [330, 128]] },
+  5: { pads: [[110, 128], [240, 128]], star: [240, 84], waypoints: [[110, 128], [240, 128]] },
+  6: { pads: [[40, 128], [110, 128], [110, 68], [180, 68], [250, 68], [320, 68]], star: [320, 24], waypoints: [[40, 128], [110, 128], [110, 68], [180, 68], [250, 68], [320, 68]] },
+};
+
 function preferredLanguage(): Language {
   return safeLocalGet('drucode-language') === 'id' ? 'id' : 'en';
 }
@@ -391,6 +415,70 @@ function safeLocalGet(key: string) {
 
 function safeLocalSet(key: string, value: string) {
   try { window.localStorage.setItem(key, value); } catch { /* Storage-disabled browsers remain usable. */ }
+}
+
+type Sfx = { step: () => void; success: () => void; error: () => void; hint: () => void };
+
+// Tiny WebAudio blips, no audio assets. The context is created lazily inside
+// a user gesture (Run/Hint click) so browser autoplay rules are respected.
+function useSfx(enabled: boolean): Sfx {
+  const contextRef = React.useRef<AudioContext | null>(null);
+  return React.useMemo(() => {
+    const tone = (frequency: number, delay: number, duration: number, type: OscillatorType, volume: number) => {
+      if (!enabled) return;
+      try {
+        const AudioCtor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (!AudioCtor) return;
+        contextRef.current ??= new AudioCtor();
+        const ctx = contextRef.current;
+        if (ctx.state === 'suspended') void ctx.resume();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const start = ctx.currentTime + delay;
+        osc.type = type;
+        osc.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + duration + 0.05);
+      } catch { /* Audio is optional; silence is fine. */ }
+    };
+    return {
+      step: () => tone(720, 0, 0.07, 'square', 0.045),
+      success: () => { tone(523, 0, 0.14, 'triangle', 0.09); tone(659, 0.09, 0.14, 'triangle', 0.09); tone(784, 0.18, 0.16, 'triangle', 0.09); tone(1047, 0.28, 0.3, 'triangle', 0.1); },
+      error: () => { tone(196, 0, 0.16, 'sine', 0.08); tone(147, 0.12, 0.22, 'sine', 0.07); },
+      hint: () => { tone(880, 0, 0.06, 'sine', 0.06); tone(1319, 0.07, 0.1, 'sine', 0.06); },
+    };
+  }, [enabled]);
+}
+
+const CONFETTI_COLORS = ['#6c4fd8', '#2ec9c0', '#ffb930', '#ffd06e', '#4cc38a', '#ff8ac2'];
+
+function Confetti({ burstKey }: { burstKey: number }) {
+  const pieces = React.useMemo(() => Array.from({ length: 46 }, (_, index) => ({
+    left: (index * 37 + 13) % 100,
+    delay: ((index * 53) % 40) / 100,
+    duration: 1.5 + ((index * 29) % 70) / 100,
+    size: 7 + ((index * 17) % 8),
+    color: CONFETTI_COLORS[index % CONFETTI_COLORS.length],
+    round: index % 3 === 0,
+    drift: ((index * 41) % 60) - 30,
+  })), [burstKey]);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+  return (
+    <div className="confetti-layer" aria-hidden="true">
+      {pieces.map((piece, index) => (
+        <i key={`${burstKey}-${index}`} style={{
+          left: `${piece.left}%`, width: piece.size, height: piece.round ? piece.size : piece.size * 0.5,
+          background: piece.color, borderRadius: piece.round ? '50%' : '2px',
+          animationDelay: `${piece.delay}s`, animationDuration: `${piece.duration}s`,
+          ['--drift' as string]: `${piece.drift}px`,
+        }} />
+      ))}
+    </div>
+  );
 }
 
 function readCompletedLessons(key: string) {
@@ -443,8 +531,14 @@ function App() {
   const [code, setCode] = React.useState(() => safeLocalGet(draftKey) ?? lesson.starterCode);
   const [hintLevel, setHintLevel] = React.useState(0);
   const [output, setOutput] = React.useState<OutputState>({ kind: 'initial' });
+  const [phase, setPhase] = React.useState<StagePhase>('idle');
+  const [runToken, setRunToken] = React.useState(0);
+  const [soundOn, setSoundOn] = React.useState(() => safeLocalGet('drucode-sfx') !== 'off');
+  const [celebrating, setCelebrating] = React.useState(false);
+  const sfx = useSfx(soundOn);
 
   React.useEffect(() => { document.documentElement.lang = language; safeLocalSet('drucode-language', language); }, [language]);
+  React.useEffect(() => { safeLocalSet('drucode-sfx', soundOn ? 'on' : 'off'); }, [soundOn]);
   React.useEffect(() => { safeLocalSet(progressKey, JSON.stringify(completedLessons)); }, [completedLessons, progressKey]);
   React.useEffect(() => { safeLocalSet(draftKey, code); }, [code, draftKey]);
 
@@ -455,20 +549,35 @@ function App() {
     setCode(safeLocalGet(draftKeyFor(slot, lessonId)) ?? selected.copy[language].starterCode);
     setHintLevel(0);
     setOutput({ kind: 'initial' });
+    setPhase('idle');
     setScreen('workspace');
   }, [language, slot]);
 
   const saveDraft = React.useCallback(() => { safeLocalSet(draftKey, code); setOutput({ kind: 'saved' }); }, [code, draftKey]);
   const runCode = React.useCallback(() => {
+    if (phase === 'running') return;
     const result = activeMission.validate(code);
-    setOutput({ kind: result });
     safeLocalSet(draftKey, code);
     if (result === 'success') {
-      setCompletedLessons((current) => current.includes(activeLessonId) || activeLessonId !== current.length + 1 ? current : [...current, activeLessonId]);
+      setPhase('running');
+      setRunToken((token) => token + 1);
+      return;
     }
-  }, [activeLessonId, activeMission, code, draftKey]);
-  const updateCode = React.useCallback((value: string) => { setCode(value); setOutput({ kind: 'initial' }); }, []);
-  const resetCode = React.useCallback(() => { setCode(lesson.starterCode); setOutput({ kind: 'reset' }); }, [lesson.starterCode]);
+    setOutput({ kind: result });
+    setPhase('error');
+    sfx.error();
+    window.setTimeout(() => setPhase((current) => (current === 'error' ? 'idle' : current)), 900);
+  }, [activeMission, code, draftKey, phase, sfx]);
+  const handleArrive = React.useCallback(() => {
+    setOutput({ kind: 'success' });
+    setPhase('success');
+    sfx.success();
+    setCelebrating(true);
+    window.setTimeout(() => setCelebrating(false), 2700);
+    setCompletedLessons((current) => current.includes(activeLessonId) || activeLessonId !== current.length + 1 ? current : [...current, activeLessonId]);
+  }, [activeLessonId, sfx]);
+  const updateCode = React.useCallback((value: string) => { setCode(value); setOutput({ kind: 'initial' }); setPhase('idle'); }, []);
+  const resetCode = React.useCallback(() => { setCode(lesson.starterCode); setOutput({ kind: 'reset' }); setPhase('idle'); }, [lesson.starterCode]);
 
   const outputText = output.kind === 'saved' ? t.savedOutput : lesson.feedback[output.kind];
   const nextMission = MISSIONS[activeLessonId];
@@ -484,6 +593,9 @@ function App() {
           <button type="button" className={language === 'en' ? 'active' : ''} aria-pressed={language === 'en'} title={t.english} onClick={() => setLanguage('en')}>EN</button>
           <button type="button" className={language === 'id' ? 'active' : ''} aria-pressed={language === 'id'} title={t.indonesian} onClick={() => setLanguage('id')}>ID</button>
         </div>
+        <button type="button" className={`sound-toggle ${soundOn ? '' : 'muted'}`} aria-pressed={soundOn} aria-label={soundOn ? t.soundOn : t.soundOff} title={soundOn ? t.soundOn : t.soundOff} onClick={() => setSoundOn((on) => !on)}>
+          {soundOn ? <Volume2 size={17} aria-hidden="true" /> : <VolumeX size={17} aria-hidden="true" />}
+        </button>
         <span className="status-chip"><Flame size={15} aria-hidden="true" /> {t.days}</span>
         <span className="xp-chip"><Star size={15} aria-hidden="true" /> {player?.profile?.xp ?? 0} XP</span>
         <span className="avatar" aria-label={`${t.activePlayer}: ${player?.name ?? t.loading}`}><UserRound size={18} /></span>
@@ -496,12 +608,40 @@ function App() {
           <Workspace
             code={code} language={language} lessonId={activeLessonId} lesson={lesson} hintLevel={hintLevel} output={outputText}
             isSuccess={output.kind === 'success'} nextLessonTitle={nextMission?.copy[language].title}
+            phase={phase} runToken={runToken} onArrive={handleArrive} onStep={sfx.step}
             onBack={() => setScreen('map')} onCodeChange={updateCode} onContinue={() => nextMission ? openLesson(nextMission.id) : setScreen('map')}
-            onHint={() => setHintLevel((level) => Math.min(3, level + 1))} onReset={resetCode} onRun={runCode} onSave={saveDraft}
+            onHint={() => { setHintLevel((level) => Math.min(3, level + 1)); sfx.hint(); }} onReset={resetCode} onRun={runCode} onSave={saveDraft}
           />
         )}
       </main>
+      {celebrating && <Confetti burstKey={runToken} />}
     </div>
+  );
+}
+
+function MapSky() {
+  return (
+    <svg className="map-sky" aria-hidden="true" focusable="false" viewBox="0 0 850 560" preserveAspectRatio="xMidYMid slice">
+      <g fill="#c9c2ec">
+        <circle cx="60" cy="80" r="2" /><circle cx="150" cy="40" r="1.3" /><circle cx="240" cy="120" r="1.7" />
+        <circle cx="330" cy="60" r="1.2" /><circle cx="420" cy="150" r="2" /><circle cx="500" cy="70" r="1.4" />
+        <circle cx="590" cy="130" r="1.8" /><circle cx="660" cy="50" r="1.2" /><circle cx="740" cy="110" r="1.6" />
+        <circle cx="110" cy="220" r="1.4" /><circle cx="300" cy="260" r="1.2" /><circle cx="520" cy="240" r="1.5" />
+        <circle cx="700" cy="230" r="1.2" /><circle cx="200" cy="330" r="1.6" /><circle cx="450" cy="360" r="1.3" />
+        <circle cx="620" cy="330" r="1.7" /><circle cx="90" cy="430" r="1.3" /><circle cx="380" cy="470" r="1.5" />
+      </g>
+      <g className="map-sky-twinkle" fill="#ffb930">
+        <path d="M180 160 l2.2 5.4 5.4 2.2 -5.4 2.2 -2.2 5.4 -2.2 -5.4 -5.4 -2.2 5.4 -2.2 Z" />
+        <path d="M560 400 l1.8 4.4 4.4 1.8 -4.4 1.8 -1.8 4.4 -1.8 -4.4 -4.4 -1.8 4.4 -1.8 Z" />
+        <path d="M690 170 l1.6 3.8 3.8 1.6 -3.8 1.6 -1.6 3.8 -1.6 -3.8 -3.8 -1.6 3.8 -1.6 Z" />
+      </g>
+      <g className="map-sky-planet" transform="translate(788 74)">
+        <circle r="26" fill="#8f7ef0" />
+        <circle cx="-8" cy="-7" r="7" fill="#a996f5" />
+        <circle cx="9" cy="10" r="4.5" fill="#7a68e4" />
+        <ellipse rx="42" ry="11" fill="none" stroke="#ffd06e" strokeWidth="3.5" transform="rotate(-18)" />
+      </g>
+    </svg>
   );
 }
 
@@ -530,6 +670,7 @@ function LearningMap({ language, playerName, level, completedLessons, onOpenLess
         </div>
 
         <div className="mission-path">
+          <MapSky />
           <div className="path-line" aria-hidden="true" />
           {MISSIONS.map((mission, index) => {
             const title = mission.copy[language].title;
@@ -556,9 +697,89 @@ function LearningMap({ language, playerName, level, completedLessons, onOpenLess
 
 type WorkspaceProps = {
   code: string; language: Language; lessonId: number; lesson: LessonCopy; hintLevel: number; output: string; isSuccess: boolean;
-  nextLessonTitle?: string; onBack: () => void; onCodeChange: (value: string) => void; onContinue: () => void; onHint: () => void;
+  nextLessonTitle?: string; phase: StagePhase; runToken: number; onArrive: () => void; onStep: () => void; onBack: () => void;
+  onCodeChange: (value: string) => void; onContinue: () => void; onHint: () => void;
   onReset: () => void; onRun: () => void; onSave: () => void;
 };
+
+function NaraSprite() {
+  return (
+    <g className="nara-sprite">
+      <line x1="0" y1="-46" x2="0" y2="-56" stroke="#ffb930" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="0" cy="-59" r="4" fill="#2ec9c0" />
+      <rect x="-19" y="-44" width="38" height="34" rx="15" fill="#ffb930" stroke="#a56600" strokeWidth="2.5" />
+      <rect x="-13" y="-37" width="26" height="14" rx="7" fill="#23204f" />
+      <circle cx="-5" cy="-30" r="2.6" fill="#6fe1d9" />
+      <circle cx="6" cy="-30" r="2.6" fill="#6fe1d9" />
+      <rect x="-14" y="-10" width="10" height="9" rx="3.5" fill="#e59a12" />
+      <rect x="4" y="-10" width="10" height="9" rx="3.5" fill="#e59a12" />
+    </g>
+  );
+}
+
+function NaraStage({ missionId, phase, runToken, onArrive, onStep }: { missionId: number; phase: StagePhase; runToken: number; onArrive: () => void; onStep: () => void }) {
+  const scene = SCENES[missionId];
+  const [step, setStep] = React.useState(0);
+  const arrived = phase === 'success';
+
+  React.useEffect(() => { setStep(0); }, [missionId]);
+
+  React.useEffect(() => {
+    if (phase !== 'running' || !scene) return undefined;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lastStep = scene.waypoints.length - 1;
+    if (reduced) {
+      setStep(lastStep);
+      const quick = window.setTimeout(onArrive, 120);
+      return () => window.clearTimeout(quick);
+    }
+    setStep(0);
+    const timers: number[] = [];
+    for (let index = 1; index <= lastStep; index += 1) {
+      timers.push(window.setTimeout(() => { setStep(index); onStep(); }, index * 430));
+    }
+    timers.push(window.setTimeout(onArrive, lastStep * 430 + 500));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+    // runToken restarts the walk even when the same mission is re-run.
+  }, [phase, runToken, scene, onArrive, onStep]);
+
+  if (!scene) return null;
+  const position = scene.waypoints[Math.min(step, scene.waypoints.length - 1)];
+  return (
+    <div className={`nara-stage ${phase}`} aria-hidden="true">
+      <svg viewBox="0 0 420 170" role="presentation" focusable="false">
+        <defs>
+          <radialGradient id="stage-sky" cx="78%" cy="12%" r="90%">
+            <stop offset="0%" stopColor="#2c2758" />
+            <stop offset="100%" stopColor="#14122e" />
+          </radialGradient>
+        </defs>
+        <rect x="0" y="0" width="420" height="170" fill="url(#stage-sky)" />
+        <g className="stage-stars" fill="#e8e6fa">
+          <circle cx="36" cy="26" r="1.6" /><circle cx="88" cy="52" r="1.1" /><circle cx="205" cy="20" r="1.4" />
+          <circle cx="262" cy="44" r="1" /><circle cx="352" cy="30" r="1.7" /><circle cx="392" cy="66" r="1.1" />
+          <circle cx="318" cy="104" r="1" /><circle cx="168" cy="96" r="1" /><circle cx="24" cy="92" r="1.2" />
+        </g>
+        <circle cx="374" cy="126" r="17" fill="#3a3474" />
+        <circle cx="368" cy="120" r="5" fill="#4a4390" />
+        {scene.pads.map(([x, y]) => (
+          <rect key={`pad-${x}-${y}`} x={x - 26} y={y} width="52" height="13" rx="6.5" fill="#39346c" stroke="#57519c" strokeWidth="1.5" />
+        ))}
+        {scene.stones?.map(([x, y]) => (
+          <ellipse key={`stone-${x}-${y}`} cx={x} cy={y + 6} rx="24" ry="8.5" fill="#39346c" stroke="#57519c" strokeWidth="1.5" />
+        ))}
+        <g transform={`translate(${scene.star[0]} ${scene.star[1]})`}>
+          <g className={`stage-star ${arrived ? 'collected' : ''}`}>
+            <path d="M0 -13 L3.4 -4.4 L12.5 -4 L5.2 1.9 L7.8 10.6 L0 5.4 L-7.8 10.6 L-5.2 1.9 L-12.5 -4 L-3.4 -4.4 Z" fill="#ffd06e" stroke="#c98a12" strokeWidth="1.6" strokeLinejoin="round" />
+          </g>
+        </g>
+        <g className="nara-walker" style={{ transform: `translate(${position[0]}px, ${position[1]}px)` }}>
+          <NaraSprite />
+        </g>
+      </svg>
+    </div>
+  );
+}
 
 function LearnFirst({ content, language }: { content: LearnFirstContent; language: Language }) {
   const t = COPY[language];
@@ -575,8 +796,9 @@ function LearnFirst({ content, language }: { content: LearnFirstContent; languag
   );
 }
 
-function Workspace({ code, language, lessonId, lesson, hintLevel, output, isSuccess, nextLessonTitle, onBack, onCodeChange, onContinue, onHint, onReset, onRun, onSave }: WorkspaceProps) {
+function Workspace({ code, language, lessonId, lesson, hintLevel, output, isSuccess, nextLessonTitle, phase, runToken, onArrive, onStep, onBack, onCodeChange, onContinue, onHint, onReset, onRun, onSave }: WorkspaceProps) {
   const t = COPY[language];
+  const roboMood = phase === 'success' ? 'cheer' : phase === 'error' ? 'oops' : hintLevel > 0 ? 'think' : 'idle';
   return (
     <div className="workspace">
       <div className="workspace-heading">
@@ -592,12 +814,13 @@ function Workspace({ code, language, lessonId, lesson, hintLevel, output, isSucc
           <LearnFirst content={lesson.learnFirst} language={language} />
           <div className="task-box"><strong>{t.yourTask}</strong><p>{lesson.task}</p></div>
           <div className="target-output"><small>{t.target}</small><strong>{lesson.target}</strong></div>
-          <div className="hint-panel"><img src="robo.png" alt="" /><div><strong>{t.roboHint} {hintLevel}/3</strong><p>{hintLevel === 0 ? t.tryFirst : lesson.hints[hintLevel - 1]}</p></div></div>
+          <div className={`hint-panel mood-${roboMood}`}><img src="robo.png" alt="" /><div><strong>{t.roboHint} {hintLevel}/3</strong><p>{hintLevel === 0 ? t.tryFirst : lesson.hints[hintLevel - 1]}</p></div></div>
           <button className="hint-button" onClick={onHint} disabled={hintLevel >= 3}><Lightbulb size={17} /> {hintLevel >= 3 ? t.allHints : t.askHint}</button>
         </section>
 
         <section className="code-zone" aria-label={t.codeArea}>
           <div className="editor-toolbar"><span><i className="dot red" /><i className="dot amber" /><i className="dot green" />main.block</span><small>{t.draftSafe}</small></div>
+          <NaraStage missionId={lessonId} phase={phase} runToken={runToken} onArrive={onArrive} onStep={onStep} />
           <label className="sr-only" htmlFor="code-editor">{t.codeLabel}</label>
           <textarea id="code-editor" value={code} placeholder={lesson.placeholder} onChange={(event) => onCodeChange(event.target.value)} spellCheck={false} />
           <div className="output-panel" aria-live="polite"><small>OUTPUT</small><pre>{output}</pre></div>
@@ -612,7 +835,7 @@ function Workspace({ code, language, lessonId, lesson, hintLevel, output, isSucc
             {isSuccess ? (
               <button className="continue-button" onClick={onContinue}>{nextLessonTitle ? t.continueTo(nextLessonTitle) : t.viewJourney} <ChevronRight size={18} /></button>
             ) : (
-              <><button className="run-button" onClick={onRun}><Play size={18} fill="currentColor" /> {t.run}</button><button className="secondary-button" onClick={onReset}><RotateCcw size={17} /> {t.reset}</button><button className="secondary-button" onClick={onSave}><Save size={17} /> {t.save}</button></>
+              <><button className="run-button" onClick={onRun} disabled={phase === 'running'}><Play size={18} fill="currentColor" /> {t.run}</button><button className="secondary-button" onClick={onReset}><RotateCcw size={17} /> {t.reset}</button><button className="secondary-button" onClick={onSave}><Save size={17} /> {t.save}</button></>
             )}
           </div>
         </section>
