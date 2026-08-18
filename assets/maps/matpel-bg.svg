@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0618"/>
+      <stop offset="100%" stop-color="#2a1206"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+
+  <!-- faint grid -->
+  <line x1="0" y1="180" x2="960" y2="180" stroke="#F97316" stroke-width="1" opacity="0.13"/>
+  <line x1="0" y1="360" x2="960" y2="360" stroke="#F97316" stroke-width="1" opacity="0.13"/>
+  <line x1="240" y1="0" x2="240" y2="540" stroke="#F97316" stroke-width="1" opacity="0.13"/>
+  <line x1="480" y1="0" x2="480" y2="540" stroke="#F97316" stroke-width="1" opacity="0.13"/>
+  <line x1="720" y1="0" x2="720" y2="540" stroke="#F97316" stroke-width="1" opacity="0.13"/>
+
+  <!-- stars -->
+  <g fill="#FFD06E" opacity="0.75">
+    <circle cx="120" cy="90" r="3"/><circle cx="300" cy="60" r="2"/><circle cx="660" cy="80" r="2.5"/>
+    <circle cx="840" cy="130" r="3"/><circle cx="780" cy="420" r="2.5"/><circle cx="180" cy="450" r="2"/>
+    <circle cx="520" cy="480" r="2.5"/><circle cx="60" cy="300" r="2"/>
+  </g>
+  <path d="M845 55 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 Z" fill="#FFD06E" opacity="0.9"/>
+  <path d="M150 380 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z" fill="#FFD06E" opacity="0.7"/>
+
+  <!-- crescent moon (PAI) -->
+  <path d="M826 220 a46 46 0 1 0 26 74 a38 38 0 1 1 -26 -74 Z" fill="#FFD06E" opacity="0.85" filter="url(#glow)"/>
+
+  <!-- pencil -->
+  <g transform="rotate(24 190 240)">
+    <rect x="150" y="228" width="90" height="22" rx="4" fill="#F97316" opacity="0.9"/>
+    <polygon points="240,228 262,239 240,250" fill="#FFD9AE"/>
+    <polygon points="256,236 262,239 256,242" fill="#2B2848"/>
+    <rect x="142" y="228" width="12" height="22" rx="3" fill="#E25C05"/>
+  </g>
+
+  <!-- open book center -->
+  <g filter="url(#glow)">
+    <path d="M480 220 Q410 190 340 205 L340 355 Q410 340 480 368 Q550 340 620 355 L620 205 Q550 190 480 220 Z" fill="#F97316" opacity="0.28"/>
+    <path d="M480 220 Q410 190 340 205 L340 355 Q410 340 480 368 Q550 340 620 355 L620 205 Q550 190 480 220 Z" fill="none" stroke="#F97316" stroke-width="3" opacity="0.8"/>
+    <path d="M480 220 L480 368" stroke="#F97316" stroke-width="3" opacity="0.8"/>
+    <path d="M365 240 Q410 226 455 240 M365 275 Q410 261 455 275 M365 310 Q410 296 455 310" stroke="#FFC98A" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75"/>
+    <path d="M505 240 Q550 226 595 240 M505 275 Q550 261 595 275 M505 310 Q550 296 595 310" stroke="#FFC98A" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75"/>
+  </g>
+
+  <!-- region label -->
+  <text x="480" y="440" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="52" font-weight="800" fill="#F97316" opacity="0.92" filter="url(#glow)">MATPEL Sekolah</text>
+  <text x="480" y="482" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="21" fill="#FFC98A" opacity="0.6">Pelajaran sekolah kelas 5</text>
+</svg>

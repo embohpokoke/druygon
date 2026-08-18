@@ -15,11 +15,46 @@ function getAnthropic() {
   return anthropicClient;
 }
 
-// ── Draco LLM provider: Ollama cloud (primary) → Claude Haiku (fallback) ──────
+// ── Draco LLM provider chain: DeepSeek (primary) → Ollama cloud → Claude Haiku ──
 const OLLAMA_HOST        = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const TUTOR_OLLAMA_MODEL = process.env.TUTOR_OLLAMA_MODEL || 'qwen3.5:cloud';
-const TUTOR_PROVIDER     = (process.env.TUTOR_PROVIDER || 'ollama').toLowerCase();
+const TUTOR_PROVIDER     = (process.env.TUTOR_PROVIDER || 'deepseek').toLowerCase();
 const OLLAMA_TIMEOUT_MS  = parseInt(process.env.TUTOR_OLLAMA_TIMEOUT_MS || '25000', 10);
+
+const DEEPSEEK_BASE_URL  = (process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, '');
+const DEEPSEEK_MODEL     = process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
+const DEEPSEEK_TIMEOUT_MS = parseInt(process.env.DEEPSEEK_TIMEOUT_MS || '30000', 10);
+
+async function callDeepseek(system, messages, { temperature = 0.7, max_tokens = 300 } = {}) {
+  if (!process.env.DEEPSEEK_API_KEY) throw new Error('DeepSeek API key not configured.');
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), DEEPSEEK_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+      },
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        model: DEEPSEEK_MODEL,
+        stream: false,
+        temperature,
+        // Reasoning models spend tokens thinking; give the reply enough room.
+        max_tokens: Math.max(max_tokens * 2, 600),
+        messages: [{ role: 'system', content: system }, ...messages],
+      }),
+    });
+    if (!res.ok) throw new Error(`deepseek ${res.status}: ${(await res.text()).slice(0, 200)}`);
+    const data = await res.json();
+    const text = ((data.choices?.[0]?.message?.content) || '').trim();
+    if (!text) throw new Error('deepseek returned empty reply');
+    return text;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 async function callOllama(system, messages, { temperature = 0.7, max_tokens = 300 } = {}) {
   const ctrl = new AbortController();
@@ -56,21 +91,28 @@ async function callAnthropic(system, messages, { temperature = 0.7, max_tokens =
   return message.content[0].text.trim();
 }
 
-// Draco talks through Ollama cloud first; on any failure it falls back to Haiku
-// so the tutor never goes dark. Set TUTOR_PROVIDER=anthropic to use Haiku only.
+// Draco talks through DeepSeek first, then Ollama cloud, then Claude Haiku,
+// so the tutor never goes dark. TUTOR_PROVIDER=ollama|anthropic forces a
+// single-provider chain (DeepSeek skipped unless provider=deepseek).
 async function callTutorLLM(system, messages, opts = {}) {
-  if (TUTOR_PROVIDER === 'ollama') {
+  if (TUTOR_PROVIDER === 'deepseek' && process.env.DEEPSEEK_API_KEY) {
+    try {
+      const text = await callDeepseek(system, messages, opts);
+      return { text, model: DEEPSEEK_MODEL };
+    } catch (err) {
+      console.error('[tutor] DeepSeek failed, falling back to Ollama:', err.message);
+    }
+  }
+  if (TUTOR_PROVIDER === 'deepseek' || TUTOR_PROVIDER === 'ollama') {
     try {
       const text = await callOllama(system, messages, opts);
       return { text, model: TUTOR_OLLAMA_MODEL };
     } catch (err) {
       console.error('[tutor] Ollama failed, falling back to Haiku:', err.message);
-      const text = await callAnthropic(system, messages, opts);
-      return { text, model: 'claude-haiku-4-5 (fallback)' };
     }
   }
   const text = await callAnthropic(system, messages, opts);
-  return { text, model: 'claude-haiku-4-5' };
+  return { text, model: TUTOR_PROVIDER === 'deepseek' ? 'claude-haiku-4-5 (fallback)' : 'claude-haiku-4-5' };
 }
 
 const RUBRIK_TOPICS = ['sains_sda', 'pancasila_sda', 'sbdp_diorama'];

@@ -34,7 +34,7 @@
   const REGION_META = {
     curriculum: { name: "Math Plains", tag: "Math", accent: "#FFCB05", accentVar: "--yellow", blurb: "Numbers & problem solving", icon: "sigma" },
     science: { name: "Science Wilds", tag: "Science", accent: "#00D9B8", accentVar: "--teal", blurb: "Living-world wilds", icon: "leaf" },
-    compsci: { name: "Digital Circuit", tag: "Compsci", accent: "#8B5CF6", accentVar: "--purple", blurb: "Logic & circuits", icon: "cpu" }
+    matpel: { name: "MATPEL Sekolah", tag: "School", accent: "#F97316", accentVar: "--orange", blurb: "Pelajaran sekolah kelas 5", icon: "book" }
   };
   let REGIONS = null;
   let QUESTIONS = {};
@@ -139,18 +139,18 @@
           { zone: 3, name: "Reaktor Mineral", topic: "materi_energi", minLevel: 11, mons: [mon(74, "Geodude", "Rock", "common"), mon(145, "Zapdos", "Electric", "legendary")] }
         ]
       },
-      compsci: {
-        id: "compsci",
-        name: "Sirkuit Digital",
-        accent: "#8B5CF6",
-        accentVar: "--purple",
-        blurb: "Logic & circuits",
-        tag: "Compsci",
-        icon: "cpu",
+      matpel: {
+        id: "matpel",
+        name: "MATPEL Sekolah",
+        accent: "#F97316",
+        accentVar: "--orange",
+        blurb: "Pelajaran sekolah kelas 5",
+        tag: "School",
+        icon: "book",
         zones: [
-          { zone: 1, name: "Gerbang Logika", topic: "urutan_logika", minLevel: 1, mons: [mon(81, "Magnemite", "Electric", "common"), mon(137, "Porygon", "Normal", "uncommon")] },
-          { zone: 2, name: "Jaringan", topic: "perulangan_jaringan", minLevel: 6, mons: [mon(233, "Porygon2", "Normal", "uncommon"), mon(479, "Rotom", "Electric", "rare")] },
-          { zone: 3, name: "Inti Prosesor", topic: "algoritma_debug", minLevel: 11, mons: [mon(474, "Porygon-Z", "Normal", "rare"), mon(1008, "Miraidon", "Electric", "legendary")] }
+          { zone: 1, name: "Pulau Puisi", topic: "puisi", minLevel: 1, mons: [mon(39, "Jigglypuff", "Normal", "common"), mon(441, "Chatot", "Flying", "common"), mon(648, "Meloetta", "Psychic", "rare")] },
+          { zone: 4, name: "Cahaya At-Tiin", topic: "qs_at_tiin", minLevel: 1, mons: [mon(928, "Smoliv", "Grass", "common"), mon(173, "Cleffa", "Fairy", "common"), mon(929, "Dolliv", "Grass", "rare")] },
+          { zone: 2, name: "Benteng Perjuangan", topic: "perjuangan_bangsa", minLevel: 1, mons: [mon(140, "Kabuto", "Rock", "common"), mon(138, "Omanyte", "Rock", "common"), mon(142, "Aerodactyl", "Flying", "rare")] }
         ]
       }
     };
@@ -176,25 +176,33 @@
       "Did you know? Our galaxy, the Milky Way, has more than 100 billion stars.",
       "Did you know? One day on Venus is longer than one whole year on Venus!"
     ],
-    urutan_logika: [
-      "Did you know? Computers understand only two numbers: 0 and 1 \u2014 that is called binary.",
-      "Did you know? An algorithm is just a list of steps in order, like a cooking recipe."
+    puisi: [
+      "Tahukah kamu? Puisi sudah ada sejak ribuan tahun lalu \u2014 jauh sebelum orang menulis buku cerita.",
+      'Tahukah kamu? Chairil Anwar adalah penyair Indonesia yang terkenal dengan puisi "Aku".'
     ],
-    perulangan_jaringan: [
-      "Did you know? A loop lets a computer repeat a task thousands of times without getting tired.",
-      "Did you know? The internet is millions of computers all connected around the world."
+    perjuangan_bangsa: [
+      "Tahukah kamu? Rempah-rempah Indonesia seperti pala dan cengkeh dulu lebih berharga daripada emas.",
+      "Tahukah kamu? Sumpah Pemuda 1928 diikrarkan 17 tahun sebelum Proklamasi Kemerdekaan."
     ],
-    algoritma_debug: [
-      'Did you know? The first computer "bug" was a real moth stuck inside the machine!',
-      "Did you know? Debugging means finding and fixing mistakes in code."
+    toleransi_bela_negara: [
+      "Tahukah kamu? Indonesia punya lebih dari 1.300 suku bangsa \u2014 semuanya bisa hidup rukun.",
+      "Tahukah kamu? Bhineka Tunggal Ika artinya berbeda-beda tetapi tetap satu."
     ],
-    jaringan_dunia: [
-      "Did you know? Wi-Fi sends data using radio waves, a lot like how a radio works.",
-      "Did you know? Always keep your password secret \u2014 never share it with anyone."
+    qs_at_tiin: [
+      "Tahukah kamu? Buah Tin (ara) disebut dalam Al-Qur'an dan sudah dimakan manusia sejak ribuan tahun lalu.",
+      "Tahukah kamu? Surat At-Tiin ada di juz 30 \u2014 juz yang berisi surat-surat pendek."
     ],
-    kecerdasan_buatan: [
-      "Did you know? AI learns from lots of examples, kind of like how you learn from practice.",
-      "Did you know? AI can make mistakes too \u2014 so always double-check its answers."
+    kisah_teladan: [
+      "Tahukah kamu? Asmaul Husna berjumlah 99 nama Allah yang baik.",
+      "Tahukah kamu? Bersedekah tidak membuat harta berkurang \u2014 justru membawa keberkahan."
+    ],
+    english_past_inventors: [
+      "Did you know? Thomas Edison tried thousands of materials before his light bulb worked.",
+      "Did you know? The first airplane flight by the Wright brothers lasted only 12 seconds!"
+    ],
+    seni_karya: [
+      'Tahukah kamu? Origami berasal dari Jepang \u2014 "oru" artinya melipat dan "kami" artinya kertas.',
+      "Tahukah kamu? Botol plastik bekas bisa menjadi pot tanaman, celengan, atau hiasan dinding."
     ]
   };
   function funFactForTopic(topic) {
@@ -255,6 +263,7 @@
     sigma: "M6 4h12M6 4l7 8-7 8h12v-3",
     leaf: "M5 19c0-8 6-13 14-13 0 9-5 14-13 14M5 19c2-4 5-6 9-7",
     cpu: "M7 7h10v10H7zM10 10h4v4h-4zM9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3",
+    book: "M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2Zm20 0h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7Z",
     users: "M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3.5 3.5 0 0 0 0-7M21 20v-1.5a4 4 0 0 0-3-3.8",
     archive: "M4 7h16v3H4zM5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9M9.5 14h5M4 7l1.5-3h13L20 7",
     chart: "M5 21V9M12 21V4M19 21v-7M3 21h18",
@@ -304,7 +313,7 @@
     return /* @__PURE__ */ React.createElement("div", { className: "pokeball", style: { width: size, height: size, "--ball-top": top, ...style } });
   }
   const AVATAR = "/assets/druygon-avatar.png";
-  const TUTOR_URL = "/tutor";
+  const TUTOR_URL = "https://draco.druygon.my.id/";
   function openTutor(topic) {
     try {
       window.open(TUTOR_URL + (topic ? "?topic=" + encodeURIComponent(topic) : ""), "_blank");
@@ -720,13 +729,14 @@
     return mons[mons.length - 1];
   }
   const rarest = (mons) => mons.reduce((a, b) => RANK[b.rarity] > RANK[a.rarity] ? b : a, mons[0]);
+  const zoneGroup = (id) => String(id).replace(/_\d+$/, "");
   const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = []) => {
     if (!z) return "locked";
     const prog = progress.find((p) => p.zoneId === z.id);
     if ((prog == null ? void 0 : prog.status) === "cleared") return "cleared";
     const zoneCaught = caught.filter((c) => c.zoneId === z.id);
     if (new Set(zoneCaught.map((c) => c.dex)).size >= 2) return "cleared";
-    const prevZone = (allZones || []).find((x) => x.zone === z.zone - 1);
+    const prevZone = (allZones || []).filter((x) => zoneGroup(x.id) === zoneGroup(z.id) && x.zone < z.zone).sort((a, b) => b.zone - a.zone)[0];
     let prevCleared = !prevZone;
     if (prevZone) {
       const prevProg = progress.find((p) => p.zoneId === prevZone.id);
@@ -746,7 +756,7 @@
     var _a;
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
-    const order = ["curriculum", "science", "compsci"].filter((id) => regions[id]);
+    const order = ["curriculum", "science", "matpel"].filter((id) => regions[id]);
     const level = (_a = profile == null ? void 0 : profile.level) != null ? _a : PLAYER.level;
     const xpPct = profile && profile.xpToNext > 0 ? Math.round(profile.xp / profile.xpToNext * 100) : PLAYER.xpPct;
     const name = playerName || "Trainer";
@@ -766,7 +776,37 @@
         crossOrigin: "anonymous",
         style: { position: "absolute", right: 6, top: 4, objectFit: "contain", opacity: 0.9, zIndex: -1, animation: "floaty 3.5s ease-in-out infinite", filter: "drop-shadow(0 8px 14px rgba(0,0,0,.5))" }
       }
-    ), /* @__PURE__ */ React.createElement("div", { className: "hero-top" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "hero-greet" }, "Hi, ", /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, name), " \u{1F44B}"), /* @__PURE__ */ React.createElement("div", { className: "hero-sub" }, idn.title, " \xB7 ", caught.length, " caught \xB7 keep the streak!")), /* @__PURE__ */ React.createElement("div", { className: "hero-lvl", style: { background: idn.color } }, "LVL ", level)), /* @__PURE__ */ React.createElement("div", { className: "hero-xp" }, /* @__PURE__ */ React.createElement("small", null, "XP"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%", background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` } }))), /* @__PURE__ */ React.createElement("div", { className: "hero-stats" }, /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, level), /* @__PURE__ */ React.createElement("span", null, "Level")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, (coins != null ? coins : 0).toLocaleString()), /* @__PURE__ */ React.createElement("span", null, "Coins")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")))), /* @__PURE__ */ React.createElement("div", { onClick: () => onOpenDraco && onOpenDraco(null), style: { position: "relative", marginTop: 14, borderRadius: 20, overflow: "hidden", padding: 16, display: "flex", alignItems: "center", gap: 14, cursor: "pointer", isolation: "isolate", background: "linear-gradient(120deg, #241a4d 0%, #16123a 55%, #101030 100%)", border: "1px solid rgba(139,92,246,.35)", boxShadow: "var(--card-shadow)" } }, /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", width: 150, height: 150, borderRadius: "50%", right: -40, top: -50, background: "radial-gradient(circle, rgba(139,92,246,.4), transparent 68%)", zIndex: -1 } }), /* @__PURE__ */ React.createElement("div", { style: { width: 56, height: 56, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #8B5CF6, #4A9EFF)", boxShadow: "0 0 20px rgba(139,92,246,.45)", animation: "floaty 3.5s ease-in-out infinite" } }, /* @__PURE__ */ React.createElement(Icon, { name: "sparkles", size: 28, color: "#fff" })), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 7 } }, /* @__PURE__ */ React.createElement("b", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 16 } }, "Draco"), /* @__PURE__ */ React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9, fontWeight: 700, letterSpacing: ".08em", color: "var(--green)", background: "rgba(74,222,128,.12)", padding: "2px 7px", borderRadius: 999 } }, /* @__PURE__ */ React.createElement("i", { style: { width: 5, height: 5, borderRadius: "50%", background: "var(--green)", display: "inline-block" } }), "AI TUTOR")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "rgba(240,238,255,.65)", marginTop: 3, lineHeight: 1.4 } }, "Stuck on a question? Ask me \u2014 science, code, or homework.")), /* @__PURE__ */ React.createElement("div", { style: { width: 34, height: 34, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(139,92,246,.2)", border: "1px solid rgba(139,92,246,.5)", color: "#B79BFF" } }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 17 }))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Choose a world")), /* @__PURE__ */ React.createElement("div", { className: "regions" }, order.map((id) => {
+    ), /* @__PURE__ */ React.createElement("div", { className: "hero-top" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "hero-greet" }, "Hi, ", /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, name), " \u{1F44B}"), /* @__PURE__ */ React.createElement("div", { className: "hero-sub" }, idn.title, " \xB7 ", caught.length, " caught \xB7 keep the streak!")), /* @__PURE__ */ React.createElement("div", { className: "hero-lvl", style: { background: idn.color } }, "LVL ", level)), /* @__PURE__ */ React.createElement("div", { className: "hero-xp" }, /* @__PURE__ */ React.createElement("small", null, "XP"), /* @__PURE__ */ React.createElement("div", { className: "meter", style: { flex: 1 } }, /* @__PURE__ */ React.createElement("i", { style: { width: xpPct + "%", background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` } }))), /* @__PURE__ */ React.createElement("div", { className: "hero-stats" }, /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, level), /* @__PURE__ */ React.createElement("span", null, "Level")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, (coins != null ? coins : 0).toLocaleString()), /* @__PURE__ */ React.createElement("span", null, "Coins")), /* @__PURE__ */ React.createElement("div", { className: "hero-stat" }, /* @__PURE__ */ React.createElement("b", { style: { color: idn.color } }, caught.length), /* @__PURE__ */ React.createElement("span", null, "Caught")))), /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: () => {
+          window.location.href = "https://cody.druygon.my.id/?slot=" + activeSlot;
+        },
+        style: {
+          width: "100%",
+          marginTop: 14,
+          borderRadius: 20,
+          overflow: "hidden",
+          padding: 0,
+          display: "grid",
+          gridTemplateColumns: "78px 1fr 34px",
+          alignItems: "center",
+          gap: 14,
+          cursor: "pointer",
+          textAlign: "left",
+          color: "#F7F5FF",
+          position: "relative",
+          background: "linear-gradient(120deg, #23204F 0%, #34266E 58%, #4A35A8 100%)",
+          border: "1px solid rgba(46,201,192,.34)",
+          boxShadow: "var(--card-shadow)"
+        },
+        "aria-label": "Buka DruCode, modul belajar coding"
+      },
+      /* @__PURE__ */ React.createElement("div", { style: { height: 92, display: "grid", placeItems: "center", background: "rgba(46,201,192,.12)" } }, /* @__PURE__ */ React.createElement(Icon, { name: "cpu", size: 34, color: "#64E0D8" })),
+      /* @__PURE__ */ React.createElement("div", { style: { padding: "14px 0" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("b", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 17 } }, "DruCode"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, fontWeight: 800, letterSpacing: ".08em", color: "#1A4744", background: "#65E4DC", padding: "3px 8px", borderRadius: 999 } }, "MODUL BARU")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "rgba(247,245,255,.7)", marginTop: 5, lineHeight: 1.45 } }, "Belajar blok visual, Python, dan web bersama Robo.")),
+      /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: "#F7F5FF" })
+    ), /* @__PURE__ */ React.createElement("div", { onClick: () => onOpenDraco && onOpenDraco(null), style: { position: "relative", marginTop: 14, borderRadius: 20, overflow: "hidden", padding: 16, display: "flex", alignItems: "center", gap: 14, cursor: "pointer", isolation: "isolate", background: "linear-gradient(120deg, #241a4d 0%, #16123a 55%, #101030 100%)", border: "1px solid rgba(139,92,246,.35)", boxShadow: "var(--card-shadow)" } }, /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", width: 150, height: 150, borderRadius: "50%", right: -40, top: -50, background: "radial-gradient(circle, rgba(139,92,246,.4), transparent 68%)", zIndex: -1 } }), /* @__PURE__ */ React.createElement("div", { style: { width: 56, height: 56, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #8B5CF6, #4A9EFF)", boxShadow: "0 0 20px rgba(139,92,246,.45)", animation: "floaty 3.5s ease-in-out infinite" } }, /* @__PURE__ */ React.createElement(Icon, { name: "sparkles", size: 28, color: "#fff" })), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 7 } }, /* @__PURE__ */ React.createElement("b", { style: { fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 16 } }, "Draco"), /* @__PURE__ */ React.createElement("span", { style: { display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9, fontWeight: 700, letterSpacing: ".08em", color: "var(--green)", background: "rgba(74,222,128,.12)", padding: "2px 7px", borderRadius: 999 } }, /* @__PURE__ */ React.createElement("i", { style: { width: 5, height: 5, borderRadius: "50%", background: "var(--green)", display: "inline-block" } }), "AI TUTOR")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "rgba(240,238,255,.65)", marginTop: 3, lineHeight: 1.4 } }, "Stuck on a question? Ask me \u2014 science, code, or homework.")), /* @__PURE__ */ React.createElement("div", { style: { width: 34, height: 34, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(139,92,246,.2)", border: "1px solid rgba(139,92,246,.5)", color: "#B79BFF" } }, /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 17 }))), /* @__PURE__ */ React.createElement("div", { className: "sec-head" }, /* @__PURE__ */ React.createElement("h2", null, "Choose a world")), /* @__PURE__ */ React.createElement("div", { className: "regions" }, order.map((id) => {
       const r = regions[id];
       const next = r.zones.find((z) => zoneState(z, profile, caught, progress, r.zones) !== "cleared") || r.zones[r.zones.length - 1];
       return /* @__PURE__ */ React.createElement("div", { key: id, className: "region-card", "data-region": id, style: { "--rc": r.accent, "--rc-soft": "var(--accent-soft)" }, onClick: () => go("map", id) }, /* @__PURE__ */ React.createElement("div", { className: "region-glow" }), /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", inset: 0, zIndex: -1, background: `linear-gradient(90deg, rgba(10,8,24,.88) 0%, rgba(10,8,24,.35) 60%, rgba(10,8,24,.12) 100%), url(assets/regions/${id}-hero.jpg)`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } }), /* @__PURE__ */ React.createElement("div", { className: "region-emblem", style: { position: "relative", display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ React.createElement(Icon, { name: r.icon, size: 30 }), /* @__PURE__ */ React.createElement(
@@ -800,6 +840,14 @@
       [1, 2, 3].map((i) => /* @__PURE__ */ React.createElement("div", { key: i, className: "lb-row", style: { opacity: 0.3 } }, /* @__PURE__ */ React.createElement("div", { className: "lb-rank" }, i), /* @__PURE__ */ React.createElement("div", { className: "lb-av" }, "\u{1F9D1}"), /* @__PURE__ */ React.createElement("div", { className: "lb-name" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"), /* @__PURE__ */ React.createElement("span", null, "loading\u2026")), /* @__PURE__ */ React.createElement("div", { className: "lb-score" }, /* @__PURE__ */ React.createElement("b", null, "\u2014"))))
     ))));
   }
+  const MAPEL_LABELS = {
+    matpel_bindo: "Bahasa Indonesia",
+    matpel_ipas: "IPAS",
+    matpel_ppkn: "PPKn",
+    matpel_pai: "Pendidikan Agama Islam",
+    matpel_eng: "Bahasa Inggris",
+    matpel_seni: "Seni Budaya"
+  };
   function RegionMap({ region, go, caught, profile, progress }) {
     var _a;
     const { regions, ready } = useContent();
@@ -811,7 +859,9 @@
     return /* @__PURE__ */ React.createElement("div", { className: "body screen-anim" }, /* @__PURE__ */ React.createElement("div", { className: "pad" }, /* @__PURE__ */ React.createElement("div", { className: "map-banner" }, /* @__PURE__ */ React.createElement("div", { className: "hero-bg", style: { background: `url(assets/maps/${region}-bg.jpg) center/cover no-repeat, radial-gradient(120% 120% at 80% 10%, ${r.accent}44, transparent 60%), linear-gradient(135deg, #16122c, #0b0a18)` } }), /* @__PURE__ */ React.createElement("img", { className: "map-banner-mon", src: feat.sprite, alt: "", crossOrigin: "anonymous" }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "eyebrow", style: { color: r.accent } }, "Region \xB7 ", r.tag), /* @__PURE__ */ React.createElement("div", { className: "region-name", style: { fontSize: 22, color: r.accent } }, r.name))), /* @__PURE__ */ React.createElement("div", { className: "map-meta" }, /* @__PURE__ */ React.createElement("div", { className: "pill", style: { color: r.accent, borderColor: r.accent } }, "LVL ", (_a = profile == null ? void 0 : profile.level) != null ? _a : PLAYER.level), /* @__PURE__ */ React.createElement("span", { className: "eyebrow" }, clearedCount, " / ", r.zones.length, " zones cleared")), r.zones.map((z) => {
       const st = zoneState(z, profile, caught, progress, r.zones);
       const locked = st === "locked", cleared = st === "cleared";
-      return /* @__PURE__ */ React.createElement("div", { key: z.zone, className: "zone " + st, onClick: () => !locked && go("catch", region, z.zone) }, /* @__PURE__ */ React.createElement("div", { className: "zone-no", style: { border: "none", background: "transparent", borderRadius: 0, width: 52, height: 52 } }, /* @__PURE__ */ React.createElement("img", { src: `assets/maps/node-${st}.svg`, alt: st, width: 52, height: 52, style: { objectFit: "contain" } })), /* @__PURE__ */ React.createElement("div", { className: "zone-main" }, /* @__PURE__ */ React.createElement("b", null, z.name), /* @__PURE__ */ React.createElement("code", null, z.topic, locked ? ` \xB7 selesaikan zona sebelumnya` : "")), /* @__PURE__ */ React.createElement("div", { className: "zone-mons" }, z.mons.slice(0, 3).map((m, i) => locked || !cleared && i > 0 ? /* @__PURE__ */ React.createElement("div", { key: i, className: "silh" }, "?") : /* @__PURE__ */ React.createElement("img", { key: i, src: m.sprite, alt: "", crossOrigin: "anonymous" }))), locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 16, color: "var(--text-tertiary)" }) : /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: r.accent }));
+      const groupLabel = MAPEL_LABELS[zoneGroup(z.id)];
+      const showHeader = groupLabel && zoneGroup(z.id) !== zoneGroup((r.zones[r.zones.indexOf(z) - 1] || {}).id || "");
+      return /* @__PURE__ */ React.createElement(React.Fragment, { key: z.zone }, showHeader && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, margin: "14px 2px 8px" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, fontWeight: 800, letterSpacing: ".1em", color: r.accent, textTransform: "uppercase" } }, groupLabel), /* @__PURE__ */ React.createElement("span", { style: { flex: 1, height: 1, background: `${r.accent}33` } })), /* @__PURE__ */ React.createElement("div", { className: "zone " + st, onClick: () => !locked && go("catch", region, z.zone) }, /* @__PURE__ */ React.createElement("div", { className: "zone-no", style: { border: "none", background: "transparent", borderRadius: 0, width: 52, height: 52 } }, /* @__PURE__ */ React.createElement("img", { src: `assets/maps/node-${st}.svg`, alt: st, width: 52, height: 52, style: { objectFit: "contain" } })), /* @__PURE__ */ React.createElement("div", { className: "zone-main" }, /* @__PURE__ */ React.createElement("b", null, z.name), /* @__PURE__ */ React.createElement("code", null, z.topic, locked ? ` \xB7 selesaikan zona sebelumnya` : "")), /* @__PURE__ */ React.createElement("div", { className: "zone-mons" }, z.mons.slice(0, 3).map((m, i) => locked || !cleared && i > 0 ? /* @__PURE__ */ React.createElement("div", { key: i, className: "silh" }, "?") : /* @__PURE__ */ React.createElement("img", { key: i, src: m.sprite, alt: "", crossOrigin: "anonymous" }))), locked ? /* @__PURE__ */ React.createElement(Icon, { name: "lock", size: 16, color: "var(--text-tertiary)" }) : /* @__PURE__ */ React.createElement(Icon, { name: "arrowR", size: 18, color: r.accent })));
     }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "var(--text-tertiary)", textAlign: "center", marginTop: 6 } }, "Tap an open zone to enter the catch loop.")));
   }
   const CHEER_WRONG = [
@@ -1099,7 +1149,7 @@
   function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
     const { regions, ready } = useContent();
     if (!ready || !regions) return /* @__PURE__ */ React.createElement(ContentLoading, null);
-    const order = ["curriculum", "science", "compsci"].filter((id) => regions[id]);
+    const order = ["curriculum", "science", "matpel"].filter((id) => regions[id]);
     const [filter, setFilter] = React.useState("all");
     const has = (dex) => caught.includes(dex);
     const all = order.flatMap((id) => regionMons(regions, id));

@@ -7,6 +7,7 @@
 [data-region="curriculum"] { --accent:#FFCB05; --accent-deep:#FF6B2B; --accent-soft:rgba(255,203,5,.16); --accent-glow:rgba(255,203,5,.45); }
 [data-region="science"]    { --accent:#00D9B8; --accent-deep:#0A9E8A; --accent-soft:rgba(0,217,184,.16); --accent-glow:rgba(0,217,184,.45); }
 [data-region="compsci"]    { --accent:#8B5CF6; --accent-deep:#6D28D9; --accent-soft:rgba(139,92,246,.18); --accent-glow:rgba(139,92,246,.45); }
+[data-region="matpel"]     { --accent:#F97316; --accent-deep:#C2540A; --accent-soft:rgba(249,115,22,.16); --accent-glow:rgba(249,115,22,.45); }
 
 /* ── studio backdrop + phone shell ────────────────────────── */
 html, body { height: 100%; }

@@ -26,6 +26,11 @@ function weightedPick(mons) {
 
 const rarest = (mons) => mons.reduce((a, b) => (RANK[b.rarity] > RANK[a.rarity] ? b : a), mons[0]);
 
+// Mapel group key: 'matpel_pai_2' → 'matpel_pai'. Zones in the same group form
+// one basic→advanced journey; different groups (school subjects) never gate
+// each other. Single-group regions (science, curriculum) behave exactly as before.
+const zoneGroup = (id) => String(id).replace(/_\d+$/, '');
+
 // Pure zone state based on real player state
 const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = []) => {
   if (!z) return 'locked';
@@ -37,8 +42,11 @@ const zoneState = (z, profile = PLAYER, caught = [], progress = [], allZones = [
   const zoneCaught = caught.filter(c => c.zoneId === z.id);
   if (new Set(zoneCaught.map(c => c.dex)).size >= 2) return 'cleared';
 
-  // Open if previous zone is cleared (or zone 1) — level is NOT a gate (GAME-RULES)
-  const prevZone = (allZones || []).find(x => x.zone === z.zone - 1);
+  // Open if the previous zone IN THE SAME GROUP is cleared (or first in group).
+  // Level is NOT a gate (GAME-RULES).
+  const prevZone = (allZones || [])
+    .filter(x => zoneGroup(x.id) === zoneGroup(z.id) && x.zone < z.zone)
+    .sort((a, b) => b.zone - a.zone)[0];
   let prevCleared = !prevZone;
   if (prevZone) {
     const prevProg = progress.find(p => p.zoneId === prevZone.id);
@@ -69,7 +77,7 @@ function ContentLoading() {
 function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, progress, dailyMission, badges, onClaimMission, onOpenDraco }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
-  const order = ['curriculum', 'science', 'compsci'].filter((id) => regions[id]);
+  const order = ['curriculum', 'science', 'matpel'].filter((id) => regions[id]);
   const level  = profile?.level  ?? PLAYER.level;
   const xpPct  = profile && profile.xpToNext > 0
     ? Math.round((profile.xp / profile.xpToNext) * 100)
@@ -107,6 +115,34 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
             <div className="hero-stat"><b style={{ color: idn.color }}>{caught.length}</b><span>Caught</span></div>
           </div>
         </div>
+
+        {/* DruCode module — carries the active Druygon player slot into the coding experience */}
+        <button
+          type="button"
+          onClick={() => { window.location.href = 'https://cody.druygon.my.id/?slot=' + activeSlot; }}
+          style={{
+            width: '100%', marginTop: 14, borderRadius: 20, overflow: 'hidden', padding: 0,
+            display: 'grid', gridTemplateColumns: '78px 1fr 34px', alignItems: 'center', gap: 14,
+            cursor: 'pointer', textAlign: 'left', color: '#F7F5FF', position: 'relative',
+            background: 'linear-gradient(120deg, #23204F 0%, #34266E 58%, #4A35A8 100%)',
+            border: '1px solid rgba(46,201,192,.34)', boxShadow: 'var(--card-shadow)',
+          }}
+          aria-label="Buka DruCode, modul belajar coding"
+        >
+          <div style={{ height: 92, display: 'grid', placeItems: 'center', background: 'rgba(46,201,192,.12)' }}>
+            <Icon name="cpu" size={34} color="#64E0D8" />
+          </div>
+          <div style={{ padding: '14px 0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <b style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 17 }}>DruCode</b>
+              <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '.08em', color: '#1A4744', background: '#65E4DC', padding: '3px 8px', borderRadius: 999 }}>MODUL BARU</span>
+            </div>
+            <div style={{ fontSize: 12, color: 'rgba(247,245,255,.7)', marginTop: 5, lineHeight: 1.45 }}>
+              Belajar blok visual, Python, dan web bersama Robo.
+            </div>
+          </div>
+          <Icon name="arrowR" size={18} color="#F7F5FF" />
+        </button>
 
         {/* Draco tutor card */}
         <div onClick={() => onOpenDraco && onOpenDraco(null)} style={{ position: 'relative', marginTop: 14, borderRadius: 20, overflow: 'hidden', padding: 16, display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer', isolation: 'isolate', background: 'linear-gradient(120deg, #241a4d 0%, #16123a 55%, #101030 100%)', border: '1px solid rgba(139,92,246,.35)', boxShadow: 'var(--card-shadow)' }}>
@@ -256,6 +292,17 @@ function Home({ go, caught, coins, profile, playerName, allSlots, activeSlot, pr
 }
 
 // ───────────────────────── REGION MAP (variant B) ─────────────────────────
+// School-subject group labels (MATPEL): zones are grouped per mata pelajaran;
+// every subject is open from the start, progression journeys within a subject.
+const MAPEL_LABELS = {
+  matpel_bindo: 'Bahasa Indonesia',
+  matpel_ipas: 'IPAS',
+  matpel_ppkn: 'PPKn',
+  matpel_pai: 'Pendidikan Agama Islam',
+  matpel_eng: 'Bahasa Inggris',
+  matpel_seni: 'Seni Budaya',
+};
+
 function RegionMap({ region, go, caught, profile, progress }) {
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
@@ -281,8 +328,17 @@ function RegionMap({ region, go, caught, profile, progress }) {
         {r.zones.map((z) => {
           const st = zoneState(z, profile, caught, progress, r.zones);
           const locked = st === 'locked', cleared = st === 'cleared';
+          const groupLabel = MAPEL_LABELS[zoneGroup(z.id)];
+          const showHeader = groupLabel && zoneGroup(z.id) !== zoneGroup((r.zones[r.zones.indexOf(z) - 1] || {}).id || '');
           return (
-            <div key={z.zone} className={'zone ' + st} onClick={() => !locked && go('catch', region, z.zone)}>
+            <React.Fragment key={z.zone}>
+            {showHeader && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '14px 2px 8px' }}>
+                <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '.1em', color: r.accent, textTransform: 'uppercase' }}>{groupLabel}</span>
+                <span style={{ flex: 1, height: 1, background: `${r.accent}33` }} />
+              </div>
+            )}
+            <div className={'zone ' + st} onClick={() => !locked && go('catch', region, z.zone)}>
               <div className="zone-no" style={{ border: 'none', background: 'transparent', borderRadius: 0, width: 52, height: 52 }}>
                 <img src={`assets/maps/node-${st}.svg`} alt={st} width={52} height={52} style={{ objectFit: 'contain' }} />
               </div>
@@ -297,6 +353,7 @@ function RegionMap({ region, go, caught, profile, progress }) {
               </div>
               {locked ? <Icon name="lock" size={16} color="var(--text-tertiary)" /> : <Icon name="arrowR" size={18} color={r.accent} />}
             </div>
+            </React.Fragment>
           );
         })}
         <p style={{ fontSize: 11, color: 'var(--text-tertiary)', textAlign: 'center', marginTop: 6 }}>
