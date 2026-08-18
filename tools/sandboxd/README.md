@@ -6,16 +6,19 @@ on the home Linux box (elitebook, `100.83.7.10:8570`).
 
 ## Isolation layers
 
-1. **bubblewrap** (preferred): no network, read-only system dirs, tmpfs /tmp.
-   Requires unprivileged user namespaces. Ubuntu 24.04+ blocks these via
-   `kernel.apparmor_restrict_unprivileged_userns=1` — to enable full bwrap
-   isolation, on the sandbox box (one-time, sudo):
+1. **bubblewrap** (active since 2026-08-18): no network, read-only system
+   dirs, tmpfs /tmp. Requires unprivileged user namespaces. Ubuntu 24.04+
+   blocks these via `kernel.apparmor_restrict_unprivileged_userns=1` — fixed
+   on elitebook with
    `echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/60-userns.conf && sudo sysctl --system`
-   then `systemctl --user restart sandboxd`. Health will report
-   `"isolation": "bwrap"`.
-2. **rlimits + audit hooks** (current fallback): CPU/mem/file-size/process
+   then `systemctl --user restart sandboxd`. Health reports
+   `"isolation": "bwrap"`. Gotchas: the systemd unit must NOT set
+   `NoNewPrivileges` or `PrivateTmp` (both block namespace creation under
+   the AppArmor restriction), and `RLIMIT_NPROC` must not be set on the
+   bwrap launch (it counts the uid's global process count → EAGAIN).
+2. **rlimits + audit hooks** (automatic fallback): CPU/mem/file-size/process
    rlimits plus `runner.py` Python audit hooks blocking network, subprocess,
-   fork/exec and ctypes. Service itself runs with `PrivateTmp=true`.
+   fork/exec and ctypes.
 
 ## Install (on the sandbox box)
 

@@ -67,11 +67,15 @@ def load_token():
         return f.read().strip()
 
 
-def set_limits():
+def set_limits(limit_nproc=True):
     resource.setrlimit(resource.RLIMIT_CPU, (MAX_TIMEOUT + 2, MAX_TIMEOUT + 2))
     resource.setrlimit(resource.RLIMIT_AS, (MEM_BYTES, MEM_BYTES))
     resource.setrlimit(resource.RLIMIT_FSIZE, (1024 * 1024, 1024 * 1024))
-    resource.setrlimit(resource.RLIMIT_NPROC, (32, 32))
+    if limit_nproc:
+        # Only for the non-bwrap fallback: RLIMIT_NPROC counts the uid's
+        # GLOBAL process count, which blocks user-namespace creation
+        # (EAGAIN) long before it constrains the child.
+        resource.setrlimit(resource.RLIMIT_NPROC, (32, 32))
     resource.setrlimit(resource.RLIMIT_NOFILE, (64, 64))
 
 
@@ -109,7 +113,7 @@ def run_code(language, code, timeout):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             cwd=BASE,
-            preexec_fn=set_limits,
+            preexec_fn=set_limits if not USE_BWRAP else (lambda: set_limits(limit_nproc=False)),
             start_new_session=True,
         )
     except FileNotFoundError as exc:

@@ -7,8 +7,9 @@ Wants=network-online.target
 ExecStart=/usr/bin/python3 /home/mahendra/sandboxd/sandboxd.py
 Restart=on-failure
 RestartSec=3
-NoNewPrivileges=true
-PrivateTmp=true
+# NOTE: do NOT add NoNewPrivileges/PrivateTmp here — under Ubuntu's AppArmor
+# userns restriction they block bubblewrap from creating namespaces, silently
+# downgrading isolation to the rlimits+audit fallback.
 
 [Install]
 WantedBy=default.target
