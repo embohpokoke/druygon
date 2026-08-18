@@ -22,6 +22,7 @@ const parentRouter = require('./src/routes/parent');
 const contentRouter = require('./src/routes/content');
 const playerRouter  = require('./src/routes/player');
 const codyRouter    = require('./src/routes/cody');
+const sandboxRouter = require('./src/routes/sandbox');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -125,6 +126,7 @@ app.use('/api/player', playerRouter);
 
 // Cody (DruCode) — server-side lesson progress per player slot
 app.use('/api/cody', codyRouter);
+app.use('/api/sandbox', sandboxRouter);
 
 // Legacy AI generation/chat/assess routes
 app.use('/api/ai', legacyAiRouter);
