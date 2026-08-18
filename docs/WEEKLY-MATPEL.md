@@ -34,13 +34,18 @@ Alur menambah materi sekolah mingguan Dru (SD Tara Salvia kelas 5, Kurikulum Mer
    ssh vps-host 'cd /opt/druygon/tools/content-engine && node seed.mjs out-matpel/ && sudo systemctl restart druygon.service'
    ```
    `seed.mjs` idempotent per zone id — zone lama tidak terhapus selama id-nya masih ada di `regions.json`.
-5. Verifikasi live:
+5. Reseed RAG Draco (wajib setelah konten berubah):
+   ```sh
+   ssh vps-host 'cd /opt/druygon && node tools/content-engine/seed-rag-matpel.mjs'
+   ```
+   Upsert idempotent ke koleksi ChromaDB `druygon_matpel` — aman diulang.
+6. Verifikasi live:
    ```sh
    curl -s https://druygon.my.id/api/content/regions | grep -o 'matpel_[a-z]*_[0-9]*'
    ```
    Plus walkthrough browser (Chromium + WebKit dari Mac): region MATPEL → zone baru terbuka/terkunci sesuai aturan journey per mapel.
-6. Draco: kalau ada topik baru, tambah entry `TOPIC_KNOWLEDGE` di `api/src/runtime/tutor_soul.js` dan update `learning_objectives` di Postgres (`druygon.parent_controls.overrides`, period pekan berjalan).
-7. Commit scoped + push branch `agent/druygon-learning-suite`; catat di AGENT-LOG (VPS `/opt/druygon-redesign/AGENT-LOG.md` + Obsidian `redesign-2026/AGENT-LOG.md`).
+7. Draco: kalau ada topik baru, tambah entry `TOPIC_KNOWLEDGE` di `api/src/runtime/tutor_soul.js` dan update `learning_objectives` di Postgres (`druygon.parent_controls.overrides`, period pekan berjalan).
+8. Commit scoped + push `master`; catat di AGENT-LOG (VPS `/opt/druygon-redesign/AGENT-LOG.md` + Obsidian `redesign-2026/AGENT-LOG.md`).
 
 ## Restore DB
 

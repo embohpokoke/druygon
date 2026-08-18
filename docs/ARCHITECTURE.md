@@ -22,8 +22,9 @@ All public hostnames currently resolve to the same Hostinger VPS. Nginx terminat
 - Cody frontend: React 19 + TypeScript + Vite + Tailwind 4, built to `modules/drucode/dist/`
 - Study content/player state: SQLite (`api/druygon_content.db`, `druygon_players.db`)
 - Draco memory: PostgreSQL
-- Draco retrieval: ChromaDB + Ollama embeddings
+- Draco retrieval: ChromaDB (`druygon_curriculum` + `druygon_matpel`) + Ollama `nomic-embed-text` embeddings
 - Draco model: DeepSeek `deepseek-v4-flash` (primary) → Ollama `qwen3.5:cloud` → Claude Haiku fallback (`TUTOR_PROVIDER` selects the chain)
+- Code execution: `sandboxd` on the home Linux box (elitebook, Tailscale `100.83.7.10:8570`), proxied by `api/src/routes/sandbox.js` at `/api/sandbox` — see `tools/sandboxd/README.md`
 - Backup: `scripts/backup-db.sh` daily cron, 14-day retention under `/root/backups/druygon`
 
 ## Shared contracts
@@ -40,9 +41,9 @@ All public hostnames currently resolve to the same Hostinger VPS. Nginx terminat
 
 ## Code execution boundary
 
-Cody ships the learning-map/workspace frontend, per-lesson draft persistence, staged hints, sequential progress, and six fixed Visual Blocks mission validators. They recognize only the small command vocabulary taught in the journey (`move`, `turnRight`, `repeat`, `ifStar`, and `collect`) and compare normalized text with a mission target. They do not evaluate JavaScript or Python. Arbitrary learner code is not executed by the browser or public VPS.
+Cody ships the learning-map/workspace frontend, per-lesson draft persistence, staged hints, sequential progress, and six fixed Visual Blocks mission validators. They recognize only the small command vocabulary taught in the journey (`move`, `turnRight`, `repeat`, `ifStar`, and `collect`) and compare normalized text with a mission target. They do not evaluate JavaScript or Python.
 
-Before enabling general-purpose Python or JavaScript execution, implement an isolated sandbox outside the VPS with no network, read-only filesystem, strict CPU/memory/time/output/process limits, private connectivity, and service-to-service authentication. The frontend must degrade safely when that sandbox is unavailable.
+General-purpose code execution runs **off the VPS**: `/api/sandbox/run` forwards snippets over Tailscale to `sandboxd` on the home Linux box (`tools/sandboxd/`), which isolates them with bubblewrap when the kernel permits user namespaces, otherwise with rlimits + Python audit hooks (network/subprocess blocked), CPU/memory/time/output caps, and Bearer-token service auth. The frontend must still degrade safely when the sandbox is unreachable (503). The public VPS itself must never execute learner code.
 
 ## Source of truth
 
@@ -58,8 +59,8 @@ When these disagree, verify production, then update both GitHub and Obsidian in 
 
 ## Current risks and pending decisions
 
-1. Cody's fixed mission checker is active, but arbitrary code execution remains intentionally offline until the sandbox boundary exists.
+1. Cody's fixed mission checker is active; general-purpose execution goes through sandboxd (`/api/sandbox`, off-VPS). Pending: one-time sudo on the sandbox box to allow user namespaces so isolation upgrades from `rlimits+audit` to full `bwrap` (see `tools/sandboxd/README.md`).
 2. Safari/WebKit remains a required release gate for frontend changes.
-3. Draco's RAG collections predate the MATPEL Sekolah region; seed `druygon_matpel` knowledge when weekly content grows.
+3. `druygon_matpel` RAG collection is seeded (2026-08-18); rerun `tools/content-engine/seed-rag-matpel.mjs` after every weekly MATPEL content update (see `docs/WEEKLY-MATPEL.md`).
 
 Resolved 2026-08-17: content/player DBs have daily backups with a tested restore (`scripts/backup-db.sh`), and Cody persistence uses the shared Express/SQLite runtime (decided against a separate Hono/tRPC/MySQL service).
