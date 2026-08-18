@@ -3,75 +3,175 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#23204f">
+  <meta name="theme-color" content="#3D7DCA">
   <title>Druygon Learning Suite</title>
   <style>
-    :root { color-scheme: light; --navy:#23204f; --deep:#171534; --purple:#6c4fd8; --purple-dark:#4a35a8; --teal:#2ec9c0; --yellow:#ffbd32; --ink:#2b2848; --muted:#716d91; --bg:#f5f4fc; --line:#e4e1f5; --card:#fff; }
+    :root {
+      color-scheme: light;
+      --pk-red:#EE3E23; --pk-red-dark:#C22E1C; --pk-yellow:#FFCB05; --pk-blue:#3D7DCA;
+      --navy:#23204F; --deep:#171534; --ink:#2B2848; --muted:#5E5A80;
+      --sky1:#79C6F2; --sky2:#C9E8FC; --grass:#58B368; --grass-dark:#3E9151;
+      --card:#FFFDF5; --line:#23204F;
+    }
     * { box-sizing:border-box; }
-    html { min-width:320px; background:var(--bg); }
-    body { margin:0; min-height:100vh; color:var(--ink); background:radial-gradient(circle at 82% 7%,rgba(108,79,216,.12),transparent 28rem),var(--bg); font-family:"Nunito Sans",ui-rounded,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    html { min-width:320px; }
+    body { margin:0; min-height:100vh; color:var(--ink); font-family:"Nunito Sans",ui-rounded,system-ui,-apple-system,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 55%,#EAF7E4 100%); overflow-x:hidden; }
     a { color:inherit; }
-    a:focus-visible { outline:3px solid rgba(108,79,216,.38); outline-offset:4px; }
-    .shell { min-height:100vh; display:grid; grid-template-columns:minmax(310px,42%) 1fr; }
-    .intro { min-height:100vh; padding:clamp(28px,5vw,72px); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; color:#f8f7ff; background:linear-gradient(148deg,var(--navy),var(--deep)); }
-    .intro:before,.intro:after { content:""; position:absolute; border-radius:50%; pointer-events:none; }
-    .intro:before { width:360px; height:360px; right:-190px; top:19%; background:rgba(46,201,192,.12); }
-    .intro:after { width:220px; height:220px; left:-120px; bottom:-80px; background:rgba(108,79,216,.26); }
-    .brand { position:relative; z-index:1; display:flex; align-items:center; gap:11px; font-weight:900; letter-spacing:-.03em; }
-    .brand-mark { width:42px; height:42px; display:grid; place-items:center; border-radius:14px; color:var(--navy); background:var(--teal); font-size:21px; }
-    .hero { position:relative; z-index:1; max-width:560px; }
-    .eyebrow { margin:0 0 13px; color:#75e7e0; font-size:12px; font-weight:900; letter-spacing:.16em; text-transform:uppercase; }
-    h1 { margin:0; max-width:560px; font-size:clamp(38px,5.8vw,72px); line-height:.98; letter-spacing:-.06em; }
-    .hero p:last-of-type { max-width:470px; margin:22px 0 0; color:#cbc8e6; font-size:clamp(16px,1.7vw,19px); line-height:1.6; }
-    .robo { position:absolute; right:clamp(-72px,-4vw,-20px); bottom:8px; width:min(54%,360px); filter:drop-shadow(0 22px 26px rgba(0,0,0,.3)); pointer-events:none; }
-    .content { padding:clamp(30px,6vw,84px); display:flex; align-items:center; }
-    .doors { width:min(100%,820px); margin:auto; }
-    .doors h2 { margin:0; color:var(--navy); font-size:clamp(28px,3vw,42px); letter-spacing:-.045em; }
-    .lead { margin:10px 0 30px; color:var(--muted); line-height:1.55; }
-    .grid { display:grid; gap:15px; }
-    .door { min-height:150px; display:grid; grid-template-columns:70px 1fr auto; align-items:center; gap:18px; padding:23px; border:1px solid var(--line); border-radius:24px; background:rgba(255,255,255,.88); box-shadow:0 14px 38px rgba(35,32,79,.08); text-decoration:none; transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
-    .door:hover { transform:translateY(-3px); border-color:rgba(108,79,216,.34); box-shadow:0 20px 44px rgba(35,32,79,.13); }
-    .door-icon { width:64px; height:64px; display:grid; place-items:center; border-radius:20px; font-size:29px; }
-    .door h3 { margin:0; color:var(--navy); font-size:22px; letter-spacing:-.025em; }
-    .door p { margin:7px 0 0; color:var(--muted); line-height:1.45; }
-    .door small { display:block; margin-top:8px; font-weight:850; letter-spacing:.03em; }
-    .arrow { width:38px; height:38px; display:grid; place-items:center; border-radius:50%; font-size:21px; font-weight:900; }
-    .cody .door-icon,.cody .arrow { color:#fff; background:var(--purple); } .cody small { color:var(--purple); }
-    .draco .door-icon,.draco .arrow { color:#fff; background:var(--navy); } .draco small { color:var(--purple-dark); }
-    .study .door-icon,.study .arrow { color:var(--navy); background:var(--yellow); } .study small { color:#ad6a00; }
-    .foot { margin:24px 0 0; color:#9a96b4; font-size:12px; text-align:center; }
-    @media (max-width:900px) { .shell { grid-template-columns:1fr; } .intro { min-height:500px; } .robo { width:260px; opacity:.9; } .content { padding-block:42px 62px; } }
-    @media (max-width:560px) { .intro { min-height:440px; padding:26px 22px; } .brand { align-self:flex-start; } .hero { padding-bottom:132px; } .hero p:last-of-type { max-width:280px; font-size:15px; } .robo { width:210px; right:-34px; } .content { padding:32px 17px 48px; } .door { grid-template-columns:52px 1fr; min-height:0; padding:18px; border-radius:20px; } .door-icon { width:50px; height:50px; border-radius:16px; font-size:23px; } .door h3 { font-size:19px; } .door p { font-size:14px; } .arrow { display:none; } }
-    @media (prefers-reduced-motion:reduce) { .door { transition:none; } .door:hover { transform:none; } }
+    a:focus-visible { outline:4px solid var(--pk-yellow); outline-offset:4px; border-radius:12px; }
+
+    /* ---------- animated scene layers ---------- */
+    .scene { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+    .sun { position:absolute; top:6%; right:9%; width:110px; height:110px; border-radius:50%;
+      background:radial-gradient(circle,#FFF3B0 0%,#FFE066 55%,rgba(255,224,102,0) 72%);
+      animation:sunPulse 6s ease-in-out infinite; }
+    .cloud { position:absolute; width:150px; height:46px; background:#fff; border-radius:40px; opacity:.92;
+      animation:drift linear infinite; }
+    .cloud:before,.cloud:after { content:""; position:absolute; background:#fff; border-radius:50%; }
+    .cloud:before { width:60px; height:60px; top:-26px; left:22px; }
+    .cloud:after { width:42px; height:42px; top:-16px; right:24px; }
+    .cloud.c1 { top:12%; animation-duration:55s; animation-delay:-8s; }
+    .cloud.c2 { top:26%; transform:scale(.7); animation-duration:75s; animation-delay:-38s; opacity:.75; }
+    .cloud.c3 { top:6%; transform:scale(.5); animation-duration:95s; animation-delay:-60s; opacity:.6; }
+    .hills { position:absolute; left:0; right:0; bottom:64px; height:180px;
+      background:
+        radial-gradient(60% 100% at 18% 100%, #8FD09A 0 62%, transparent 63%),
+        radial-gradient(55% 110% at 55% 100%, #7BC78A 0 62%, transparent 63%),
+        radial-gradient(65% 95% at 88% 100%, #8FD09A 0 62%, transparent 63%);
+      opacity:.85; }
+    .grass { position:absolute; left:0; right:0; bottom:0; height:84px;
+      background:linear-gradient(180deg,var(--grass) 0%,var(--grass-dark) 100%); }
+    .grass:before { content:""; position:absolute; inset:-14px 0 auto; height:16px;
+      background:radial-gradient(circle at 8px -4px, transparent 10px, var(--grass) 11px);
+      background-size:26px 16px; animation:sway 4s ease-in-out infinite alternate; }
+    .sparkle { position:absolute; width:10px; height:10px; background:var(--pk-yellow);
+      clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+      animation:twinkle 2.6s ease-in-out infinite; }
+    .sparkle.s1 { top:18%; left:12%; } .sparkle.s2 { top:34%; right:16%; animation-delay:.9s; }
+    .sparkle.s3 { top:9%; left:44%; animation-delay:1.7s; transform:scale(.7); }
+    .floatball { position:absolute; width:54px; height:54px; animation:floaty 5.5s ease-in-out infinite; filter:drop-shadow(0 8px 10px rgba(23,21,52,.25)); }
+    .floatball.b1 { top:20%; right:26%; }
+    .floatball.b2 { top:58%; left:6%; width:38px; height:38px; animation-delay:1.4s; opacity:.9; }
+
+    /* ---------- trainer card ---------- */
+    .stage { position:relative; z-index:1; min-height:100vh; display:grid; place-items:center; padding:clamp(18px,4vw,48px); }
+    .card { width:min(100%,620px); background:var(--card); border:4px solid var(--line); border-radius:26px;
+      box-shadow:0 12px 0 rgba(23,21,52,.18), 0 26px 48px rgba(23,21,52,.22);
+      overflow:hidden; animation:cardIn .7s cubic-bezier(.2,1.4,.4,1) both .15s; }
+    .card-top { display:flex; align-items:center; gap:14px; padding:16px 22px; color:#fff;
+      background:linear-gradient(135deg,var(--pk-red) 0%,var(--pk-red-dark) 100%);
+      border-bottom:4px solid var(--line); }
+    .card-top .ball { width:44px; height:44px; animation:spin 9s linear infinite; flex:none; }
+    .card-top .t { line-height:1.05; }
+    .card-top .t b { display:block; font-size:clamp(20px,3vw,26px); font-weight:900; letter-spacing:.02em; text-shadow:0 2px 0 rgba(0,0,0,.25); }
+    .card-top .t span { font-size:12px; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:var(--pk-yellow); }
+    .idno { margin-left:auto; font-weight:900; font-size:13px; background:rgba(0,0,0,.22); padding:7px 12px; border-radius:12px; letter-spacing:.08em; white-space:nowrap; }
+    .card-body { padding:clamp(20px,4vw,32px); }
+    .hello { display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; margin-bottom:20px; }
+    .hello h1 { margin:0; font-size:clamp(26px,4.4vw,40px); line-height:1.02; letter-spacing:-.03em; color:var(--navy); }
+    .hello h1 em { font-style:normal; color:var(--pk-red); position:relative; }
+    .hello p { margin:10px 0 0; color:var(--muted); font-size:clamp(14px,1.8vw,17px); line-height:1.55; }
+    .robo { width:clamp(96px,16vw,150px); animation:bob 3.4s ease-in-out infinite; filter:drop-shadow(0 10px 12px rgba(23,21,52,.28)); }
+
+    /* ---------- module menu (pokemon game menu style) ---------- */
+    .menu { display:grid; gap:14px; }
+    .menu-label { margin:0 0 -4px; font-size:12px; font-weight:900; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+    .door { position:relative; display:grid; grid-template-columns:64px 1fr auto; align-items:center; gap:16px;
+      padding:16px 18px; background:#fff; border:3px solid var(--line); border-radius:20px;
+      box-shadow:0 5px 0 rgba(23,21,52,.16); text-decoration:none;
+      transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+      animation:doorIn .5s cubic-bezier(.2,1.3,.4,1) both; }
+    .door:nth-child(3) { animation-delay:.12s; } .door:nth-child(4) { animation-delay:.22s; }
+    .door:hover { transform:translateY(-4px) rotate(-.4deg); box-shadow:0 9px 0 rgba(23,21,52,.16); background:#FFF9E6; }
+    .door:hover .icon { animation:wiggle .5s ease-in-out; }
+    .door:hover .go { transform:translateX(5px); }
+    .icon { width:60px; height:60px; display:grid; place-items:center; border-radius:16px; border:3px solid var(--line); }
+    .icon svg { width:34px; height:34px; }
+    .door h3 { margin:0; font-size:clamp(19px,2.4vw,23px); font-weight:900; color:var(--navy); letter-spacing:-.01em; }
+    .door p { margin:5px 0 0; color:var(--muted); line-height:1.4; font-size:clamp(13px,1.6vw,15px); }
+    .door small { display:inline-block; margin-top:7px; padding:3px 10px; border-radius:999px; font-size:10px; font-weight:900; letter-spacing:.14em; border:2px solid currentColor; }
+    .go { font-size:26px; font-weight:900; color:var(--pk-red); transition:transform .16s ease; }
+    .cody .icon { background:var(--pk-blue); } .cody small { color:var(--pk-blue); }
+    .draco .icon { background:var(--navy); } .draco small { color:var(--navy); }
+    .study .icon { background:var(--pk-yellow); } .study small { color:#A06A00; }
+    .foot { margin:20px 0 0; text-align:center; color:var(--muted); font-size:12px; font-weight:700; }
+    .foot b { color:var(--pk-red); }
+
+    /* ---------- keyframes ---------- */
+    @keyframes drift { from { left:-220px; } to { left:110%; } }
+    @keyframes sunPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.08); } }
+    @keyframes sway { from { transform:translateY(0); } to { transform:translateY(3px); } }
+    @keyframes twinkle { 0%,100% { opacity:0; transform:scale(.4) rotate(0deg); } 50% { opacity:1; transform:scale(1) rotate(90deg); } }
+    @keyframes floaty { 0%,100% { transform:translateY(0) rotate(-8deg); } 50% { transform:translateY(-16px) rotate(8deg); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes bob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
+    @keyframes wiggle { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-8deg); } 75% { transform:rotate(8deg); } }
+    @keyframes cardIn { from { opacity:0; transform:translateY(34px) scale(.96); } to { opacity:1; transform:none; } }
+    @keyframes doorIn { from { opacity:0; transform:translateX(-22px); } to { opacity:1; transform:none; } }
+
+    @media (max-width:560px) {
+      .floatball.b1 { right:8%; top:14%; width:42px; height:42px; }
+      .floatball.b2 { display:none; }
+      .hello { grid-template-columns:1fr; }
+      .robo { position:absolute; right:14px; top:86px; width:88px; opacity:.95; }
+      .card-body { position:relative; }
+      .hello p { max-width:78%; }
+      .door { grid-template-columns:52px 1fr; }
+      .go { display:none; }
+      .icon { width:48px; height:48px; border-radius:14px; }
+      .icon svg { width:28px; height:28px; }
+      .idno { display:none; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *, *:before, *:after { animation:none !important; transition:none !important; }
+    }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <section class="intro" aria-labelledby="suite-title">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">D</span><span>Druygon</span></div>
-      <div class="hero">
-        <p class="eyebrow">Learning suite</p>
-        <h1 id="suite-title">Tiga cara belajar. Satu petualangan.</h1>
-        <p>Pilih dunia yang ingin kamu jelajahi hari ini. Robo dan Draco siap menemanimu.</p>
+  <div class="scene" aria-hidden="true">
+    <div class="sun"></div>
+    <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+    <div class="sparkle s1"></div><div class="sparkle s2"></div><div class="sparkle s3"></div>
+    <div class="hills"></div>
+    <div class="grass"></div>
+    <svg class="floatball b1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff" stroke="#23204F" stroke-width="5"/><path d="M2 50a48 48 0 0 1 96 0z" fill="#EE3E23"/><rect x="2" y="45" width="96" height="10" fill="#23204F"/><circle cx="50" cy="50" r="14" fill="#fff" stroke="#23204F" stroke-width="5"/><circle cx="50" cy="50" r="6" fill="#C9E8FC" stroke="#23204F" stroke-width="3"/></svg>
+    <svg class="floatball b2" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff" stroke="#23204F" stroke-width="5"/><path d="M2 50a48 48 0 0 1 96 0z" fill="#3D7DCA"/><rect x="2" y="45" width="96" height="10" fill="#23204F"/><circle cx="50" cy="50" r="14" fill="#fff" stroke="#23204F" stroke-width="5"/><circle cx="50" cy="50" r="6" fill="#C9E8FC" stroke="#23204F" stroke-width="3"/></svg>
+  </div>
+
+  <main class="stage">
+    <section class="card" aria-labelledby="suite-title">
+      <div class="card-top">
+        <svg class="ball" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#fff" stroke="#23204F" stroke-width="5"/><path d="M2 50a48 48 0 0 1 96 0z" fill="#FFCB05"/><rect x="2" y="45" width="96" height="10" fill="#23204F"/><circle cx="50" cy="50" r="14" fill="#fff" stroke="#23204F" stroke-width="5"/><circle cx="50" cy="50" r="6" fill="#EE3E23" stroke="#23204F" stroke-width="3"/></svg>
+        <div class="t"><b>Druygon</b><span>Trainer Card</span></div>
+        <span class="idno">No. 005 · KELAS 5</span>
       </div>
-      <img class="robo" src="robo.png" alt="Robo, teman belajar Druygon">
-    </section>
-    <section class="content" aria-labelledby="choose-title">
-      <div class="doors">
-        <h2 id="choose-title">Mau belajar apa?</h2>
-        <p class="lead">Semua modul terhubung dalam keluarga Druygon.</p>
-        <div class="grid">
+      <div class="card-body">
+        <div class="hello">
+          <div>
+            <h1 id="suite-title">Siap berpetualang, <em>Trainer Dru</em>?</h1>
+            <p>Tiga dunia belajar menunggumu. Pilih misimu, kumpulkan XP, dan jadi Master Belajar!</p>
+          </div>
+          <img class="robo" src="robo.png" alt="Robo, teman belajar Druygon">
+        </div>
+        <nav class="menu" aria-label="Modul belajar">
+          <p class="menu-label">▶ Pilih Duniamu</p>
           <a class="door cody" href="https://cody.druygon.my.id/">
-            <span class="door-icon" aria-hidden="true">⌘</span><span><h3>Cody</h3><p>Belajar coding langkah demi langkah bersama Robo.</p><small>CODING LEARN</small></span><span class="arrow" aria-hidden="true">→</span>
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+            <span><h3>Cody</h3><p>Latihan coding bareng Robo — dari blok sampai Python.</p><small>CODING GYM</small></span>
+            <span class="go" aria-hidden="true">▶</span>
           </a>
           <a class="door draco" href="https://draco.druygon.my.id/">
-            <span class="door-icon" aria-hidden="true">✦</span><span><h3>Draco</h3><p>Tanya, diskusi, dan pahami pelajaran lewat AI chat.</p><small>AI CHAT LEARN</small></span><span class="arrow" aria-hidden="true">→</span>
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#FFCB05" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 20l1.1-4.1A8.38 8.38 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.4 8.38 8.38 0 0 1 9 8.4z"/></svg></span>
+            <span><h3>Draco</h3><p>Tanya apa saja ke AI — diskusi pelajaran sampai paham.</p><small>AI LAB</small></span>
+            <span class="go" aria-hidden="true">▶</span>
           </a>
           <a class="door study" href="https://study.druygon.my.id/">
-            <span class="door-icon" aria-hidden="true">⚡</span><span><h3>Study</h3><p>Belajar dengan misi, Pokémon, XP, dan hadiah.</p><small>GAMIFIED STUDY</small></span><span class="arrow" aria-hidden="true">→</span>
+            <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#23204F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+            <span><h3>Study</h3><p>Misi pelajaran sekolah, tangkap Pokémon, raih hadiah.</p><small>ADVENTURE MART</small></span>
+            <span class="go" aria-hidden="true">▶</span>
           </a>
-        </div>
-        <p class="foot">Druygon dibuat untuk petualangan belajar Dru.</p>
+        </nav>
+        <p class="foot">Dibuat khusus untuk petualangan belajar <b>Dru</b> · Gotta Learn 'Em All!</p>
       </div>
     </section>
   </main>
