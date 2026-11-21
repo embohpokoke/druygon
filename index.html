@@ -30,6 +30,17 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+<style id="dru-public-privacy">
+html:not(.dru-authed) .lb,
+html:not(.dru-authed) .leaderboard { display: none !important; }
+</style>
+<script>
+fetch("/api/dru/status", { credentials: "same-origin" })
+  .then(function (r) { return r.json(); })
+  .then(function (d) { if (d && d.authenticated) document.documentElement.classList.add("dru-authed"); })
+  .catch(function () {});
+</script>
 </head>
 <body>
 <div id="root">

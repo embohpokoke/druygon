@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#080714" />
+<meta name="robots" content="noindex" />
+<title>Masuk — Druygon</title>
+<style>
+  :root { --bg:#080714; --card:#16142a; --accent:#ffcb05; --text:#f5f2e8; --muted:#9a96b0; --danger:#ff6b7a; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100dvh; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--bg); color: var(--text); display:flex; align-items:center; justify-content:center; padding:24px; }
+  .card { width:min(100%, 360px); background:var(--card); border-radius:24px; padding:28px 24px 32px;
+    box-shadow: 0 16px 60px rgba(0,0,0,.4); }
+  h1 { font-size:22px; margin:0 0 8px; }
+  p { color:var(--muted); margin:0 0 20px; font-size:14px; line-height:1.4; }
+  #pin { width:100%; letter-spacing:.4em; font-size:28px; text-align:center; padding:12px;
+    border-radius:14px; border:1px solid #2e2a4a; background:#0e0c1c; color:var(--text); margin-bottom:16px; }
+  .pad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .pad button { font-size:22px; font-weight:700; padding:16px 0; border:0; border-radius:14px;
+    background:#2a2742; color:var(--text); cursor:pointer; }
+  .pad button:active { transform:scale(.97); }
+  .pad .ok { background:var(--accent); color:#1a1400; }
+  .pad .del { background:#3a2430; }
+  #msg { min-height:1.4em; font-size:13px; margin:12px 0 0; color:var(--danger); text-align:center; }
+  a.back { display:block; text-align:center; margin-top:18px; color:var(--muted); text-decoration:none; font-size:13px; font-weight:700; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>PIN Dru</h1>
+    <p id="intro">Masukkan PIN untuk membuka tutor, latihan mingguan, dan penyimpanan permainan.</p>
+    <form id="f" autocomplete="off">
+      <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" autofocus />
+      <div class="pad" aria-hidden="true">
+        <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+        <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+        <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+        <button type="button" class="del" data-k="del">⌫</button>
+        <button type="button" data-k="0">0</button>
+        <button type="submit" class="ok">OK</button>
+      </div>
+    </form>
+    <p id="msg"></p>
+    <a class="back" href="/">← Kembali ke portal</a>
+  </div>
+<script>
+(function () {
+  const pin = document.getElementById('pin');
+  const msg = document.getElementById('msg');
+  const intro = document.getElementById('intro');
+  const params = new URLSearchParams(location.search);
+  const next = params.get('next') || '/';
+  if (params.get('reason') === 'not-set') {
+    intro.textContent = 'PIN Dru belum diatur. Minta orang tua mengaturnya di dasbor Parent.';
+  }
+  document.querySelector('.pad').addEventListener('click', (e) => {
+    const k = e.target.dataset.k;
+    if (!k) return;
+    if (k === 'del') pin.value = pin.value.slice(0, -1);
+    else if (pin.value.length < 10) pin.value += k;
+    pin.focus();
+  });
+  document.getElementById('f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.textContent = '';
+    const value = pin.value.trim();
+    if (!value) { msg.textContent = 'PIN wajib diisi'; return; }
+    try {
+      const res = await fetch('/api/dru/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ pin: value, next })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 429) {
+        msg.textContent = data.error || 'Terlalu banyak percobaan.';
+        return;
+      }
+      if (!res.ok) {
+        msg.textContent = data.error || 'PIN salah';
+        pin.value = '';
+        pin.focus();
+        return;
+      }
+      const dest = (data.next && data.next.startsWith('/') && !data.next.startsWith('//')) ? data.next : '/';
+      location.replace(dest);
+    } catch (_) {
+      msg.textContent = 'Gagal terhubung ke server. Coba lagi.';
+    }
+  });
+})();
+</script>
+</body>
+</html>

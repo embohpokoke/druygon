@@ -14,6 +14,7 @@
  */
 
 const express  = require('express');
+const { requireDruAuth } = require('../middleware/dru-auth');
 const router   = express.Router();
 const path     = require('path');
 const Database = require('better-sqlite3');
@@ -74,7 +75,7 @@ router.get('/progress/:slot', (req, res) => {
 // ── POST /api/cody/progress/:slot/complete ───────────────────────────────────
 // Body: { lessonId: number }
 // Idempotent: first completion awards XP + coins to the shared profile.
-router.post('/progress/:slot/complete', (req, res) => {
+router.post('/progress/:slot/complete', requireDruAuth,  (req, res) => {
   const slot = parseSlot(req.params.slot);
   if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
 

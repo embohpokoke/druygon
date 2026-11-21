@@ -7,6 +7,8 @@ const Database = require('better-sqlite3');
 const pool     = require('../runtime/db');
 const { buildNovaSystemPrompt } = require('../runtime/nova_soul');
 const { requireParentAuth, parentAuthStatus, loginParent, logoutParent } = require('../middleware/parent-auth');
+const druPinStore = require('../runtime/dru_auth_store');
+const parentPinStore = require('../runtime/parent_auth_store');
 
 const PLAYERS_DB = path.join(__dirname, '..', '..', '..', 'druygon_players.db');
 
@@ -28,6 +30,64 @@ router.post('/auth/pin', loginParent);
 router.post('/auth/logout', logoutParent);
 
 router.use(requireParentAuth);
+
+
+router.get('/dru-pin/status', (req, res) => {
+  res.json({ pinSet: druPinStore.pinIsSet() });
+});
+
+router.post('/dru-pin', async (req, res) => {
+  try {
+    const pin = typeof req.body?.pin === 'string' ? req.body.pin : '';
+    const confirm = typeof req.body?.pin_confirm === 'string' ? req.body.pin_confirm : pin;
+    if (pin !== confirm) {
+      return res.status(400).json({ error: 'PIN dan konfirmasi tidak sama' });
+    }
+    await druPinStore.setPin(pin);
+    return res.json({ success: true, pinSet: true });
+  } catch (err) {
+    if (err.code === 'INVALID_PIN') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error('Set Dru PIN failed:', err.code || 'error');
+    return res.status(500).json({ error: 'Gagal menyimpan PIN' });
+  }
+});
+
+router.get('/pin/status', (req, res) => {
+  res.json({
+    hashSet: parentPinStore.hashIsSet(),
+    mode: parentPinStore.authMode(),
+    bootstrapEnvPresent: parentPinStore.envBootstrapPresent(),
+  });
+});
+
+router.post('/pin', async (req, res) => {
+  try {
+    const current = typeof req.body?.current_pin === 'string' ? req.body.current_pin.trim() : '';
+    const pin = typeof req.body?.pin === 'string' ? req.body.pin.trim() : '';
+    const confirm = typeof req.body?.pin_confirm === 'string' ? req.body.pin_confirm.trim() : pin;
+    if (!current) {
+      return res.status(400).json({ error: 'PIN saat ini wajib diisi' });
+    }
+    if (pin !== confirm) {
+      return res.status(400).json({ error: 'PIN baru dan konfirmasi tidak sama' });
+    }
+    const ok = await parentPinStore.matchesStored(current);
+    if (!ok) {
+      return res.status(401).json({ error: 'PIN saat ini salah', code: 'PIN_WRONG' });
+    }
+    await parentPinStore.setPin(pin);
+    return res.json({ success: true, hashSet: true });
+  } catch (err) {
+    if (err.code === 'INVALID_PIN') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error('Change parent PIN failed:', err.code || 'error');
+    return res.status(500).json({ error: 'Gagal menyimpan PIN' });
+  }
+});
+
 
 // GET /api/parent/materials
 router.get('/materials', async (req, res) => {

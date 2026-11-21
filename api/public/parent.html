@@ -198,6 +198,35 @@
     <button class="btn" id="save-btn" onclick="saveObjectives()">Simpan Perubahan ✨</button>
     <p id="status-msg" style="text-align: center; font-size: 13px; margin-top: 12px; display: none;"></p>
 
+
+    <div class="card" id="pin-forms-card">
+      <h2 style="font-size: 18px; color: var(--accent); margin-bottom: 8px;">PIN Dru</h2>
+      <p style="opacity:0.7;font-size:13px;margin-bottom:12px;">PIN 4–10 digit, disimpan hanya sebagai hash di database. Untuk tutor, latihan mingguan, dan simpanan permainan.</p>
+      <p id="dru-pin-state" style="font-size:13px;margin-bottom:12px;"></p>
+      <form id="dru-pin-form" autocomplete="off">
+        <label>PIN Dru baru</label>
+        <input type="password" id="dru-pin-new" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="new-password">
+        <label>Ulangi PIN Dru</label>
+        <input type="password" id="dru-pin-confirm" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="new-password">
+        <button class="btn" type="submit" style="margin-top:12px;">Simpan PIN Dru</button>
+        <p id="dru-pin-msg" style="text-align:center;font-size:13px;margin-top:10px;"></p>
+      </form>
+
+      <h2 style="font-size: 18px; color: var(--accent); margin: 28px 0 8px;">Ganti PIN parent</h2>
+      <p style="opacity:0.7;font-size:13px;margin-bottom:12px;">Wajib isi PIN parent saat ini. PIN baru (4–32 karakter, tanpa spasi) disimpan sebagai hash Argon2id. Setelah tersimpan, nilai di environment diabaikan dan bisa dihapus.</p>
+      <p id="parent-pin-state" style="font-size:13px;margin-bottom:12px;"></p>
+      <form id="parent-pin-form" autocomplete="off">
+        <label>PIN parent saat ini</label>
+        <input type="password" id="parent-pin-current" maxlength="32" autocomplete="current-password">
+        <label>PIN parent baru</label>
+        <input type="password" id="parent-pin-new" maxlength="32" autocomplete="new-password">
+        <label>Ulangi PIN parent baru</label>
+        <input type="password" id="parent-pin-confirm" maxlength="32" autocomplete="new-password">
+        <button class="btn" type="submit" style="margin-top:12px;">Simpan PIN parent</button>
+        <p id="parent-pin-msg" style="text-align:center;font-size:13px;margin-top:10px;"></p>
+      </form>
+    </div>
+
     <!-- Redesign Player Data -->
     <div id="players-section" style="margin-top: 24px;">
       <h2 style="font-size: 18px; color: var(--accent); margin-bottom: 12px;">Pemain Redesign</h2>
@@ -211,28 +240,32 @@
     let currentSubjects = [];
     let playerList = [];
 
-    function checkPin() {
-      const pin = document.getElementById('pin-input').value;
-      if (pin === 'dru2026') {
+    async function checkPin() {
+      const pin = (document.getElementById('pin-input').value || '').trim();
+      if (!pin) {
+        alert('PIN wajib diisi');
+        return;
+      }
+      try {
+        const res = await fetch('/api/parent/auth/pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ pin })
+        });
+        if (!res.ok) {
+          alert('PIN Salah!');
+          document.getElementById('pin-input').value = '';
+          return;
+        }
         document.getElementById('pin-screen').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        authenticateParent(pin);
         loadData();
-      } else {
-        alert('PIN Salah!');
-        document.getElementById('pin-input').value = '';
+      } catch (e) {
+        alert('Gagal terhubung ke server. Coba lagi.');
       }
     }
 
-    async function authenticateParent(pin) {
-      try {
-        await fetch('/api/parent/auth/pin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pin })
-        });
-      } catch (e) { /* non-fatal — player section may fail but curriculum still works */ }
-    }
 
     document.getElementById('pin-input').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') checkPin();
@@ -250,6 +283,8 @@
         alert('Gagal memuat data!');
       }
       loadPlayers();
+      loadDruPinState();
+      loadParentPinState();
     }
 
     async function loadPlayers() {
@@ -392,6 +427,79 @@
       currentSubjects[index].locked = !currentSubjects[index].locked;
       renderSubjects();
     }
+
+
+
+    async function loadDruPinState() {
+      try {
+        const res = await fetch('/api/parent/dru-pin/status', { credentials: 'same-origin' });
+        const data = await res.json();
+        const el = document.getElementById('dru-pin-state');
+        if (el) el.textContent = data.pinSet
+          ? 'Status: PIN Dru sudah diatur. Isi form untuk mengganti.'
+          : 'Status: PIN Dru belum diatur. Latihan dan tutor terkunci sampai PIN dibuat.';
+      } catch (_) {}
+    }
+
+    async function loadParentPinState() {
+      try {
+        const res = await fetch('/api/parent/pin/status', { credentials: 'same-origin' });
+        const data = await res.json();
+        const el = document.getElementById('parent-pin-state');
+        if (!el) return;
+        if (data.hashSet) el.textContent = 'Status: PIN parent sudah disimpan sebagai hash. Environment diabaikan.';
+        else if (data.bootstrapEnvPresent) el.textContent = 'Status: masih memakai PIN bootstrap dari environment. Ganti lewat form ini agar hanya hash yang dipakai.';
+        else el.textContent = 'Status: PIN parent belum diatur.';
+      } catch (_) {}
+    }
+
+    document.getElementById('dru-pin-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const msg = document.getElementById('dru-pin-msg');
+      const pin = document.getElementById('dru-pin-new').value.trim();
+      const confirm = document.getElementById('dru-pin-confirm').value.trim();
+      msg.textContent = '';
+      if (pin !== confirm) { msg.textContent = 'PIN dan konfirmasi tidak sama'; return; }
+      try {
+        const res = await fetch('/api/parent/dru-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ pin, pin_confirm: confirm })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { msg.textContent = data.error || 'Gagal menyimpan'; return; }
+        msg.textContent = 'PIN Dru tersimpan.';
+        document.getElementById('dru-pin-new').value = '';
+        document.getElementById('dru-pin-confirm').value = '';
+        loadDruPinState();
+      } catch (_) { msg.textContent = 'Gagal terhubung ke server.'; }
+    });
+
+    document.getElementById('parent-pin-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const msg = document.getElementById('parent-pin-msg');
+      const current_pin = document.getElementById('parent-pin-current').value.trim();
+      const pin = document.getElementById('parent-pin-new').value.trim();
+      const pin_confirm = document.getElementById('parent-pin-confirm').value.trim();
+      msg.textContent = '';
+      if (pin !== pin_confirm) { msg.textContent = 'PIN baru dan konfirmasi tidak sama'; return; }
+      try {
+        const res = await fetch('/api/parent/pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ current_pin, pin, pin_confirm })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { msg.textContent = data.error || 'Gagal menyimpan'; return; }
+        msg.textContent = 'PIN parent tersimpan sebagai hash.';
+        document.getElementById('parent-pin-current').value = '';
+        document.getElementById('parent-pin-new').value = '';
+        document.getElementById('parent-pin-confirm').value = '';
+        loadParentPinState();
+      } catch (_) { msg.textContent = 'Gagal terhubung ke server.'; }
+    });
 
     async function saveObjectives() {
       const btn = document.getElementById('save-btn');
