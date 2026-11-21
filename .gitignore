@@ -34,3 +34,12 @@ api/.env.backup.*
 
 # content-engine scratch
 tools/content-engine/out/
+
+# Secrets: never commit env files or env backups (2026-11-21)
+.env
+.env.*
+**/.env
+**/.env.*
+api/.env.backup*
+!.env.example
+!**/.env.example
