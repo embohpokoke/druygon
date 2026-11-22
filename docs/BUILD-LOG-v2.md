@@ -23,15 +23,15 @@ Jangan pernah menulis PIN/kredensial ke file ini.
 - [x] Recon vault + runtime (vault `/root/erikmah-vault/projects/druygon`, kode `/opt/druygon`, DB, API).
 - [x] Spec v2 + log dibuat di MBP (`docs/`).
 - [x] Staging lokal `~/projects/druygon-vps/` (redesign/app, index.html, api routes, tools/content-engine).
-- [ ] Fondasi data + CSS/SFX.
-- [ ] Backend player.js (shiny, rank, claim).
-- [ ] Screens1 (Home/Map/Catch/Celebration).
-- [ ] Screens2 (Collection/Profile) + index-src.
-- [ ] Content seed legendary + content route.
-- [ ] Build + QA (Playwright + curl) di VPS.
-- [ ] Commit + push GitHub.
-- [ ] Update vault docs + AGENT-LOG.
-- [ ] Backup DB sebelum deploy.
+- [x] Fondasi data + CSS/SFX.
+- [x] Backend player.js (shiny, rank, claim).
+- [x] Screens1 (Home/Map/Catch/Celebration).
+- [x] Screens2 (Collection/Profile) + index-src.
+- [x] Content seed legendary + content route.
+- [x] Build + QA (Playwright + curl) di VPS.
+- [x] Commit + push GitHub (`0bc885a`, master).
+- [x] Update vault docs + AGENT-LOG + wiki.
+- [x] Backup DB sebelum deploy (`/root/backups/druygon-v2/`).
 
 ## Fakta runtime yang sudah diverifikasi (22 Nov 2026)
 
@@ -66,6 +66,28 @@ docs/BUILD-LOG-v2.md
 Push ke `origin master` setelah build & QA. Vault di-update terpisah (bukan di repo).
 
 ## Entri
+
+### 22 Nov 2026 19:10 WIB — v2 live, sudah di-push
+
+- Deploy: DB backup dulu → rsync source → seed legendary gates → `bash redesign/build.sh` → `systemctl restart druygon` → health 200.
+- Bundle `997be28c`. Commit `0bc885a` di-push ke `master` (`38f8cff..0bc885a`).
+- API test (slot 5, dibersihkan lagi): catch shiny persist, legendary flag, rank claim idempoten, 409 tier belum capai, 400 `shiny` bukan boolean.
+- Playwright 390×844 dengan sesi parent: home, map science, catch normal, catch shiny (Math.random dipaksa), catch legendary Mewtwo, collection, profile — **0 console/page error**. Reduce-motion shot diambil.
+- Bug yang ditemukan & diperbaiki saat QA: (1) Catch dipanggil saat konten belum siap → React #310 (hooks order) → dipisah wrapper `Catch` + `CatchScreen`; (2) chip filter Collection meluber → `flex-wrap`; (3) judul header "…" karena App tidak subscribe `onContentReady` → tick state.
+- Screenshot bukti: `~/projects/druygon-vps/shots/` (home, map-science, catch-normal, catch-shiny, catch-legendary, collection, profile, home-reduced).
+- Catatan: koneksi SSH dari MBP ke VPS sempat stall beberapa kali saat screenshot; pekerjaan inti sudah selesai sebelum itu.
+
+#### Angka nyata Dru saat build
+
+Level 7 · 286 poin (Youngster, 14 poin lagi ke Ace Trainer) · 24 caught · 1 legendary (Volcarona #637) · 0 shiny · 200 koin · 0 Poké Ball / 1 Great Ball. Rank Rookie + Youngster belum diklaim → bisa langsung klaim 2 Great Ball di Profile.
+
+#### Lanjutan yang disarankan (belum dikerjakan)
+
+1. Perbaiki `Progress by world` di Profile agar memakai turunan `caught_v2` (bukan `zone_progress`) — sekarang bisa tampak 0% walau zona sudah clear.
+2. Spec v1 Fase 2: hentikan hadiah koin/XP per soal (sekarang +5/+5) dan ganti pujian informatif + stempel pekan (belum).
+3. Legendary gate untuk Cody/region baru kalau ada; shiny dex per region (saat ini koleksi shiny lintas region).
+4. Uji manual iPhone Safari oleh Erik (audio unlock, haptic-less animasi, layout) — gate WebKit dari Mac belum dijalankan build ini.
+5. Setelah Dru main, cek `rank_awards` + `caught_shiny` mengisi; kalau reward rank dobel, lihat PK `(slot, rank_id)`.
 
 ### 22 Nov 2026 18:35 WIB — recon selesai, spec v2 ditulis
 
