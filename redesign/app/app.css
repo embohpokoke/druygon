@@ -218,7 +218,7 @@ body { background: radial-gradient(120% 90% at 50% -10%, #15122a 0%, #0a0818 55%
 .col-stat { flex:1; text-align:center; padding:13px 6px; border-radius:var(--r-md); background:var(--bg-card); border:1px solid var(--border-subtle); }
 .col-stat b { font-family:var(--font-display); font-weight:800; font-size:20px; display:block; }
 .col-stat span { font-size:9px; letter-spacing:.06em; color:var(--text-tertiary); text-transform:uppercase; }
-.col-filters { display:flex; gap:8px; margin:16px 0 6px; overflow-x:auto; }
+.col-filters { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 6px; }
 .col-filters::-webkit-scrollbar{display:none}
 .filter { padding:6px 13px; border-radius:var(--r-pill); font-size:12px; font-weight:600; border:1px solid var(--border-medium); color:var(--text-secondary); white-space:nowrap; cursor:pointer; }
 .filter.on { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
@@ -338,3 +338,89 @@ body { background: radial-gradient(120% 90% at 50% -10%, #15122a 0%, #0a0818 55%
 .recovery-actions { display:grid; gap:10px; margin-top:22px; }
 .recovery-actions .btn { width:100%; }
 .recovery-link { display:inline-block; margin-top:18px; color:var(--text-secondary); font-size:12px; text-decoration:underline; text-underline-offset:3px; }
+
+/* ===== V2 — shiny / legendary / rank ===== */
+/* Motion layer for SPEC v2 (§3.1–3.5). Rules: transform + opacity only
+   (no width/height/top/left animation), nothing loops louder than the
+   reduced-motion block at the end of this section.
+   Name check against the rest of the codebase:
+   · `comboPop` ALREADY EXISTS (line ~288, used by `.combo-badge`). It is
+     intentionally NOT redefined here so the badge keeps its rotate keyframes;
+     `.combo-pop` below simply reuses it at the shorter 260ms duration.
+   · Every other keyframe/class name in this block is new — no collisions in
+     app.css, design-system.css or desktop.css. */
+
+/* ── keyframes ────────────────────────────────────────────── */
+@keyframes encounterIn { from { opacity:0; transform: translateY(14px) scale(.94); } to { opacity:1; transform: translateY(0) scale(1); } }
+@keyframes legendaryIn { from { opacity:0; transform: scale(1.08); } to { opacity:1; transform: scale(1); } }
+@keyframes auraPulse { 0%, 100% { opacity:.55; } 50% { opacity:1; } }
+@keyframes sparkleTwinkle {
+  0%   { opacity:0; transform: scale(.4); }
+  50%  { opacity:1; transform: scale(1.4); }
+  100% { opacity:0; transform: scale(.6); }
+}
+@keyframes ballArc {
+  0%   { opacity:0; transform: translate3d(-34px, 58px, 0) rotate(0deg) scale(.7); }
+  20%  { opacity:1; }
+  50%  { transform: translate3d(4px, -78px, 0) rotate(190deg) scale(.92); }
+  100% { opacity:1; transform: translate3d(30px, -22px, 0) rotate(380deg) scale(.9); }
+}
+/* 3 phases, then settle — rotate values are measured from centre */
+@keyframes wobble3 {
+  0%   { transform: rotate(0deg); }
+  16%  { transform: rotate(-12deg); }
+  46%  { transform: rotate(12deg); }
+  76%  { transform: rotate(-8deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes burstPop { from { opacity:1; transform: scale(.2); } to { opacity:0; transform: scale(1.6); } }
+@keyframes catchPop { 0% { transform: scale(.6); } 62% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes damageFloat { from { opacity:1; transform: translateY(0); } to { opacity:0; transform: translateY(-38px); } }
+@keyframes xpGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes rankRays { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes emblemPop { 0% { transform: scale(.7); } 62% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@keyframes flashGold { 0% { opacity:0; } 32% { opacity:.8; } 100% { opacity:0; } }
+@keyframes trophyShine { from { transform: translateX(-120%); } to { transform: translateX(220%); } }
+@keyframes gatePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+/* comboPop: reused from the "juice" set above — not redefined (see note at top). */
+
+/* ── wild encounter / legendary entrance ──────────────────── */
+.wild-enter { animation: encounterIn .3s var(--ease-out) both; }
+.wild-legendary { animation: legendaryIn .5s var(--ease-out) both; position: relative; box-shadow: 0 0 40px rgba(255,203,5,.35); }
+.aura-gold { position:absolute; inset:-18px; border-radius:50%; background: radial-gradient(circle, rgba(255,203,5,.35), transparent 70%); animation: auraPulse 2.4s ease-in-out infinite; pointer-events:none; }
+.sparkle { position:absolute; width:8px; height:8px; border-radius:50%; background:#FFF3B0; box-shadow:0 0 8px #FFCB05; animation: sparkleTwinkle 1.2s ease-out both; pointer-events:none; }
+
+/* ── ball throw → wobble → burst → catch ──────────────────── */
+.ball-throw { animation: ballArc .7s cubic-bezier(.3,.7,.4,1) both; }
+.ball-wobble { animation: wobble3 .7s ease-in-out .7s both; }
+.burst-ring { position:absolute; width:120px; height:120px; border:3px solid #FFCB05; border-radius:50%; animation: burstPop .42s ease-out both; pointer-events:none; }
+.catch-pop { animation: catchPop .36s var(--ease-spring) both; }
+
+/* ── battle feedback: damage number + XP bar ──────────────── */
+.damage-float { position:absolute; animation: damageFloat .62s ease-out both; pointer-events:none; font-weight:800; }
+.meter i.xp-grow { animation: xpGrow .4s var(--ease-out) both; transform-origin:left center; }
+
+/* ── rank-up overlay ──────────────────────────────────────── */
+.rank-overlay { position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; background:rgba(8,7,20,.9); overflow:hidden; }
+.rank-rays { position:absolute; width:520px; height:520px; animation: rankRays 6s linear infinite; pointer-events:none; }
+.rank-emblem { animation: emblemPop .5s var(--ease-spring) both; display:grid; place-items:center; }
+.screen-flash { position:fixed; inset:0; background: radial-gradient(circle, rgba(255,203,5,.9), transparent 65%); animation: flashGold .45s ease-out both; pointer-events:none; z-index:1150; }
+
+/* ── trophy card + legendary gate ─────────────────────────── */
+.trophy-card { position:relative; overflow:hidden; border-radius:16px; border:1px solid rgba(255,203,5,.35); }
+.trophy-card::after { content:''; position:absolute; inset:0; background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%); transform: translateX(-120%); animation: trophyShine 1.8s ease-in-out infinite; pointer-events:none; }
+.legend-gate { animation: gatePulse 2s ease-in-out infinite; border:1px solid rgba(255,203,5,.55); background: linear-gradient(120deg, rgba(255,203,5,.16), rgba(120,70,0,.12)); }
+.combo-pop { animation: comboPop .26s var(--ease-spring) both; }
+
+/* ── collection frames / badges / small chrome ────────────── */
+.shiny-frame { border-color:#FFD84D !important; box-shadow:0 0 12px rgba(255,216,77,.35); }
+.legend-frame { border-color:#FFCB05 !important; background: linear-gradient(160deg, rgba(255,203,5,.14), rgba(20,14,2,.6)) !important; }
+.shiny-badge { position:absolute; top:2px; left:2px; font-size:11px; background:rgba(0,0,0,.55); border-radius:999px; padding:1px 5px; color:#FFD84D; }
+.sfx-toggle { width:34px; height:34px; border-radius:50%; border:1px solid rgba(255,255,255,.16); background:rgba(0,0,0,.35); display:grid; place-items:center; cursor:pointer; color:var(--text-secondary); }
+.rank-mini { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:16px; background:var(--bg-card); border:1px solid rgba(255,203,5,.28); }
+
+/* reduced motion: no loops, no particles, no ball arc — layout stays intact */
+@media (prefers-reduced-motion: reduce) {
+  .wild-enter,.wild-legendary,.aura-gold,.sparkle,.ball-throw,.ball-wobble,.burst-ring,.catch-pop,.damage-float,.rank-rays,.rank-emblem,.screen-flash,.trophy-card::after,.legend-gate,.combo-pop { animation: none !important; }
+  .meter i.xp-grow { animation: none !important; transform: none !important; }
+}

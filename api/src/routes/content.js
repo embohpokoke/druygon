@@ -31,9 +31,17 @@ router.get('/regions', (req, res) => {
       "SELECT id, name, accent, status FROM subject WHERE status != 'locked' ORDER BY id"
     ).all();
 
-    const zones = db.prepare(
-      "SELECT z.id, z.subject_id, z.ord, z.name, z.topic, z.min_level FROM zone z"
-    ).all();
+    // v2: `legendary` column may not exist on older content DBs — fall back safely.
+    let zones;
+    try {
+      zones = db.prepare(
+        "SELECT z.id, z.subject_id, z.ord, z.name, z.topic, z.min_level, z.legendary FROM zone z"
+      ).all();
+    } catch (e) {
+      zones = db.prepare(
+        "SELECT z.id, z.subject_id, z.ord, z.name, z.topic, z.min_level, 0 AS legendary FROM zone z"
+      ).all();
+    }
 
     const pokemon = db.prepare(
       "SELECT zone_id, dex, name, type, rarity FROM zone_pokemon ORDER BY zone_id, rarity DESC, dex"
@@ -66,6 +74,7 @@ router.get('/regions', (req, res) => {
           name:     z.name,
           topic:    z.topic,
           minLevel: z.min_level,
+          legendary: !!z.legendary,
           mons:     pokemonByZone[z.id] || []
         }));
 

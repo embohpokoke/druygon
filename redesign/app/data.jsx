@@ -20,6 +20,40 @@ const RARITY = {
   legendary: { label: 'Legendary', c: '#FFCB05' },
 };
 
+// ── Trainer ranks (mirror of server RANKS; server is authoritative) ─────────
+// points = level*10 + caught*3 + shiny*25 + legendary*40 + zonesCleared*15 + badges*2
+const TRAINER_RANKS = [
+  { id: 'rookie',    name: 'Rookie',        title: 'Rookie Trainer', tier: 1, points: 0,    color: '#9aa0b5', emoji: '🥚', perks: [] },
+  { id: 'youngster', name: 'Youngster',     title: 'Youngster',      tier: 2, points: 120,  color: '#4ADE80', emoji: '🧢', perks: ['+2 Great Ball'] },
+  { id: 'ace',       name: 'Ace Trainer',   title: 'Ace Trainer',    tier: 3, points: 300,  color: '#4A9EFF', emoji: '⚡', perks: ['+1 Great Ball', 'Shiny Charm'] },
+  { id: 'gym',       name: 'Gym Leader',    title: 'Gym Leader',     tier: 4, points: 600,  color: '#8B5CF6', emoji: '🏅', perks: ['+5 Ultra Ball'] },
+  { id: 'elite',     name: 'Elite Four',    title: 'Elite Four',     tier: 5, points: 1000, color: '#F472B6', emoji: '🔥', perks: ['+1 Master Ball'] },
+  { id: 'champion',  name: 'Champion',      title: 'Champion',       tier: 6, points: 1500, color: '#FF6B2B', emoji: '👑', perks: ['+3 Ultra Ball', '+2 Great Ball'] },
+  { id: 'dragon',    name: 'Dragon Master', title: 'Dragon Master',  tier: 7, points: 2200, color: '#FFCB05', emoji: '🐉', perks: ['+1 Master Ball'] },
+];
+
+// Client-side mirror: which rank does this point total sit in?
+function rankForPoints(points) {
+  let cur = TRAINER_RANKS[0];
+  for (const r of TRAINER_RANKS) if (points >= r.points) cur = r;
+  const idx = TRAINER_RANKS.indexOf(cur);
+  return { ...cur, next: TRAINER_RANKS[idx + 1] || null, index: idx };
+}
+
+// ── Shiny: official-artwork shiny sprite + encounter roll ───────────────────
+const SHINY_SPRITE = (dex) =>
+  `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/official-artwork/shiny/${dex}.png`;
+
+const SHINY_RATE = { common: 1 / 16, uncommon: 1 / 20, rare: 1 / 24, legendary: 1 / 64 };
+
+function shinyChance(rarity, charm) {
+  const base = SHINY_RATE[rarity] ?? SHINY_RATE.common;
+  return Math.min(0.5, base * (charm ? 2 : 1));
+}
+function rollShiny(rarity, charm) {
+  return Math.random() < shinyChance(rarity, charm);
+}
+
 const POKEBALLS = [
   { id: 'pokeball',   name: 'Poké Ball',   rate: 0.50, price: 100,  own: 5, top: '#EE3D34', label: 'P' },
   { id: 'greatball',  name: 'Great Ball',  rate: 0.70, price: 200,  own: 2, top: '#3B6FB5', label: 'G' },
@@ -79,6 +113,7 @@ async function _fetchRegions() {
         name:     z.name,
         topic:    z.topic,
         minLevel: z.minLevel,
+        legendary: !!z.legendary,   // legendary gate zone (v2)
         mons:     z.mons,         // already have .sprite from API
       })),
     };
@@ -225,6 +260,7 @@ loadContent();
 
 Object.assign(window, {
   SPRITE, TYPE_COLOR, RARITY, POKEBALLS, REGION_META, FUNFACTS, funFactForTopic,
+  TRAINER_RANKS, rankForPoints, SHINY_SPRITE, SHINY_RATE, shinyChance, rollShiny,
   // Live-updated refs — components read these after ready
   get REGIONS()   { return REGIONS;   },
   get QUESTIONS() { return QUESTIONS; },

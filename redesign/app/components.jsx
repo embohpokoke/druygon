@@ -107,6 +107,15 @@ const SFX = (() => {
     levelup() { [392, 523, 659, 784, 1047].forEach((f, i) => tone(f, i * .09, .12, 'triangle', .11)); },
     combo()   { tone(740, 0, .07, 'square', .09); tone(988, .07, .1, 'square', .09); },
     click()   { tone(520, 0, .05, 'sine', .05); },
+    // ── v2: shiny / legendary / rank (SPEC §3.5) — additive, keys above unchanged
+    encounter() { tone(520, 0, .06, 'sine', .06); tone(680, .06, .08, 'sine', .06); },
+    legendary() { tone(110, 0, .5, 'sawtooth', .09, 70); tone(220, .1, .5, 'sine', .06, 90); },
+    shiny() { [880, 1108, 1318, 1760].forEach((f, i) => tone(f, i * .07, .12, 'triangle', .08)); },
+    wobble()  { tone(300, 0, .04, 'square', .05); },
+    burst()   { tone(900, 0, .12, 'square', .08, 300); },
+    flee()    { tone(400, 0, .12, 'sawtooth', .06, 200); tone(300, .12, .16, 'sawtooth', .06, 150); },
+    rankup()  { [392, 523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i * .1, .16, 'triangle', .1)); },
+    coin()    { tone(1200, 0, .06, 'square', .05); tone(1600, .06, .1, 'square', .05); },
   };
   return {
     isOn: () => on,

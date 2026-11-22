@@ -22,17 +22,36 @@ const findMonByDex = (regions, dex) => {
   return null;
 };
 
-function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
+function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove, shiny = [] }) {
+  const [filter, setFilter] = React.useState('all');
   const { regions, ready } = useContent();
   if (!ready || !regions) return <ContentLoading />;
 
   const order = ['curriculum', 'science', 'matpel'].filter(id => regions[id]);
-  const [filter, setFilter] = React.useState('all');
   const has = (dex) => caught.includes(dex);
+  const hasShiny = (dex) => (shiny || []).some((s) => s && s.dex === dex);
   const all = order.flatMap(id => regionMons(regions, id));
   const total = all.length;
+  const shinyCount = (shiny || []).length;
   const legend = all.filter((m) => has(m.dex) && m.rarity === 'legendary').length;
   const accent = (regions[region] || regions[order[0]] || {}).accent || 'var(--accent)';
+
+  // v2 tabs: shiny is a cross-region collection; legendary shows owned legendaries.
+  const isShinyTab = filter === 'shiny';
+  const isLegendTab = filter === 'legend';
+  const monsFor = (id) => {
+    const mons = regionMons(regions, id);
+    if (isShinyTab) return mons.filter((m) => hasShiny(m.dex));
+    if (isLegendTab) return mons.filter((m) => m.rarity === 'legendary' && has(m.dex));
+    return mons;
+  };
+  const shownRegions = order.filter((id) => filter === 'all' || filter === id || isShinyTab || isLegendTab);
+  const visibleCount = shownRegions.reduce((n, id) => n + monsFor(id).length, 0);
+  const emptyText = isShinyTab
+    ? 'Belum ada shiny — terus cari! ✨'
+    : isLegendTab
+      ? 'Belum ada legendary — selesaikan semua zona region untuk membuka gerbang legenda.'
+      : 'Belum ada Pokémon yang cocok dengan filter ini.';
 
   return (
     <div className="body screen-anim">
@@ -53,16 +72,28 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
             <b style={{ color: 'var(--accent)' }}>{caught.length}</b><span>Caught</span>
           </div>
           <div className="col-stat"><b>{total}</b><span>Pokédex</span></div>
+          <div className="col-stat"><b style={{ color: '#FFD84D' }}>{shinyCount}</b><span>Shiny</span></div>
           <div className="col-stat"><b style={{ color: 'var(--yellow)' }}>{legend}</b><span>Legendary</span></div>
         </div>
         <div className="col-filters" data-region={region}>
-          {[['all', 'All'], ...order.map((id) => [id, regions[id].tag || id])].map(([id, label]) => (
+          {[['all', 'All'], ...order.map((id) => [id, regions[id].tag || id]), ['shiny', '✨ Shiny'], ['legend', '★ Legend']].map(([id, label]) => (
             <div key={id} className={'filter' + (filter === id ? ' on' : '')} onClick={() => setFilter(id)}>{label}</div>
           ))}
         </div>
-        {order.filter((id) => filter === 'all' || filter === id).map((id) => {
+        {visibleCount === 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px', textAlign: 'center' }}>
+            <div style={{ fontSize: 34, lineHeight: 1, marginBottom: 10 }}>
+              {isShinyTab ? '✨' : isLegendTab ? '★' : '🔎'}
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0, maxWidth: 300 }}>
+              {emptyText}
+            </p>
+          </div>
+        )}
+        {shownRegions.map((id) => {
           const r = regions[id];
-          const mons = regionMons(regions, id);
+          const mons = monsFor(id);
+          if ((isShinyTab || isLegendTab) && mons.length === 0) return null;
           const c = mons.filter((m) => has(m.dex)).length;
           return (
             <div key={id} data-region={id}>
@@ -75,15 +106,25 @@ function Collection({ caught, region, go, team, onTeamAdd, onTeamRemove }) {
               <div className="col-grid">
                 {mons.map((m) => {
                   const inTeam = (team || []).includes(m.dex);
-                  const caught = has(m.dex);
+                  const isCaught = has(m.dex);
+                  const isShiny = hasShiny(m.dex);
+                  const isLegend = m.rarity === 'legendary' && isCaught;
+                  const frame = 'dex' + (isCaught ? '' : ' un')
+                    + (isShiny ? ' shiny-frame' : '')
+                    + (isLegend ? ' legend-frame' : '');
                   return (
-                  <div key={m.dex} className={'dex' + (caught ? '' : ' un')}
-                    style={caught ? { borderColor: inTeam ? 'var(--yellow)' : 'var(--accent)', background: inTeam ? 'rgba(255,203,5,.08)' : 'var(--accent-soft)' } : {}}>
+                  <div key={m.dex} className={frame}
+                    style={isCaught ? { borderColor: inTeam ? 'var(--yellow)' : 'var(--accent)', background: inTeam ? 'rgba(255,203,5,.08)' : 'var(--accent-soft)' } : {}}>
                     <span className="rar" style={{ background: RARITY[m.rarity].c }} />
-                    <img src={m.sprite} alt={caught ? m.name : '???'} crossOrigin="anonymous" />
+                    <img src={isShiny ? SHINY_SPRITE(m.dex) : m.sprite} alt={isCaught ? m.name : '???'} crossOrigin="anonymous"
+                      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = m.sprite; }} />
                     <span className="no">#{String(m.dex).padStart(3, '0')}</span>
+                    {isShiny && <span className="shiny-badge" title="Shiny">✨</span>}
+                    {isLegend && (
+                      <span title="Legendary" style={{ position: 'absolute', bottom: 2, left: 4, fontSize: 10, lineHeight: 1, color: '#FFD84D', textShadow: '0 0 6px rgba(255,203,5,.65)' }}>★</span>
+                    )}
                     {inTeam && <span style={{ position: 'absolute', top: 2, right: 2, fontSize: 14, lineHeight: 1, filter: 'drop-shadow(0 0 3px rgba(255,203,5,.6))' }} title="In team">⭐</span>}
-                    {caught && onTeamAdd && onTeamRemove && (
+                    {isCaught && onTeamAdd && onTeamRemove && (
                       inTeam
                         ? <div onClick={(e) => { e.stopPropagation(); onTeamRemove(m.dex); }} style={{ position: 'absolute', bottom: 2, right: 2, width: 20, height: 20, borderRadius: '50%', background: 'rgba(238,61,52,.8)', color: '#fff', fontSize: 14, lineHeight: '18px', textAlign: 'center', cursor: 'pointer' }} title="Remove from team">−</div>
                         : (!inTeam && (team || []).length < 3)
@@ -162,13 +203,74 @@ function Store({ coins, region, pokeballs, activeSlot, onPurchase }) {
 
 // SlotAvatar comes from components.jsx (partner Pokémon + colour ring)
 
-function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots, onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove }) {
+// Local fallback when the server rank payload is missing (older API / offline).
+// Mirrors GET /api/player/:slot rank maths; awards stay server-authoritative.
+function localRank(profile, caught, awards) {
+  const level = (profile && profile.level) || 1;
+  const points = level * 10 + (caught || []).length * 3;
+  const base = rankForPoints(points);
+  const next = base.next || null;
+  const span = next ? next.points - base.points : 0;
+  const progressPct = next && span > 0
+    ? Math.max(0, Math.min(100, Math.round(((points - base.points) / span) * 100)))
+    : 100;
+  return {
+    id: base.id,
+    name: base.name,
+    title: base.title,
+    tier: base.tier,
+    points,
+    next: next ? { id: next.id, name: next.name, points: next.points } : null,
+    progressPct,
+    charm: base.tier >= 3 && (awards || []).includes('ace'),
+    perks: base.perks || [],
+    awards: [],
+  };
+}
+
+function Profile({ caught = [], region, go, profile, playerName, activeSlot, allSlots = [], onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove, rank = null, shiny = [], rankAwards = [], onRankClaim = null }) {
   const { regions } = useContent();
+  const [claiming, setClaiming] = React.useState(null);
+  const [claimErr, setClaimErr] = React.useState(null);
 
   // XP % for meter
   const xpPct = profile.xpToNext > 0
     ? Math.round((profile.xp / profile.xpToNext) * 100)
     : 100;
+
+  // ── Trainer Rank (server-authoritative; local mirror as a safe fallback) ──
+  const awards = Array.isArray(rankAwards) ? rankAwards : [];
+  const rk = rank || localRank(profile, caught, awards);
+  const rankMeta = TRAINER_RANKS.find(r => r.id === rk.id) || TRAINER_RANKS.find(r => r.tier === rk.tier) || TRAINER_RANKS[0];
+  const rankName = rk.name || rankMeta.name;
+  const rankTitle = rk.title || rankMeta.title;
+  const rankEmoji = rankMeta.emoji || '🥚';
+  const rankColor = rankMeta.color || '#FFCB05';
+  const rankTier = rk.tier || rankMeta.tier || 1;
+  const rankPoints = typeof rk.points === 'number' ? rk.points : 0;
+  const nextRank = rk.next || null;
+  const threshold = rankMeta.points || 0;
+  const computedPct = nextRank
+    ? Math.round(((rankPoints - threshold) / Math.max(1, nextRank.points - threshold)) * 100)
+    : 100;
+  const progressPct = Math.max(0, Math.min(100, Number.isFinite(rk.progressPct) ? rk.progressPct : computedPct));
+  const pointsToNext = nextRank ? Math.max(0, nextRank.points - rankPoints) : 0;
+  const shinyCount = (shiny || []).length;
+  const charmOn = !!rk.charm;
+
+  const claimRank = async (rankId) => {
+    if (!onRankClaim || claiming) return;
+    setClaiming(rankId);
+    setClaimErr(null);
+    try {
+      const data = await onRankClaim(rankId);
+      if (!data) setClaimErr({ id: rankId, msg: 'Gagal klaim hadiah. Coba lagi.' });
+    } catch (e) {
+      setClaimErr({ id: rankId, msg: (e && e.message) || 'Gagal klaim hadiah.' });
+    } finally {
+      setClaiming(null);
+    }
+  };
 
   // Zone progress per region — uses server-authoritative progress data
   const clearedByRegion = React.useMemo(() => {
@@ -184,13 +286,28 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
     return out;
   }, [regions, progress]);
 
+  // Legendary mons already caught (Profile gets caught as dex array)
+  const legendaryCaught = React.useMemo(() => {
+    if (!regions) return 0;
+    const caughtSet = new Set(caught);
+    const seen = new Set();
+    for (const r of Object.values(regions)) {
+      for (const z of (r.zones || [])) {
+        for (const m of (z.mons || [])) {
+          if (m.rarity === 'legendary' && caughtSet.has(m.dex)) seen.add(m.dex);
+        }
+      }
+    }
+    return seen.size;
+  }, [regions, caught]);
+
   // ── Achievements badges ──
 
   return (
     <div className="body screen-anim" data-region={region}>
       <div className="pad">
 
-        {/* ── Active player card — trainer identity colours ── */}
+        {/* ── Active player card — trainer identity colours + rank title ── */}
         {(() => { const idn = playerIdentity(playerName); return (
         <div className="prof-card" style={{ background: `linear-gradient(135deg, ${idn.color}22, var(--bg-card))` }}>
           <div style={{ width: 62, height: 62, borderRadius: '50%', overflow: 'hidden', border: `2.5px solid ${idn.color}`, flexShrink: 0, background: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -199,7 +316,11 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
           </div>
           <div className="who" style={{ flex: 1, minWidth: 0 }}>
             <b>{playerName}</b>
-            <span>{idn.title} · Level {profile.level} · {caught.length} caught · {(profile.coins ?? 0).toLocaleString()} coins</span>
+            <span style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '2px 5px' }}>
+              <span style={{ fontSize: 13, lineHeight: 1 }} title={rankTitle}>{rankEmoji}</span>
+              <span style={{ color: rankColor, fontWeight: 700 }}>{rankTitle}</span>
+              <span>· Level {profile.level} · {caught.length} caught · {(profile.coins ?? 0).toLocaleString()} coins</span>
+            </span>
             <div className="meter" style={{ marginTop: 8 }}>
               <i style={{ width: xpPct + '%', background: `linear-gradient(90deg, ${idn.color}, #FF6B2B)` }} />
             </div>
@@ -209,6 +330,93 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
           </div>
         </div>
         ); })()}
+
+        {/* ── Trainer Rank — header, progress, ladder & claims (SPEC v2 §3.3) ── */}
+        <div className="sec-head"><h2>Rank {rankName}</h2><a style={{ whiteSpace: 'nowrap' }}>{rankPoints} pts</a></div>
+        <div className="rank-mini" style={{ marginBottom: 10 }}>
+          <div style={{ width: 46, height: 46, borderRadius: '50%', flexShrink: 0, display: 'grid', placeItems: 'center',
+            background: rankColor + '22', border: '1.5px solid ' + rankColor, fontSize: 23, lineHeight: 1 }}>
+            {rankEmoji}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 6 }}>
+              <b style={{ fontFamily: 'var(--font-display)', fontSize: 14, color: rankColor }}>{rankTitle}</b>
+              <span style={{ fontSize: 10, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>{rankPoints} pts</span>
+            </div>
+            <div className="meter" style={{ margin: '6px 0 4px' }}>
+              <i style={{ width: progressPct + '%', background: 'linear-gradient(90deg, #FFCB05, #FFD84D)' }} />
+            </div>
+            <small style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+              {nextRank ? `Next: ${nextRank.name} · ${pointsToNext} pts lagi` : 'Rank tertinggi tercapai 🐉'}
+            </small>
+          </div>
+        </div>
+
+        <div style={{ fontSize: 10, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', margin: '4px 0 7px' }}>
+          Rank Ladder
+        </div>
+        {TRAINER_RANKS.map((r) => {
+          const claimed = awards.includes(r.id);
+          const isCurrent = r.id === rk.id || r.tier === rankTier;
+          const done = r.tier < rankTier;
+          const locked = r.tier > rankTier && !isCurrent;
+          const claimable = (done || isCurrent) && !claimed && !!onRankClaim;
+          const symbol = claimed ? '✓' : (isCurrent || done) ? '●' : '🔒';
+          const statusLabel = claimed ? 'Hadiah sudah diklaim'
+            : isCurrent ? 'Rank sekarang'
+              : done ? 'Tercapai — hadiah belum diklaim'
+                : 'Terkunci';
+          const rowBusy = claiming === r.id;
+          return (
+            <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 11px', borderRadius: 12, marginBottom: 7,
+              background: isCurrent ? 'rgba(255,203,5,.10)' : claimed ? 'var(--bg-card)' : 'transparent',
+              border: isCurrent ? '1px solid rgba(255,203,5,.35)' : claimed ? '1px solid rgba(74,222,128,.22)' : '1px solid var(--border-subtle)',
+              opacity: locked ? 0.55 : 1 }}>
+              <span style={{ width: 24, textAlign: 'center', fontSize: 18, lineHeight: 1, flexShrink: 0,
+                filter: locked ? 'grayscale(1)' : 'none' }}>
+                {r.emoji}
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700,
+                  color: isCurrent ? '#FFD84D' : locked ? 'var(--text-tertiary)' : 'var(--text-primary)' }}>
+                  {r.name}
+                </div>
+                <div style={{ fontSize: 10, color: 'var(--text-tertiary)', marginTop: 1 }}>
+                  {r.points} pts{r.perks && r.perks.length ? ' · ' + r.perks.join(' · ') : ''}
+                </div>
+                {claimErr && claimErr.id === r.id && (
+                  <div style={{ fontSize: 10, color: 'var(--red)', marginTop: 2 }}>{claimErr.msg}</div>
+                )}
+              </div>
+              {claimable && (
+                <button type="button" onClick={() => claimRank(r.id)} disabled={!!claiming}
+                  style={{ flexShrink: 0, padding: '5px 9px', borderRadius: 8, border: 'none',
+                    cursor: claiming ? 'wait' : 'pointer', background: '#FFCB05', color: '#0b0a16',
+                    fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 10,
+                    opacity: rowBusy ? 0.6 : 1 }}>
+                  {rowBusy ? '…' : 'Klaim'}
+                </button>
+              )}
+              <span title={statusLabel} style={{ width: 16, flexShrink: 0, textAlign: 'center',
+                fontSize: claimed ? 13 : 11, color: claimed ? '#4ADE80' : (isCurrent || done) ? '#FFCB05' : 'var(--text-tertiary)' }}>
+                {symbol}
+              </span>
+            </div>
+          );
+        })}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', margin: '2px 0 12px' }}>
+          <span style={{ fontSize: 11, padding: '5px 10px', borderRadius: 999,
+            background: charmOn ? 'rgba(255,203,5,.14)' : 'var(--surface-2)',
+            border: '1px solid ' + (charmOn ? 'rgba(255,203,5,.45)' : 'var(--border-subtle)'),
+            color: charmOn ? '#FFD84D' : 'var(--text-tertiary)' }}>
+            Shiny Charm: {charmOn ? 'aktif' : 'nonaktif'}
+          </span>
+          <span style={{ fontSize: 11, padding: '5px 10px', borderRadius: 999, background: 'var(--surface-2)',
+            border: '1px solid var(--border-subtle)', color: 'var(--text-secondary)' }}>
+            ✨ Shiny {shinyCount}
+          </span>
+        </div>
 
         {/* ── Slot selector ── */}
         <div className="sec-head"><h2>Switch player</h2></div>
@@ -288,6 +496,16 @@ function Profile({ caught, region, go, profile, playerName, activeSlot, allSlots
         ) : (
           <p style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 12 }}>No team yet — catch Pokémon and add them from the celebration screen!</p>
         )}
+
+        {/* ── Shiny / Legendary summary — sits next to Achievements ── */}
+        <div className="col-stats" style={{ margin: '16px 0 2px' }}>
+          <div className="col-stat">
+            <b style={{ color: '#FFD84D' }}>{shinyCount}</b><span>✨ Shiny</span>
+          </div>
+          <div className="col-stat">
+            <b style={{ color: 'var(--yellow)' }}>{legendaryCaught}</b><span>★ Legendary</span>
+          </div>
+        </div>
 
         {/* ── Achievements ── */}
         {badges && badges.length > 0 && (

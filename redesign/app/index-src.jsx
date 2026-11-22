@@ -91,6 +91,17 @@ function App() {
   // Celebration overlay
   const [celeb, setCeleb] = React.useState(null);
 
+  // v2 — shiny collection, trainer rank, rank-up overlay
+  const [shiny, setShiny]             = React.useState([]);
+  const [legendaryCount, setLegendaryCount] = React.useState(0);
+  const [rank, setRank]               = React.useState(null);
+  const [rankAwards, setRankAwards]   = React.useState([]);
+  const [rankCeleb, setRankCeleb]     = React.useState(null);
+  // Content loads async; App itself does not use useContent, so nudge a render
+  // when regions/questions are ready (otherwise the header title stays "…").
+  const [, setContentTick] = React.useState(0);
+  React.useEffect(() => { onContentReady(() => setContentTick((n) => n + 1)); }, []);
+
   // Load active player + all slot previews
   const loadActivePlayer = React.useCallback((slot) => {
     setPlayerReady(false);
@@ -103,6 +114,10 @@ function App() {
         setProgress(data.progress || []);
         setTeam(data.team || []);
         setBadges(data.badges || []);
+        setShiny(data.shiny || []);
+        setLegendaryCount(data.legendaryCount ?? 0);
+        setRank(data.rank || null);
+        setRankAwards(data.rankAwards || []);
         setDailyMission(data.dailyMission || { progress: 0, target: 3, completed: false, claimed: false, streak: 0 });
         setPlayerReady(true);
       })
@@ -205,22 +220,41 @@ function App() {
     requestAnimationFrame(() => { const b = document.querySelector('.body'); if (b) b.scrollTop = 0; });
   };
 
-  // Catch handler
+  // Rank-up overlay for rank changes that happen outside a catch (mission/answer)
+  const checkRankUp = (nextRank) => {
+    if (!nextRank) return;
+    const prevTier = rank ? rank.tier : 0;
+    setRank(nextRank);
+    if (nextRank.tier > prevTier && prevTier > 0 && !celeb) setRankCeleb(nextRank);
+  };
+
+  // Catch handler — shiny flag comes from the encounter roll in Catch
   const onCaught = async (mon, ball) => {
+    const isShiny     = ball._shiny === true;
+    const isLegendary = ball._legendary === true || mon.rarity === 'legendary';
     setCaught(prev => prev.some(c => c.dex === mon.dex)
       ? prev
       : [...prev, { dex: mon.dex, zoneId: ball._zoneId || '', caughtAt: new Date().toISOString() }]
     );
+    if (isShiny) {
+      setShiny(prev => prev.some(s => s.dex === mon.dex) ? prev
+        : [...prev, { dex: mon.dex, zoneId: ball._zoneId || '', caughtAt: new Date().toISOString() }]);
+    }
+    if (isLegendary) setLegendaryCount(n => n + 1);
     setProfile(prev => ({
       ...prev,
       coins: prev.coins + (ball._coinAward ?? 50),
       pokeballs: { ...prev.pokeballs, [ball.id]: Math.max(0, (prev.pokeballs[ball.id] ?? 0) - 1) },
     }));
-    setCeleb({ mon, region, coins: ball._coinAward ?? 50, fact: funFactForTopic(ball._topic) });
+    setCeleb({
+      mon, region, coins: ball._coinAward ?? 50,
+      fact: funFactForTopic(ball._topic),
+      shiny: isShiny, legendary: isLegendary,
+    });
 
     try {
       const data = await apiPost(`/api/player/${activeSlot}/catch`, {
-        dex: mon.dex, zoneId: ball._zoneId || '', ballType: ball.id,
+        dex: mon.dex, zoneId: ball._zoneId || '', ballType: ball.id, shiny: isShiny,
       });
       setProfile(prev => ({
         ...prev,
@@ -229,6 +263,17 @@ function App() {
         xp:        data.xpNow       ?? prev.xp,
         pokeballs: data.pokeballs   ?? prev.pokeballs,
       }));
+      if (data.shiny && data.shinyNew) {
+        setShiny(prev => prev.some(s => s.dex === mon.dex) ? prev
+          : [...prev, { dex: mon.dex, zoneId: ball._zoneId || '', caughtAt: new Date().toISOString() }]);
+      }
+      if (data.rank) {
+        const prevTier = rank ? rank.tier : 0;
+        setRank(data.rank);
+        if (data.rankUp || (prevTier > 0 && data.rank.tier > prevTier)) {
+          setCeleb(prev => prev ? { ...prev, rankUp: true, newRank: data.rank } : prev);
+        }
+      }
       // Update celeb with level-up info if applicable
       if (data.levelUp) {
         setCeleb(prev => prev ? { ...prev, newLevel: data.levelNow, rewardBalls: data.rewardBalls, levelUp: true } : prev);
@@ -241,6 +286,28 @@ function App() {
       }));
     } catch (err) {
       console.error('[App] catch persist failed:', err.message);
+    }
+  };
+
+  // Claim a trainer-rank reward (idempotent, server validates rank)
+  const onRankClaim = async (rankId) => {
+    try {
+      const data = await apiPost(`/api/player/${activeSlot}/rank/claim`, {
+        rankId,
+        idempotencyKey: 'rank_' + activeSlot + '_' + rankId,
+      });
+      setProfile(prev => ({
+        ...prev,
+        coins:     data.coinsNow  ?? prev.coins,
+        pokeballs: data.pokeballs ?? prev.pokeballs,
+      }));
+      if (data.rank) setRank(data.rank);
+      if (!rankAwards.includes(rankId)) setRankAwards(prev => [...prev, rankId]);
+      SFX.play('coin');
+      return data;
+    } catch (err) {
+      console.error('[App] rank claim failed:', err.message);
+      return null;
     }
   };
 
@@ -282,18 +349,18 @@ function App() {
 
   if (screen === 'home') {
     header  = <Header region={region} coins={profile.coins} {...hProps} />;
-    content = <Home go={go} caught={caught} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} onOpenDraco={openDraco} />;
+    content = <Home go={go} caught={caught} coins={profile.coins} profile={profile} playerName={playerName} allSlots={allSlots} activeSlot={activeSlot} progress={progress} dailyMission={dailyMission} badges={badges} onClaimMission={onClaimMission} onOpenDraco={openDraco} rank={rank} shiny={shiny} legendaryCount={legendaryCount} />;
   } else if (screen === 'map') {
     header  = <Header region={region} title={r ? r.name : '…'} sub="Region map" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
     content = <RegionMap region={region} go={go} caught={caught} profile={profile} progress={progress} />;
   } else if (screen === 'catch') {
     const z = r && r.zones.find(x => x.zone === zone);
     header  = <Header region={region} title={z ? z.name : '…'} sub={r ? r.name : '…'} coins={profile.coins} onBack={() => go('map', region)} {...hProps} />;
-    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} onAnswer={onAnswer} onOpenDraco={openDraco} />;
+    content = <Catch region={region} zone={zone} go={go} onCaught={onCaught} pokeballs={pokeballs} caught={caught} shiny={shiny} shinyCharm={!!(rank && rank.charm)} onAnswer={onAnswer} onOpenDraco={openDraco} />;
     showNav = false;
   } else if (screen === 'collection') {
     header  = <Header region={region} title="Collection" sub="Your Pokédex" coins={profile.coins} {...hProps} />;
-    content = <Collection caught={caughtDex} region={region} go={go} team={team} onTeamAdd={onTeamAdd} onTeamRemove={onTeamRemove} />;
+    content = <Collection caught={caughtDex} region={region} go={go} team={team} shiny={shiny} onTeamAdd={onTeamAdd} onTeamRemove={onTeamRemove} />;
   } else if (screen === 'store') {
     header  = <Header region={region} title="Shop" sub="Balls & items" coins={profile.coins} {...hProps} />;
     content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} activeSlot={activeSlot} onPurchase={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, pokeballs: data.pokeballs ?? prev.pokeballs }))} />;
@@ -301,7 +368,8 @@ function App() {
     header  = <Header region={region} title="Profile" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
     content = <Profile caught={caughtDex} region={region} go={go} profile={profile}
                 playerName={playerName} activeSlot={activeSlot} allSlots={allSlots}
-                onSwitchSlot={switchSlot} team={team} badges={badges} dailyMission={dailyMission} progress={progress} onTeamRemove={onTeamRemove} />;
+                onSwitchSlot={switchSlot} team={team} badges={badges} dailyMission={dailyMission} progress={progress} onTeamRemove={onTeamRemove}
+                rank={rank} shiny={shiny} rankAwards={rankAwards} onRankClaim={onRankClaim} />;
   } else if (screen === 'mathblitz') {
     header  = <Header region="curriculum" title="5-Minute Math" sub="Timed practice" coins={profile.coins} onBack={() => go('home')} {...hProps} />;
     content = <MathBlitz activeSlot={activeSlot} onReward={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, xp: data.xpNow ?? prev.xp, level: data.levelNow ?? prev.level }))} go={go} />;
@@ -316,7 +384,8 @@ function App() {
         {header}
         {content}
         {showNav && <BottomNav active={navActive} go={(s) => go(s)} />}
-        {celeb && <Celebration mon={celeb.mon} region={celeb.region} coins={celeb.coins} fact={celeb.fact} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} newLevel={celeb.newLevel} rewardBalls={celeb.rewardBalls} levelUp={celeb.levelUp} />}
+        {celeb && <Celebration mon={celeb.mon} region={celeb.region} coins={celeb.coins} fact={celeb.fact} onDone={closeCeleb} onTeam={closeCeleb} activeSlot={activeSlot} onTeamAdd={onTeamAdd} newLevel={celeb.newLevel} rewardBalls={celeb.rewardBalls} levelUp={celeb.levelUp} shiny={celeb.shiny} legendary={celeb.legendary} rankUp={celeb.rankUp} newRank={celeb.newRank} />}
+        {rankCeleb && <RankUpOverlay rank={rankCeleb} onDone={() => setRankCeleb(null)} />}
       </div>
 
       {/* Player picker — first launch splash + header avatar tap */}

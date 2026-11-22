@@ -19,6 +19,8 @@ const path     = require('path');
 const Database = require('better-sqlite3');
 
 const PLAYERS_DB = path.join(__dirname, '..', '..', '..', 'druygon_players.db');
+// Content DB readonly — sumber rarity legendary + zona legendary (SPEC v2 §3.2/§4.2)
+const CONTENT_DB = path.join(__dirname, '..', '..', 'druygon_content.db');
 
 // XP thresholds per level (mirrors old profile.js)
 const XP_THR = [0, 100, 200, 400, 700, 1100, 1600, 2200, 2900, 3700, 4600];
@@ -27,7 +29,30 @@ const xpFor  = (lvl) => XP_THR[Math.min(lvl, XP_THR.length - 1)] || (4600 + (lvl
 const BALL_TYPES = ['pokeball', 'greatball', 'ultraball', 'masterball'];
 const COIN_AWARD = { pokeball: 50, greatball: 80, ultraball: 120, masterball: 300 };
 const XP_AWARD   = 50;
+const SHINY_XP_AWARD = 20;   // shiny baru untuk base yang sudah tertangkap
 const BALL_PRICE = { pokeball: 100, greatball: 200, ultraball: 500, masterball: 2000 };
+
+// Trainer Rank (SPEC v2 §3.3) — selalu derived, tidak disimpan di profile_json.
+const RANKS = [
+  { id: 'rookie',    name: 'Rookie',        title: 'Rookie Trainer', tier: 1, points: 0,    charm: false, perks: [] },
+  { id: 'youngster', name: 'Youngster',     title: 'Youngster',      tier: 2, points: 120,  charm: false, perks: ['+2 Great Ball'] },
+  { id: 'ace',       name: 'Ace Trainer',   title: 'Ace Trainer',    tier: 3, points: 300,  charm: true,  perks: ['+1 Great Ball', 'Shiny Charm'] },
+  { id: 'gym',       name: 'Gym Leader',    title: 'Gym Leader',     tier: 4, points: 600,  charm: true,  perks: ['+5 Ultra Ball'] },
+  { id: 'elite',     name: 'Elite Four',    title: 'Elite Four',     tier: 5, points: 1000, charm: true,  perks: ['+1 Master Ball'] },
+  { id: 'champion',  name: 'Champion',      title: 'Champion',       tier: 6, points: 1500, charm: true,  perks: ['+3 Ultra Ball', '+2 Great Ball'] },
+  { id: 'dragon',    name: 'Dragon Master', title: 'Dragon Master',  tier: 7, points: 2200, charm: true,  perks: ['+1 Master Ball'] },
+];
+
+// Hadiah sekali klaim per rank (ditulis ke pokeball_ledger, reason 'rank_up').
+const RANK_REWARDS = {
+  rookie:    {},
+  youngster: { greatball: 2 },
+  ace:       { greatball: 1 },
+  gym:       { ultraball: 5 },
+  elite:     { masterball: 1 },
+  champion:  { ultraball: 3, greatball: 2 },
+  dragon:    { masterball: 1 },
+};
 
 /** Count consecutive days (back from today) with at least 1 catch. */
 function computeStreak(db, slot, today) {
@@ -63,6 +88,150 @@ function computeBadges(caught, progress, profile) {
   if (totalCorrect >= 20) badges.push({ id: 'sharp_mind',  name: 'Sharp Mind',          description: '20+ correct answers',       icon: 'zap' });
 
   return badges;
+}
+
+/** Tabel v2 (SPEC §4.1) — idempoten, dipanggil di GET/catch/rank-claim. */
+function ensureGameTables(db) {
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS caught_shiny (
+      slot INTEGER NOT NULL,
+      dex INTEGER NOT NULL,
+      zone_id TEXT NOT NULL DEFAULT '',
+      caught_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (slot, dex)
+    )
+  `).run();
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS rank_awards (
+      slot INTEGER NOT NULL,
+      rank_id TEXT NOT NULL,
+      claimed_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (slot, rank_id)
+    )
+  `).run();
+}
+
+/** Baca content DB readonly: dex legendary + zona legendary (beserta dex-nya).
+ *  Gagal / kolom belum di-seed → null / daftar kosong; rank tetap jalan. */
+function loadLegendaryContent() {
+  let cdb = null;
+  try {
+    cdb = new Database(CONTENT_DB, { readonly: true });
+
+    const legendaryDex = new Set();
+    try {
+      const rows = cdb.prepare("SELECT DISTINCT dex FROM zone_pokemon WHERE rarity='legendary'").all();
+      for (const r of rows) legendaryDex.add(r.dex);
+    } catch { /* zone_pokemon tidak terbaca → fallback 0 */ }
+
+    const legendaryZones = [];
+    try {
+      // kolom zone.legendary ditambah oleh seed; kalau belum ada, throw → diabaikan
+      const zones = cdb.prepare('SELECT id FROM zone WHERE legendary=1').all();
+      for (const z of zones) {
+        let dexes = [];
+        try {
+          dexes = cdb.prepare('SELECT dex FROM zone_pokemon WHERE zone_id=?').all(z.id).map(r => r.dex);
+        } catch { dexes = []; }
+        legendaryZones.push({ id: z.id, dexes });
+      }
+    } catch { /* kolom legendary belum ada → zona legendary diabaikan */ }
+
+    return { legendaryDex, legendaryZones };
+  } catch (err) {
+    console.warn('[player/content-db] legendary data unavailable:', err.message);
+    return null;
+  } finally {
+    if (cdb) { try { cdb.close(); } catch { /* ignore */ } }
+  }
+}
+
+/**
+ * Hitung Trainer Rank dari state nyata (SPEC v2 §3.3).
+ * points = level*10 + caught*3 + shiny*25 + legendary*40 + zonesCleared*15 + badges*2
+ * opts: { profile, caught, progress, contentInfo } — opsional, supaya GET/claim
+ * tidak query ulang. Return shape mengikuti §4.3.
+ */
+function computeRank(db, slot, opts = {}) {
+  let p = opts.profile;
+  if (!p) {
+    const row = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
+    if (row) { try { p = JSON.parse(row.profile_json); } catch { p = {}; } }
+  }
+  p = p || {};
+
+  const caught   = opts.caught   || db.prepare('SELECT dex, zone_id FROM caught_v2 WHERE slot=?').all(slot);
+  const progress = opts.progress || db.prepare('SELECT zone_id, status FROM zone_progress WHERE slot=?').all(slot);
+  const contentInfo = opts.contentInfo !== undefined ? opts.contentInfo : loadLegendaryContent();
+
+  // Shiny count — tabel dijamin ada oleh ensureGameTables()
+  let shinyCount = 0;
+  try {
+    shinyCount = db.prepare('SELECT COUNT(*) AS cnt FROM caught_shiny WHERE slot=?').get(slot).cnt;
+  } catch { shinyCount = 0; }
+
+  // Legendary count + zona legendary yang dex-nya tertangkap
+  const caughtDex = new Set(caught.map(c => c.dex));
+  const clearedZones = new Set();
+  let legendaryCount = 0;
+  if (contentInfo) {
+    for (const dex of caughtDex) if (contentInfo.legendaryDex.has(dex)) legendaryCount++;
+    for (const z of contentInfo.legendaryZones) {
+      if ((z.dexes || []).some(d => caughtDex.has(d))) clearedZones.add(z.id);
+    }
+  }
+
+  // Zona non-legendary: >=2 dex berbeda di zone_id yang sama
+  const dexByZone = new Map();
+  for (const c of caught) {
+    if (!c.zone_id) continue;
+    if (!dexByZone.has(c.zone_id)) dexByZone.set(c.zone_id, new Set());
+    dexByZone.get(c.zone_id).add(c.dex);
+  }
+  for (const [zoneId, dexes] of dexByZone) {
+    if (dexes.size >= 2) clearedZones.add(zoneId);
+  }
+
+  const badges = computeBadges(caught, progress, p);
+  const level  = p.level ?? 1;
+  const points = level * 10
+    + caught.length * 3
+    + shinyCount * 25
+    + legendaryCount * 40
+    + clearedZones.size * 15
+    + badges.length * 2;
+
+  let rank = RANKS[0];
+  for (const r of RANKS) if (points >= r.points) rank = r;
+
+  const next = RANKS.find(r => r.points > points) || null;
+  let progressPct = 100;
+  if (next) {
+    const span = next.points - rank.points;
+    progressPct = span > 0
+      ? Math.max(0, Math.min(100, Math.round(((points - rank.points) / span) * 100)))
+      : 100;
+  }
+
+  let awards = [];
+  try {
+    const rows = db.prepare('SELECT rank_id FROM rank_awards WHERE slot=?').all(slot);
+    const claimed = new Set(rows.map(r => r.rank_id));
+    awards = RANKS.filter(r => claimed.has(r.id)).map(r => r.id);
+  } catch { awards = []; }
+
+  return {
+    id:      rank.id,
+    name:    rank.name,
+    title:   rank.title,
+    tier:    rank.tier,
+    points,
+    next:    next ? { id: next.id, name: next.name, points: next.points } : null,
+    progressPct,
+    charm:   !!(rank.charm && awards.includes('ace')),
+    perks:   rank.perks.slice(),
+    awards,
+  };
 }
 
 /** Daily mission state: "Catch 3 Pokémon today". */
@@ -125,8 +294,10 @@ router.get('/:slot', (req, res) => {
   const slot = parseSlot(req.params.slot);
   if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
 
+  let db = null;
   try {
-    const db = getDb();
+    db = getDb();
+    ensureGameTables(db);
 
     const player = db.prepare(
       'SELECT slot, name, profile_json, updated_at FROM players WHERE slot=?'
@@ -136,6 +307,9 @@ router.get('/:slot', (req, res) => {
     const caught   = db.prepare('SELECT dex, zone_id, caught_at FROM caught_v2 WHERE slot=? ORDER BY caught_at').all(slot);
     const progress = db.prepare('SELECT zone_id, status, cleared_at FROM zone_progress WHERE slot=? ORDER BY zone_id').all(slot);
     const pokeballs = pokeballBalances(db, slot);
+    const shinyRows = db.prepare(
+      'SELECT dex, zone_id, caught_at FROM caught_shiny WHERE slot=? ORDER BY caught_at, dex'
+    ).all(slot);
 
     let p = {};
     try { p = JSON.parse(player.profile_json); } catch { /* use defaults */ }
@@ -143,6 +317,16 @@ router.get('/:slot', (req, res) => {
     const dailyMission = computeDailyMission(db, slot);
     const badges       = computeBadges(caught, progress, p);
     const team         = Array.isArray(p.team) ? p.team : [];
+
+    // Legendary + rank derived on the fly (SPEC v2 §3.2–3.3)
+    const contentInfo = loadLegendaryContent();
+    const caughtDex   = new Set(caught.map(c => c.dex));
+    let legendaryCount = 0;
+    if (contentInfo) {
+      for (const dex of caughtDex) if (contentInfo.legendaryDex.has(dex)) legendaryCount++;
+    }
+    const rank       = computeRank(db, slot, { profile: p, caught, progress, contentInfo });
+    const rankAwards = rank.awards;
 
     db.close();
 
@@ -164,28 +348,39 @@ router.get('/:slot', (req, res) => {
       team,
       badges,
       dailyMission,
+      shiny: shinyRows.map(s => ({ dex: s.dex, zoneId: s.zone_id, caughtAt: s.caught_at })),
+      shinyCount: shinyRows.length,
+      legendaryCount,
+      rank,
+      rankAwards,
     });
   } catch (err) {
+    try { if (db) db.close(); } catch { /* ignore */ }
     console.error('[player/get]', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
 // ── POST /api/player/:slot/catch ─────────────────────────────────────────────
-// Body: { dex: number, zoneId?: string, ballType?: string }
-// Records the catch in caught_v2 (idempotent).
+// Body: { dex: number, zoneId?: string, ballType?: string, shiny?: boolean }
+// Records the catch in caught_v2 (idempotent) + caught_shiny kalau shiny.
 // Deducts 1 ball from ledger (if first catch with a thrown ball).
-// Awards coins + XP for new catches only.
+// Awards coins + XP for new catches; shiny baru untuk base lama dapat koin + 20 XP.
 router.post('/:slot/catch', (req, res) => {
   const slot = parseSlot(req.params.slot);
   if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
 
-  const { dex, zoneId = '', ballType = 'pokeball' } = req.body;
+  const { dex, zoneId = '', ballType = 'pokeball', shiny } = req.body;
   if (!dex || typeof dex !== 'number') return res.status(400).json({ success: false, error: 'dex (number) required' });
   if (!BALL_TYPES.includes(ballType)) return res.status(400).json({ success: false, error: `ballType must be one of ${BALL_TYPES.join('|')}` });
+  if (shiny !== undefined && typeof shiny !== 'boolean') return res.status(400).json({ success: false, error: 'shiny must be boolean' });
 
+  const isShiny = shiny === true;
+
+  let db = null;
   try {
-    const db = getDb();
+    db = getDb();
+    ensureGameTables(db);
 
     const player = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
     if (!player) { db.close(); return res.status(404).json({ success: false, error: `No player at slot ${slot}` }); }
@@ -200,27 +395,45 @@ router.post('/:slot/catch', (req, res) => {
     let p = {};
     try { p = JSON.parse(player.profile_json); } catch { /* defaults */ }
 
+    // Rank sebelum mutasi (untuk deteksi rank-up) + info legendary dari content DB.
+    const contentInfo = loadLegendaryContent();
+    const isLegendary = !!(contentInfo && contentInfo.legendaryDex.has(dex));
+    const rankBefore  = computeRank(db, slot, { contentInfo });
+
+    let isNewBase  = false;
+    let shinyNew   = false;
+    let levelUp    = false;
+    let rewardBalls = {};
+
     // All mutations in one transaction
     db.transaction(() => {
       // 1. Insert catch (IGNORE if duplicate)
       const r = db.prepare(
         'INSERT OR IGNORE INTO caught_v2(slot, dex, zone_id) VALUES (?,?,?)'
       ).run(slot, dex, zoneId);
-      const isNew = r.changes > 0;
+      isNewBase = r.changes > 0;
+
+      // 1b. Shiny baru (satu baris per slot+dex)
+      if (isShiny) {
+        const sr = db.prepare(
+          'INSERT OR IGNORE INTO caught_shiny(slot, dex, zone_id) VALUES (?,?,?)'
+        ).run(slot, dex, zoneId);
+        shinyNew = sr.changes > 0;
+      }
 
       // 2. Always deduct 1 ball (ball was thrown regardless of catch success)
       db.prepare(
         "INSERT INTO pokeball_ledger(slot, ball_type, delta, reason, ref_dex) VALUES (?,?,?,?,?)"
       ).run(slot, ballType, -1, 'use_throw', dex);
 
-      // 3. Award coins + XP for new catches (GAME-RULES §2)
-      let levelUp = false;
-      let rewardBalls = {};
-      if (isNew) {
+      // 3. Award: base baru (koin + 50 XP) atau shiny baru untuk base lama (koin + 20 XP).
+      //    Duplikat non-shiny tidak dapat award, seperti sebelumnya.
+      if (isNewBase || (isShiny && shinyNew)) {
         const coinAward = COIN_AWARD[ballType] ?? 50;
-        p.coins  = (p.coins  ?? 0) + coinAward;
-        p.xp     = (p.xp     ?? 0) + XP_AWARD;
-        p.caughtCount = (p.caughtCount ?? 0) + 1;
+        p.coins  = (p.coins ?? 0) + coinAward;
+        p.xp     = (p.xp ?? 0) + (isNewBase ? XP_AWARD : SHINY_XP_AWARD);
+        if (isNewBase) p.caughtCount = (p.caughtCount ?? 0) + 1;
+
         // Level-up check + reward (GAME-RULES §3)
         const oldLevel = p.level ?? 1;
         while (p.xp >= xpFor(p.level ?? 1)) {
@@ -238,9 +451,13 @@ router.post('/:slot/catch', (req, res) => {
         // History event
         db.prepare(
           "INSERT INTO profile_history(slot, event, profile_json) VALUES (?,?,?)"
-        ).run(slot, `catch-dex${dex}`, JSON.stringify(p));
+        ).run(slot, isNewBase ? `catch-dex${dex}` : `shiny-dex${dex}`, JSON.stringify(p));
       }
     })();
+
+    // Rank sesudah mutasi → rankUp kalau tier naik
+    const rank   = computeRank(db, slot, { contentInfo });
+    const rankUp = rank.tier > rankBefore.tier;
 
     // Re-derive balances after mutation
     const pokeballs = pokeballBalances(db, slot);
@@ -251,15 +468,95 @@ router.post('/:slot/catch', (req, res) => {
       isNew:    true,   // always report true here; UI uses this to trigger celebration
       dex,
       zoneId,
+      shiny:    isShiny,
+      shinyNew,
+      legendary: isLegendary,
       pokeballs,
       coinsNow: p.coins,
       levelNow: p.level,
       xpNow:    p.xp,
       levelUp,
       rewardBalls,
+      rank,
+      rankUp,
     });
   } catch (err) {
+    try { if (db) db.close(); } catch { /* ignore */ }
     console.error('[player/catch]', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ── POST /api/player/:slot/rank/claim ───────────────────────────────────────
+// Body: { rankId: string, idempotencyKey: string }
+// Klaim hadiah rank sekali per (slot, rankId) — PK rank_awards sudah idempoten.
+router.post('/:slot/rank/claim', (req, res) => {
+  const slot = parseSlot(req.params.slot);
+  if (!slot) return res.status(400).json({ success: false, error: 'slot must be 1–5' });
+
+  const { rankId, idempotencyKey } = req.body || {};
+  const rankDef = RANKS.find(r => r.id === rankId);
+  if (!rankDef) return res.status(400).json({ success: false, error: `rankId must be one of ${RANKS.map(r => r.id).join('|')}` });
+  if (!idempotencyKey || typeof idempotencyKey !== 'string') return res.status(400).json({ success: false, error: 'idempotencyKey required' });
+
+  let db = null;
+  try {
+    db = getDb();
+    ensureGameTables(db);
+
+    const player = db.prepare('SELECT profile_json FROM players WHERE slot=?').get(slot);
+    if (!player) { db.close(); return res.status(404).json({ success: false, error: `No player at slot ${slot}` }); }
+
+    const contentInfo = loadLegendaryContent();
+    const current = computeRank(db, slot, { contentInfo });
+
+    // 409 kalau tier rank belum tercapai
+    if (rankDef.tier > current.tier) {
+      db.close();
+      return res.status(409).json({ success: false, error: 'Rank belum tercapai' });
+    }
+
+    const reward = RANK_REWARDS[rankDef.id] || {};
+
+    // Idempoten per (slot, rankId)
+    const prior = db.prepare('SELECT 1 FROM rank_awards WHERE slot=? AND rank_id=?').get(slot, rankDef.id);
+    if (prior) {
+      const rank = computeRank(db, slot, { contentInfo });
+      const pokeballs = pokeballBalances(db, slot);
+      let p = {}; try { p = JSON.parse(player.profile_json); } catch {}
+      db.close();
+      return res.json({
+        success: true, idempotent: true, rankId: rankDef.id, reward, pokeballs,
+        coinsNow: p.coins ?? 0, xpNow: p.xp ?? 0, levelNow: p.level ?? 1, rank,
+      });
+    }
+
+    // Tulis award + hadiah bola (tanpa koin/XP). INSERT OR IGNORE menutup race.
+    let alreadyClaimed = false;
+    db.transaction(() => {
+      const r = db.prepare('INSERT OR IGNORE INTO rank_awards(slot, rank_id) VALUES (?,?)').run(slot, rankDef.id);
+      if (r.changes === 0) { alreadyClaimed = true; return; }
+      for (const [ballType, delta] of Object.entries(reward)) {
+        db.prepare(
+          "INSERT INTO pokeball_ledger(slot, ball_type, delta, reason) VALUES (?,?,?,?)"
+        ).run(slot, ballType, delta, 'rank_up');
+      }
+    })();
+
+    const rank = computeRank(db, slot, { contentInfo });
+    const pokeballs = pokeballBalances(db, slot);
+    let p = {}; try { p = JSON.parse(player.profile_json); } catch {}
+    db.close();
+
+    const body = {
+      success: true, rankId: rankDef.id, reward, pokeballs,
+      coinsNow: p.coins ?? 0, xpNow: p.xp ?? 0, levelNow: p.level ?? 1, rank,
+    };
+    if (alreadyClaimed) body.idempotent = true;
+    res.json(body);
+  } catch (err) {
+    try { if (db) db.close(); } catch { /* ignore */ }
+    console.error('[player/rank/claim]', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
