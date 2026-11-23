@@ -67,6 +67,15 @@ Push ke `origin master` setelah build & QA. Vault di-update terpisah (bukan di r
 
 ## Entri
 
+### 23 Nov 2026 08:25 WIB — v2.1 polish (lanjutan setelah resume)
+
+- **Fix progres Profile:** `Progress by world` sekarang dihitung dari `zoneState` (catch nyata), bukan tabel `zone_progress` yang jarang ditulis. Dru: Math 14%, Science 33%, MATPEL 0% (bukan 0% semua).
+- **Fix header:** App sekarang memakai `useContent()`, jadi judul/sub header Catch & Map keluar dari "…" setelah konten siap.
+- **Fix sprite:** jsdelivr 403 untuk dex 548/774 → handler `error` global mencoba `raw.githubusercontent.com` (path yang sama). QA: **0 resource gagal**.
+- **QA akhir:** Playwright 390×844, 7 layar, **0 console/page error**, overflow horizontal 0 px; Trophy Case tampil (Volcarona 1/6, frame legendary); Legendary Gate tampil (Sky Pillar/Rayquaza, terkunci).
+- **WebKit:** belum bisa dijalankan di VPS (`webkit-2311` tidak terpasang) → uji manual iPhone Safari tetap pending.
+- Bundle `44f5a360`; commit `68bc63c` (akan di-push bersama log ini).
+
 ### 22 Nov 2026 19:10 WIB — v2 live, sudah di-push
 
 - Deploy: DB backup dulu → rsync source → seed legendary gates → `bash redesign/build.sh` → `systemctl restart druygon` → health 200.
