@@ -2,6 +2,20 @@
 // Edit this file + run build.sh to update bundle.js
 
 // ── Constants ──────────────────────────────────────────────────────────────
+// ── Sprite CDN fallback ────────────────────────────────────────────────────
+// jsdelivr occasionally 403s a file that exists in the repo (observed: 548, 774).
+// Capture image errors once and retry the same path on raw.githubusercontent.
+window.addEventListener('error', function (e) {
+  var t = e && e.target;
+  if (!t || t.tagName !== 'IMG' || t.dataset.cdnFallback) return;
+  if (!t.src || t.src.indexOf('cdn.jsdelivr.net/gh/PokeAPI/sprites@master/') === -1) return;
+  t.dataset.cdnFallback = '1';
+  t.src = t.src.replace(
+    'https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/',
+    'https://raw.githubusercontent.com/PokeAPI/sprites/master/'
+  );
+}, true);
+
 const NAV_LS   = 'druygon-nav-v2';
 const SLOT_LS  = 'druygon-slot-v1';   // persists active slot across sessions
 const VALID_SLOTS = [1, 2, 3, 4];     // slot 5 is disabled (design-only removed)
@@ -97,10 +111,9 @@ function App() {
   const [rank, setRank]               = React.useState(null);
   const [rankAwards, setRankAwards]   = React.useState([]);
   const [rankCeleb, setRankCeleb]     = React.useState(null);
-  // Content loads async; App itself does not use useContent, so nudge a render
-  // when regions/questions are ready (otherwise the header title stays "…").
-  const [, setContentTick] = React.useState(0);
-  React.useEffect(() => { onContentReady(() => setContentTick((n) => n + 1)); }, []);
+  // Content loads async. App must subscribe itself, otherwise the header
+  // title/sub stay "…" (Home/Catch re-render through their own useContent).
+  const { regions: liveRegions } = useContent();
 
   // Load active player + all slot previews
   const loadActivePlayer = React.useCallback((slot) => {
@@ -315,8 +328,8 @@ function App() {
   const caughtDex  = caught.map(c => c.dex);
 
   const currentZoneId = (() => {
-    if (!window.REGIONS || !window.REGIONS[region]) return '';
-    const z = window.REGIONS[region].zones.find(x => x.zone === zone);
+    if (!liveRegions || !liveRegions[region]) return '';
+    const z = liveRegions[region].zones.find(x => x.zone === zone);
     return z ? z.id : '';
   })();
 
@@ -338,7 +351,7 @@ function App() {
     );
   }
 
-  const r = window.REGIONS && window.REGIONS[region];
+  const r = liveRegions && liveRegions[region];
   let header, content, showNav = true;
 
   const openPicker = () => setPickerOpen(true);
@@ -366,7 +379,7 @@ function App() {
     content = <Store coins={profile.coins} region={region} pokeballs={pokeballs} activeSlot={activeSlot} onPurchase={(data) => setProfile(prev => ({ ...prev, coins: data.coinsNow ?? prev.coins, pokeballs: data.pokeballs ?? prev.pokeballs }))} />;
   } else if (screen === 'profile') {
     header  = <Header region={region} title="Profile" sub="Trainer & parent" coins={profile.coins} {...hProps} />;
-    content = <Profile caught={caughtDex} region={region} go={go} profile={profile}
+    content = <Profile caught={caughtDex} caughtRaw={caught} region={region} go={go} profile={profile}
                 playerName={playerName} activeSlot={activeSlot} allSlots={allSlots}
                 onSwitchSlot={switchSlot} team={team} badges={badges} dailyMission={dailyMission} progress={progress} onTeamRemove={onTeamRemove}
                 rank={rank} shiny={shiny} rankAwards={rankAwards} onRankClaim={onRankClaim} />;

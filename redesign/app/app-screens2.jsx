@@ -228,7 +228,7 @@ function localRank(profile, caught, awards) {
   };
 }
 
-function Profile({ caught = [], region, go, profile, playerName, activeSlot, allSlots = [], onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove, rank = null, shiny = [], rankAwards = [], onRankClaim = null }) {
+function Profile({ caught = [], caughtRaw = [], region, go, profile, playerName, activeSlot, allSlots = [], onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove, rank = null, shiny = [], rankAwards = [], onRankClaim = null }) {
   const { regions } = useContent();
   const [claiming, setClaiming] = React.useState(null);
   const [claimErr, setClaimErr] = React.useState(null);
@@ -277,9 +277,13 @@ function Profile({ caught = [], region, go, profile, playerName, activeSlot, all
     const out = {};
     if (!regions) return out;
     for (const [rid, r] of Object.entries(regions)) {
-      const total   = r.zones.length;
+      const total = r.zones.length;
+      // v2 fix: derive cleared zones from real catches (zoneState), not the
+      // rarely-written zone_progress table. Same rule the map uses.
       const cleared = r.zones.filter(z =>
-        (progress || []).some(p => p.zoneId === z.id && p.status === 'cleared')
+        typeof zoneState === 'function'
+          ? zoneState(z, profile, caughtRaw, progress, r.zones) === 'cleared'
+          : (progress || []).some(p => p.zoneId === z.id && p.status === 'cleared')
       ).length;
       out[rid] = total > 0 ? Math.round((cleared / total) * 100) : 0;
     }

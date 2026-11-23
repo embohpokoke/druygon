@@ -1598,7 +1598,7 @@
       awards: []
     };
   }
-  function Profile({ caught = [], region, go, profile, playerName, activeSlot, allSlots = [], onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove, rank = null, shiny = [], rankAwards = [], onRankClaim = null }) {
+  function Profile({ caught = [], caughtRaw = [], region, go, profile, playerName, activeSlot, allSlots = [], onSwitchSlot, team, badges, dailyMission, progress, onTeamRemove, rank = null, shiny = [], rankAwards = [], onRankClaim = null }) {
     const { regions } = useContent();
     const [claiming, setClaiming] = React.useState(null);
     const [claimErr, setClaimErr] = React.useState(null);
@@ -1638,7 +1638,7 @@
       for (const [rid, r] of Object.entries(regions)) {
         const total = r.zones.length;
         const cleared = r.zones.filter(
-          (z) => (progress || []).some((p) => p.zoneId === z.id && p.status === "cleared")
+          (z) => typeof zoneState === "function" ? zoneState(z, profile, caughtRaw, progress, r.zones) === "cleared" : (progress || []).some((p) => p.zoneId === z.id && p.status === "cleared")
         ).length;
         out[rid] = total > 0 ? Math.round(cleared / total * 100) : 0;
       }
@@ -1858,6 +1858,16 @@
     } }, /* @__PURE__ */ React.createElement("i", { style: { position: "absolute", top: 2, left: on ? 20 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left .2s" } })));
   }
   Object.assign(window, { Collection, Store, Profile, regionMons, SoundRow });
+  window.addEventListener("error", function(e) {
+    var t = e && e.target;
+    if (!t || t.tagName !== "IMG" || t.dataset.cdnFallback) return;
+    if (!t.src || t.src.indexOf("cdn.jsdelivr.net/gh/PokeAPI/sprites@master/") === -1) return;
+    t.dataset.cdnFallback = "1";
+    t.src = t.src.replace(
+      "https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/",
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/"
+    );
+  }, true);
   const NAV_LS = "druygon-nav-v2";
   const SLOT_LS = "druygon-slot-v1";
   const VALID_SLOTS = [1, 2, 3, 4];
@@ -1945,10 +1955,7 @@
     const [rank, setRank] = React.useState(null);
     const [rankAwards, setRankAwards] = React.useState([]);
     const [rankCeleb, setRankCeleb] = React.useState(null);
-    const [, setContentTick] = React.useState(0);
-    React.useEffect(() => {
-      onContentReady(() => setContentTick((n) => n + 1));
-    }, []);
+    const { regions: liveRegions } = useContent();
     const loadActivePlayer = React.useCallback((slot) => {
       setPlayerReady(false);
       setPlayerErr(null);
@@ -2168,8 +2175,8 @@
     };
     const caughtDex = caught.map((c) => c.dex);
     const currentZoneId = (() => {
-      if (!window.REGIONS || !window.REGIONS[region]) return "";
-      const z = window.REGIONS[region].zones.find((x) => x.zone === zone);
+      if (!liveRegions || !liveRegions[region]) return "";
+      const z = liveRegions[region].zones.find((x) => x.zone === zone);
       return z ? z.id : "";
     })();
     const pokeballs = POKEBALLS.map((b) => {
@@ -2184,7 +2191,7 @@
     if (!playerReady) {
       return /* @__PURE__ */ React.createElement("div", { className: "device" }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 12, color: "var(--text-secondary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 32 } }, "\u26A1"), /* @__PURE__ */ React.createElement("div", { style: { fontFamily: "var(--font-display)", fontSize: 13 } }, "Loading\u2026")));
     }
-    const r = window.REGIONS && window.REGIONS[region];
+    const r = liveRegions && liveRegions[region];
     let header, content, showNav = true;
     const openPicker = () => setPickerOpen(true);
     const closePicker = () => {
@@ -2218,6 +2225,7 @@
         Profile,
         {
           caught: caughtDex,
+          caughtRaw: caught,
           region,
           go,
           profile,
